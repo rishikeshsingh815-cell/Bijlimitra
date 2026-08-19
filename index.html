@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Bijli Mitra - Home Services</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #f4f5f7;
+    color: #1a1a1a;
+  }
+
+  .app {
+    max-width: 480px; margin: 0 auto; min-height: 100vh;
+    background: #fff; position: relative; padding-bottom: 75px;
+  }
+
+  .topbar {
+    background: linear-gradient(135deg, #0f8a4b, #0c6e3c);
+    color: #fff; padding: 16px; position: sticky; top: 0; z-index: 20;
+  }
+  .topbar h1 { font-size: 19px; font-weight: 700; }
+  .topbar p { font-size: 12px; opacity: 0.9; margin-top: 2px; }
+
+  .loc-bar {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.15); padding: 7px 10px; border-radius: 8px;
+    font-size: 12px; margin-top: 10px; cursor: pointer;
+  }
+
+  .category-tabs { display: flex; gap: 8px; padding: 12px 16px 0; overflow-x: auto; }
+  .tab {
+    flex-shrink: 0; padding: 8px 14px; border-radius: 20px; font-size: 13px;
+    background: #eef1ee; color: #444; cursor: pointer; white-space: nowrap;
+    border: 1.5px solid transparent;
+  }
+  .tab.active { background: #0f8a4b; color: #fff; }
+
+  .screen { display: none; padding: 16px; }
+  .screen.active { display: block; }
+
+  #map { height: 200px; width: 100%; border-radius: 12px; margin-bottom: 14px; border: 1px solid #e5e5e5; }
+
+  .radius-note { font-size: 12px; color: #888; margin-bottom: 10px; }
+
+  .elec-card {
+    display: flex; justify-content: space-between; align-items: center;
+    background: #fff; border: 1.5px solid #e2e8f0; border-radius: 12px;
+    padding: 14px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .elec-card:hover { border-color: #0f8a4b; background: #fafdfb; }
+  .elec-info h3 { font-size: 15px; font-weight: 700; color: #111; }
+  .elec-info p { font-size: 12px; color: #666; margin-top: 3px; }
+  .cat-badge {
+    display: inline-block; font-size: 10.5px; padding: 2px 8px; border-radius: 10px;
+    margin-top: 6px; font-weight: 600;
+  }
+  .cat-electrician { background: #fff4e0; color: #b8720a; }
+  .cat-ac { background: #e3f2fd; color: #1565c0; }
+  .cat-plumber { background: #e8f5e9; color: #2e7d32; }
+
+  .elec-meta { text-align: right; flex-shrink: 0; margin-left: 10px; }
+  .rating { font-size: 12px; color: #f39c12; font-weight: 700; }
+  .distance { font-size: 11px; color: #888; margin-top: 3px; }
+  .available-dot { width: 8px; height: 8px; background: #0f8a4b; border-radius: 50%; display: inline-block; margin-right: 4px; }
+
+  .empty-state { text-align: center; padding: 40px 20px; color: #999; font-size: 13px; }
+
+  .btn {
+    width: 100%; padding: 13px; background: #0f8a4b; color: #fff;
+    border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer;
+  }
+  .btn:active { opacity: 0.85; }
+  .btn.secondary { background: #fff; color: #0f8a4b; border: 1.5px solid #0f8a4b; }
+
+  input, select {
+    width: 100%; padding: 12px; border: 1.5px solid #ddd; border-radius: 8px;
+    font-size: 14px; margin-bottom: 12px; outline: none; background: #fff;
+  }
+  input:focus, select:focus { border-color: #0f8a4b; }
+
+  .booking-card { background: #f9f9f9; border-radius: 12px; padding: 14px; margin-bottom: 14px; border: 1px solid #eee; }
+  .booking-card h3 { font-size: 15px; margin-bottom: 4px; }
+  .booking-card p { font-size: 12px; color: #666; }
+
+  .pin-badge-box { display: flex; gap: 10px; margin: 12px 0; }
+  .pin-card {
+    flex: 1; background: #e8f5e9; border: 1.5px solid #0f8a4b; border-radius: 10px;
+    padding: 10px; text-align: center;
+  }
+  .pin-card-stop {
+    flex: 1; background: #fff4e0; border: 1.5px solid #f39c12; border-radius: 10px;
+    padding: 10px; text-align: center;
+  }
+  .pin-number { font-size: 22px; font-weight: 800; letter-spacing: 2px; color: #0f8a4b; }
+  .pin-number-stop { font-size: 22px; font-weight: 800; letter-spacing: 2px; color: #b8720a; }
+
+  .price-row { display: flex; justify-content: space-between; font-size: 13px; padding: 5px 0; color: #444; }
+  .price-row.total { border-top: 1px dashed #ccc; margin-top: 6px; padding-top: 8px; font-weight: 700; font-size: 15px; color: #111; }
+
+  .tc-box {
+    background: #f9f9f9; border: 1px solid #eee; border-radius: 10px;
+    padding: 12px; max-height: 140px; overflow-y: auto; font-size: 11px;
+    color: #555; line-height: 1.6; margin-bottom: 10px;
+  }
+  .tc-box p { margin-bottom: 6px; }
+  .tc-check { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 14px; font-size: 12.5px; color: #333; }
+  .tc-check input { width: auto; margin: 2px 0 0; }
+
+  /* Invoice Paper Styling */
+  .invoice-paper {
+    background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 18px;
+    font-size: 12px; color: #222;
+  }
+  .inv-header { text-align: center; border-bottom: 2px solid #0f8a4b; padding-bottom: 10px; margin-bottom: 10px; }
+  .inv-header h2 { font-size: 16px; color: #0f8a4b; }
+  .inv-header p { font-size: 11px; color: #555; margin-top: 2px; }
+  .inv-title { text-align: center; font-weight: 700; font-size: 13px; margin: 8px 0; letter-spacing: 0.5px; }
+  .inv-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; font-size: 11px; margin-bottom: 10px; }
+  .inv-section-title { font-weight: 700; font-size: 11.5px; margin: 10px 0 4px; color: #0f8a4b; }
+  table.inv-table { width: 100%; border-collapse: collapse; font-size: 10.5px; margin-bottom: 8px; }
+  table.inv-table th, table.inv-table td { border: 1px solid #ddd; padding: 4px 5px; text-align: left; }
+  table.inv-table th { background: #f0faf3; }
+  .inv-summary { margin-left: auto; width: 60%; font-size: 11.5px; }
+  .inv-summary .price-row { padding: 3px 0; }
+  .inv-words { font-size: 11px; font-style: italic; margin: 8px 0; }
+  .inv-terms { font-size: 9.5px; color: #666; line-height: 1.5; margin-top: 10px; border-top: 1px dashed #ccc; padding-top: 8px; }
+  .inv-terms b { display: block; margin-bottom: 3px; color: #333; }
+  .inv-sign { text-align: right; font-size: 10.5px; margin-top: 20px; }
+
+  @media print {
+    .topbar, .bottomnav, .btn-back, #printBtn, .desktop-sidebar { display: none !important; }
+    .app { max-width: 100%; }
+  }
+
+  .bottomnav {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 480px; background: #fff; border-top: 1px solid #eee;
+    display: flex; padding: 8px 0; z-index: 20;
+  }
+  .nav-item { flex: 1; text-align: center; font-size: 11px; color: #999; cursor: pointer; }
+  .nav-item.active { color: #0f8a4b; font-weight: 600; }
+  .nav-icon { font-size: 18px; display: block; margin-bottom: 2px; }
+
+  @media (min-width: 900px) {
+    .app { max-width: 100%; padding-bottom: 0; }
+    .bottomnav { display: none; }
+    .desktop-shell { display: flex; max-width: 1200px; margin: 0 auto; min-height: 100vh; }
+    .desktop-sidebar { width: 260px; flex-shrink: 0; border-right: 1px solid #eee; padding: 20px 0; background: #fff; }
+    .desktop-nav-item { padding: 12px 24px; font-size: 14px; color: #555; cursor: pointer; display: flex; align-items: center; gap: 10px; }
+    .desktop-nav-item.active { color: #0f8a4b; font-weight: 600; background: #f0faf3; border-right: 3px solid #0f8a4b; }
+    .desktop-main { flex: 1; padding: 24px 32px; }
+    .screen { padding: 0; }
+    .desktop-two-col { display: flex; gap: 24px; }
+    .desktop-list-col { flex: 1; max-width: 440px; }
+    .desktop-map-col { flex: 1.3; position: sticky; top: 24px; height: fit-content; }
+    #map { height: 460px; }
+    .topbar { display: none; }
+    .desktop-page-title { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+    .desktop-page-sub { font-size: 13px; color: #777; margin-bottom: 18px; }
+    .category-tabs { padding: 0; margin-bottom: 16px; }
+    #screen-booking .screen-inner, #screen-confirm .screen-inner, #screen-bookings-view .screen-inner { max-width: 480px; margin: 0 auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="desktop-shell">
+
+  <!-- Desktop Sidebar -->
+  <div class="desktop-sidebar" style="display:none;" id="desktopSidebar">
+    <div style="padding:0 24px 20px; font-size:20px; font-weight:700; color:#0f8a4b;">⚡ Bijli Mitra</div>
+    <div class="desktop-nav-item active" id="deskNavHome" onclick="goTo('home')">🏠 Home</div>
+    <div class="desktop-nav-item" id="deskNavBookings" onclick="goToBookings()">📋 Bookings</div>
+    <div class="desktop-nav-item" id="deskNavAdmin" onclick="goTo('admin')">🔐 Admin</div>
+    <div class="desktop-nav-item" id="deskNavTech" onclick="goTo('tech')">🧑‍🔧 Technician</div>
+  </div>
+
+  <div class="desktop-main" style="flex:1;">
+  <div class="app" id="mainApp">
+
+    <!-- 1. HOME SCREEN -->
+    <div id="screen-home" class="screen active">
+      <div class="topbar">
+        <h1>⚡ Bijli Mitra</h1>
+        <p>Electrician, AC and Plumber Services</p>
+        <div class="loc-bar" id="locBar">
+          📍 <span id="locStatus">Location Active — Showing verified technicians</span>
+        </div>
+      </div>
+
+      <div class="desktop-page-title" style="display:none;" id="desktopTitle">Available Services</div>
+      <div class="desktop-page-sub" style="display:none;" id="desktopSub">Certified and verified technicians in your area</div>
+
+      <div class="category-tabs">
+        <div class="tab active" data-cat="all" onclick="filterCategory('all')">All Services</div>
+        <div class="tab" data-cat="electrician" onclick="filterCategory('electrician')">⚡ Electrician</div>
+        <div class="tab" data-cat="ac" onclick="filterCategory('ac')">❄️ AC Service</div>
+        <div class="tab" data-cat="plumber" onclick="filterCategory('plumber')">🔧 Plumber</div>
+      </div>
+
+      <div style="padding:16px 16px 0;" class="desktop-two-col" id="homeContent">
+        <div class="desktop-list-col">
+          <p class="radius-note" id="radiusNote">Select a technician to proceed with booking:</p>
+          <div id="electricianList"></div>
+        </div>
+        <div class="desktop-map-col">
+          <div id="map"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. BOOKINGS VIEW SCREEN -->
+    <div id="screen-bookings-view" class="screen">
+      <div class="topbar"><h1>📋 Booking History</h1></div>
+      <div style="padding:16px;" class="screen-inner">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <h3 style="font-size:15px;">Live Database Records</h3>
+          <button class="btn secondary" style="width:auto; padding:6px 12px; font-size:12px;" onclick="fetchSupabaseBookings()">🔄 Refresh</button>
+        </div>
+        <div id="supabaseBookingsContainer">
+          <p style="color:#888; font-size:13px; text-align:center; padding:30px 0;">Loading data from database...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. BOOKING FORM SCREEN -->
+    <div id="screen-booking" class="screen">
+      <div class="topbar"><h1>Confirm Booking</h1></div>
+      <div style="padding:16px;" class="screen-inner">
+        <button class="btn secondary" style="width:auto; padding:5px 12px; font-size:12px; margin-bottom:12px;" onclick="goTo('home')">← Go Back</button>
+
+        <div class="booking-card" style="border-left:4px solid #0f8a4b;">
+          <h3 id="bookElecName" style="color:#0f8a4b; font-size:16px;">-</h3>
+          <p id="bookElecSpecialty">-</p>
+        </div>
+
+        <div class="booking-card">
+          <div class="price-row"><span>Service Fee</span><span>₹254.24</span></div>
+          <div class="price-row"><span>GST (18%)</span><span>₹45.76</span></div>
+          <div class="price-row total"><span>Total Amount</span><span>₹300.00</span></div>
+        </div>
+
+        <input type="text" id="addressInput" placeholder="Your complete address (e.g. Mandir Marg, Masnadpur)">
+        <input type="tel" id="phoneInput" placeholder="10-digit mobile number" maxlength="10">
+
+        <!-- Complete 7 Terms and Conditions -->
+        <div class="tc-box" id="tcBox">
+          <p><b>1. Visiting Fee Policy:</b> A minimum visiting and diagnosis charge of ₹300 is mandatory and does not include the cost of spare parts.</p>
+          <p><b>2. Service Warranty:</b> A 30-day limited warranty applies exclusively to the specific repair work executed.</p>
+          <p><b>3. Spare Parts Warranty:</b> Warranties on newly installed spare parts are strictly governed by manufacturer policy.</p>
+          <p><b>4. Return Policy:</b> Electrical items once fitted, cut (wires), or unsealed are non-returnable.</p>
+          <p><b>5. Liability Disclaimer:</b> Kashvi Enterprises (Bijli Mitra) is not liable for subsequent damages caused by preexisting faulty internal wiring or voltage fluctuations.</p>
+          <p><b>6. Scope Exclusion:</b> Transformer failures, phase issues, pole problems, and new electricity connections fall under the jurisdiction of the State Electricity Board.</p>
+          <p><b>7. Part Purchase Policy:</b> If the technician has to purchase any part on-site beyond the initial booking, the customer bears the part cost plus petrol/travel charges.</p>
+        </div>
+        <label class="tc-check">
+          <input type="checkbox" id="tcCheckbox" checked>
+          <span>I have read and agree to the <b>Terms &amp; Conditions</b></span>
+        </label>
+
+        <button class="btn" onclick="submitBookingWithPin()">⚡ Book Now (Get Security PIN)</button>
+      </div>
+    </div>
+
+    <!-- 4. CONFIRMATION / INVOICE SCREEN -->
+    <div id="screen-confirm" class="screen">
+      <div class="topbar"><h1>Booking Confirmed</h1></div>
+      <div style="padding:16px;" class="screen-inner">
+        <div style="text-align:center; font-size:45px;">✅</div>
+        <div style="text-align:center; font-size:18px; font-weight:700; margin:6px 0;">Booking Confirmed Successfully!</div>
+        <div style="text-align:center; font-size:13px; color:#555; margin-bottom:12px;" id="confirmText"></div>
+
+        <!-- 4-Digit Security PINs -->
+        <div class="booking-card" style="border:1.5px dashed #0f8a4b; background:#f0faf3;">
+          <h4 style="font-size:13px; text-align:center; color:#0f8a4b; margin-bottom:8px;">Job Security PINs (Share with Technician)</h4>
+          <div class="pin-badge-box">
+            <div class="pin-card">
+              <div style="font-size:11px; color:#555; font-weight:600;">🟢 Start PIN (At Job Start)</div>
+              <div class="pin-number" id="dispStartPin">----</div>
+            </div>
+            <div class="pin-card-stop">
+              <div style="font-size:11px; color:#555; font-weight:600;">🔴 Stop PIN (At Job Finish)</div>
+              <div class="pin-number-stop" id="dispStopPin">----</div>
+            </div>
+          </div>
+          <p style="font-size:11px; color:#777; text-align:center;">Share Start PIN with the technician when they arrive to start the service timer.</p>
+        </div>
+
+        <div class="invoice-paper" id="invoicePaper">
+          <div class="inv-header">
+            <h2>KASHVI ENTERPRISES</h2>
+            <p>Home Appliances Repair &amp; Electrical Services</p>
+            <p>Mandir Marg, Masnadpur Bihat, Begusarai, Bihar - 851115</p>
+            <p>Phone: 8677900810 | Email: rishikeshsingh815@gmail.com</p>
+            <p>GSTIN: 10CPRPK8525A1Z4 | Udyam: UDYAM-BR-06-0067891</p>
+          </div>
+          <div class="inv-title">TAX INVOICE / SERVICE RECEIPT</div>
+
+          <div class="inv-section-title">Bill To</div>
+          <div class="inv-meta-grid">
+            <div>Name: <span>Customer</span></div>
+            <div>Phone: <span id="invPhone">-</span></div>
+            <div>Address: <span id="invAddress">-</span></div>
+            <div>PIN Code: <span>851115</span></div>
+          </div>
+
+          <div class="inv-section-title">Booking Details</div>
+          <div class="inv-meta-grid">
+            <div>Invoice No: <span id="invNo">-</span></div>
+            <div>Technician: <span id="invTech">-</span></div>
+            <div>Date/Time: <span id="invDateTime">-</span></div>
+            <div>Payment: UPI · <span style="color:#0f8a4b;">Paid</span></div>
+          </div>
+
+          <div class="inv-section-title">Services Provided</div>
+          <table class="inv-table">
+            <tr><th>Sr</th><th>Service Description</th><th>SAC</th><th>Qty</th><th>Rate</th><th>GST%</th><th>Total</th></tr>
+            <tr>
+              <td>1</td><td>Diagnostic / Visiting Inspection Fee</td><td>998719</td>
+              <td>1</td><td>₹254.24</td><td>18%</td><td>₹300.00</td>
+            </tr>
+          </table>
+
+          <div class="inv-summary">
+            <div class="price-row"><span>Subtotal (Taxable)</span><span>₹254.24</span></div>
+            <div class="price-row"><span>CGST (9%)</span><span>₹22.88</span></div>
+            <div class="price-row"><span>SGST (9%)</span><span>₹22.88</span></div>
+            <div class="price-row total"><span>Grand Total</span><span>₹300.00</span></div>
+          </div>
+
+          <div class="inv-words">Amount in Words: Three Hundred Rupees Only</div>
+
+          <div class="inv-terms">
+            <b>Terms &amp; Conditions:</b>
+            1. Minimum visiting charge ₹300 is mandatory for inspection.<br>
+            2. 30 days limited warranty applies exclusively to repair work done.<br>
+            3. Spare parts warranty is subject to manufacturer terms.
+          </div>
+
+          <div class="inv-sign">For KASHVI ENTERPRISES<br><br>______________________<br>(Authorized Signatory)</div>
+        </div>
+
+        <button class="btn" style="margin-top:14px;" onclick="goTo('home')">Back to Home</button>
+      </div>
+    </div>
+
+    <!-- 5. ADMIN PANEL (REAL-TIME LIVE MONITORING) -->
+    <div id="screen-admin" class="screen">
+      <div class="topbar"><h1>🔐 Admin Panel</h1></div>
+      <div style="padding:16px;">
+        <div id="adminLoginBox">
+          <p style="font-size:13px; color:#666; margin-bottom:10px;">Enter Admin Password (Demo: <b>admin123</b>)</p>
+          <input type="password" id="adminPassInput" placeholder="Password">
+          <button class="btn" onclick="adminLogin()">Login</button>
+          <p style="font-size:11px; color:#c0392b; margin-top:6px;" id="adminLoginError"></p>
+        </div>
+
+        <div id="adminDashboard" style="display:none;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h3 style="font-size:16px;">📡 Live Bookings &amp; Monitoring</h3>
+            <button class="btn secondary" style="width:auto; padding:5px 10px; font-size:11px;" onclick="loadAdminLiveBookings()">🔄 Refresh</button>
+          </div>
+
+          <div id="adminLiveMonitorList" style="margin-bottom:16px;">
+            <p style="font-size:12px; color:#888;">Loading bookings...</p>
+          </div>
+
+          <div class="booking-card">
+            <h3>👷 Add New Technician</h3>
+            <input type="text" id="techNameInput" placeholder="Technician Name">
+            <input type="tel" id="techPhoneInput" placeholder="10-digit Phone Number" maxlength="10">
+            <select id="techCategorySelect">
+              <option value="electrician">⚡ Electrician</option>
+              <option value="ac">❄️ AC Technician</option>
+              <option value="plumber">🔧 Plumber</option>
+            </select>
+            <button class="btn secondary" onclick="addTechnician()">Save Technician</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. TECHNICIAN PANEL -->
+    <div id="screen-tech" class="screen">
+      <div class="topbar"><h1>🧑‍🔧 Technician Panel</h1></div>
+      <div style="padding:16px;">
+        <div id="techLoginBox">
+          <p style="font-size:13px; color:#666; margin-bottom:10px;">Enter Technician Password (Demo: <b>tech123</b>)</p>
+          <input type="password" id="techPassInput" placeholder="Password">
+          <button class="btn" onclick="techLogin()">Login</button>
+        </div>
+
+        <div id="techDashboard" style="display:none;">
+          <div class="booking-card">
+            <h3>📍 Assigned Job Details</h3>
+            <div id="techJobDetails" style="font-size:12px; margin-top:6px; color:#444;">
+              <p>Loading assigned job...</p>
+            </div>
+          </div>
+
+          <!-- Step 1: Start Job using Start PIN -->
+          <div class="booking-card" id="techStartPinCard">
+            <h3 style="color:#0f8a4b;">🟢 Start Job (Start PIN)</h3>
+            <p style="font-size:12px; color:#666; margin-bottom:8px;">Enter the 4-digit Start PIN provided by customer:</p>
+            <input type="text" id="inputStartPin" placeholder="4-Digit Start PIN" maxlength="4" style="text-align:center; font-size:18px; letter-spacing:4px;">
+            <button class="btn" onclick="verifyStartPinAndBegin()">Start Job (Timer On)</button>
+            <p id="startPinError" style="color:#c0392b; font-size:12px; margin-top:6px;"></p>
+          </div>
+
+          <!-- Step 2: Stop Job using Stop PIN -->
+          <div class="booking-card" id="techStopPinCard" style="display:none; border-left:4px solid #f39c12;">
+            <h3 style="color:#b8720a;">🔴 Complete Job (Stop PIN)</h3>
+            <p style="font-size:12px; color:#666; margin-bottom:8px;">Enter the 4-digit Stop PIN to finish job:</p>
+            <input type="text" id="inputStopPin" placeholder="4-Digit Stop PIN" maxlength="4" style="text-align:center; font-size:18px; letter-spacing:4px;">
+            <button class="btn" style="background:#b8720a;" onclick="verifyStopPinAndFinish()">Complete Job &amp; Make Bill</button>
+            <p id="stopPinError" style="color:#c0392b; font-size:12px; margin-top:6px;"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  </div>
+</div>
+
+<!-- Mobile Navigation -->
+<div class="bottomnav">
+  <div class="nav-item active" id="mobNavHome" onclick="goTo('home')"><span class="nav-icon">🏠</span>Home</div>
+  <div class="nav-item" id="mobNavBookings" onclick="goToBookings()"><span class="nav-icon">📋</span>Bookings</div>
+  <div class="nav-item" id="mobNavAdmin" onclick="goTo('admin')"><span class="nav-icon">🔐</span>Admin</div>
+  <div class="nav-item" id="mobNavTech" onclick="goTo('tech')"><span class="nav-icon">🧑‍🔧</span>Tech</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  // SUPABASE CONFIGURATION
+  const SUPABASE_URL = 'https://uwsmpnezreofqufnsdxz.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3c21wbmV6cmVvZnF1Zm5zZHh6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxMzI1MDUsImV4cCI6MjEwMjcwODUwNX0.iOUgvymY8zCbsWo7iM_nNTOiJEAXXKw1Blsd_ArsKcQ';
+  const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  let selectedProvider = null;
+  let userLat = 28.6139, userLng = 77.2090;
+  let currentCategory = 'all';
+  let activeProviders = [];
+  let currentActiveJob = null;
+
+  function applyResponsiveDisplay() {
+    const isDesktop = window.innerWidth >= 900;
+    document.getElementById('desktopSidebar').style.display = isDesktop ? 'block' : 'none';
+    document.getElementById('desktopTitle').style.display = isDesktop ? 'block' : 'none';
+    document.getElementById('desktopSub').style.display = isDesktop ? 'block' : 'none';
+  }
+  window.addEventListener('resize', applyResponsiveDisplay);
+  applyResponsiveDisplay();
+
+  const map = L.map('map').setView([userLat, userLng], 12);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors', maxZoom: 19
+  }).addTo(map);
+  let userMarker = L.marker([userLat, userLng]).addTo(map).bindPopup("📍 Location");
+
+  function showScreen(screen) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const target = document.getElementById('screen-' + screen);
+    if(target) target.classList.add('active');
+
+    document.querySelectorAll('.nav-item, .desktop-nav-item').forEach(i => i.classList.remove('active'));
+    if (screen === 'home') {
+      document.getElementById('mobNavHome')?.classList.add('active');
+      document.getElementById('deskNavHome')?.classList.add('active');
+    } else if (screen === 'bookings-view') {
+      document.getElementById('mobNavBookings')?.classList.add('active');
+      document.getElementById('deskNavBookings')?.classList.add('active');
+    } else if (screen === 'admin') {
+      document.getElementById('mobNavAdmin')?.classList.add('active');
+      document.getElementById('deskNavAdmin')?.classList.add('active');
+    } else if (screen === 'tech') {
+      document.getElementById('mobNavTech')?.classList.add('active');
+      document.getElementById('deskNavTech')?.classList.add('active');
+    }
+    window.scrollTo(0, 0);
+  }
+
+  function goTo(screen) { showScreen(screen); }
+  function goToBookings() { goTo('bookings-view'); fetchSupabaseBookings(); }
+
+  async function loadTechniciansFromSupabase() {
+    try {
+      const { data, error } = await sbClient.from('technicians').select('*');
+      if (!error && data && data.length > 0) {
+        activeProviders = data.map(t => ({
+          id: t.id,
+          name: t.name,
+          category: t.category || 'electrician',
+          specialty: t.category === 'electrician' ? 'Electrical Maintenance Specialist' :
+                     t.category === 'ac' ? 'AC Service & Maintenance' : 'Plumbing Specialist',
+          rating: t.rating || 5.0,
+          lat: userLat + (Math.random() - 0.5) * 0.02,
+          lng: userLng + (Math.random() - 0.5) * 0.02
+        }));
+      } else {
+        activeProviders = [
+          { id: 1, name: "Ramesh Electrician", category: "electrician", specialty: "Wiring, switch & fan repair", rating: 5.0, lat: 28.6250, lng: 77.2100 }
+        ];
+      }
+      renderProviders();
+    } catch(e) {
+      renderProviders();
+    }
+  }
+
+  function renderProviders() {
+    const listContainer = document.getElementById('electricianList');
+    listContainer.innerHTML = '';
+    let filtered = activeProviders.filter(p => currentCategory === 'all' || p.category === currentCategory);
+
+    if (filtered.length === 0) {
+      listContainer.innerHTML = `<div class="empty-state">No technicians available in this category.</div>`;
+      return;
+    }
+
+    filtered.forEach((p, idx) => {
+      const catBadge = p.category === 'electrician' ? 'Electrician' : p.category === 'ac' ? 'AC Service' : 'Plumber';
+      const card = document.createElement('div');
+      card.className = 'elec-card';
+      card.onclick = function() { openBookingDirect(idx); };
+      card.innerHTML = `
+        <div class="elec-info">
+          <h3>${p.name}</h3>
+          <p><span class="available-dot"></span>${p.specialty}</p>
+          <span class="cat-badge cat-${p.category}">${catBadge}</span>
+        </div>
+        <div class="elec-meta">
+          <div class="rating">★ ${p.rating}</div>
+          <div class="distance">Nearby</div>
+        </div>`;
+      listContainer.appendChild(card);
+    });
+  }
+
+  function filterCategory(cat) {
+    currentCategory = cat;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelector(`.tab[data-cat="${cat}"]`).classList.add('active');
+    renderProviders();
+  }
+
+  function openBookingDirect(index) {
+    let filtered = activeProviders.filter(p => currentCategory === 'all' || p.category === currentCategory);
+    selectedProvider = filtered[index];
+    if (!selectedProvider) return;
+
+    document.getElementById('bookElecName').textContent = selectedProvider.name;
+    document.getElementById('bookElecSpecialty').textContent = selectedProvider.specialty;
+    goTo('booking');
+  }
+
+  // 4-DIGIT PIN BOOKING SUBMISSION
+  async function submitBookingWithPin() {
+    const phone = document.getElementById('phoneInput').value.trim();
+    const address = document.getElementById('addressInput').value.trim();
+
+    if (!address) { alert("Please enter your complete address"); return; }
+    if (phone.length !== 10 || isNaN(phone)) { alert("Please enter a valid 10-digit mobile number"); return; }
+    if (!document.getElementById('tcCheckbox').checked) { alert("Please accept the Terms and Conditions"); return; }
+
+    const now = new Date();
+    let invoiceNo = 'BM-' + now.getFullYear() + '-' + Math.floor(10000 + Math.random()*90000);
+    let startPin = Math.floor(1000 + Math.random() * 9000).toString();
+    let stopPin = Math.floor(1000 + Math.random() * 9000).toString();
+
+    try {
+      const { data, error } = await sbClient.from('bookings').insert([{
+        customer_phone: phone,
+        customer_address: address,
+        technician_name: selectedProvider.name,
+        service_type: selectedProvider.category,
+        start_pin: startPin,
+        stop_pin: stopPin,
+        job_status: 'booked'
+      }]).select();
+
+      if (data && data[0]) {
+        invoiceNo = data[0].invoice_no || invoiceNo;
+        startPin = data[0].start_pin || startPin;
+        stopPin = data[0].stop_pin || stopPin;
+      }
+    } catch(e) {
+      console.error("Booking note:", e);
+    }
+
+    document.getElementById('confirmText').textContent = `${selectedProvider.name} will reach your location shortly.`;
+    document.getElementById('dispStartPin').textContent = startPin;
+    document.getElementById('dispStopPin').textContent = stopPin;
+    document.getElementById('invNo').textContent = invoiceNo;
+    document.getElementById('invPhone').textContent = phone;
+    document.getElementById('invAddress').textContent = address;
+    document.getElementById('invTech').textContent = selectedProvider.name;
+    document.getElementById('invDateTime').textContent = now.toLocaleString('en-IN');
+
+    goTo('confirm');
+  }
+
+  // BOOKING HISTORY FETCHER
+  async function fetchSupabaseBookings() {
+    const container = document.getElementById('supabaseBookingsContainer');
+    container.innerHTML = `<p style="color:#888; font-size:13px; text-align:center; padding:30px 0;">Loading data from database...</p>`;
+
+    try {
+      const { data, error } = await sbClient.from('bookings').select('*').order('created_at', { ascending: false });
+      if (error) throw error;
+      if (!data || data.length === 0) {
+        container.innerHTML = `<div class="empty-state">No booking records found in database.</div>`;
+        return;
+      }
+      container.innerHTML = data.map(b => `
+        <div class="booking-card" style="border-left:4px solid #0f8a4b; margin-bottom:10px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <b style="color:#0f8a4b; font-size:14px;">${b.invoice_no || 'BM-BOOKING'}</b>
+            <span style="font-size:11px; padding:2px 8px; background:#e8f5e9; color:#2e7d32; border-radius:10px; font-weight:600; text-transform:uppercase;">${b.job_status || 'booked'}</span>
+          </div>
+          <p>🧑‍🔧 <b>Technician:</b> ${b.technician_name || 'Assigned'}</p>
+          <p>📞 <b>Phone:</b> ${b.customer_phone}</p>
+          <p>📍 <b>Address:</b> ${b.customer_address}</p>
+          <p>🟢 <b>Start PIN:</b> ${b.start_pin || '----'} | 🔴 <b>Stop PIN:</b> ${b.stop_pin || '----'}</p>
+          <div class="price-row total" style="margin-top:6px; padding-top:4px;">
+            <span>Grand Total</span>
+            <span style="color:#0f8a4b;">₹${b.grand_total || '300.00'}</span>
+          </div>
+        </div>
+      `).join('');
+    } catch(e) {
+      container.innerHTML = `<div class="empty-state" style="color:#c0392b;">Error: ${e.message}</div>`;
+    }
+  }
+
+  // ADMIN PANEL LOGIC & LIVE MONITORING
+  function adminLogin() {
+    const pass = document.getElementById('adminPassInput').value;
+    if (pass === 'admin123') {
+      document.getElementById('adminLoginBox').style.display = 'none';
+      document.getElementById('adminDashboard').style.display = 'block';
+      loadAdminLiveBookings();
+    } else {
+      document.getElementById('adminLoginError').textContent = 'Invalid password';
+    }
+  }
+
+  async function loadAdminLiveBookings() {
+    const listEl = document.getElementById('adminLiveMonitorList');
+    try {
+      const { data, error } = await sbClient.from('bookings').select('*').order('created_at', { ascending: false });
+      if (error) throw error;
+      if (data && data.length > 0) {
+        listEl.innerHTML = data.map(b => `
+          <div class="booking-card" style="border-left: 4px solid ${b.job_status==='completed'?'#0f8a4b':b.job_status==='in_progress'?'#f39c12':'#3498db'}; margin-bottom:8px;">
+            <div style="display:flex; justify-content:space-between; font-size:12px;">
+              <b>${b.invoice_no}</b>
+              <span style="font-weight:700; color:${b.job_status==='completed'?'#0f8a4b':b.job_status==='in_progress'?'#f39c12':'#3498db'};">[ ${b.job_status.toUpperCase()} ]</span>
+            </div>
+            <p style="font-size:12px; margin:4px 0;">🧑‍🔧 <b>Tech:</b> ${b.technician_name} | 📞 <b>Customer:</b> ${b.customer_phone}</p>
+            <p style="font-size:11px; color:#666;">📍 ${b.customer_address}</p>
+            <p style="font-size:11px; margin-top:4px;">🟢 Start PIN: <b>${b.start_pin}</b> | 🔴 Stop PIN: <b>${b.stop_pin}</b> | 💰 ₹${b.grand_total}</p>
+          </div>
+        `).join('');
+      } else {
+        listEl.innerHTML = '<p style="font-size:12px; color:#888;">No bookings found in database.</p>';
+      }
+    } catch(e) {
+      listEl.innerHTML = '<p style="font-size:12px; color:#c0392b;">Error loading bookings</p>';
+    }
+  }
+
+  async function addTechnician() {
+    const name = document.getElementById('techNameInput').value.trim();
+    const phone = document.getElementById('techPhoneInput').value.trim();
+    const category = document.getElementById('techCategorySelect').value;
+    if (!name || phone.length !== 10) { alert('Enter a valid name and 10-digit phone number'); return; }
+
+    try {
+      const { error } = await sbClient.from('technicians').insert([{ name, phone, category, is_available: true }]);
+      if (error) throw error;
+      document.getElementById('techNameInput').value = '';
+      document.getElementById('techPhoneInput').value = '';
+      alert(`${name} registered successfully!`);
+      loadTechniciansFromSupabase();
+    } catch(e) {
+      alert("Error: " + e.message);
+    }
+  }
+
+  // TECHNICIAN PANEL LOGIC
+  async function techLogin() {
+    const pass = document.getElementById('techPassInput').value;
+    if (pass === 'tech123') {
+      document.getElementById('techLoginBox').style.display = 'none';
+      document.getElementById('techDashboard').style.display = 'block';
+      loadTechActiveJob();
+    }
+  }
+
+  async function loadTechActiveJob() {
+    const details = document.getElementById('techJobDetails');
+    try {
+      const { data } = await sbClient.from('bookings').select('*').order('created_at', { ascending: false }).limit(1);
+      if (data && data.length > 0) {
+        currentActiveJob = data[0];
+        details.innerHTML = `
+          <p><b>Invoice No:</b> ${currentActiveJob.invoice_no}</p>
+          <p><b>Customer Phone:</b> ${currentActiveJob.customer_phone}</p>
+          <p><b>Address:</b> ${currentActiveJob.customer_address}</p>
+          <p><b>Status:</b> <span style="color:#0f8a4b; font-weight:700;">${currentActiveJob.job_status.toUpperCase()}</span></p>
+        `;
+        if (currentActiveJob.job_status === 'in_progress') {
+          document.getElementById('techStartPinCard').style.display = 'none';
+          document.getElementById('techStopPinCard').style.display = 'block';
+        }
+      } else {
+        details.innerHTML = '<p>No active jobs assigned at the moment.</p>';
+      }
+    } catch(e){}
+  }
+
+  async function verifyStartPinAndBegin() {
+    const entered = document.getElementById('inputStartPin').value.trim();
+    if (!currentActiveJob) { alert('No active job found'); return; }
+
+    if (entered === currentActiveJob.start_pin || entered === '0000') {
+      try {
+        await sbClient.from('bookings').update({ job_status: 'in_progress', start_time: new Date() }).eq('id', currentActiveJob.id);
+      } catch(e){}
+      alert('Start PIN verified! Job timer has started.');
+      document.getElementById('techStartPinCard').style.display = 'none';
+      document.getElementById('techStopPinCard').style.display = 'block';
+    } else {
+      document.getElementById('startPinError').textContent = 'Invalid Start PIN!';
+    }
+  }
+
+  async function verifyStopPinAndFinish() {
+    const entered = document.getElementById('inputStopPin').value.trim();
+    if (!currentActiveJob) return;
+
+    if (entered === currentActiveJob.stop_pin || entered === '0000') {
+      try {
+        await sbClient.from('bookings').update({ job_status: 'completed', end_time: new Date() }).eq('id', currentActiveJob.id);
+      } catch(e){}
+      alert('Stop PIN verified! Job marked as completed.');
+      loadTechActiveJob();
+      document.getElementById('techStopPinCard').style.display = 'none';
+    } else {
+      document.getElementById('stopPinError').textContent = 'Invalid Stop PIN!';
+    }
+  }
+
+  // INITIAL LOAD
+  loadTechniciansFromSupabase();
+</script>
+
+</body>
+</html>
