@@ -1204,14 +1204,17 @@
     errEl.textContent = "";
     if (!pendingGoogleUser) return;
 
-    try {
-      await sbClient.from('customers').upsert({
-        email: pendingGoogleUser.email,
-        name: pendingGoogleUser.name,
-        phone,
-        address
-      });
-    } catch(e){}
+    // Save to Supabase using email as the conflict key (Google users are matched by
+    // email, not phone) - and surface any real error instead of failing silently.
+    const { error: upsertError } = await sbClient.from('customers').upsert(
+      { email: pendingGoogleUser.email, name: pendingGoogleUser.name, phone, address },
+      { onConflict: 'email' }
+    );
+
+    if (upsertError) {
+      errEl.textContent = "Could not save your details: " + upsertError.message;
+      return;
+    }
 
     currentUser = { name: pendingGoogleUser.name, phone, address, email: pendingGoogleUser.email };
     localStorage.setItem('bm_active_customer', JSON.stringify(currentUser));
