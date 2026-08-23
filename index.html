@@ -2,150 +2,216 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Bijli Mitra - Home Services</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Bijli Mitra - Professional Home Services</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: #f4f5f7;
+    background: #f4f7f6;
     color: #1a1a1a;
+    min-height: 100vh;
   }
 
   .app {
-    max-width: 480px; margin: 0 auto; min-height: 100vh;
-    background: #fff; position: relative; padding-bottom: 75px;
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: #fff;
+    position: relative;
+    padding-bottom: 80px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
   }
 
   .topbar {
     background: linear-gradient(135deg, #0f8a4b, #0c6e3c);
-    color: #fff; padding: 16px; position: sticky; top: 0; z-index: 20;
+    color: #fff;
+    padding: 14px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
-  .topbar h1 { font-size: 19px; font-weight: 700; }
-  .topbar p { font-size: 12px; opacity: 0.9; margin-top: 2px; }
+  .topbar h1 { font-size: 18px; font-weight: 700; }
+  .topbar p { font-size: 11.5px; opacity: 0.9; }
 
-  .loc-bar {
-    display: flex; align-items: center; gap: 6px;
-    background: rgba(255,255,255,0.15); padding: 7px 10px; border-radius: 8px;
-    font-size: 12px; margin-top: 10px; cursor: pointer;
+  .user-badge {
+    background: rgba(255,255,255,0.22);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    border: 1px solid rgba(255,255,255,0.3);
   }
 
-  .category-tabs { display: flex; gap: 8px; padding: 12px 16px 0; overflow-x: auto; }
-  .tab {
-    flex-shrink: 0; padding: 8px 14px; border-radius: 20px; font-size: 13px;
-    background: #eef1ee; color: #444; cursor: pointer; white-space: nowrap;
-    border: 1.5px solid transparent;
-  }
-  .tab.active { background: #0f8a4b; color: #fff; }
-
-  .screen { display: none; padding: 16px; }
+  .screen { display: none; padding: 16px; animation: fadeIn 0.2s ease-in-out; }
   .screen.active { display: block; }
 
-  #map { height: 200px; width: 100%; border-radius: 12px; margin-bottom: 14px; border: 1px solid #e5e5e5; }
-
-  .radius-note { font-size: 12px; color: #888; margin-bottom: 10px; }
-
-  .elec-card {
-    display: flex; justify-content: space-between; align-items: center;
-    background: #fff; border: 1.5px solid #e2e8f0; border-radius: 12px;
-    padding: 14px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s ease;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(3px); }
+    to { opacity: 1; transform: translateY(0); }
   }
-  .elec-card:hover { border-color: #0f8a4b; background: #fafdfb; }
-  .elec-info h3 { font-size: 15px; font-weight: 700; color: #111; }
-  .elec-info p { font-size: 12px; color: #666; margin-top: 3px; }
-  .cat-badge {
-    display: inline-block; font-size: 10.5px; padding: 2px 8px; border-radius: 10px;
-    margin-top: 6px; font-weight: 600;
+
+  .card {
+    background: #fff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
   }
-  .cat-electrician { background: #fff4e0; color: #b8720a; }
-  .cat-ac { background: #e3f2fd; color: #1565c0; }
-  .cat-plumber { background: #e8f5e9; color: #2e7d32; }
 
-  .elec-meta { text-align: right; flex-shrink: 0; margin-left: 10px; }
-  .rating { font-size: 12px; color: #f39c12; font-weight: 700; }
-  .distance { font-size: 11px; color: #888; margin-top: 3px; }
-  .available-dot { width: 8px; height: 8px; background: #0f8a4b; border-radius: 50%; display: inline-block; margin-right: 4px; }
+  .category-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 10px;
+  }
+  .category-card {
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .category-card:hover { border-color: #0f8a4b; background: #fafdfb; }
+  .category-card h3 { font-size: 15px; color: #111; }
+  .category-card p { font-size: 12px; color: #666; margin-top: 2px; }
 
-  .empty-state { text-align: center; padding: 40px 20px; color: #999; font-size: 13px; }
+  .addon-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px dashed #eee;
+    font-size: 12.5px;
+  }
+  .addon-item:last-child { border-bottom: none; }
+  .addon-item label { display: flex; align-items: center; gap: 8px; cursor: pointer; flex: 1; }
+  .addon-item input { width: auto; margin: 0; }
+  .addon-price { font-weight: 700; color: #0f8a4b; white-space: nowrap; margin-left: 8px; }
+
+  .terms-box {
+    background: #fff8f0;
+    border: 1.5px solid #fbd38d;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 11.5px;
+    color: #744210;
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
 
   .btn {
-    width: 100%; padding: 13px; background: #0f8a4b; color: #fff;
-    border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer;
+    width: 100%;
+    padding: 13px;
+    background: #0f8a4b;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 14.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
   }
   .btn:active { opacity: 0.85; }
   .btn.secondary { background: #fff; color: #0f8a4b; border: 1.5px solid #0f8a4b; }
+  .btn.danger { background: #e74c3c; color: #fff; }
 
-  input, select {
-    width: 100%; padding: 12px; border: 1.5px solid #ddd; border-radius: 8px;
-    font-size: 14px; margin-bottom: 12px; outline: none; background: #fff;
+  .input-group { position: relative; margin-bottom: 12px; }
+  input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1.5px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    background: #fff;
   }
-  input:focus, select:focus { border-color: #0f8a4b; }
-
-  .booking-card { background: #f9f9f9; border-radius: 12px; padding: 14px; margin-bottom: 14px; border: 1px solid #eee; }
-  .booking-card h3 { font-size: 15px; margin-bottom: 4px; }
-  .booking-card p { font-size: 12px; color: #666; }
-
-  .pin-badge-box { display: flex; gap: 10px; margin: 12px 0; }
-  .pin-card {
-    flex: 1; background: #e8f5e9; border: 1.5px solid #0f8a4b; border-radius: 10px;
-    padding: 10px; text-align: center;
+  input:focus, select:focus, textarea:focus { border-color: #0f8a4b; }
+  .toggle-pw {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    font-size: 13px;
+    color: #0f8a4b;
+    cursor: pointer;
+    font-weight: 600;
+    user-select: none;
   }
-  .pin-card-stop {
-    flex: 1; background: #fff4e0; border: 1.5px solid #f39c12; border-radius: 10px;
-    padding: 10px; text-align: center;
-  }
-  .pin-number { font-size: 22px; font-weight: 800; letter-spacing: 2px; color: #0f8a4b; }
-  .pin-number-stop { font-size: 22px; font-weight: 800; letter-spacing: 2px; color: #b8720a; }
 
   .price-row { display: flex; justify-content: space-between; font-size: 13px; padding: 5px 0; color: #444; }
   .price-row.total { border-top: 1px dashed #ccc; margin-top: 6px; padding-top: 8px; font-weight: 700; font-size: 15px; color: #111; }
 
-  .tc-box {
-    background: #f9f9f9; border: 1px solid #eee; border-radius: 10px;
-    padding: 12px; max-height: 140px; overflow-y: auto; font-size: 11px;
-    color: #555; line-height: 1.6; margin-bottom: 10px;
-  }
-  .tc-box p { margin-bottom: 6px; }
-  .tc-check { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 14px; font-size: 12.5px; color: #333; }
-  .tc-check input { width: auto; margin: 2px 0 0; }
+  .pin-badge-box { display: flex; gap: 10px; margin: 12px 0; }
+  .pin-card { flex: 1; background: #e8f5e9; border: 1.5px solid #0f8a4b; border-radius: 10px; padding: 10px; text-align: center; }
+  .pin-card-stop { flex: 1; background: #fff4e0; border: 1.5px solid #f39c12; border-radius: 10px; padding: 10px; text-align: center; }
+  .pin-number { font-size: 22px; font-weight: 800; color: #0f8a4b; }
+  .pin-number-stop { font-size: 22px; font-weight: 800; color: #b8720a; }
 
-  /* Invoice Paper Styling */
-  .invoice-paper {
-    background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 18px;
-    font-size: 12px; color: #222;
+  .qr-box { background: #fff; border: 2px dashed #0f8a4b; border-radius: 12px; padding: 16px; text-align: center; margin-bottom: 14px; }
+  .qr-img { width: 170px; height: 170px; margin: 8px auto; display: block; border-radius: 6px; border: 1px solid #ddd; }
+
+  .modal-backdrop {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; padding: 16px;
   }
-  .inv-header { text-align: center; border-bottom: 2px solid #0f8a4b; padding-bottom: 10px; margin-bottom: 10px; }
-  .inv-header h2 { font-size: 16px; color: #0f8a4b; }
-  .inv-header p { font-size: 11px; color: #555; margin-top: 2px; }
-  .inv-title { text-align: center; font-weight: 700; font-size: 13px; margin: 8px 0; letter-spacing: 0.5px; }
-  .inv-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; font-size: 11px; margin-bottom: 10px; }
-  .inv-section-title { font-weight: 700; font-size: 11.5px; margin: 10px 0 4px; color: #0f8a4b; }
+  .modal-content {
+    background: #fff; border-radius: 14px; max-width: 440px; width: 100%; max-height: 90vh;
+    overflow-y: auto; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: fadeIn 0.2s ease-in-out;
+  }
+
+  .invoice-paper { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 16px; font-size: 12px; color: #222; }
+  .inv-header { text-align: center; border-bottom: 2px solid #0f8a4b; padding-bottom: 8px; margin-bottom: 10px; }
+  .inv-title { text-align: center; font-weight: 700; font-size: 13px; margin: 8px 0; }
+  .inv-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; font-size: 11px; margin-bottom: 8px; }
   table.inv-table { width: 100%; border-collapse: collapse; font-size: 10.5px; margin-bottom: 8px; }
   table.inv-table th, table.inv-table td { border: 1px solid #ddd; padding: 4px 5px; text-align: left; }
   table.inv-table th { background: #f0faf3; }
-  .inv-summary { margin-left: auto; width: 60%; font-size: 11.5px; }
-  .inv-summary .price-row { padding: 3px 0; }
-  .inv-words { font-size: 11px; font-style: italic; margin: 8px 0; }
-  .inv-terms { font-size: 9.5px; color: #666; line-height: 1.5; margin-top: 10px; border-top: 1px dashed #ccc; padding-top: 8px; }
-  .inv-terms b { display: block; margin-bottom: 3px; color: #333; }
-  .inv-sign { text-align: right; font-size: 10.5px; margin-top: 20px; }
-
-  @media print {
-    .topbar, .bottomnav, .btn-back, #printBtn, .desktop-sidebar { display: none !important; }
-    .app { max-width: 100%; }
-  }
+  .inv-summary { margin-left: auto; width: 65%; font-size: 11.5px; }
 
   .bottomnav {
-    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
-    width: 100%; max-width: 480px; background: #fff; border-top: 1px solid #eee;
-    display: flex; padding: 8px 0; z-index: 20;
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    background: #fff;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    padding: 8px 0;
+    z-index: 500;
   }
-  .nav-item { flex: 1; text-align: center; font-size: 11px; color: #999; cursor: pointer; }
+  .nav-item { flex: 1; text-align: center; font-size: 11px; color: #888; cursor: pointer; }
   .nav-item.active { color: #0f8a4b; font-weight: 600; }
   .nav-icon { font-size: 18px; display: block; margin-bottom: 2px; }
+
+  #homeMap { height: 180px; width: 100%; border-radius: 12px; margin-bottom: 12px; border: 1.5px solid #0f8a4b; }
+  #signupMap { height: 190px; width: 100%; border-radius: 10px; border: 1.5px solid #0f8a4b; margin-top: 6px; }
+  #bookingMap { height: 200px; width: 100%; border-radius: 10px; border: 1.5px solid #0f8a4b; margin-top: 6px; }
+
+  .pay-alert-box {
+    background: #fff4e0; border: 1.5px solid #f39c12; border-radius: 10px;
+    padding: 12px; margin-bottom: 12px; font-size: 12px; color: #7a4a00;
+  }
+
+  .lang-switch {
+    display: flex; background: rgba(255,255,255,0.2); border-radius: 14px;
+    padding: 2px; cursor: pointer;
+  }
+  .lang-option { padding: 4px 9px; font-size: 11px; border-radius: 12px; color: #fff; font-weight: 600; }
+  .lang-option.active { background: #fff; color: #0f8a4b; }
 
   @media (min-width: 900px) {
     .app { max-width: 100%; padding-bottom: 0; }
@@ -154,17 +220,9 @@
     .desktop-sidebar { width: 260px; flex-shrink: 0; border-right: 1px solid #eee; padding: 20px 0; background: #fff; }
     .desktop-nav-item { padding: 12px 24px; font-size: 14px; color: #555; cursor: pointer; display: flex; align-items: center; gap: 10px; }
     .desktop-nav-item.active { color: #0f8a4b; font-weight: 600; background: #f0faf3; border-right: 3px solid #0f8a4b; }
-    .desktop-main { flex: 1; padding: 24px 32px; }
+    .desktop-main { flex: 1; padding: 24px 32px; background: #f9fbfa; }
     .screen { padding: 0; }
-    .desktop-two-col { display: flex; gap: 24px; }
-    .desktop-list-col { flex: 1; max-width: 440px; }
-    .desktop-map-col { flex: 1.3; position: sticky; top: 24px; height: fit-content; }
-    #map { height: 460px; }
-    .topbar { display: none; }
-    .desktop-page-title { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
-    .desktop-page-sub { font-size: 13px; color: #777; margin-bottom: 18px; }
-    .category-tabs { padding: 0; margin-bottom: 16px; }
-    #screen-booking .screen-inner, #screen-confirm .screen-inner, #screen-bookings-view .screen-inner { max-width: 480px; margin: 0 auto; }
+    .desktop-inner { max-width: 520px; margin: 0 auto; }
   }
 </style>
 </head>
@@ -172,254 +230,410 @@
 
 <div class="desktop-shell">
 
-  <!-- Desktop Sidebar -->
+  <!-- Desktop Role Protected Sidebar -->
   <div class="desktop-sidebar" style="display:none;" id="desktopSidebar">
-    <div style="padding:0 24px 20px; font-size:20px; font-weight:700; color:#0f8a4b;">⚡ Bijli Mitra</div>
-    <div class="desktop-nav-item active" id="deskNavHome" onclick="goTo('home')">🏠 Home</div>
-    <div class="desktop-nav-item" id="deskNavBookings" onclick="goToBookings()">📋 Bookings</div>
-    <div class="desktop-nav-item" id="deskNavAdmin" onclick="goTo('admin')">🔐 Admin</div>
-    <div class="desktop-nav-item" id="deskNavTech" onclick="goTo('tech')">🧑‍🔧 Technician</div>
+    <div style="padding:0 24px 4px; font-size:20px; font-weight:700; color:#0f8a4b;">⚡ Bijli Mitra</div>
+    <div style="padding:0 24px 16px; font-size:12px; color:#666;">Begusarai, Bihar</div>
+    
+    <div id="deskCustomerNav">
+      <div class="desktop-nav-item active" id="deskNavHome" onclick="navigateTo('home')">🏠 <span data-i18n="deskBookCategory">Book Category</span></div>
+      <div class="desktop-nav-item" id="deskNavProfile" onclick="goToCustomerProfile()">👤 <span data-i18n="deskMyProfile">My Profile &amp; History</span></div>
+    </div>
+
+    <div id="deskTechNav" style="display:none;">
+      <div class="desktop-nav-item" id="deskNavTech" onclick="navigateTo('tech-pool')">🧑‍🔧 <span data-i18n="deskTechPool">Technician Job Pool</span></div>
+    </div>
+
+    <div id="deskAdminNav" style="display:none;">
+      <div class="desktop-nav-item" id="deskNavAdmin" onclick="navigateTo('admin')">🔐 <span data-i18n="deskAdminMgmt">Admin Management</span></div>
+    </div>
   </div>
 
   <div class="desktop-main" style="flex:1;">
   <div class="app" id="mainApp">
 
-    <!-- 1. HOME SCREEN -->
-    <div id="screen-home" class="screen active">
-      <div class="topbar">
+    <div class="topbar">
+      <div>
         <h1>⚡ Bijli Mitra</h1>
-        <p>Electrician, AC and Plumber Services</p>
-        <div class="loc-bar" id="locBar">
-          📍 <span id="locStatus">Location Active — Showing verified technicians</span>
-        </div>
+        <p>Begusarai, Bihar</p>
       </div>
-
-      <div class="desktop-page-title" style="display:none;" id="desktopTitle">Available Services</div>
-      <div class="desktop-page-sub" style="display:none;" id="desktopSub">Certified and verified technicians in your area</div>
-
-      <div class="category-tabs">
-        <div class="tab active" data-cat="all" onclick="filterCategory('all')">All Services</div>
-        <div class="tab" data-cat="electrician" onclick="filterCategory('electrician')">⚡ Electrician</div>
-        <div class="tab" data-cat="ac" onclick="filterCategory('ac')">❄️ AC Service</div>
-        <div class="tab" data-cat="plumber" onclick="filterCategory('plumber')">🔧 Plumber</div>
-      </div>
-
-      <div style="padding:16px 16px 0;" class="desktop-two-col" id="homeContent">
-        <div class="desktop-list-col">
-          <p class="radius-note" id="radiusNote">Select a technician to proceed with booking:</p>
-          <div id="electricianList"></div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div class="lang-switch" id="langSwitch">
+          <span class="lang-option active" data-lang="en" onclick="setLanguage('en')">EN</span>
+          <span class="lang-option" data-lang="hi" onclick="setLanguage('hi')">हिं</span>
         </div>
-        <div class="desktop-map-col">
-          <div id="map"></div>
+        <div class="user-badge" id="topAuthBadge" onclick="handleTopBadgeClick()">Sign In</div>
+      </div>
+    </div>
+
+    <!-- 1. CUSTOMER AUTH SCREEN (SIGN-UP WITH MAP + LOGIN) -->
+    <div id="screen-auth" class="screen">
+      <div class="desktop-inner">
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <h3 style="font-size:16px; color:#0f8a4b;" id="custAuthFormTitle">Customer Registration</h3>
+            <button type="button" class="btn secondary" style="width:auto; padding:4px 8px; font-size:11px;" id="custAuthToggleBtn" onclick="toggleCustomerAuthMode()">Switch to Login</button>
+          </div>
+
+          <button type="button" class="btn" style="background:#fff; color:#444; border:1.5px solid #ddd; display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:10px;" onclick="signInWithGoogle()">
+            <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.9 32.7 29.4 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l6-6C34.4 5.1 29.5 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.2-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 15.9 18.9 13 24 13c3.1 0 5.8 1.1 8 3l6-6C34.4 5.1 29.5 3 24 3 15.9 3 8.9 7.6 6.3 14.7z"/><path fill="#4CAF50" d="M24 45c5.3 0 10.1-2 13.7-5.4l-6.3-5.3C29.4 36 26.9 37 24 37c-5.3 0-9.8-3.3-11.4-8l-6.6 5.1C8.9 40.4 15.9 45 24 45z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4 5.5l6.3 5.3C39.9 36.6 43 30.9 43 24c0-1.2-.1-2.4-.4-3.5z"/></svg>
+            <span data-i18n="googleBtn">Continue with Google</span>
+          </button>
+          <div style="text-align:center; font-size:11px; color:#999; margin-bottom:12px;" data-i18n="orDivider">— or use phone &amp; password —</div>
+          
+          <div id="custSignupFields">
+            <div class="input-group">
+              <input type="text" id="custRegName" placeholder="Full Name (e.g. Ramesh Kumar)" data-i18n-ph="fullNamePh">
+            </div>
+
+            <!-- Map Location Picker during Signup -->
+            <div class="card" style="padding:10px; background:#f0faf3; margin-bottom:12px;">
+              <span style="font-size:12px; font-weight:700; color:#0f8a4b;" data-i18n="selectAddrMap">📍 Select Address from Map:</span>
+              <p style="font-size:11px; color:#666; margin-top:2px;" data-i18n="tapMapHint">Tap your street/home location on the map below:</p>
+              <div id="signupMap"></div>
+            </div>
+
+            <div class="input-group">
+              <input type="text" id="custRegAddress" placeholder="Selected Address (or type detailed landmark)" data-i18n-ph="selectedAddrPh">
+            </div>
+          </div>
+
+          <div class="input-group">
+            <input type="tel" id="authPhone" placeholder="10-Digit Mobile Number (e.g. 7549898581)" maxlength="10" data-i18n-ph="mobilePh">
+          </div>
+
+          <div class="input-group">
+            <input type="password" id="authPassword" placeholder="6-Digit Password" data-i18n-ph="passwordPh">
+            <span class="toggle-pw" onclick="togglePasswordVisibility('authPassword', this)">Show</span>
+          </div>
+
+          <button class="btn" id="custAuthActionBtn" onclick="handleCustomerAuthAction()">Create Account &amp; Proceed</button>
+          <p id="authMsg" style="font-size:12px; margin-top:10px; text-align:center;"></p>
+
+          <div style="border-top:1px solid #eee; margin-top:16px; padding-top:12px; display:flex; justify-content:space-between;">
+            <a href="#" style="font-size:11px; color:#888; text-decoration:none;" onclick="openTechLoginModal()" data-i18n="techLoginLink">🧑‍🔧 Staff/Technician Login</a>
+            <a href="#" style="font-size:11px; color:#888; text-decoration:none;" onclick="openAdminLoginModal()" data-i18n="adminAccessLink">🔐 Admin Access</a>
+          </div>
+        </div>
+
+        <!-- Hidden Staff / Admin Login Portals -->
+        <div id="roleSecTech" class="card" style="display:none; border-top:3px solid #0f8a4b;">
+          <h3 style="font-size:15px; margin-bottom:6px; color:#0f8a4b;" data-i18n="techLoginHeading">🧑‍🔧 Technician Login</h3>
+          <input type="text" id="techIdInput" placeholder="Technician ID (e.g. TECH-001)" style="margin-bottom:10px; text-transform:uppercase;" data-i18n-ph="techIdPh">
+          <select id="techCategorySelect" style="margin-bottom:10px;">
+            <option value="electrician">⚡ Electrician Pool</option>
+            <option value="ac">❄️ AC Service Pool</option>
+            <option value="plumber">🔧 Plumber Pool</option>
+          </select>
+          <input type="password" id="techPinInput" placeholder="4-Digit PIN Assigned by Admin" maxlength="4" style="margin-bottom:10px;" data-i18n-ph="techPinPh">
+          <button class="btn" onclick="loginTechnicianToPool()" data-i18n="techLoginBtn">Login to Job Pool</button>
+        </div>
+
+        <div id="roleSecAdmin" class="card" style="display:none; border-top:3px solid #0f8a4b;">
+          <h3 style="font-size:15px; margin-bottom:6px; color:#0f8a4b;" data-i18n="adminLoginHeading">🔐 Admin Login</h3>
+          <input type="email" id="adminEmailInput" placeholder="Authorized Admin Email" style="margin-bottom:10px;" data-i18n-ph="adminEmailPh">
+          <input type="password" id="adminPassInput" placeholder="Admin Password (admin123)" style="margin-bottom:10px;" data-i18n-ph="adminPassPh">
+          <button class="btn" onclick="adminGlobalLogin()" data-i18n="adminLoginBtn">Login as Admin</button>
         </div>
       </div>
     </div>
 
-    <!-- 2. BOOKINGS VIEW SCREEN -->
-    <div id="screen-bookings-view" class="screen">
-      <div class="topbar"><h1>📋 Booking History</h1></div>
-      <div style="padding:16px;" class="screen-inner">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-          <h3 style="font-size:15px;">Live Database Records</h3>
-          <button class="btn secondary" style="width:auto; padding:6px 12px; font-size:12px;" onclick="fetchSupabaseBookings()">🔄 Refresh</button>
+    <!-- 2. HOME SCREEN -->
+    <div id="screen-home" class="screen active">
+      <div class="desktop-inner">
+        <h2 style="font-size:15.5px; margin-bottom:6px;" data-i18n="homeMapTitle">Begusarai Street Dispatch Map</h2>
+        <div id="homeMap"></div>
+
+        <h2 style="font-size:15.5px; margin-bottom:4px;" data-i18n="homeSelectCat">Select Service Category</h2>
+        <div class="category-grid">
+          <div class="category-card" onclick="selectCategoryBooking('electrician')">
+            <div>
+              <h3 data-i18n="catElecTitle">⚡ Electrical Services</h3>
+              <p data-i18n="catElecDesc">Wiring, Switches, Fans, MCB, Inverter</p>
+            </div>
+            <div style="text-align:right;">
+              <b style="color:#0f8a4b;" data-i18n="catElecPrice">₹299 Base</b>
+              <p style="font-size:11px; color:#888;" data-i18n="catGstNote">(incl. 18% GST)</p>
+            </div>
+          </div>
+
+          <div class="category-card" onclick="selectCategoryBooking('ac')">
+            <div>
+              <h3 data-i18n="catAcTitle">❄️ AC Repair &amp; Service</h3>
+              <p data-i18n="catAcDesc">Jet Pump Wash, Installation, Gas Refill</p>
+            </div>
+            <div style="text-align:right;">
+              <b style="color:#0f8a4b;" data-i18n="catAcPrice">₹799 Base</b>
+              <p style="font-size:11px; color:#888;" data-i18n="catGstNote">(incl. 18% GST)</p>
+            </div>
+          </div>
+
+          <div class="category-card" onclick="selectCategoryBooking('plumber')">
+            <div>
+              <h3 data-i18n="catPlumbTitle">🔧 Plumbing Works</h3>
+              <p data-i18n="catPlumbDesc">Pipelines, Taps, Leakages, Tank Cleaning</p>
+            </div>
+            <div style="text-align:right;">
+              <b style="color:#0f8a4b;" data-i18n="catPlumbPrice">₹299 Base</b>
+              <p style="font-size:11px; color:#888;" data-i18n="catGstNote">(incl. 18% GST)</p>
+            </div>
+          </div>
         </div>
-        <div id="supabaseBookingsContainer">
-          <p style="color:#888; font-size:13px; text-align:center; padding:30px 0;">Loading data from database...</p>
+
+        <div class="card" style="margin-top:16px; background:#f0f4ff; border:1.5px solid #6366f1;">
+          <h4 style="font-size:13px; color:#4338ca; margin-bottom:6px;" data-i18n="commercialTitle">🏢 Commercial &amp; Bulk Order Desk</h4>
+          <p style="font-size:11.5px; color:#444; line-height:1.5;" data-i18n="commercialText">
+            For bulk, commercial, or enterprise requirements (Hotels, Commercial Complexes, Hospitals, and Institutions) covering HVAC/AC, Electrical, or Plumbing maintenance, please contact our corporate desk at:
+            <a href="mailto:kashvienterprises.bihar@gmail.com" style="color:#4338ca; font-weight:700;">kashvienterprises.bihar@gmail.com</a>
+          </p>
         </div>
       </div>
     </div>
 
-    <!-- 3. BOOKING FORM SCREEN -->
+    <!-- 3. CUSTOMER DEDICATED PROFILE SCREEN -->
+    <div id="screen-profile" class="screen">
+      <div class="desktop-inner">
+        <div class="card" style="border-left:4px solid #0f8a4b;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <div>
+              <h2 style="font-size:17px; color:#0f8a4b;" id="profDispName">Customer Name</h2>
+              <p style="font-size:12px; color:#555; margin-top:2px;">📞 <span id="profDispPhone">--</span></p>
+              <p style="font-size:12px; color:#555; margin-top:2px;">📍 <span id="profDispAddress">--</span></p>
+            </div>
+            <button class="btn secondary" style="width:auto; padding:4px 8px; font-size:11px;" onclick="customerLogout()" data-i18n="logoutBtn">Logout</button>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; margin-top:14px;">
+          <h3 style="font-size:15px;" data-i18n="myBookingHistory">My Personal Booking History &amp; Status</h3>
+          <button class="btn secondary" style="width:auto; padding:4px 8px; font-size:11px;" onclick="loadCustomerOrders()" data-i18n="refreshBtn">🔄 Refresh</button>
+        </div>
+
+        <div id="customerHistoryContainer">
+          <p style="color:#888; font-size:13px; text-align:center; padding:20px 0;" data-i18n="loadingBookings">Loading your past bookings...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. CATEGORY-WISE BOOKING & ADD-ONS WITH TERMS CHECKBOX -->
     <div id="screen-booking" class="screen">
-      <div class="topbar"><h1>Confirm Booking</h1></div>
-      <div style="padding:16px;" class="screen-inner">
-        <button class="btn secondary" style="width:auto; padding:5px 12px; font-size:12px; margin-bottom:12px;" onclick="goTo('home')">← Go Back</button>
+      <div class="desktop-inner">
+        <button class="btn secondary" style="width:auto; padding:6px 14px; font-size:12px; margin-bottom:12px;" onclick="window.history.back()" data-i18n="backBtn">← Back</button>
 
-        <div class="booking-card" style="border-left:4px solid #0f8a4b;">
-          <h3 id="bookElecName" style="color:#0f8a4b; font-size:16px;">-</h3>
-          <p id="bookElecSpecialty">-</p>
+        <div class="card" style="border-left:4px solid #0f8a4b;">
+          <h3 id="bookCatName" style="color:#0f8a4b; font-size:16px;">Electrical Services</h3>
+          <p id="bookBaseScopeDesc" style="font-size:12px; color:#444; margin-top:4px; line-height:1.4;">-</p>
         </div>
 
-        <div class="booking-card">
-          <div class="price-row"><span>Service Fee</span><span>₹254.24</span></div>
-          <div class="price-row"><span>GST (18%)</span><span>₹45.76</span></div>
-          <div class="price-row total"><span>Total Amount</span><span>₹300.00</span></div>
+        <div class="card">
+          <h4 style="font-size:13px; color:#0f8a4b; margin-bottom:8px;" data-i18n="addonsHeading">Additional Work / Add-ons (Optional):</h4>
+          <div id="dynamicAddonsList"></div>
         </div>
 
-        <input type="text" id="addressInput" placeholder="Your complete address (e.g. Mandir Marg, Masnadpur)">
-        <input type="tel" id="phoneInput" placeholder="10-digit mobile number" maxlength="10">
-
-        <!-- Complete 7 Terms and Conditions -->
-        <div class="tc-box" id="tcBox">
-          <p><b>1. Visiting Fee Policy:</b> A minimum visiting and diagnosis charge of ₹300 is mandatory and does not include the cost of spare parts.</p>
-          <p><b>2. Service Warranty:</b> A 30-day limited warranty applies exclusively to the specific repair work executed.</p>
-          <p><b>3. Spare Parts Warranty:</b> Warranties on newly installed spare parts are strictly governed by manufacturer policy.</p>
-          <p><b>4. Return Policy:</b> Electrical items once fitted, cut (wires), or unsealed are non-returnable.</p>
-          <p><b>5. Liability Disclaimer:</b> Kashvi Enterprises (Bijli Mitra) is not liable for subsequent damages caused by preexisting faulty internal wiring or voltage fluctuations.</p>
-          <p><b>6. Scope Exclusion:</b> Transformer failures, phase issues, pole problems, and new electricity connections fall under the jurisdiction of the State Electricity Board.</p>
-          <p><b>7. Part Purchase Policy:</b> If the technician has to purchase any part on-site beyond the initial booking, the customer bears the part cost plus petrol/travel charges.</p>
+        <div class="card">
+          <div class="price-row"><span data-i18n="baseServicePack">Base Service Pack (incl. GST)</span><span id="priceBaseVal">₹299.00</span></div>
+          <div class="price-row"><span data-i18n="selectedAddonsTotal">Selected Add-ons Total</span><span id="priceAddonsVal">₹0.00</span></div>
+          <div class="price-row" style="font-weight:600; border-top:1px dashed #eee; margin-top:4px; padding-top:4px;">
+            <span data-i18n="estTotalAmount">Estimated Total Work Amount</span><span id="priceTotalIncGst">₹299.00</span>
+          </div>
+          <div class="price-row" style="color:#0f8a4b;"><span data-i18n="advanceToken">Advance Booking Token</span><span>- ₹21.00</span></div>
+          <div class="price-row total"><span data-i18n="dueAfterToken">Due Amount After Token</span><span id="priceTotalDueVal">₹278.00</span></div>
+          <p style="font-size:11px; color:#666; margin-top:6px;" data-i18n="tokenNote">*Note: The ₹21 token is deducted on the final invoice bill.</p>
         </div>
-        <label class="tc-check">
-          <input type="checkbox" id="tcCheckbox" checked>
-          <span>I have read and agree to the <b>Terms &amp; Conditions</b></span>
-        </label>
 
-        <button class="btn" onclick="submitBookingWithPin()">⚡ Book Now (Get Security PIN)</button>
+        <label style="font-size:12px; font-weight:600; color:#444; margin-bottom:4px; display:block;" data-i18n="serviceAddrLabel">Service Address:</label>
+        <input type="text" id="custAddressInput" placeholder="Your complete address (or select from map below)" data-i18n-ph="serviceAddrPh">
+        
+        <div class="card" style="padding:10px; background:#f0faf3; margin-bottom:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:12px; font-weight:700; color:#0f8a4b;" data-i18n="mapPickerLabel">📍 Map Location Picker</span>
+            <button type="button" class="btn secondary" style="width:auto; padding:4px 8px; font-size:11px;" onclick="toggleBookingMap()" data-i18n="toggleMapBtn">Toggle Map</button>
+          </div>
+          <p style="font-size:11px; color:#666; margin-top:4px;" data-i18n="tapPinHint">Tap anywhere on map to pin exact location:</p>
+          <div id="bookingMapContainer" style="display:block; margin-top:8px;">
+            <div id="bookingMap"></div>
+          </div>
+        </div>
+
+        <label style="font-size:12px; font-weight:600; color:#444; margin-bottom:4px; display:block;" data-i18n="mobileNoLabel">Customer Mobile Number:</label>
+        <input type="tel" id="custPhoneInput" placeholder="10-digit mobile number" maxlength="10" readonly style="background:#f9f9f9;">
+
+        <!-- STRICT STATUTORY TERMS & CONDITIONS -->
+        <div class="terms-box">
+          <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer;">
+            <input type="checkbox" id="bookingTermsCheckbox" style="width:18px; height:18px; margin-top:2px;">
+            <span id="bookingTermsText" data-i18n="termsText">
+              <b>Terms &amp; Conditions:</b><br>
+              1. A limited 30-day warranty applies only to the repair work performed.<br>
+              2. Warranty on newly installed spare parts is governed solely by the manufacturer's policy.<br>
+              3. Electrical parts that have been used, cut (wires), unsealed, or fitted are non-returnable.<br>
+              4. Kashvi Enterprises (Bijli Mitra) is not liable for damage caused by pre-existing faulty wiring, voltage fluctuations, or unauthorized third-party tampering.<br>
+              5. Transformer failures, phase issues (single/three phase), pole-related problems, and new electricity connections fall under the jurisdiction of the Bihar Electricity Board and are outside the scope of our company. In such cases, we can only offer guidance, not resolution.<br>
+              I agree to the ₹21 advance token and all the above terms.
+            </span>
+          </label>
+        </div>
+
+        <button class="btn" onclick="openDirectAdvancePayment()" data-i18n="proceedPayBtn">Proceed to Pay Advance Token (₹21.00)</button>
       </div>
     </div>
 
-    <!-- 4. CONFIRMATION / INVOICE SCREEN -->
-    <div id="screen-confirm" class="screen">
-      <div class="topbar"><h1>Booking Confirmed</h1></div>
-      <div style="padding:16px;" class="screen-inner">
-        <div style="text-align:center; font-size:45px;">✅</div>
-        <div style="text-align:center; font-size:18px; font-weight:700; margin:6px 0;">Booking Confirmed Successfully!</div>
-        <div style="text-align:center; font-size:13px; color:#555; margin-bottom:12px;" id="confirmText"></div>
-
-        <!-- 4-Digit Security PINs -->
-        <div class="booking-card" style="border:1.5px dashed #0f8a4b; background:#f0faf3;">
-          <h4 style="font-size:13px; text-align:center; color:#0f8a4b; margin-bottom:8px;">Job Security PINs (Share with Technician)</h4>
-          <div class="pin-badge-box">
-            <div class="pin-card">
-              <div style="font-size:11px; color:#555; font-weight:600;">🟢 Start PIN (At Job Start)</div>
-              <div class="pin-number" id="dispStartPin">----</div>
-            </div>
-            <div class="pin-card-stop">
-              <div style="font-size:11px; color:#555; font-weight:600;">🔴 Stop PIN (At Job Finish)</div>
-              <div class="pin-number-stop" id="dispStopPin">----</div>
-            </div>
-          </div>
-          <p style="font-size:11px; color:#777; text-align:center;">Share Start PIN with the technician when they arrive to start the service timer.</p>
+    <!-- 5. ADVANCE REAL DIRECT UPI QR PAYMENT SCREEN -->
+    <div id="screen-advance-pay" class="screen">
+      <div class="desktop-inner">
+        <div class="card" style="border-left:4px solid #0f8a4b;">
+          <h3>Direct UPI Advance Token (₹21.00)</h3>
+          <p>Scan the official dynamic QR code below to pay directly to Kashvi Enterprises account.</p>
         </div>
 
-        <div class="invoice-paper" id="invoicePaper">
-          <div class="inv-header">
-            <h2>KASHVI ENTERPRISES</h2>
-            <p>Home Appliances Repair &amp; Electrical Services</p>
-            <p>Mandir Marg, Masnadpur Bihat, Begusarai, Bihar - 851115</p>
-            <p>Phone: 8677900810 | Email: rishikeshsingh815@gmail.com</p>
-            <p>GSTIN: 10CPRPK8525A1Z4 | Udyam: UDYAM-BR-06-0067891</p>
-          </div>
-          <div class="inv-title">TAX INVOICE / SERVICE RECEIPT</div>
-
-          <div class="inv-section-title">Bill To</div>
-          <div class="inv-meta-grid">
-            <div>Name: <span>Customer</span></div>
-            <div>Phone: <span id="invPhone">-</span></div>
-            <div>Address: <span id="invAddress">-</span></div>
-            <div>PIN Code: <span>851115</span></div>
-          </div>
-
-          <div class="inv-section-title">Booking Details</div>
-          <div class="inv-meta-grid">
-            <div>Invoice No: <span id="invNo">-</span></div>
-            <div>Technician: <span id="invTech">-</span></div>
-            <div>Date/Time: <span id="invDateTime">-</span></div>
-            <div>Payment: UPI · <span style="color:#0f8a4b;">Paid</span></div>
-          </div>
-
-          <div class="inv-section-title">Services Provided</div>
-          <table class="inv-table">
-            <tr><th>Sr</th><th>Service Description</th><th>SAC</th><th>Qty</th><th>Rate</th><th>GST%</th><th>Total</th></tr>
-            <tr>
-              <td>1</td><td>Diagnostic / Visiting Inspection Fee</td><td>998719</td>
-              <td>1</td><td>₹254.24</td><td>18%</td><td>₹300.00</td>
-            </tr>
-          </table>
-
-          <div class="inv-summary">
-            <div class="price-row"><span>Subtotal (Taxable)</span><span>₹254.24</span></div>
-            <div class="price-row"><span>CGST (9%)</span><span>₹22.88</span></div>
-            <div class="price-row"><span>SGST (9%)</span><span>₹22.88</span></div>
-            <div class="price-row total"><span>Grand Total</span><span>₹300.00</span></div>
-          </div>
-
-          <div class="inv-words">Amount in Words: Three Hundred Rupees Only</div>
-
-          <div class="inv-terms">
-            <b>Terms &amp; Conditions:</b>
-            1. Minimum visiting charge ₹300 is mandatory for inspection.<br>
-            2. 30 days limited warranty applies exclusively to repair work done.<br>
-            3. Spare parts warranty is subject to manufacturer terms.
-          </div>
-
-          <div class="inv-sign">For KASHVI ENTERPRISES<br><br>______________________<br>(Authorized Signatory)</div>
+        <div class="pay-alert-box" data-i18n="advancePayAlert">
+          ⚠️ Important: Payment confirmation is NOT automatic just from scanning the QR (UPI has no automatic callback for this). Before clicking "Payment Confirmed" below, please make sure the payment has actually gone through — for true automatic verification, a payment gateway like Razorpay/Cashfree is recommended in the future.
         </div>
 
-        <button class="btn" style="margin-top:14px;" onclick="goTo('home')">Back to Home</button>
+        <div class="qr-box">
+          <div style="font-size:12px; font-weight:700; color:#0f8a4b;">KASHVI ENTERPRISES</div>
+          <img id="advanceQrImg" class="qr-img" alt="Dynamic UPI QR" />
+          <div style="font-size:18px; font-weight:800; color:#0f8a4b;">₹21.00</div>
+          <p style="font-size:11px; color:#888;">Scan with any UPI app (PhonePe, GPay, Paytm)</p>
+        </div>
+
+        <a id="advanceUpiIntentBtn" href="#" class="btn" style="display:block; text-align:center; text-decoration:none; margin-bottom:10px;">
+          🚀 Open in UPI App (PhonePe / GPay)
+        </a>
+
+        <label style="font-size:12px; font-weight:600; color:#444; margin-bottom:4px; display:block;">UPI Transaction / Reference ID (from your payment app):</label>
+        <input type="text" id="advanceTxnRefInput" placeholder="e.g. last 12-digit UTR number shown after payment">
+        <p id="advanceTxnError" style="color:#c0392b; font-size:11px; margin-bottom:8px;"></p>
+
+        <button class="btn secondary" onclick="broadcastJobToPool()">
+          ✔ Payment Confirmed (Confirm Booking &amp; Go to Home)
+        </button>
       </div>
     </div>
 
-    <!-- 5. ADMIN PANEL (REAL-TIME LIVE MONITORING) -->
-    <div id="screen-admin" class="screen">
-      <div class="topbar"><h1>🔐 Admin Panel</h1></div>
-      <div style="padding:16px;">
-        <div id="adminLoginBox">
-          <p style="font-size:13px; color:#666; margin-bottom:10px;">Enter Admin Password (Demo: <b>admin123</b>)</p>
-          <input type="password" id="adminPassInput" placeholder="Password">
-          <button class="btn" onclick="adminLogin()">Login</button>
-          <p style="font-size:11px; color:#c0392b; margin-top:6px;" id="adminLoginError"></p>
-        </div>
-
-        <div id="adminDashboard" style="display:none;">
+    <!-- 6. TECHNICIAN POOL & CLAIMED JOBS DASHBOARD -->
+    <div id="screen-tech-pool" class="screen">
+      <div class="desktop-inner">
+        <div id="techPoolDashboard">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <h3 style="font-size:16px;">📡 Live Bookings &amp; Monitoring</h3>
-            <button class="btn secondary" style="width:auto; padding:5px 10px; font-size:11px;" onclick="loadAdminLiveBookings()">🔄 Refresh</button>
+            <h3 style="font-size:16px;" id="techPoolHeader">Live Job Pool</h3>
+            <div style="display:flex; gap:6px;">
+              <button class="btn secondary" style="width:auto; padding:4px 10px; font-size:11px;" onclick="renderPoolJobs()">🔄 Refresh</button>
+              <button class="btn danger" style="width:auto; padding:4px 8px; font-size:11px;" onclick="techLogout()">Logout</button>
+            </div>
           </div>
 
-          <div id="adminLiveMonitorList" style="margin-bottom:16px;">
-            <p style="font-size:12px; color:#888;">Loading bookings...</p>
+          <div id="techCooldownNotice" style="display:none; background:#fee2e2; border:1px solid #e74c3c; padding:10px; border-radius:8px; font-size:12px; color:#991b1b; margin-bottom:10px;">
+            ⚠️ Cooldown Active: You canceled a claimed job. You can claim new jobs in: <b id="cooldownTimer">--:--</b>
           </div>
 
-          <div class="booking-card">
-            <h3>👷 Add New Technician</h3>
-            <input type="text" id="techNameInput" placeholder="Technician Name">
-            <input type="tel" id="techPhoneInput" placeholder="10-digit Phone Number" maxlength="10">
-            <select id="techCategorySelect">
+          <!-- Active Claimed Job Section in Technician Dashboard -->
+          <div id="activeClaimedJobSection"></div>
+
+          <h4 style="font-size:13px; color:#666; margin:14px 0 8px;">Available Category Broadcasts:</h4>
+          <div id="availablePoolList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. TECHNICIAN BILL-SUBMITTED CONFIRMATION SCREEN -->
+    <div id="screen-bill-submitted" class="screen">
+      <div class="desktop-inner">
+        <div class="card" style="border-left:4px solid #0f8a4b; text-align:center; padding:30px 16px;">
+          <div style="font-size:44px; margin-bottom:8px;">✅</div>
+          <h3 style="color:#0f8a4b;" data-i18n="billSubmittedTitle">Bill Successfully Generated</h3>
+          <p style="font-size:12.5px; color:#555; margin-top:6px;" data-i18n="billSubmittedText">The customer will see the payment QR on their own phone/profile. Your part of the job is complete here.</p>
+          <button class="btn" style="margin-top:16px;" onclick="navigateTo('tech-pool')" data-i18n="backToPoolBtn">Back to Job Pool</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. HIDDEN INVOICE TEMPLATE FOR PDF GENERATION -->
+    <div id="invoiceRenderWrapper" style="display:none; padding:20px; background:#fff;">
+      <div class="invoice-paper" id="invoicePdf">
+        <div class="inv-header">
+          <h2>KASHVI ENTERPRISES</h2>
+          <p>Home Appliances Repair &amp; Electrical Services</p>
+          <p>Mandir Marg, Masnadpur Bihat, Begusarai, Bihar - 851115</p>
+          <p>Email: kashvienterprises.bihar@gmail.com</p>
+          <p>GSTIN: 10CPRPK8525A1Z4 | Udyam: UDYAM-BR-06-0067891</p>
+        </div>
+        <div class="inv-title">TAX INVOICE / SERVICE RECEIPT</div>
+
+        <div class="inv-meta-grid">
+          <div>Customer Name: <span id="pdfCustName">-</span></div>
+          <div>Customer Phone: <span id="pdfCustPhone">-</span></div>
+          <div>Invoice No: <span id="pdfInvNo">-</span></div>
+          <div>Address: <span id="pdfCustAddr">-</span></div>
+          <div>Technician: <span id="pdfTech">-</span></div>
+          <div>Date: <span id="pdfDate">-</span></div>
+        </div>
+
+        <table class="inv-table">
+          <thead>
+            <tr><th>Sr</th><th>Description</th><th>SAC/HSN</th><th>Taxable Rate</th><th>GST (18%)</th><th>Total</th></tr>
+          </thead>
+          <tbody id="pdfItemsBody"></tbody>
+        </table>
+
+        <div class="inv-summary">
+          <div class="price-row"><span>Taxable Subtotal</span><span id="pdfSubtotal">₹0.00</span></div>
+          <div class="price-row"><span>CGST (9%)</span><span id="pdfCgst">₹0.00</span></div>
+          <div class="price-row"><span>SGST (9%)</span><span id="pdfSgst">₹0.00</span></div>
+          <div class="price-row"><span>Advance Token</span><span>- ₹21.00</span></div>
+          <div class="price-row total"><span>Net Paid Total</span><span id="pdfGrandTotal">₹0.00</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. ADMIN DASHBOARD SCREEN (360° SURVEILLANCE & REPORTS) -->
+    <div id="screen-admin" class="screen">
+      <div class="desktop-inner">
+        <div id="adminGlobalDashboard">
+          <div style="background:#e8f5e9; border:1px solid #0f8a4b; padding:12px; border-radius:8px; margin-bottom:14px;">
+            <h4 style="font-size:13px; color:#0f8a4b; margin-bottom:4px;">📥 06:00 AM to 06:00 PM Shift Reports</h4>
+            <p style="font-size:11px; color:#555; margin-bottom:8px;">Download completed works and customer logs for today's 6 AM - 6 PM shift.</p>
+            <button class="btn" style="padding:10px; font-size:13px;" onclick="downloadShiftReport()">Download 6 AM - 6 PM Shift Report (CSV)</button>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h3 style="font-size:16px;">Global Activity, Techs &amp; Payments</h3>
+            <div style="display:flex; gap:6px;">
+              <button class="btn secondary" style="width:auto; padding:5px 10px; font-size:11px;" onclick="loadAdminGlobalFeed()">🔄 Refresh</button>
+              <button class="btn danger" style="width:auto; padding:5px 8px; font-size:11px;" onclick="adminLogout()">Logout</button>
+            </div>
+          </div>
+          <div id="adminGlobalFeed" style="margin-bottom:16px;"></div>
+
+          <div class="card">
+            <h3>👷 Register New Technician &amp; Assign PIN</h3>
+            <input type="text" id="newTechName" placeholder="Full Name" style="margin-bottom:8px;">
+            <input type="tel" id="newTechPhone" placeholder="Contact Phone Number (10 digits)" maxlength="10" style="margin-bottom:8px;">
+            <select id="newTechCat" style="margin-bottom:8px;">
               <option value="electrician">⚡ Electrician</option>
-              <option value="ac">❄️ AC Technician</option>
+              <option value="ac">❄️ AC Service</option>
               <option value="plumber">🔧 Plumber</option>
             </select>
-            <button class="btn secondary" onclick="addTechnician()">Save Technician</button>
+            <input type="text" id="newTechQualification" placeholder="Educational / Technical Qualification (e.g. ITI Electrician)" style="margin-bottom:8px;">
+            <input type="number" id="newTechExperience" placeholder="Years of Field Experience" min="0" style="margin-bottom:8px;">
+            <input type="password" id="newTechPin" placeholder="4-Digit Access PIN" maxlength="4" style="margin-bottom:10px;">
+            <button class="btn secondary" onclick="registerTechnician()">Save Technician &amp; Generate PIN</button>
           </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- 6. TECHNICIAN PANEL -->
-    <div id="screen-tech" class="screen">
-      <div class="topbar"><h1>🧑‍🔧 Technician Panel</h1></div>
-      <div style="padding:16px;">
-        <div id="techLoginBox">
-          <p style="font-size:13px; color:#666; margin-bottom:10px;">Enter Technician Password (Demo: <b>tech123</b>)</p>
-          <input type="password" id="techPassInput" placeholder="Password">
-          <button class="btn" onclick="techLogin()">Login</button>
-        </div>
-
-        <div id="techDashboard" style="display:none;">
-          <div class="booking-card">
-            <h3>📍 Assigned Job Details</h3>
-            <div id="techJobDetails" style="font-size:12px; margin-top:6px; color:#444;">
-              <p>Loading assigned job...</p>
+          <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <h3>🧑‍🔧 Technician Fleet (Block/Unblock)</h3>
+              <button class="btn secondary" style="width:auto; padding:4px 10px; font-size:11px;" onclick="loadTechnicianFleet()">🔄</button>
             </div>
+            <div id="techFleetList"><p style="color:#888; font-size:12px;">Loading...</p></div>
           </div>
 
-          <!-- Step 1: Start Job using Start PIN -->
-          <div class="booking-card" id="techStartPinCard">
-            <h3 style="color:#0f8a4b;">🟢 Start Job (Start PIN)</h3>
-            <p style="font-size:12px; color:#666; margin-bottom:8px;">Enter the 4-digit Start PIN provided by customer:</p>
-            <input type="text" id="inputStartPin" placeholder="4-Digit Start PIN" maxlength="4" style="text-align:center; font-size:18px; letter-spacing:4px;">
-            <button class="btn" onclick="verifyStartPinAndBegin()">Start Job (Timer On)</button>
-            <p id="startPinError" style="color:#c0392b; font-size:12px; margin-top:6px;"></p>
-          </div>
-
-          <!-- Step 2: Stop Job using Stop PIN -->
-          <div class="booking-card" id="techStopPinCard" style="display:none; border-left:4px solid #f39c12;">
-            <h3 style="color:#b8720a;">🔴 Complete Job (Stop PIN)</h3>
-            <p style="font-size:12px; color:#666; margin-bottom:8px;">Enter the 4-digit Stop PIN to finish job:</p>
-            <input type="text" id="inputStopPin" placeholder="4-Digit Stop PIN" maxlength="4" style="text-align:center; font-size:18px; letter-spacing:4px;">
-            <button class="btn" style="background:#b8720a;" onclick="verifyStopPinAndFinish()">Complete Job &amp; Make Bill</button>
-            <p id="stopPinError" style="color:#c0392b; font-size:12px; margin-top:6px;"></p>
+          <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <h3>🚫 Customer Accounts (Fraud Block)</h3>
+              <button class="btn secondary" style="width:auto; padding:4px 10px; font-size:11px;" onclick="loadCustomerAccounts()">🔄</button>
+            </div>
+            <div id="customerAccountsList"><p style="color:#888; font-size:12px;">Loading...</p></div>
           </div>
         </div>
       </div>
@@ -429,340 +643,1962 @@
   </div>
 </div>
 
-<!-- Mobile Navigation -->
-<div class="bottomnav">
-  <div class="nav-item active" id="mobNavHome" onclick="goTo('home')"><span class="nav-icon">🏠</span>Home</div>
-  <div class="nav-item" id="mobNavBookings" onclick="goToBookings()"><span class="nav-icon">📋</span>Bookings</div>
-  <div class="nav-item" id="mobNavAdmin" onclick="goTo('admin')"><span class="nav-icon">🔐</span>Admin</div>
-  <div class="nav-item" id="mobNavTech" onclick="goTo('tech')"><span class="nav-icon">🧑‍🔧</span>Tech</div>
+<!-- 10. TECHNICIAN WORK COMPLETION & BILLING MODAL -->
+<div id="techCompletionModal" class="modal-backdrop">
+  <div class="modal-content">
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px solid #0f8a4b; padding-bottom:8px; margin-bottom:12px;">
+      <h3 style="font-size:15px; color:#0f8a4b;">Work Completion &amp; Billing Calculation</h3>
+      <span style="font-size:20px; font-weight:700; cursor:pointer;" onclick="closeTechCompletionModal()">&times;</span>
+    </div>
+
+    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px; margin-bottom:12px; font-size:12px;">
+      <b>Initial Customer Order Details:</b>
+      <p style="color:#555; margin-top:2px;" id="modalInitialOrderText">-</p>
+      <p style="color:#0f8a4b; font-weight:700; margin-top:4px;">Advance Token Paid: ₹21.00 (Adjusted)</p>
+      <p style="color:#7c3aed; font-weight:700; margin-top:4px;" id="modalElapsedTimeText">Job duration: --</p>
+    </div>
+
+    <div style="margin-bottom:12px;">
+      <label style="font-weight:700; font-size:12.5px; display:block; margin-bottom:6px;">Select Additional Tasks Done On-Site:</label>
+      <div id="modalAddonsChecklist" style="max-height:150px; overflow-y:auto; border:1px solid #eee; border-radius:6px; padding:6px 10px;"></div>
+    </div>
+
+    <div style="margin-bottom:12px;">
+      <label style="font-weight:700; font-size:12.5px; display:block; margin-bottom:6px;">Spare Parts Used (select from GST-coded catalog):</label>
+      <div id="modalPartsCatalog" style="border:1px solid #eee; border-radius:6px; padding:6px 10px;"></div>
+      <div id="modalCustomPartsRows" style="margin-top:8px;"></div>
+      <button type="button" class="btn secondary" style="margin-top:8px; padding:8px; font-size:12px;" onclick="addCustomPartRow()">+ Add Custom Part (not in catalog)</button>
+    </div>
+
+    <div class="input-group">
+      <label style="font-weight:700; font-size:12.5px; display:block; margin-bottom:4px;">Enter Customer 4-Digit Stop PIN:</label>
+      <input type="text" id="modalStopPinInput" placeholder="Stop PIN" maxlength="4" style="text-align:center; font-size:16px; font-weight:700;">
+    </div>
+
+    <div class="card" style="background:#f0faf3; border:1px solid #0f8a4b; padding:10px; margin-bottom:12px;">
+      <div class="price-row"><span>Base Service Pack:</span><span id="modalBaseDisp">₹0.00</span></div>
+      <div class="price-row"><span>Initial Add-ons:</span><span id="modalInitialAddonsDisp">₹0.00</span></div>
+      <div class="price-row"><span>Extra On-Site Work:</span><span id="modalExtraWorkDisp">₹0.00</span></div>
+      <div class="price-row"><span>Materials / Spares:</span><span id="modalMaterialsDisp">₹0.00</span></div>
+      <div class="price-row" id="modalOvertimeRow" style="display:none; color:#b8720a;"><span id="modalOvertimeLabel">Overtime:</span><span id="modalOvertimeDisp">₹0.00</span></div>
+      <div class="price-row" style="color:#0f8a4b;"><span>Advance Token Deducted:</span><span>- ₹21.00</span></div>
+      <div class="price-row total"><span>Net Payable Bill:</span><span id="modalFinalNetDue" style="color:#0f8a4b;">₹0.00</span></div>
+    </div>
+
+    <button class="btn" style="background:#b8720a;" onclick="submitFinalCalculatedBill()">✔ Finalize &amp; Generate Customer Bill</button>
+  </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<!-- 11. CUSTOMER-SIDE FINAL PAYMENT MODAL (opens from Profile, on their own device) -->
+<div id="customerPaymentModal" class="modal-backdrop">
+  <div class="modal-content">
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px solid #0f8a4b; padding-bottom:8px; margin-bottom:12px;">
+      <h3 style="font-size:15px; color:#0f8a4b;">Final Service Bill Settlement</h3>
+      <span style="font-size:20px; font-weight:700; cursor:pointer;" onclick="closeCustomerPaymentModal()">&times;</span>
+    </div>
+
+    <div class="card">
+      <div class="price-row"><span>Base Service Pack</span><span id="payBase">₹0.00</span></div>
+      <div class="price-row"><span>Initial Customer Add-ons</span><span id="payInitialAddons">₹0.00</span></div>
+      <div class="price-row"><span>Technician Site Extra Work</span><span id="payTechExtraWork">₹0.00</span></div>
+      <div class="price-row"><span>Materials / Spare Parts</span><span id="payParts">₹0.00</span></div>
+      <div class="price-row" id="payOvertimeRow" style="display:none; color:#b8720a;"><span id="payOvertimeLabel">Overtime</span><span id="payOvertimeVal">₹0.00</span></div>
+      <div class="price-row" style="color:#0f8a4b;"><span>Advance Token Deducted</span><span>- ₹21.00</span></div>
+      <div class="price-row total"><span>Net Payable Balance</span><span id="payTotal" style="color:#0f8a4b;">₹0.00</span></div>
+    </div>
+
+    <div class="pay-alert-box" data-i18n="finalPayAlert">
+      ⚠️ Only click "Payment Confirmed" below after the actual payment has gone through post-QR scan.
+    </div>
+
+    <div class="qr-box">
+      <div style="font-size:12px; font-weight:700; color:#0f8a4b;">FINAL SETTLEMENT - DIRECT UPI</div>
+      <img id="finalQrImg" class="qr-img" alt="Final Bill UPI QR" />
+      <div id="finalAmountTag" style="font-size:20px; font-weight:800; color:#0f8a4b;">₹0.00</div>
+      <p style="font-size:11px; color:#888;">Scan with any UPI app (PhonePe, GPay, Paytm)</p>
+    </div>
+
+    <a id="finalUpiIntentBtn" href="#" class="btn" style="display:block; text-align:center; text-decoration:none; margin-bottom:10px;">
+      🚀 Open in UPI App (PhonePe / GPay)
+    </a>
+
+    <label style="font-size:12px; font-weight:600; color:#444; margin-bottom:4px; display:block;">UPI Transaction / Reference ID (from your payment app):</label>
+    <input type="text" id="finalTxnRefInput" placeholder="e.g. last 12-digit UTR number shown after payment">
+    <p id="finalTxnError" style="color:#c0392b; font-size:11px; margin-bottom:8px;"></p>
+
+    <button class="btn secondary" onclick="completeFinalSettlement()">
+      ✔ Payment Confirmed (Unlock &amp; Download PDF Invoice)
+    </button>
+  </div>
+</div>
+
+<!-- 12. GOOGLE SIGN-IN: Phone Number Collection Modal (mandatory, since Google only gives email/name) -->
+<div id="googlePhoneModal" class="modal-backdrop">
+  <div class="modal-content" style="max-width:380px;">
+    <h3 style="font-size:15px; color:#0f8a4b; margin-bottom:6px;">One Last Step</h3>
+    <p style="font-size:12px; color:#555; margin-bottom:14px;">Google doesn't share your phone number or address, but our field technicians need both to reach you. Please provide them to complete your account.</p>
+    <input type="tel" id="googlePhoneInput" placeholder="10-digit mobile number" maxlength="10" style="margin-bottom:8px;">
+
+    <div class="card" style="padding:10px; background:#f0faf3; margin-bottom:8px;">
+      <span style="font-size:12px; font-weight:700; color:#0f8a4b;">📍 Select Address from Map:</span>
+      <p style="font-size:11px; color:#666; margin-top:2px;">Tap your street/home location on the map below:</p>
+      <div id="googleSignupMap" style="height:170px; border-radius:10px; border:1.5px solid #0f8a4b; margin-top:6px;"></div>
+    </div>
+    <input type="text" id="googleAddressInput" placeholder="Selected address (or type detailed landmark)" style="margin-bottom:8px;">
+
+    <p id="googlePhoneError" style="color:#c0392b; font-size:11px; margin-bottom:8px;"></p>
+    <button class="btn" onclick="submitGooglePhone()">Save &amp; Continue</button>
+  </div>
+</div>
+
+<!-- Mobile Dynamic Role Navigation Bar -->
+<div class="bottomnav" id="mobileBottomNav"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-  // SUPABASE CONFIGURATION
   const SUPABASE_URL = 'https://uwsmpnezreofqufnsdxz.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3c21wbmV6cmVvZnF1Zm5zZHh6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxMzI1MDUsImV4cCI6MjEwMjcwODUwNX0.iOUgvymY8zCbsWo7iM_nNTOiJEAXXKw1Blsd_ArsKcQ';
   const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  let selectedProvider = null;
-  let userLat = 28.6139, userLng = 77.2090;
-  let currentCategory = 'all';
-  let activeProviders = [];
-  let currentActiveJob = null;
+  const KASHVI_UPI_VPA = 'rishikeshsingh815@okaxis'; // aapki real UPI ID (pehle 'kashvienterprises.bihar@ybl' galat/nakli VPA thi)
+  const KASHVI_PAYEE_NAME = 'Kashvi Enterprises';
+  const OVERTIME_RATE_PER_HOUR = 100;
+  const FREE_HOURS_BEFORE_OVERTIME = 3;
 
-  function applyResponsiveDisplay() {
-    const isDesktop = window.innerWidth >= 900;
-    document.getElementById('desktopSidebar').style.display = isDesktop ? 'block' : 'none';
-    document.getElementById('desktopTitle').style.display = isDesktop ? 'block' : 'none';
-    document.getElementById('desktopSub').style.display = isDesktop ? 'block' : 'none';
+  const SERVICE_CONFIG = {
+    electrician: {
+      title: 'Electrical Services',
+      base: 245.18,
+      gst: 53.82,
+      total: 299.00,
+      sac: '998719',
+      scope: '✅ <b>Base Scope Included:</b> Technician Visit + 1 Ceiling/Exhaust Fan Mount OR 1 Switchboard Repair OR Up to 2 Switch/Socket Replacements OR Up to 2 LED Lights/Holders Installation',
+      addons: [
+        { id: 'el_fan', name: 'Additional Ceiling/Exhaust Fan Installation', price: 99.00 },
+        { id: 'el_sw', name: 'Additional Switch/Socket Replacement', price: 30.00 },
+        { id: 'el_reg', name: 'Additional Fan Regulator Installation/Replacement', price: 49.00 },
+        { id: 'el_led', name: 'Additional LED Light / Batten Fitting', price: 49.00 },
+        { id: 'el_board', name: 'Additional Switchboard Repair / Fitting', price: 99.00 },
+        { id: 'el_point', name: 'New Point Wiring (Light / Fan / Plug Line)', price: 149.00 },
+        { id: 'el_power', name: 'Power Point Wiring (16A/25A AC/Geyser Socket)', price: 199.00 },
+        { id: 'el_mcb', name: 'MCB / Isolator Replacement', price: 99.00 },
+        { id: 'el_diag', name: 'Short Circuit / Fault Diagnosis', price: 149.00 },
+        { id: 'el_other', name: 'Other Electrical Work (Quote after Site Inspection)', price: 0.00 }
+      ]
+    },
+    plumber: {
+      title: 'Plumbing Works',
+      base: 245.18,
+      gst: 53.82,
+      total: 299.00,
+      sac: '998722',
+      scope: '✅ <b>Base Scope Included:</b> Plumber Visit + 1 Tap/Angle Valve Leakage Repair/Replacement OR 1 Basin/Sink Drain Unclogging OR 1 Appliance Inlet Pipe Fitting',
+      addons: [
+        { id: 'pl_tap', name: 'Additional Tap / Angle Valve / Shower Replacement', price: 49.00 },
+        { id: 'pl_jet', name: 'Additional Jet Spray / Health Faucet Installation', price: 49.00 },
+        { id: 'pl_waste', name: 'Additional Sink / Basin Waste Pipe Replacement', price: 79.00 },
+        { id: 'pl_flush_kit', name: 'Flush Tank Internal Kit Repair', price: 119.00 },
+        { id: 'pl_flush_new', name: 'New Flush Tank Installation', price: 199.00 },
+        { id: 'pl_point', name: 'New Water Pipeline Point Creation', price: 199.00 },
+        { id: 'pl_block', name: 'Toilet Pan / Main Sewer Heavy Blockage Clearing', price: 299.00 },
+        { id: 'pl_tank', name: 'Overhead Water Tank Cleaning (500L to 1000L)', price: 499.00 },
+        { id: 'pl_motor', name: 'Water Motor / Pump Installation', price: 249.00 },
+        { id: 'pl_other', name: 'Other Plumbing Work (Quote after Site Inspection)', price: 0.00 }
+      ]
+    },
+    ac: {
+      title: 'AC Repair & Service',
+      base: 677.12,
+      gst: 121.88,
+      total: 799.00,
+      sac: '998715',
+      scope: '✅ <b>Base Scope Included:</b> Technician Visit + Tools & Safety Kit + Complete High-Pressure Jet Pump Service for 1 Split/Window AC (Indoor + Outdoor Unit)',
+      addons: [
+        { id: 'ac_extra_serv', name: 'Additional AC Jet Service (Discounted Rate)', price: 599.00 },
+        { id: 'ac_leak', name: 'Indoor Unit Water Leakage Repair', price: 149.00 },
+        { id: 'ac_cap', name: 'Capacitor Replacement Labor', price: 99.00 },
+        { id: 'ac_copper', name: 'New Copper Piping / Drain Point Creation', price: 249.00 },
+        { id: 'ac_uninstall', name: 'AC Un-installation (Safe Dismantling)', price: 299.00 },
+        { id: 'ac_install', name: 'Complete New AC Installation', price: 799.00 },
+        { id: 'ac_gas', name: 'Full Refrigerant Gas Charging (R32 / R410A)', price: 1699.00 },
+        { id: 'ac_other', name: 'Other AC Fault / PCB Repair (Quote after Checkup)', price: 0.00 }
+      ]
+    }
+  };
+
+  // ===== GST-coded Spare Parts Catalog (trade-wise) - Technician billing ke liye =====
+  const SPARE_PARTS_CATALOG = {
+    electrician: [
+      { name: 'MCB (Single Pole)', code: 'HSN 8536', rate: 99.00 },
+      { name: 'Switch / Socket', code: 'HSN 8536', rate: 30.00 },
+      { name: 'Wire (per meter)', code: 'HSN 8544', rate: 15.00 },
+      { name: 'Fan Capacitor', code: 'HSN 8532', rate: 60.00 },
+      { name: 'LED Bulb / Holder', code: 'HSN 8539', rate: 49.00 }
+    ],
+    ac: [
+      { name: 'Refrigerant Gas R32 (per unit charge)', code: 'HSN 2903', rate: 1699.00 },
+      { name: 'Copper Piping (per meter)', code: 'HSN 7411', rate: 120.00 },
+      { name: 'Run Capacitor', code: 'HSN 8532', rate: 150.00 },
+      { name: 'Drain Pipe (per meter)', code: 'HSN 3917', rate: 40.00 }
+    ],
+    plumber: [
+      { name: 'PVC Pipe (per meter)', code: 'HSN 3917', rate: 60.00 },
+      { name: 'CPVC Fitting', code: 'HSN 3917', rate: 40.00 },
+      { name: 'Bib Tap', code: 'HSN 8481', rate: 120.00 },
+      { name: 'Angle Valve', code: 'HSN 8481', rate: 90.00 }
+    ]
+  };
+
+  let currentUser = null;
+  const savedCustomer = localStorage.getItem('bm_active_customer');
+  if (savedCustomer) {
+    try { currentUser = JSON.parse(savedCustomer); } catch(e){}
   }
-  window.addEventListener('resize', applyResponsiveDisplay);
-  applyResponsiveDisplay();
 
-  const map = L.map('map').setView([userLat, userLng], 12);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors', maxZoom: 19
-  }).addTo(map);
-  let userMarker = L.marker([userLat, userLng]).addTo(map).bindPopup("📍 Location");
+  let isCustomerSignupMode = true;
+  let currentCategory = 'electrician';
+  let pendingAdvanceState = null;
+  let activeTechSession = null;
+  let isAdminLoggedIn = false;
+  let adminEmail = null;
+  let currentSettlementJob = null;
+  let activeModalJob = null;
+  let bookingMap = null, bookingMapMarker = null;
+  let signupMap = null, signupMapMarker = null;
 
-  function showScreen(screen) {
+  // ===== Password hashing (SHA-256 via Web Crypto) - plaintext se behtar, real backend mein bcrypt use karein =====
+  async function hashPassword(plain) {
+    const enc = new TextEncoder().encode(plain);
+    const buf = await crypto.subtle.digest('SHA-256', enc);
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  // 15-Minute Inactivity Session Timer
+  const CUSTOMER_SESSION_TIMEOUT_MS = 15 * 60 * 1000;
+  let customerInactivityTimer = null;
+
+  function resetCustomerInactivityTimer() {
+    if (customerInactivityTimer) clearTimeout(customerInactivityTimer);
+    if (currentUser) {
+      customerInactivityTimer = setTimeout(handleCustomerSessionExpiry, CUSTOMER_SESSION_TIMEOUT_MS);
+    }
+  }
+
+  function handleCustomerSessionExpiry() {
+    if (!currentUser) return;
+    currentUser = null;
+    localStorage.removeItem('bm_active_customer');
+    if (customerInactivityTimer) clearTimeout(customerInactivityTimer);
+    updateRoleBasedNavigation();
+    alert("Your 15-minute customer session has expired. Please sign in again.");
+    window.location.reload();
+  }
+
+  ['click', 'mousemove', 'keypress', 'touchstart', 'scroll'].forEach(evt => {
+    window.addEventListener(evt, resetCustomerInactivityTimer, { passive: true });
+  });
+
+  // ==================== ROLE-BASED ACCESS CONTROL (RBAC) ====================
+  function updateRoleBasedNavigation() {
+    const badge = document.getElementById('topAuthBadge');
+    const mobNav = document.getElementById('mobileBottomNav');
+    const deskCustomer = document.getElementById('deskCustomerNav');
+    const deskTech = document.getElementById('deskTechNav');
+    const deskAdmin = document.getElementById('deskAdminNav');
+    const t = uiTranslations[currentLang];
+
+    if (isAdminLoggedIn) {
+      badge.innerHTML = `🔐 ${t.masterAdmin} (<span onclick="adminLogout()" style="text-decoration:underline;">${t.navLogout}</span>)`;
+      deskCustomer.style.display = 'none';
+      deskTech.style.display = 'none';
+      deskAdmin.style.display = 'block';
+
+      mobNav.innerHTML = `
+        <div class="nav-item active" onclick="navigateTo('admin')"><span class="nav-icon">🔐</span>${t.navAdmin}</div>
+        <div class="nav-item" onclick="adminLogout()"><span class="nav-icon">🚪</span>${t.navLogout}</div>
+      `;
+    } else if (activeTechSession) {
+      badge.innerHTML = `🧑‍🔧 ${activeTechSession.name} (<span onclick="techLogout()" style="text-decoration:underline;">${t.navLogout}</span>)`;
+      deskCustomer.style.display = 'none';
+      deskTech.style.display = 'block';
+      deskAdmin.style.display = 'none';
+
+      mobNav.innerHTML = `
+        <div class="nav-item active" onclick="navigateTo('tech-pool')"><span class="nav-icon">🧑‍🔧</span>${t.navJobPool}</div>
+        <div class="nav-item" onclick="techLogout()"><span class="nav-icon">🚪</span>${t.navLogout}</div>
+      `;
+    } else if (currentUser) {
+      badge.innerHTML = `👤 ${currentUser.name || currentUser.phone} (<span onclick="customerLogout()" style="text-decoration:underline;">${t.navLogout}</span>)`;
+      deskCustomer.style.display = 'block';
+      deskTech.style.display = 'none';
+      deskAdmin.style.display = 'none';
+
+      mobNav.innerHTML = `
+        <div class="nav-item active" id="mobNavHome" onclick="navigateTo('home')"><span class="nav-icon">🏠</span>${t.navCategories}</div>
+        <div class="nav-item" id="mobNavProfile" onclick="goToCustomerProfile()"><span class="nav-icon">👤</span>${t.navProfileOrders}</div>
+      `;
+    } else {
+      badge.textContent = t.navSignIn;
+      deskCustomer.style.display = 'block';
+      deskTech.style.display = 'none';
+      deskAdmin.style.display = 'none';
+
+      mobNav.innerHTML = `
+        <div class="nav-item active" id="mobNavHome" onclick="navigateTo('home')"><span class="nav-icon">🏠</span>${t.navCategories}</div>
+        <div class="nav-item" onclick="navigateTo('auth')"><span class="nav-icon">👤</span>${t.navSignIn}</div>
+      `;
+    }
+  }
+
+  async function customerLogout() {
+    currentUser = null;
+    localStorage.removeItem('bm_active_customer');
+    if (customerInactivityTimer) clearTimeout(customerInactivityTimer);
+    try { await sbClient.auth.signOut(); } catch(e){} // Google session bhi clear ho jaye
+    window.location.reload();
+  }
+
+  function techLogout() {
+    activeTechSession = null;
+    window.location.reload();
+  }
+
+  function adminLogout() {
+    isAdminLoggedIn = false;
+    window.location.reload();
+  }
+
+  function handleTopBadgeClick() {
+    if (currentUser) goToCustomerProfile();
+    else if (activeTechSession) navigateTo('tech-pool');
+    else if (isAdminLoggedIn) navigateTo('admin');
+    else navigateTo('auth');
+  }
+
+  function showScreenOnly(screenId) {
+    if (screenId === 'admin' && !isAdminLoggedIn) { alert("Access Denied: Master Admin verification required."); navigateTo('auth'); return; }
+    if (screenId === 'tech-pool' && !activeTechSession) { alert("Access Denied: Technician login required."); navigateTo('auth'); return; }
+
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    const target = document.getElementById('screen-' + screen);
+    const target = document.getElementById('screen-' + screenId);
     if(target) target.classList.add('active');
 
-    document.querySelectorAll('.nav-item, .desktop-nav-item').forEach(i => i.classList.remove('active'));
-    if (screen === 'home') {
-      document.getElementById('mobNavHome')?.classList.add('active');
-      document.getElementById('deskNavHome')?.classList.add('active');
-    } else if (screen === 'bookings-view') {
-      document.getElementById('mobNavBookings')?.classList.add('active');
-      document.getElementById('deskNavBookings')?.classList.add('active');
-    } else if (screen === 'admin') {
-      document.getElementById('mobNavAdmin')?.classList.add('active');
-      document.getElementById('deskNavAdmin')?.classList.add('active');
-    } else if (screen === 'tech') {
-      document.getElementById('mobNavTech')?.classList.add('active');
-      document.getElementById('deskNavTech')?.classList.add('active');
-    }
+    if (screenId === 'home' && homeMap) setTimeout(() => homeMap.invalidateSize(), 200);
+    else if (screenId === 'auth' && signupMap) setTimeout(() => signupMap.invalidateSize(), 200);
+    else if (screenId === 'booking' && bookingMap) setTimeout(() => bookingMap.invalidateSize(), 200);
     window.scrollTo(0, 0);
   }
 
-  function goTo(screen) { showScreen(screen); }
-  function goToBookings() { goTo('bookings-view'); fetchSupabaseBookings(); }
-
-  async function loadTechniciansFromSupabase() {
+  function navigateTo(screenId, replaceHistory = false) {
+    showScreenOnly(screenId);
     try {
-      const { data, error } = await sbClient.from('technicians').select('*');
-      if (!error && data && data.length > 0) {
-        activeProviders = data.map(t => ({
-          id: t.id,
-          name: t.name,
-          category: t.category || 'electrician',
-          specialty: t.category === 'electrician' ? 'Electrical Maintenance Specialist' :
-                     t.category === 'ac' ? 'AC Service & Maintenance' : 'Plumbing Specialist',
-          rating: t.rating || 5.0,
-          lat: userLat + (Math.random() - 0.5) * 0.02,
-          lng: userLng + (Math.random() - 0.5) * 0.02
-        }));
-      } else {
-        activeProviders = [
-          { id: 1, name: "Ramesh Electrician", category: "electrician", specialty: "Wiring, switch & fan repair", rating: 5.0, lat: 28.6250, lng: 77.2100 }
-        ];
-      }
-      renderProviders();
-    } catch(e) {
-      renderProviders();
-    }
+      if (replaceHistory) history.replaceState({ screen: screenId }, '', '#' + screenId);
+      else history.pushState({ screen: screenId }, '', '#' + screenId);
+    } catch(e) {}
   }
 
-  function renderProviders() {
-    const listContainer = document.getElementById('electricianList');
-    listContainer.innerHTML = '';
-    let filtered = activeProviders.filter(p => currentCategory === 'all' || p.category === currentCategory);
+  window.addEventListener('popstate', (e) => {
+    let targetScreen = (e.state && e.state.screen) ? e.state.screen : 'home';
+    if (targetScreen === 'auth' && (currentUser || activeTechSession || isAdminLoggedIn)) targetScreen = 'home';
+    showScreenOnly(targetScreen);
+  });
 
-    if (filtered.length === 0) {
-      listContainer.innerHTML = `<div class="empty-state">No technicians available in this category.</div>`;
-      return;
-    }
+  function openTechLoginModal() { document.getElementById('roleSecTech').style.display = 'block'; }
+  function openAdminLoginModal() { document.getElementById('roleSecAdmin').style.display = 'block'; }
 
-    filtered.forEach((p, idx) => {
-      const catBadge = p.category === 'electrician' ? 'Electrician' : p.category === 'ac' ? 'AC Service' : 'Plumber';
-      const card = document.createElement('div');
-      card.className = 'elec-card';
-      card.onclick = function() { openBookingDirect(idx); };
-      card.innerHTML = `
-        <div class="elec-info">
-          <h3>${p.name}</h3>
-          <p><span class="available-dot"></span>${p.specialty}</p>
-          <span class="cat-badge cat-${p.category}">${catBadge}</span>
-        </div>
-        <div class="elec-meta">
-          <div class="rating">★ ${p.rating}</div>
-          <div class="distance">Nearby</div>
-        </div>`;
-      listContainer.appendChild(card);
+  function toggleCustomerAuthMode() {
+    isCustomerSignupMode = !isCustomerSignupMode;
+    applyAuthModeLanguage();
+    document.getElementById('custSignupFields').style.display = isCustomerSignupMode ? "block" : "none";
+    document.getElementById('authMsg').textContent = "";
+    document.getElementById('authPassword').value = "";
+    if (isCustomerSignupMode && signupMap) setTimeout(() => signupMap.invalidateSize(), 200);
+  }
+
+  // Auth screen ke teeno dynamic text (title/toggle/action button) - language ke hisaab se
+  function applyAuthModeLanguage() {
+    const t = uiTranslations[currentLang];
+    document.getElementById('custAuthFormTitle').textContent = isCustomerSignupMode ? t.custRegTitle : t.custLoginTitle;
+    document.getElementById('custAuthToggleBtn').textContent = isCustomerSignupMode ? t.switchToLoginBtn : t.switchToSignupBtn;
+    document.getElementById('custAuthActionBtn').textContent = isCustomerSignupMode ? t.createAcctBtn : t.loginProceedBtn;
+  }
+
+  // Maps Initialization (Begusarai Bounds)
+  const southWest = L.latLng(25.20, 85.80);
+  const northEast = L.latLng(25.75, 86.45);
+  const begusaraiBounds = L.latLngBounds(southWest, northEast);
+
+  const homeMap = L.map('homeMap', {
+    center: [25.4182, 86.1272],
+    zoom: 13,
+    minZoom: 11,
+    maxBounds: begusaraiBounds,
+    maxBoundsViscosity: 1.0
+  });
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { bounds: begusaraiBounds }).addTo(homeMap);
+  L.marker([25.4182, 86.1272]).addTo(homeMap).bindPopup("<b>Begusarai Central Dispatch Hub</b>").openPopup();
+
+  function initSignupMap() {
+    if (signupMap) return;
+    signupMap = L.map('signupMap', {
+      center: [25.4182, 86.1272],
+      zoom: 13,
+      minZoom: 11,
+      maxBounds: begusaraiBounds,
+      maxBoundsViscosity: 1.0
+    });
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { bounds: begusaraiBounds }).addTo(signupMap);
+    signupMapMarker = L.marker([25.4182, 86.1272]).addTo(signupMap);
+
+    signupMap.on('click', function(e) {
+      signupMapMarker.setLatLng(e.latlng);
+      reverseGeocodeAndFill(e.latlng.lat, e.latlng.lng, 'custRegAddress', signupMapMarker);
     });
   }
 
-  function filterCategory(cat) {
-    currentCategory = cat;
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelector(`.tab[data-cat="${cat}"]`).classList.add('active');
-    renderProviders();
+  function initBookingMap() {
+    if (bookingMap) return;
+    bookingMap = L.map('bookingMap', {
+      center: [25.4182, 86.1272],
+      zoom: 13,
+      minZoom: 11,
+      maxBounds: begusaraiBounds,
+      maxBoundsViscosity: 1.0
+    });
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { bounds: begusaraiBounds }).addTo(bookingMap);
+    bookingMapMarker = L.marker([25.4182, 86.1272]).addTo(bookingMap);
+
+    bookingMap.on('click', function(e) {
+      bookingMapMarker.setLatLng(e.latlng);
+      reverseGeocodeAndFill(e.latlng.lat, e.latlng.lng, 'custAddressInput', bookingMapMarker);
+      // Store raw coordinates too, so we can save a real geo-point to the database later
+      window.lastPickedBookingLat = e.latlng.lat;
+      window.lastPickedBookingLng = e.latlng.lng;
+    });
   }
 
-  function openBookingDirect(index) {
-    let filtered = activeProviders.filter(p => currentCategory === 'all' || p.category === currentCategory);
-    selectedProvider = filtered[index];
-    if (!selectedProvider) return;
-
-    document.getElementById('bookElecName').textContent = selectedProvider.name;
-    document.getElementById('bookElecSpecialty').textContent = selectedProvider.specialty;
-    goTo('booking');
-  }
-
-  // 4-DIGIT PIN BOOKING SUBMISSION
-  async function submitBookingWithPin() {
-    const phone = document.getElementById('phoneInput').value.trim();
-    const address = document.getElementById('addressInput').value.trim();
-
-    if (!address) { alert("Please enter your complete address"); return; }
-    if (phone.length !== 10 || isNaN(phone)) { alert("Please enter a valid 10-digit mobile number"); return; }
-    if (!document.getElementById('tcCheckbox').checked) { alert("Please accept the Terms and Conditions"); return; }
-
-    const now = new Date();
-    let invoiceNo = 'BM-' + now.getFullYear() + '-' + Math.floor(10000 + Math.random()*90000);
-    let startPin = Math.floor(1000 + Math.random() * 9000).toString();
-    let stopPin = Math.floor(1000 + Math.random() * 9000).toString();
+  // Reverse geocoding: converts a lat/lng pin into a readable street address,
+  // using the free OpenStreetMap Nominatim API (no API key required).
+  async function reverseGeocodeAndFill(lat, lng, inputId, marker) {
+    const input = document.getElementById(inputId);
+    const fallbackAddress = `Pin Location [${lat.toFixed(4)}, ${lng.toFixed(4)}], Begusarai, Bihar`;
+    input.value = "Finding address...";
 
     try {
-      const { data, error } = await sbClient.from('bookings').insert([{
-        customer_phone: phone,
-        customer_address: address,
-        technician_name: selectedProvider.name,
-        service_type: selectedProvider.category,
-        start_pin: startPin,
-        stop_pin: stopPin,
-        job_status: 'booked'
-      }]).select();
-
-      if (data && data[0]) {
-        invoiceNo = data[0].invoice_no || invoiceNo;
-        startPin = data[0].start_pin || startPin;
-        stopPin = data[0].stop_pin || stopPin;
-      }
-    } catch(e) {
-      console.error("Booking note:", e);
+      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`, {
+        headers: { 'Accept-Language': 'en' }
+      });
+      const data = await res.json();
+      const address = data && data.display_name ? data.display_name : fallbackAddress;
+      input.value = address;
+      marker.bindPopup(`<b>Selected:</b><br>${address}`).openPopup();
+    } catch (e) {
+      // If the free geocoding service is unreachable, fall back to raw coordinates
+      input.value = fallbackAddress;
+      marker.bindPopup(`<b>Selected:</b><br>${fallbackAddress}`).openPopup();
     }
-
-    document.getElementById('confirmText').textContent = `${selectedProvider.name} will reach your location shortly.`;
-    document.getElementById('dispStartPin').textContent = startPin;
-    document.getElementById('dispStopPin').textContent = stopPin;
-    document.getElementById('invNo').textContent = invoiceNo;
-    document.getElementById('invPhone').textContent = phone;
-    document.getElementById('invAddress').textContent = address;
-    document.getElementById('invTech').textContent = selectedProvider.name;
-    document.getElementById('invDateTime').textContent = now.toLocaleString('en-IN');
-
-    goTo('confirm');
   }
 
-  // BOOKING HISTORY FETCHER
-  async function fetchSupabaseBookings() {
-    const container = document.getElementById('supabaseBookingsContainer');
-    container.innerHTML = `<p style="color:#888; font-size:13px; text-align:center; padding:30px 0;">Loading data from database...</p>`;
+  function toggleBookingMap() {
+    const container = document.getElementById('bookingMapContainer');
+    container.style.display = container.style.display === 'none' ? 'block' : 'none';
+    if (container.style.display === 'block' && bookingMap) setTimeout(() => bookingMap.invalidateSize(), 150);
+  }
 
+  function togglePasswordVisibility(inputId, el) {
+    const input = document.getElementById(inputId);
+    input.type = input.type === 'password' ? 'text' : 'password';
+    el.textContent = input.type === 'password' ? 'Show' : 'Hide';
+  }
+
+  function generateDynamicUpi(amount, note) {
+    const upiUri = `upi://pay?pa=${KASHVI_UPI_VPA}&pn=${encodeURIComponent(KASHVI_PAYEE_NAME)}&am=${amount.toFixed(2)}&cu=INR&tn=${encodeURIComponent(note)}`;
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(upiUri)}`;
+    return { upiUri, qrUrl };
+  }
+
+  // ==================== STEP 1: CUSTOMER REGISTRATION, LOGIN & ONBOARDING ====================
+  // ==================== GOOGLE OAUTH SIGN-IN ====================
+  let pendingGoogleUser = null; // holds the Google profile until phone + address are collected
+  let googleSignupMap = null, googleSignupMapMarker = null;
+
+  async function signInWithGoogle() {
+    const { error } = await sbClient.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin + window.location.pathname }
+    });
+    if (error) alert("Google login error: " + error.message);
+  }
+
+  // This event fires automatically after Google redirects back to the app
+  sbClient.auth.onAuthStateChange(async (event, session) => {
+    if (event !== 'SIGNED_IN' || !session?.user) return;
+
+    const email = session.user.email;
+    const name = session.user.user_metadata?.full_name || session.user.user_metadata?.name || 'Customer';
+
+    let existing = null;
     try {
-      const { data, error } = await sbClient.from('bookings').select('*').order('created_at', { ascending: false });
-      if (error) throw error;
-      if (!data || data.length === 0) {
-        container.innerHTML = `<div class="empty-state">No booking records found in database.</div>`;
+      const { data } = await sbClient.from('customers').select('*').eq('email', email).single();
+      existing = data;
+    } catch(e){}
+
+    if (existing && existing.phone && existing.address) {
+      // Already fully registered - log straight in
+      if (existing.is_blocked) {
+        alert("Your account has been blocked by Admin. Please contact office at kashvienterprises.bihar@gmail.com");
         return;
       }
-      container.innerHTML = data.map(b => `
-        <div class="booking-card" style="border-left:4px solid #0f8a4b; margin-bottom:10px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-            <b style="color:#0f8a4b; font-size:14px;">${b.invoice_no || 'BM-BOOKING'}</b>
-            <span style="font-size:11px; padding:2px 8px; background:#e8f5e9; color:#2e7d32; border-radius:10px; font-weight:600; text-transform:uppercase;">${b.job_status || 'booked'}</span>
-          </div>
-          <p>🧑‍🔧 <b>Technician:</b> ${b.technician_name || 'Assigned'}</p>
-          <p>📞 <b>Phone:</b> ${b.customer_phone}</p>
-          <p>📍 <b>Address:</b> ${b.customer_address}</p>
-          <p>🟢 <b>Start PIN:</b> ${b.start_pin || '----'} | 🔴 <b>Stop PIN:</b> ${b.stop_pin || '----'}</p>
-          <div class="price-row total" style="margin-top:6px; padding-top:4px;">
-            <span>Grand Total</span>
-            <span style="color:#0f8a4b;">₹${b.grand_total || '300.00'}</span>
-          </div>
-        </div>
-      `).join('');
-    } catch(e) {
-      container.innerHTML = `<div class="empty-state" style="color:#c0392b;">Error: ${e.message}</div>`;
-    }
-  }
-
-  // ADMIN PANEL LOGIC & LIVE MONITORING
-  function adminLogin() {
-    const pass = document.getElementById('adminPassInput').value;
-    if (pass === 'admin123') {
-      document.getElementById('adminLoginBox').style.display = 'none';
-      document.getElementById('adminDashboard').style.display = 'block';
-      loadAdminLiveBookings();
+      currentUser = { name: existing.name || name, phone: existing.phone, address: existing.address, email };
+      localStorage.setItem('bm_active_customer', JSON.stringify(currentUser));
+      window.location.hash = '#home';
+      window.location.reload();
     } else {
-      document.getElementById('adminLoginError').textContent = 'Invalid password';
-    }
-  }
-
-  async function loadAdminLiveBookings() {
-    const listEl = document.getElementById('adminLiveMonitorList');
-    try {
-      const { data, error } = await sbClient.from('bookings').select('*').order('created_at', { ascending: false });
-      if (error) throw error;
-      if (data && data.length > 0) {
-        listEl.innerHTML = data.map(b => `
-          <div class="booking-card" style="border-left: 4px solid ${b.job_status==='completed'?'#0f8a4b':b.job_status==='in_progress'?'#f39c12':'#3498db'}; margin-bottom:8px;">
-            <div style="display:flex; justify-content:space-between; font-size:12px;">
-              <b>${b.invoice_no}</b>
-              <span style="font-weight:700; color:${b.job_status==='completed'?'#0f8a4b':b.job_status==='in_progress'?'#f39c12':'#3498db'};">[ ${b.job_status.toUpperCase()} ]</span>
-            </div>
-            <p style="font-size:12px; margin:4px 0;">🧑‍🔧 <b>Tech:</b> ${b.technician_name} | 📞 <b>Customer:</b> ${b.customer_phone}</p>
-            <p style="font-size:11px; color:#666;">📍 ${b.customer_address}</p>
-            <p style="font-size:11px; margin-top:4px;">🟢 Start PIN: <b>${b.start_pin}</b> | 🔴 Stop PIN: <b>${b.stop_pin}</b> | 💰 ₹${b.grand_total}</p>
-          </div>
-        `).join('');
-      } else {
-        listEl.innerHTML = '<p style="font-size:12px; color:#888;">No bookings found in database.</p>';
+      // New Google user, or an existing one missing phone/address - collect both before granting access
+      pendingGoogleUser = { email, name };
+      document.getElementById('googlePhoneModal').style.display = 'flex';
+      if (existing) {
+        document.getElementById('googlePhoneInput').value = existing.phone || '';
+        document.getElementById('googleAddressInput').value = existing.address || '';
       }
-    } catch(e) {
-      listEl.innerHTML = '<p style="font-size:12px; color:#c0392b;">Error loading bookings</p>';
+      setTimeout(initGoogleSignupMap, 150);
     }
+  });
+
+  function initGoogleSignupMap() {
+    if (googleSignupMap) { googleSignupMap.invalidateSize(); return; }
+    googleSignupMap = L.map('googleSignupMap', {
+      center: [25.4182, 86.1272],
+      zoom: 13,
+      minZoom: 11,
+      maxBounds: begusaraiBounds,
+      maxBoundsViscosity: 1.0
+    });
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { bounds: begusaraiBounds }).addTo(googleSignupMap);
+    googleSignupMapMarker = L.marker([25.4182, 86.1272]).addTo(googleSignupMap);
+
+    googleSignupMap.on('click', function(e) {
+      googleSignupMapMarker.setLatLng(e.latlng);
+      reverseGeocodeAndFill(e.latlng.lat, e.latlng.lng, 'googleAddressInput', googleSignupMapMarker);
+    });
   }
 
-  async function addTechnician() {
-    const name = document.getElementById('techNameInput').value.trim();
-    const phone = document.getElementById('techPhoneInput').value.trim();
-    const category = document.getElementById('techCategorySelect').value;
-    if (!name || phone.length !== 10) { alert('Enter a valid name and 10-digit phone number'); return; }
+  async function submitGooglePhone() {
+    const phoneInput = document.getElementById('googlePhoneInput');
+    const addressInput = document.getElementById('googleAddressInput');
+    const phone = phoneInput.value.trim();
+    const address = addressInput.value.trim();
+    const errEl = document.getElementById('googlePhoneError');
+    const phoneRegex = /^[6-9]\d{9}$/;
+
+    if (!phoneRegex.test(phone)) {
+      errEl.textContent = "Please enter a valid 10-digit Indian mobile number.";
+      return;
+    }
+    if (!address) {
+      errEl.textContent = "Please select your exact address on the map (or type it in).";
+      return;
+    }
+    errEl.textContent = "";
+    if (!pendingGoogleUser) return;
 
     try {
-      const { error } = await sbClient.from('technicians').insert([{ name, phone, category, is_available: true }]);
-      if (error) throw error;
-      document.getElementById('techNameInput').value = '';
-      document.getElementById('techPhoneInput').value = '';
-      alert(`${name} registered successfully!`);
-      loadTechniciansFromSupabase();
-    } catch(e) {
-      alert("Error: " + e.message);
+      await sbClient.from('customers').upsert({
+        email: pendingGoogleUser.email,
+        name: pendingGoogleUser.name,
+        phone,
+        address
+      });
+    } catch(e){}
+
+    currentUser = { name: pendingGoogleUser.name, phone, address, email: pendingGoogleUser.email };
+    localStorage.setItem('bm_active_customer', JSON.stringify(currentUser));
+    document.getElementById('googlePhoneModal').style.display = 'none';
+    window.location.hash = '#home';
+    window.location.reload();
+  }
+
+  async function handleCustomerAuthAction() {
+    const phoneInput = document.getElementById('authPhone');
+    const passwordInput = document.getElementById('authPassword');
+    const phone = phoneInput.value.trim();
+    const password = passwordInput.value.trim();
+    const msg = document.getElementById('authMsg');
+    const phoneRegex = /^[6-9]\d{9}$/;
+
+    if (!phoneRegex.test(phone)) {
+      msg.textContent = "Please enter a valid 10-digit Indian mobile number.";
+      msg.style.color = "#c0392b";
+      passwordInput.value = "";
+      return;
+    }
+
+    if (password.length < 6) {
+      msg.textContent = "Password must be at least 6 characters.";
+      msg.style.color = "#c0392b";
+      passwordInput.value = "";
+      return;
+    }
+
+    const hashedPassword = await hashPassword(password);
+
+    if (isCustomerSignupMode) {
+      const nameInput = document.getElementById('custRegName');
+      const addressInput = document.getElementById('custRegAddress');
+      const name = nameInput.value.trim();
+      const address = addressInput.value.trim();
+
+      if (!name || !address) {
+        msg.textContent = "Please enter Name and select Address from Map.";
+        msg.style.color = "#c0392b";
+        passwordInput.value = "";
+        return;
+      }
+
+      // Password hash is stored in Supabase (source of truth), not just the browser's
+      // local storage - this is what makes login work from any device/browser.
+      const { error: insertError } = await sbClient.from('customers').upsert(
+        { name, phone, address, password_hash: hashedPassword },
+        { onConflict: 'phone' }
+      );
+
+      if (insertError) {
+        msg.textContent = "Registration failed: " + insertError.message;
+        msg.style.color = "#c0392b";
+        return;
+      }
+
+      // Also cache locally for speed / offline fallback
+      let userAccounts = JSON.parse(localStorage.getItem('bm_customer_accounts') || '{}');
+      userAccounts[phone] = { name, address, phone, password: hashedPassword };
+      localStorage.setItem('bm_customer_accounts', JSON.stringify(userAccounts));
+
+      alert("Registration Successful! Page will refresh. Please log in with your credentials.");
+      sessionStorage.setItem('bm_just_registered_phone', phone);
+      window.location.hash = '#auth';
+      window.location.reload();
+    } else {
+      // LOGIN: check Supabase first (works from any device/browser), fall back to the
+      // local cache only if Supabase is unreachable.
+      let account = null;
+      try {
+        const { data } = await sbClient.from('customers').select('*').eq('phone', phone).single();
+        account = data;
+      } catch(e){}
+
+      if (!account) {
+        const userAccounts = JSON.parse(localStorage.getItem('bm_customer_accounts') || '{}');
+        account = userAccounts[phone] ? { ...userAccounts[phone], password_hash: userAccounts[phone].password } : null;
+      }
+
+      if (!account) {
+        msg.textContent = "Account not found with this number. Please Sign Up.";
+        msg.style.color = "#c0392b";
+        passwordInput.value = "";
+        toggleCustomerAuthMode();
+        return;
+      }
+
+      if (account.is_blocked) {
+        msg.textContent = "This account has been blocked by Admin. Please contact office at kashvienterprises.bihar@gmail.com";
+        msg.style.color = "#c0392b";
+        return;
+      }
+
+      if (account.password_hash !== hashedPassword) {
+        msg.textContent = "Incorrect password. Field cleared. Please re-enter.";
+        msg.style.color = "#c0392b";
+        passwordInput.value = "";
+        passwordInput.focus();
+        return;
+      }
+
+      currentUser = {
+        name: account.name || "Customer",
+        address: account.address || "Begusarai, Bihar",
+        phone: phone
+      };
+      localStorage.setItem('bm_active_customer', JSON.stringify(currentUser));
+
+      window.location.hash = '#home';
+      window.location.reload();
     }
   }
 
-  // TECHNICIAN PANEL LOGIC
-  async function techLogin() {
-    const pass = document.getElementById('techPassInput').value;
-    if (pass === 'tech123') {
-      document.getElementById('techLoginBox').style.display = 'none';
-      document.getElementById('techDashboard').style.display = 'block';
-      loadTechActiveJob();
-    }
+  function goToCustomerProfile() {
+    if (!currentUser) { alert("Please sign in or register to view your personal profile."); navigateTo('auth'); return; }
+    document.getElementById('profDispName').textContent = currentUser.name || "Customer";
+    document.getElementById('profDispPhone').textContent = currentUser.phone;
+    document.getElementById('profDispAddress').textContent = currentUser.address || "Begusarai, Bihar";
+
+    navigateTo('profile');
+    loadCustomerOrders();
   }
 
-  async function loadTechActiveJob() {
-    const details = document.getElementById('techJobDetails');
+  // ==================== STEP 2: CATEGORY BOOKING, MANDATORY TERMS & ADVANCE ====================
+  function selectCategoryBooking(catKey) {
+    if (!currentUser) { alert("Please Sign In or Register to book services."); navigateTo('auth'); return; }
+
+    currentCategory = catKey;
+    const cfg = SERVICE_CONFIG[catKey];
+
+    document.getElementById('bookCatName').textContent = cfg.title;
+    document.getElementById('bookBaseScopeDesc').innerHTML = cfg.scope;
+    document.getElementById('custPhoneInput').value = currentUser.phone;
+    document.getElementById('custAddressInput').value = currentUser.address || "";
+    document.getElementById('bookingTermsCheckbox').checked = false;
+
+    const addonsContainer = document.getElementById('dynamicAddonsList');
+    addonsContainer.innerHTML = cfg.addons.map(a => `
+      <div class="addon-item">
+        <label>
+          <input type="checkbox" class="dyn-addon-checkbox" data-id="${a.id}" data-name="${a.name}" data-price="${a.price}" onchange="recalculateDynamicBill()">
+          <span>${a.name}</span>
+        </label>
+        <span class="addon-price">${a.price > 0 ? '+₹' + a.price.toFixed(2) : '₹0.00'}</span>
+      </div>
+    `).join('');
+
+    recalculateDynamicBill();
+    navigateTo('booking');
+    initBookingMap();
+    setTimeout(() => { if (bookingMap) bookingMap.invalidateSize(); }, 200);
+  }
+
+  function recalculateDynamicBill() {
+    const cfg = SERVICE_CONFIG[currentCategory];
+    let addonsTotal = 0;
+    document.querySelectorAll('.dyn-addon-checkbox:checked').forEach(cb => {
+      addonsTotal += parseFloat(cb.getAttribute('data-price')) || 0;
+    });
+
+    const totalServiceAmount = cfg.total + addonsTotal;
+    const dueAfterToken = totalServiceAmount - 21;
+
+    document.getElementById('priceBaseVal').textContent = `₹${cfg.total.toFixed(2)}`;
+    document.getElementById('priceAddonsVal').textContent = `+₹${addonsTotal.toFixed(2)}`;
+    document.getElementById('priceTotalIncGst').textContent = `₹${totalServiceAmount.toFixed(2)}`;
+    document.getElementById('priceTotalDueVal').textContent = `₹${dueAfterToken.toFixed(2)}`;
+  }
+
+  async function openDirectAdvancePayment() {
+    const address = document.getElementById('custAddressInput').value.trim();
+    const phone = currentUser ? currentUser.phone : document.getElementById('custPhoneInput').value.trim();
+    const termsAccepted = document.getElementById('bookingTermsCheckbox').checked;
+
+    if (!address) { alert("Please enter or pin your service address."); return; }
+    if (!termsAccepted) {
+      alert("Mandatory: Please accept the Terms & Conditions to proceed.");
+      return;
+    }
+
+    // Fraud check: blocked customer booking nahi kar sakta
     try {
-      const { data } = await sbClient.from('bookings').select('*').order('created_at', { ascending: false }).limit(1);
-      if (data && data.length > 0) {
-        currentActiveJob = data[0];
-        details.innerHTML = `
-          <p><b>Invoice No:</b> ${currentActiveJob.invoice_no}</p>
-          <p><b>Customer Phone:</b> ${currentActiveJob.customer_phone}</p>
-          <p><b>Address:</b> ${currentActiveJob.customer_address}</p>
-          <p><b>Status:</b> <span style="color:#0f8a4b; font-weight:700;">${currentActiveJob.job_status.toUpperCase()}</span></p>
-        `;
-        if (currentActiveJob.job_status === 'in_progress') {
-          document.getElementById('techStartPinCard').style.display = 'none';
-          document.getElementById('techStopPinCard').style.display = 'block';
-        }
-      } else {
-        details.innerHTML = '<p>No active jobs assigned at the moment.</p>';
+      const { data: custCheck } = await sbClient.from('customers').select('is_blocked').eq('phone', phone).single();
+      if (custCheck && custCheck.is_blocked) {
+        alert("Your account has been blocked by Admin due to suspicious activity. Please contact office at kashvienterprises.bihar@gmail.com");
+        return;
       }
     } catch(e){}
+
+    const invoiceNo = 'BM-' + Date.now().toString().slice(-6);
+    const startPin = Math.floor(1000 + Math.random() * 9000).toString();
+    const stopPin = Math.floor(1000 + Math.random() * 9000).toString();
+
+    let selectedAddons = [];
+    let addonsTotal = 0;
+    document.querySelectorAll('.dyn-addon-checkbox:checked').forEach(cb => {
+      selectedAddons.push(`${cb.getAttribute('data-name')} (₹${cb.getAttribute('data-price')})`);
+      addonsTotal += parseFloat(cb.getAttribute('data-price')) || 0;
+    });
+
+    pendingAdvanceState = {
+      category: currentCategory,
+      customerName: currentUser.name || "Customer",
+      address,
+      phone,
+      invoiceNo,
+      startPin,
+      stopPin,
+      addonsList: selectedAddons.join(', ') || 'Base Scope Only',
+      addonsTotal: addonsTotal
+    };
+
+    const upi = generateDynamicUpi(21.00, `AdvanceToken-${invoiceNo}`);
+    document.getElementById('advanceQrImg').src = upi.qrUrl;
+    document.getElementById('advanceUpiIntentBtn').href = upi.upiUri;
+
+    navigateTo('advance-pay');
   }
 
-  async function verifyStartPinAndBegin() {
-    const entered = document.getElementById('inputStartPin').value.trim();
-    if (!currentActiveJob) { alert('No active job found'); return; }
+  async function broadcastJobToPool() {
+    if (!pendingAdvanceState) return;
 
-    if (entered === currentActiveJob.start_pin || entered === '0000') {
-      try {
-        await sbClient.from('bookings').update({ job_status: 'in_progress', start_time: new Date() }).eq('id', currentActiveJob.id);
-      } catch(e){}
-      alert('Start PIN verified! Job timer has started.');
-      document.getElementById('techStartPinCard').style.display = 'none';
-      document.getElementById('techStopPinCard').style.display = 'block';
+    // Payment validation enforcement: booking cannot be confirmed without a transaction reference.
+    // NOTE: This is a manual-verification safeguard, not automatic bank-side confirmation - a real
+    // payment gateway (Razorpay/Cashfree) with webhook callbacks would be needed for that.
+    const txnRefInput = document.getElementById('advanceTxnRefInput');
+    const txnRef = txnRefInput.value.trim();
+    const txnErrEl = document.getElementById('advanceTxnError');
+    if (txnRef.length < 4) {
+      txnErrEl.textContent = "Please enter the UPI transaction/reference ID shown in your payment app after paying.";
+      return;
+    }
+    txnErrEl.textContent = "";
+
+    const cfg = SERVICE_CONFIG[pendingAdvanceState.category];
+
+    const newBooking = {
+      customer_name: pendingAdvanceState.customerName,
+      customer_phone: pendingAdvanceState.phone,
+      customer_address: pendingAdvanceState.address,
+      service_type: pendingAdvanceState.category,
+      extra_services: pendingAdvanceState.addonsList,
+      extra_parts_cost: pendingAdvanceState.addonsTotal,
+      start_pin: pendingAdvanceState.startPin,
+      stop_pin: pendingAdvanceState.stopPin,
+      job_status: 'pending_acceptance',
+      technician_name: null,
+      base_fee: cfg.base,
+      invoice_no: pendingAdvanceState.invoiceNo,
+      payment_status: 'advance_received',
+      advance_txn_ref: txnRef
+    };
+
+    let insertedId = null;
+    try {
+      const { data } = await sbClient.from('bookings').insert([newBooking]).select().single();
+      if (data) insertedId = data.id;
+    } catch(e){}
+
+    let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
+    localPool.unshift({ ...newBooking, id: insertedId || newBooking.invoice_no });
+    localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
+
+    alert(`Payment of ₹21 Received! Booking ID: ${pendingAdvanceState.invoiceNo} is placed. Redirecting to Home.`);
+    navigateTo('home', true);
+  }
+
+  // ==================== STEP 3: CUSTOMER DEDICATED HISTORY ====================
+  async function loadCustomerOrders() {
+    if (!currentUser) return;
+    const container = document.getElementById('customerHistoryContainer');
+    container.innerHTML = '<p style="color:#888; font-size:13px; text-align:center; padding:20px 0;">Loading your booking history...</p>';
+
+    let orders = [];
+    try {
+      const { data } = await sbClient.from('bookings').select('*').eq('customer_phone', currentUser.phone).order('created_at', { ascending: false });
+      if (data) orders = data;
+    } catch(e){}
+
+    if (orders.length === 0) {
+      let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
+      orders = localPool.filter(j => j.customer_phone === currentUser.phone);
+    }
+
+    if (orders.length === 0) {
+      container.innerHTML = '<div style="text-align:center; color:#888; padding:24px 0; font-size:13px;">You have no active or past bookings.</div>';
+      return;
+    }
+
+    container.innerHTML = orders.map(b => {
+      const isPaid = b.job_status === 'paid_completed';
+      const isBillReady = b.job_status === 'work_completed';
+      const catConfig = SERVICE_CONFIG[b.service_type] || SERVICE_CONFIG.electrician;
+
+      let statusBadge = `<span style="color:#d97706; font-weight:700;">[ ⏳ PENDING POOL ACCEPT ]</span>`;
+      if (b.job_status === 'claimed') statusBadge = `<span style="color:#2563eb; font-weight:700;">[ 🧑‍🔧 ACCEPTED BY TECH ]</span>`;
+      else if (b.job_status === 'in_progress') statusBadge = `<span style="color:#7c3aed; font-weight:700;">[ ⚡ WORK IN PROGRESS ]</span>`;
+      else if (isBillReady) statusBadge = `<span style="color:#b8720a; font-weight:700;">[ 🧾 BILL READY - PAYMENT PENDING ]</span>`;
+      else if (isPaid) statusBadge = `<span style="color:#0f8a4b; font-weight:700;">[ ✔ COMPLETED &amp; PAID ]</span>`;
+
+      return `
+        <div class="card" style="border-left:4px solid ${isPaid ? '#0f8a4b' : (isBillReady ? '#b8720a' : '#f39c12')};">
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
+            <b>${b.invoice_no || 'BM-ORDER'}</b>
+            ${statusBadge}
+          </div>
+          <p style="font-size:12px; color:#333; font-weight:600;">🛠️ Service: ${catConfig.title}</p>
+          <p style="font-size:11.5px; color:#555;">📋 Work Details: ${b.extra_services || 'Standard Base Service'}</p>
+          <p style="font-size:12px; color:#555;">🧑‍🔧 Assigned Tech: <b>${b.technician_name || 'Broadcasting in Pool (Waiting Tech...)'}</b></p>
+          <p style="font-size:12px; color:#555;">📍 Work Address: ${b.customer_address}</p>
+          <div style="background:#f0faf3; border:1px dashed #0f8a4b; border-radius:6px; padding:6px; margin:6px 0; font-size:11.5px;">
+            🟢 Your Start PIN: <b>${b.start_pin}</b> (Give to tech upon arrival)<br>
+            🔴 Your Stop PIN: <b>${b.stop_pin}</b> (Give only when work is completed)
+          </div>
+          ${isBillReady ? `
+            <button class="btn" style="padding:8px; font-size:12px; margin-top:8px; background:#b8720a;" onclick='openCustomerSettlementFromProfile(${JSON.stringify(b).replace(/'/g,"&apos;")})'>
+              💳 Bill Ready - Pay Now (₹${(b.calculated_total || 0).toFixed(2)})
+            </button>
+          ` : ''}
+          ${isPaid ? `
+            <button class="btn secondary" style="padding:6px; font-size:11px; margin-top:8px;" onclick="downloadOrderPdf('${b.id || b.invoice_no}')">
+              📥 Download Official Tax Invoice PDF
+            </button>
+          ` : ''}
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Customer apne profile se, apne hi phone par bill/QR kholega (technician ke phone par NAHI)
+  function openCustomerSettlementFromProfile(booking) {
+    currentSettlementJob = {
+      id: booking.id,
+      invoice_no: booking.invoice_no,
+      baseAmount: (SERVICE_CONFIG[booking.service_type] || SERVICE_CONFIG.electrician).total,
+      initialAddonsCost: parseFloat(booking.extra_parts_cost) || 0,
+      extraOnSiteCost: parseFloat(booking.extra_on_site_cost) || 0,
+      extraMaterialCost: parseFloat(booking.extra_material_cost) || 0,
+      overtimeCharge: parseFloat(booking.overtime_charge) || 0,
+      overtimeHours: parseFloat(booking.overtime_hours) || 0,
+      netDue: parseFloat(booking.calculated_total) || 0
+    };
+
+    document.getElementById('payBase').textContent = `₹${currentSettlementJob.baseAmount.toFixed(2)}`;
+    document.getElementById('payInitialAddons').textContent = `₹${currentSettlementJob.initialAddonsCost.toFixed(2)}`;
+    document.getElementById('payTechExtraWork').textContent = `₹${currentSettlementJob.extraOnSiteCost.toFixed(2)}`;
+    document.getElementById('payParts').textContent = `₹${currentSettlementJob.extraMaterialCost.toFixed(2)}`;
+
+    if (currentSettlementJob.overtimeCharge > 0) {
+      document.getElementById('payOvertimeRow').style.display = 'flex';
+      document.getElementById('payOvertimeLabel').textContent = `Overtime (${currentSettlementJob.overtimeHours} hr @ ₹100/hr)`;
+      document.getElementById('payOvertimeVal').textContent = `₹${currentSettlementJob.overtimeCharge.toFixed(2)}`;
     } else {
-      document.getElementById('startPinError').textContent = 'Invalid Start PIN!';
+      document.getElementById('payOvertimeRow').style.display = 'none';
+    }
+
+    document.getElementById('payTotal').textContent = `₹${currentSettlementJob.netDue.toFixed(2)}`;
+    document.getElementById('finalAmountTag').textContent = `₹${currentSettlementJob.netDue.toFixed(2)}`;
+
+    const upi = generateDynamicUpi(currentSettlementJob.netDue, `FinalSettlement-${currentSettlementJob.invoice_no}`);
+    document.getElementById('finalQrImg').src = upi.qrUrl;
+    document.getElementById('finalUpiIntentBtn').href = upi.upiUri;
+
+    document.getElementById('customerPaymentModal').style.display = 'flex';
+  }
+
+  function closeCustomerPaymentModal() {
+    document.getElementById('customerPaymentModal').style.display = 'none';
+  }
+
+  async function downloadOrderPdf(orderId) {
+    let data = null;
+    try {
+      const res = await sbClient.from('bookings').select('*').eq('id', orderId).single();
+      data = res.data;
+    } catch(e){}
+
+    if (!data) {
+      let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
+      data = localPool.find(j => j.id === orderId || j.invoice_no === orderId);
+    }
+    if (!data) return;
+
+    document.getElementById('pdfCustName').textContent = data.customer_name || currentUser.name || "Valued Customer";
+    document.getElementById('pdfCustPhone').textContent = data.customer_phone;
+    document.getElementById('pdfInvNo').textContent = data.invoice_no;
+    document.getElementById('pdfCustAddr').textContent = data.customer_address;
+    document.getElementById('pdfTech').textContent = data.technician_name || 'Certified Technician';
+    document.getElementById('pdfDate').textContent = new Date(data.created_at || Date.now()).toLocaleDateString('en-IN');
+
+    const cfg = SERVICE_CONFIG[data.service_type] || SERVICE_CONFIG.electrician;
+    const base = cfg.base;
+    const addons = (data.extra_parts_cost || 0) + (data.extra_on_site_cost || 0) + (data.extra_material_cost || 0);
+    const overtimeCharge = parseFloat(data.overtime_charge) || 0;
+    const subtotal = base + (addons / 1.18) + overtimeCharge;
+    const gst = subtotal * 0.18;
+    const netGrand = (subtotal + gst) - 21;
+
+    let rowsHtml = `
+      <tr>
+        <td>1</td>
+        <td>${cfg.title} (Base Service Pack)</td>
+        <td>${cfg.sac}</td>
+        <td>₹${base.toFixed(2)}</td>
+        <td>18%</td>
+        <td>₹${cfg.total.toFixed(2)}</td>
+      </tr>`;
+    let sr = 2;
+    if ((data.extra_on_site_cost || 0) > 0) {
+      const onSiteAmt = data.extra_on_site_cost;
+      rowsHtml += `
+        <tr>
+          <td>${sr++}</td>
+          <td>Add-ons &amp; Site Extras</td>
+          <td>${cfg.sac}</td>
+          <td>₹${(onSiteAmt / 1.18).toFixed(2)}</td>
+          <td>18%</td>
+          <td>₹${onSiteAmt.toFixed(2)}</td>
+        </tr>`;
+    }
+
+    // Spare parts JSON se HSN-code wise alag rows banayein
+    try {
+      const parts = JSON.parse(data.spare_parts_json || '[]');
+      parts.forEach(p => {
+        const partAmt = p.total * 1.18;
+        rowsHtml += `
+          <tr>
+            <td>${sr++}</td>
+            <td>${p.name} (Qty: ${p.qty})</td>
+            <td>${p.code}</td>
+            <td>₹${p.total.toFixed(2)}</td>
+            <td>18%</td>
+            <td>₹${partAmt.toFixed(2)}</td>
+          </tr>`;
+      });
+    } catch(e){}
+    if (overtimeCharge > 0) {
+      rowsHtml += `
+        <tr>
+          <td>${sr++}</td>
+          <td>Overtime Charge (${data.overtime_hours || 0} hr beyond 3 hrs @ ₹100/hr)</td>
+          <td>-</td>
+          <td>₹${overtimeCharge.toFixed(2)}</td>
+          <td>18%</td>
+          <td>₹${(overtimeCharge * 1.18).toFixed(2)}</td>
+        </tr>`;
+    }
+    document.getElementById('pdfItemsBody').innerHTML = rowsHtml;
+
+    document.getElementById('pdfSubtotal').textContent = `₹${subtotal.toFixed(2)}`;
+    document.getElementById('pdfCgst').textContent = `₹${(gst / 2).toFixed(2)}`;
+    document.getElementById('pdfSgst').textContent = `₹${(gst / 2).toFixed(2)}`;
+    document.getElementById('pdfGrandTotal').textContent = `₹${netGrand.toFixed(2)}`;
+
+    const el = document.getElementById('invoicePdf');
+    document.getElementById('invoiceRenderWrapper').style.display = 'block';
+    html2pdf().from(el).set({
+      margin: 10,
+      filename: `${data.invoice_no}_Tax_Invoice.pdf`,
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    }).save().then(() => {
+      document.getElementById('invoiceRenderWrapper').style.display = 'none';
+    });
+  }
+
+  // ==================== STEP 4: TECHNICIAN POOL & WORK COMPLETION MODAL ====================
+  async function loginTechnicianToPool() {
+    const techId = document.getElementById('techIdInput').value.trim().toUpperCase();
+    const cat = document.getElementById('techCategorySelect').value;
+    const pinInput = document.getElementById('techPinInput');
+    const pin = pinInput.value.trim();
+    const msg = document.getElementById('authMsg');
+
+    if (!techId) {
+      msg.textContent = "Please enter your Technician ID.";
+      msg.style.color = "#c0392b";
+      return;
+    }
+
+    if (pin.length !== 4) {
+      msg.textContent = "Please enter your 4-digit PIN.";
+      msg.style.color = "#c0392b";
+      pinInput.value = "";
+      return;
+    }
+
+    try {
+      // Sirf Admin dwara register kiya gaya real technician (ID + PIN + category match) hi login kar sakta hai
+      const { data, error } = await sbClient.from('technicians').select('*').eq('tech_code', techId).eq('phone', pin).eq('category', cat).single();
+
+      if (error && error.code !== 'PGRST116') {
+        // PGRST116 = "no rows found" (normal case for wrong ID/PIN). Koi aur error ho to asli wajah dikhayein.
+        msg.textContent = "Connection/Server Error: " + error.message;
+        msg.style.color = "#c0392b";
+        return;
+      }
+
+      if (!data) {
+        msg.textContent = "Invalid Technician ID / PIN / Category combination.";
+        msg.style.color = "#c0392b";
+        pinInput.value = "";
+        pinInput.focus();
+        return;
+      }
+
+      if (data.is_available === false) {
+        msg.textContent = "This Technician account has been blocked by Admin. Contact office.";
+        msg.style.color = "#c0392b";
+        pinInput.value = "";
+        return;
+      }
+
+      activeTechSession = { name: data.name, category: cat, id: data.id, techCode: data.tech_code };
+      document.getElementById('topAuthBadge').textContent = "🧑‍🔧 " + data.name + " (" + data.tech_code + ")";
+      document.getElementById('techPoolHeader').textContent = `${data.name} [${data.tech_code}] (${cat.toUpperCase()} Pool)`;
+      msg.textContent = "";
+
+      updateRoleBasedNavigation();
+      navigateTo('tech-pool', true);
+      renderPoolJobs();
+    } catch(e) {
+      msg.textContent = "Login Error: " + e.message;
+      msg.style.color = "#c0392b";
+      pinInput.value = "";
     }
   }
 
-  async function verifyStopPinAndFinish() {
-    const entered = document.getElementById('inputStopPin').value.trim();
-    if (!currentActiveJob) return;
+  function checkCooldownState() {
+    const cooldownEnd = localStorage.getItem('tech_cooldown_until');
+    if (cooldownEnd && Date.now() < parseInt(cooldownEnd)) {
+      const remainingSec = Math.ceil((parseInt(cooldownEnd) - Date.now()) / 1000);
+      document.getElementById('techCooldownNotice').style.display = 'block';
+      document.getElementById('cooldownTimer').textContent = `${Math.floor(remainingSec / 60)}m ${remainingSec % 60}s`;
+      return true;
+    }
+    document.getElementById('techCooldownNotice').style.display = 'none';
+    return false;
+  }
 
-    if (entered === currentActiveJob.stop_pin || entered === '0000') {
-      try {
-        await sbClient.from('bookings').update({ job_status: 'completed', end_time: new Date() }).eq('id', currentActiveJob.id);
-      } catch(e){}
-      alert('Stop PIN verified! Job marked as completed.');
-      loadTechActiveJob();
-      document.getElementById('techStopPinCard').style.display = 'none';
+  async function renderPoolJobs() {
+    if (!activeTechSession) return;
+    const cooldownActive = checkCooldownState();
+
+    let claimedJob = null;
+    try {
+      const { data: claimed } = await sbClient.from('bookings')
+        .select('*')
+        .eq('technician_name', activeTechSession.name)
+        .in('job_status', ['claimed', 'in_progress', 'work_completed', 'paid_completed'])
+        .order('created_at', { ascending: false })
+        .limit(1);
+      if (claimed && claimed.length > 0) claimedJob = claimed[0];
+    } catch(e){}
+
+    if (!claimedJob) {
+      let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
+      claimedJob = localPool.find(j => j.technician_name === activeTechSession.name && ['claimed','in_progress','work_completed','paid_completed'].includes(j.job_status));
+    }
+
+    const activeSec = document.getElementById('activeClaimedJobSection');
+    if (claimedJob) {
+      activeSec.innerHTML = `
+        <div class="card" style="border:2px solid #0f8a4b; background:#f0faf3;">
+          <div style="display:flex; justify-content:space-between;">
+            <b style="color:#0f8a4b;">Active Claimed Job: ${claimedJob.invoice_no}</b>
+            <span>[ ${claimedJob.job_status.toUpperCase()} ]</span>
+          </div>
+          <p style="font-size:12px; margin:4px 0;">👤 Customer: <b>${claimedJob.customer_name || 'Customer'}</b> | 📞 ${claimedJob.customer_phone}</p>
+          <p style="font-size:12px; margin-bottom:4px;">📍 Address: ${claimedJob.customer_address}</p>
+          <p style="font-size:11.5px; color:#555;">📋 Pre-booked Works: <b>${claimedJob.extra_services || 'Base Package Only'}</b></p>
+          
+          ${claimedJob.job_status === 'claimed' ? `
+            <div style="margin-top:8px;">
+              <p style="font-size:11.5px; color:#0f8a4b; font-weight:700; margin-bottom:4px;">Ask Start PIN from Customer upon arrival:</p>
+              <input type="text" id="startPinVerifyInput" placeholder="Enter 4-Digit Start PIN" maxlength="4" style="text-align:center; font-size:16px; font-weight:700; margin-bottom:6px;">
+              <button class="btn" onclick="verifyStartPin('${claimedJob.id || claimedJob.invoice_no}', '${claimedJob.start_pin}')">Verify Start PIN &amp; Begin Job</button>
+              <button class="btn danger" style="margin-top:6px;" onclick="cancelClaimedJob('${claimedJob.id || claimedJob.invoice_no}')">Cancel Job (15-Min Penalty)</button>
+            </div>
+          ` : claimedJob.job_status === 'in_progress' ? `
+            <div style="margin-top:8px;">
+              <button class="btn" style="background:#b8720a;" onclick="openTechCompletionModal('${claimedJob.id || claimedJob.invoice_no}')">
+                📋 Work Finished: Fill Details, Stop PIN &amp; Generate Bill
+              </button>
+            </div>
+          ` : `
+            <div style="margin-top:8px;">
+              <p style="font-size:11.5px; color:#0f8a4b; font-weight:700;">Bill generated - waiting for customer payment.</p>
+              ${claimedJob.job_status === 'paid_completed' ? `
+                <button class="btn secondary" style="margin-top:6px;" onclick="downloadOrderPdf('${claimedJob.id || claimedJob.invoice_no}')">
+                  📥 Download Tax Invoice PDF
+                </button>
+              ` : ''}
+            </div>
+          `}
+        </div>
+      `;
     } else {
-      document.getElementById('stopPinError').textContent = 'Invalid Stop PIN!';
+      activeSec.innerHTML = '';
+    }
+
+    let poolJobs = [];
+    try {
+      const { data: pool } = await sbClient.from('bookings')
+        .select('*')
+        .eq('service_type', activeTechSession.category)
+        .eq('job_status', 'pending_acceptance')
+        .order('created_at', { ascending: false });
+      if (pool && pool.length > 0) poolJobs = pool;
+    } catch(e){}
+
+    if (poolJobs.length === 0) {
+      let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
+      poolJobs = localPool.filter(j => j.service_type === activeTechSession.category && j.job_status === 'pending_acceptance');
+    }
+
+    const poolList = document.getElementById('availablePoolList');
+    if (!poolJobs || poolJobs.length === 0) {
+      poolList.innerHTML = '<p style="color:#888; font-size:12px; text-align:center; padding:16px 0;">No pending broadcasts in your category pool right now.</p>';
+      return;
+    }
+
+    poolList.innerHTML = poolJobs.map(j => `
+      <div class="card" style="border-left:4px solid #f39c12;">
+        <div style="display:flex; justify-content:space-between;">
+          <b>${j.invoice_no}</b>
+          <span style="font-weight:700; color:#0f8a4b;">${j.service_type?.toUpperCase()}</span>
+        </div>
+        <p style="font-size:12px; color:#333; margin:3px 0;">👤 ${j.customer_name || 'Customer'} (📞 ${j.customer_phone})</p>
+        <p style="font-size:12px; color:#555;">📍 ${j.customer_address}</p>
+        <p style="font-size:11.5px; color:#666;">📋 Details: ${j.extra_services || 'Standard Base'}</p>
+        <button class="btn" style="margin-top:8px;" ${cooldownActive ? 'disabled' : ''} onclick="claimPoolJob('${j.id || j.invoice_no}')">
+          ${cooldownActive ? 'Claim Blocked (Cooldown)' : '⚡ Accept &amp; Claim Job'}
+        </button>
+      </div>
+    `).join('');
+  }
+
+  async function claimPoolJob(jobId) {
+    if (checkCooldownState()) return;
+
+    try {
+      await sbClient.from('bookings').update({ job_status: 'claimed', technician_name: activeTechSession.name }).eq('id', jobId);
+    } catch(e){}
+
+    let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
+    localPool = localPool.map(j => (j.id === jobId || j.invoice_no === jobId) ? { ...j, job_status: 'claimed', technician_name: activeTechSession.name } : j);
+    localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
+
+    renderPoolJobs();
+  }
+
+  async function cancelClaimedJob(jobId) {
+    if (!confirm("Canceling will return this job to pool and enforce a 15-minute cooldown penalty. Continue?")) return;
+
+    const cooldownUntil = Date.now() + 15 * 60 * 1000;
+    localStorage.setItem('tech_cooldown_until', cooldownUntil.toString());
+
+    try { await sbClient.from('bookings').update({ job_status: 'pending_acceptance', technician_name: null }).eq('id', jobId); } catch(e){}
+
+    let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
+    localPool = localPool.map(j => (j.id === jobId || j.invoice_no === jobId) ? { ...j, job_status: 'pending_acceptance', technician_name: null } : j);
+    localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
+
+    renderPoolJobs();
+  }
+
+  // Start PIN verify hote hi start_time DB mein record hota hai - isi se overtime calculate hoga
+  async function verifyStartPin(jobId, correctPin) {
+    const entered = document.getElementById('startPinVerifyInput').value.trim();
+    if (entered === correctPin) {
+      const startTime = new Date().toISOString();
+      try { await sbClient.from('bookings').update({ job_status: 'in_progress', start_time: startTime }).eq('id', jobId); } catch(e){}
+
+      let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
+      localPool = localPool.map(j => (j.id === jobId || j.invoice_no === jobId) ? { ...j, job_status: 'in_progress', start_time: startTime } : j);
+      localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
+
+      alert("Start PIN verified successfully! Job marked In-Progress. Timer shuru ho gaya.");
+      renderPoolJobs();
+    } else {
+      alert("Invalid Start PIN! Please check with customer.");
     }
   }
 
-  // INITIAL LOAD
-  loadTechniciansFromSupabase();
+  // Work Completion Modal Handlers
+  async function openTechCompletionModal(jobId) {
+    let job = null;
+    try {
+      const { data } = await sbClient.from('bookings').select('*').eq('id', jobId).single();
+      job = data;
+    } catch(e){}
+
+    if (!job) {
+      let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
+      job = localPool.find(j => j.id === jobId || j.invoice_no === jobId);
+    }
+    if (!job) return;
+
+    activeModalJob = job;
+    const cfg = SERVICE_CONFIG[job.service_type] || SERVICE_CONFIG.electrician;
+
+    document.getElementById('modalInitialOrderText').textContent = job.extra_services || "Base Scope Package";
+    document.getElementById('modalStopPinInput').value = "";
+    document.getElementById('modalCustomPartsRows').innerHTML = "";
+
+    // Trade-specific spare parts catalog render karein (HSN/SAC code ke saath)
+    const catalog = SPARE_PARTS_CATALOG[job.service_type] || [];
+    document.getElementById('modalPartsCatalog').innerHTML = catalog.map((p, idx) => `
+      <div class="addon-item">
+        <label style="flex:1;">
+          <span>${p.name} <span style="color:#888; font-size:10.5px;">(${p.code})</span></span>
+        </label>
+        <input type="number" class="catalog-part-qty" data-name="${p.name}" data-code="${p.code}" data-rate="${p.rate}"
+          min="0" value="0" style="width:60px; padding:6px; margin:0; text-align:center;" oninput="recalculateModalFinalTotal()">
+        <span class="addon-price" style="width:60px; text-align:right;">₹${p.rate.toFixed(2)}/pc</span>
+      </div>
+    `).join('') || '<p style="font-size:11px; color:#888;">No preset catalog for this category</p>';
+
+    if (job.start_time) {
+      const hrs = (Date.now() - new Date(job.start_time).getTime()) / 3600000;
+      document.getElementById('modalElapsedTimeText').textContent = `Job duration so far: ${hrs.toFixed(2)} hours`;
+    } else {
+      document.getElementById('modalElapsedTimeText').textContent = 'Job duration: start time not recorded';
+    }
+
+    const checklistContainer = document.getElementById('modalAddonsChecklist');
+    checklistContainer.innerHTML = cfg.addons.map(a => `
+      <div class="addon-item">
+        <label>
+          <input type="checkbox" class="modal-addon-cb" data-name="${a.name}" data-price="${a.price}" onchange="recalculateModalFinalTotal()">
+          <span>${a.name}</span>
+        </label>
+        <span class="addon-price">${a.price > 0 ? '+₹' + a.price.toFixed(2) : '₹0.00'}</span>
+      </div>
+    `).join('');
+
+    recalculateModalFinalTotal();
+    document.getElementById('techCompletionModal').style.display = 'flex';
+  }
+
+  function closeTechCompletionModal() {
+    document.getElementById('techCompletionModal').style.display = 'none';
+    activeModalJob = null;
+  }
+
+  // Catalog mein na ho aisa part - manual custom entry row
+  function addCustomPartRow() {
+    const id = 'custpart' + Date.now();
+    const row = document.createElement('div');
+    row.id = id;
+    row.style.cssText = 'display:flex; gap:6px; margin-bottom:6px;';
+    row.innerHTML = `
+      <input type="text" placeholder="Part Name" class="custom-part-name" style="flex:2; margin:0; padding:8px; font-size:12px;">
+      <input type="text" placeholder="HSN/SAC" class="custom-part-code" style="flex:1; margin:0; padding:8px; font-size:12px;">
+      <input type="number" placeholder="Qty" class="custom-part-qty" value="1" style="width:50px; margin:0; padding:8px; font-size:12px;" oninput="recalculateModalFinalTotal()">
+      <input type="number" placeholder="Rate ₹" class="custom-part-rate" style="width:65px; margin:0; padding:8px; font-size:12px;" oninput="recalculateModalFinalTotal()">
+      <button type="button" onclick="document.getElementById('${id}').remove(); recalculateModalFinalTotal();" style="background:#e74c3c; color:#fff; border:none; border-radius:6px; padding:0 10px;">✕</button>
+    `;
+    document.getElementById('modalCustomPartsRows').appendChild(row);
+  }
+
+  // Catalog + custom parts se total materials cost aur line-item breakdown nikalein
+  function getPartsBreakdown() {
+    let total = 0;
+    let lineItems = [];
+
+    document.querySelectorAll('.catalog-part-qty').forEach(inp => {
+      const qty = parseFloat(inp.value) || 0;
+      if (qty > 0) {
+        const rate = parseFloat(inp.getAttribute('data-rate'));
+        const lineTotal = qty * rate;
+        total += lineTotal;
+        lineItems.push({ name: inp.getAttribute('data-name'), code: inp.getAttribute('data-code'), qty, rate, total: lineTotal });
+      }
+    });
+
+    document.querySelectorAll('#modalCustomPartsRows > div').forEach(row => {
+      const name = row.querySelector('.custom-part-name').value.trim();
+      const code = row.querySelector('.custom-part-code').value.trim() || '-';
+      const qty = parseFloat(row.querySelector('.custom-part-qty').value) || 0;
+      const rate = parseFloat(row.querySelector('.custom-part-rate').value) || 0;
+      if (name && qty > 0 && rate > 0) {
+        const lineTotal = qty * rate;
+        total += lineTotal;
+        lineItems.push({ name, code, qty, rate, total: lineTotal });
+      }
+    });
+
+    return { total, lineItems };
+  }
+
+  // Overtime: 3 ghante se upar, ₹100/ghanta (ceil kiya gaya) - complete_and_calculate_job SQL logic yahan mirror ki gayi hai
+  function calculateOvertime(job) {
+    if (!job || !job.start_time) return { hours: 0, charge: 0 };
+    const elapsedHours = (Date.now() - new Date(job.start_time).getTime()) / 3600000;
+    if (elapsedHours <= FREE_HOURS_BEFORE_OVERTIME) return { hours: 0, charge: 0 };
+    const extraHours = Math.ceil(elapsedHours - FREE_HOURS_BEFORE_OVERTIME);
+    return { hours: extraHours, charge: extraHours * OVERTIME_RATE_PER_HOUR };
+  }
+
+  function recalculateModalFinalTotal() {
+    if (!activeModalJob) return;
+    const cfg = SERVICE_CONFIG[activeModalJob.service_type] || SERVICE_CONFIG.electrician;
+    const baseAmount = cfg.total;
+    const initialAddonsCost = parseFloat(activeModalJob.extra_parts_cost) || 0;
+
+    let extraOnSiteCost = 0;
+    document.querySelectorAll('.modal-addon-cb:checked').forEach(cb => {
+      extraOnSiteCost += parseFloat(cb.getAttribute('data-price')) || 0;
+    });
+
+    const partsBreakdown = getPartsBreakdown();
+    const extraMaterialCost = partsBreakdown.total;
+    const overtime = calculateOvertime(activeModalJob);
+
+    const grandTotal = baseAmount + initialAddonsCost + extraOnSiteCost + extraMaterialCost + overtime.charge;
+    const netDue = grandTotal - 21;
+
+    document.getElementById('modalBaseDisp').textContent = `₹${baseAmount.toFixed(2)}`;
+    document.getElementById('modalInitialAddonsDisp').textContent = `+₹${initialAddonsCost.toFixed(2)}`;
+    document.getElementById('modalExtraWorkDisp').textContent = `+₹${extraOnSiteCost.toFixed(2)}`;
+    document.getElementById('modalMaterialsDisp').textContent = `+₹${extraMaterialCost.toFixed(2)}`;
+
+    if (overtime.charge > 0) {
+      document.getElementById('modalOvertimeRow').style.display = 'flex';
+      document.getElementById('modalOvertimeLabel').textContent = `Overtime (${overtime.hours} hr @ ₹100/hr):`;
+      document.getElementById('modalOvertimeDisp').textContent = `+₹${overtime.charge.toFixed(2)}`;
+    } else {
+      document.getElementById('modalOvertimeRow').style.display = 'none';
+    }
+
+    document.getElementById('modalFinalNetDue').textContent = `₹${netDue.toFixed(2)}`;
+  }
+
+  async function submitFinalCalculatedBill() {
+    if (!activeModalJob) return;
+
+    const enteredPin = document.getElementById('modalStopPinInput').value.trim();
+    const partsBreakdown = getPartsBreakdown();
+    const extraMaterialCost = partsBreakdown.total;
+
+    if (!enteredPin) {
+      alert("Mandatory: Please enter Customer 4-digit Stop PIN.");
+      return;
+    }
+
+    // Koi universal bypass PIN nahi - sirf sahi Stop PIN se hi bill banega
+    if (enteredPin !== activeModalJob.stop_pin) {
+      alert("Invalid Stop PIN. Please ask customer for correct 4-digit Stop PIN.");
+      return;
+    }
+
+    const cfg = SERVICE_CONFIG[activeModalJob.service_type] || SERVICE_CONFIG.electrician;
+    const baseAmount = cfg.total;
+    const initialAddonsCost = parseFloat(activeModalJob.extra_parts_cost) || 0;
+
+    let extraOnSiteNames = [];
+    let extraOnSiteCost = 0;
+    document.querySelectorAll('.modal-addon-cb:checked').forEach(cb => {
+      extraOnSiteNames.push(`${cb.getAttribute('data-name')} (₹${cb.getAttribute('data-price')})`);
+      extraOnSiteCost += parseFloat(cb.getAttribute('data-price')) || 0;
+    });
+
+    const overtime = calculateOvertime(activeModalJob);
+    const grandTotal = baseAmount + initialAddonsCost + extraOnSiteCost + extraMaterialCost + overtime.charge;
+    const netDue = grandTotal - 21;
+
+    const partsSummary = partsBreakdown.lineItems.map(p => `${p.name} x${p.qty} (${p.code})`).join(', ') || 'None';
+    const fullWorkDescription = `${activeModalJob.extra_services || 'Base Package'} | Extras: ${extraOnSiteNames.join(', ') || 'None'} | Spares: ${partsSummary}`;
+
+    const updatePayload = {
+      job_status: 'work_completed',
+      extra_services: fullWorkDescription,
+      extra_on_site_cost: extraOnSiteCost,
+      extra_material_cost: extraMaterialCost,
+      spare_parts_json: JSON.stringify(partsBreakdown.lineItems),
+      overtime_hours: overtime.hours,
+      overtime_charge: overtime.charge,
+      calculated_total: netDue,
+      end_time: new Date().toISOString()
+    };
+
+    try {
+      await sbClient.from('bookings').update(updatePayload).eq('id', activeModalJob.id || activeModalJob.invoice_no);
+    } catch(e){}
+
+    let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
+    localPool = localPool.map(j => (j.id === activeModalJob.id || j.invoice_no === activeModalJob.invoice_no) ? { ...j, ...updatePayload } : j);
+    localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
+
+    closeTechCompletionModal();
+    // The technician does NOT see the customer's payment screen - it opens only in the customer's own profile
+    navigateTo('bill-submitted');
+  }
+
+  // Customer confirms payment from their own profile, on their own device
+  async function completeFinalSettlement() {
+    if (!currentSettlementJob) return;
+
+    // Payment validation enforcement - same manual-verification safeguard as the advance token step
+    const txnRefInput = document.getElementById('finalTxnRefInput');
+    const txnRef = txnRefInput.value.trim();
+    const txnErrEl = document.getElementById('finalTxnError');
+    if (txnRef.length < 4) {
+      txnErrEl.textContent = "Please enter the UPI transaction/reference ID shown in your payment app after paying.";
+      return;
+    }
+    txnErrEl.textContent = "";
+
+    try {
+      await sbClient.from('bookings').update({
+        job_status: 'paid_completed',
+        payment_status: 'settled_full',
+        final_txn_ref: txnRef
+      }).eq('id', currentSettlementJob.id);
+    } catch(e){}
+
+    let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
+    localPool = localPool.map(j => (j.id === currentSettlementJob.id || j.invoice_no === currentSettlementJob.invoice_no) ? {
+      ...j,
+      job_status: 'paid_completed',
+      payment_status: 'settled_full',
+      final_txn_ref: txnRef
+    } : j);
+    localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
+
+    closeCustomerPaymentModal();
+    alert("Final payment verified! Generating official Tax Invoice PDF.");
+    downloadOrderPdf(currentSettlementJob.id || currentSettlementJob.invoice_no);
+    loadCustomerOrders();
+  }
+
+  // ==================== STEP 5: ADMIN 360° SURVEILLANCE & REPORTS ====================
+  // सिर्फ़ इन दो अधिकृत ईमेल से ही Admin login हो सकता है
+  const ADMIN_ALLOWED_EMAILS = ['kashvienterprises.bihar@gmail.com', 'rishikeshsingh815@gmail.com'];
+
+  function adminGlobalLogin() {
+    const emailInput = document.getElementById('adminEmailInput');
+    const passInput = document.getElementById('adminPassInput');
+    const email = emailInput.value.trim().toLowerCase();
+    const pass = passInput.value.trim();
+    const msg = document.getElementById('authMsg');
+
+    if (!ADMIN_ALLOWED_EMAILS.includes(email)) {
+      msg.textContent = "This email is not authorized for Admin access.";
+      msg.style.color = "#c0392b";
+      emailInput.value = "";
+      passInput.value = "";
+      emailInput.focus();
+      return;
+    }
+
+    if (pass === 'admin123' || pass === 'Admin123') {
+      isAdminLoggedIn = true;
+      adminEmail = email;
+      msg.textContent = "";
+      updateRoleBasedNavigation();
+      navigateTo('admin', true);
+      loadAdminGlobalFeed();
+      loadTechnicianFleet();
+      loadCustomerAccounts();
+    } else {
+      msg.textContent = "Invalid Admin Password. Re-enter password.";
+      msg.style.color = "#c0392b";
+      passInput.value = "";
+      passInput.focus();
+    }
+  }
+
+  async function loadAdminGlobalFeed() {
+    const feed = document.getElementById('adminGlobalFeed');
+    feed.innerHTML = '<p style="color:#888; font-size:12px;">Loading global surveillance feed...</p>';
+
+    let data = [];
+    try {
+      const res = await sbClient.from('bookings').select('*').order('created_at', { ascending: false });
+      if (res.data) data = res.data;
+    } catch(e){}
+
+    if (data.length === 0) data = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
+
+    if (data.length === 0) {
+      feed.innerHTML = '<p style="color:#888; font-size:12px;">No active records in database.</p>';
+      return;
+    }
+
+    feed.innerHTML = data.map(b => {
+      const isPaid = b.job_status === 'paid_completed';
+      const isBillReady = b.job_status === 'work_completed';
+      let statusColor = '#d97706';
+      let statusText = (b.job_status || 'pending').toUpperCase();
+      if (isPaid) { statusColor = '#0f8a4b'; statusText = '✔ PAID & COMPLETED'; }
+      else if (isBillReady) { statusColor = '#b8720a'; statusText = '🧾 BILL READY - AWAITING CUSTOMER PAYMENT'; }
+
+      return `
+        <div class="card" style="font-size:12px; margin-bottom:8px; border-left:4px solid ${statusColor};">
+          <div style="display:flex; justify-content:space-between;">
+            <b>${b.invoice_no} [${b.service_type?.toUpperCase()}]</b>
+            <span style="font-weight:700; color:${statusColor};">${statusText}</span>
+          </div>
+          <p style="margin-top:2px;">Customer: <b>${b.customer_name || 'Customer'}</b> (📞 ${b.customer_phone})</p>
+          <p>Tech Assigned: <b>${b.technician_name || 'Unassigned (In Pool)'}</b></p>
+          <p>PINs Surveillance: 🟢 Start PIN: <b>${b.start_pin}</b> | 🔴 Stop PIN: <b>${b.stop_pin}</b></p>
+          <p style="color:#555;">Address: ${b.customer_address}</p>
+          ${isPaid ? `
+          <div style="margin-top:6px;">
+            <button class="btn secondary" style="padding:4px 8px; font-size:10.5px; width:auto;" onclick="downloadOrderPdf('${b.id || b.invoice_no}')">
+              📄 View Tax Invoice PDF
+            </button>
+          </div>` : ''}
+        </div>
+      `;
+    }).join('');
+  }
+
+  async function registerTechnician() {
+    const name = document.getElementById('newTechName').value.trim();
+    const contactPhone = document.getElementById('newTechPhone').value.trim();
+    const category = document.getElementById('newTechCat').value;
+    const qualification = document.getElementById('newTechQualification').value.trim();
+    const experienceYears = document.getElementById('newTechExperience').value.trim();
+    const pin = document.getElementById('newTechPin').value.trim();
+
+    if (!name || pin.length !== 4) { alert("Enter technician name and 4-digit PIN."); return; }
+    if (!/^[6-9]\d{9}$/.test(contactPhone)) { alert("Enter a valid 10-digit contact phone number."); return; }
+
+    // Fetch existing tech_codes and find the highest number - more reliable than count(),
+    // and if this fetch fails, we surface the real error instead of silently hiding it.
+    let nextNum = 1;
+    try {
+      const { data: existingTechs, error } = await sbClient.from('technicians').select('tech_code');
+      if (error) throw error;
+      const nums = (existingTechs || [])
+        .map(t => t.tech_code)
+        .filter(Boolean)
+        .map(code => parseInt(String(code).replace('TECH-', ''), 10))
+        .filter(n => !isNaN(n));
+      if (nums.length > 0) nextNum = Math.max(...nums) + 1;
+    } catch(e) {
+      alert("Warning: Could not check existing Technician IDs (connection/permission issue: " + e.message + "). Registration cancelled - please check your Supabase connection and try again.");
+      return;
+    }
+
+    const techCode = 'TECH-' + String(nextNum).padStart(3, '0');
+
+    // NOTE: the 'phone' column stores the LOGIN PIN (kept for backward compatibility with
+    // existing login logic) - the real contact number is stored separately as 'contact_phone'.
+    const { error: insertError } = await sbClient.from('technicians').insert([{
+      name, phone: pin, category, is_available: true, tech_code: techCode,
+      contact_phone: contactPhone, qualification: qualification || null,
+      experience_years: experienceYears ? parseInt(experienceYears, 10) : null
+    }]);
+
+    if (insertError) {
+      alert("Failed to register technician!\nError: " + insertError.message + "\nTechnician was NOT saved - please fix the issue and try again.");
+      return;
+    }
+
+    document.getElementById('newTechName').value = '';
+    document.getElementById('newTechPhone').value = '';
+    document.getElementById('newTechQualification').value = '';
+    document.getElementById('newTechExperience').value = '';
+    document.getElementById('newTechPin').value = '';
+    alert(`Technician ${name} registered successfully!\nTechnician ID: ${techCode}\nPIN: ${pin}\n\nGive BOTH of these to the technician for login.`);
+    loadTechnicianFleet();
+  }
+
+  // ===== Technician Fleet: Admin block/unblock kar sake =====
+  async function loadTechnicianFleet() {
+    const container = document.getElementById('techFleetList');
+    if (!container) return;
+    let techs = [];
+    try {
+      const { data } = await sbClient.from('technicians').select('*').order('created_at', { ascending: false });
+      if (data) techs = data;
+    } catch(e){}
+
+    if (techs.length === 0) { container.innerHTML = '<p style="color:#888; font-size:12px;">No technicians registered yet.</p>'; return; }
+
+    container.innerHTML = techs.map(t => `
+      <div style="padding:6px 0; border-bottom:1px solid #eee; font-size:12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span>${t.is_available === false ? '🔴' : '🟢'} <b>${t.tech_code || '-'}</b> ${t.name} (${t.category})</span>
+          <button class="btn ${t.is_available === false ? 'secondary' : 'danger'}" style="width:auto; padding:4px 10px; font-size:10.5px;" onclick="toggleTechnicianBlock('${t.id}', ${t.is_available === false})">
+            ${t.is_available === false ? 'Unblock' : 'Block'}
+          </button>
+        </div>
+        <div style="color:#888; font-size:10.5px; margin-top:2px; padding-left:20px;">
+          📞 ${t.contact_phone || 'N/A'} · 🎓 ${t.qualification || 'Not specified'} · 🕐 ${t.experience_years != null ? t.experience_years + ' yrs experience' : 'Experience not specified'}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  async function toggleTechnicianBlock(techId, shouldUnblock) {
+    try { await sbClient.from('technicians').update({ is_available: shouldUnblock }).eq('id', techId); } catch(e){}
+    loadTechnicianFleet();
+  }
+
+  // ===== Customer Accounts: Admin fraud customer block kar sake =====
+  async function loadCustomerAccounts() {
+    const container = document.getElementById('customerAccountsList');
+    if (!container) return;
+    let customers = [];
+    try {
+      const { data } = await sbClient.from('customers').select('*').order('created_at', { ascending: false });
+      if (data) customers = data;
+    } catch(e){}
+
+    if (customers.length === 0) { container.innerHTML = '<p style="color:#888; font-size:12px;">No customer accounts found.</p>'; return; }
+
+    container.innerHTML = customers.map(c => `
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid #eee; font-size:12px;">
+        <span>${c.is_blocked ? '🚫' : '✅'} ${c.name || 'Customer'} (📞 ${c.phone})</span>
+        <button class="btn ${c.is_blocked ? 'secondary' : 'danger'}" style="width:auto; padding:4px 10px; font-size:10.5px;" onclick="toggleCustomerBlock('${c.phone}', ${!c.is_blocked})">
+          ${c.is_blocked ? 'Unblock' : 'Block (Fraud)'}
+        </button>
+      </div>
+    `).join('');
+  }
+
+  async function toggleCustomerBlock(phone, shouldBlock) {
+    try { await sbClient.from('customers').update({ is_blocked: shouldBlock }).eq('phone', phone); } catch(e){}
+    loadCustomerAccounts();
+  }
+
+  async function downloadShiftReport() {
+    let data = [];
+    try {
+      const res = await sbClient.from('bookings').select('*');
+      if (res.data) data = res.data;
+    } catch(e){}
+
+    if (data.length === 0) data = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
+
+    const shiftData = data.filter(b => {
+      const d = new Date(b.created_at || Date.now());
+      const hours = d.getHours();
+      return hours >= 6 && hours < 18;
+    });
+
+    if (shiftData.length === 0) { alert("No work records found between 06:00 AM and 06:00 PM today."); return; }
+
+    let csv = "data:text/csv;charset=utf-8,InvoiceNo,CustomerName,CustomerPhone,Address,Technician,Status,Date\r\n";
+    shiftData.forEach(row => {
+      csv += `"${row.invoice_no}","${row.customer_name||''}","${row.customer_phone}","${row.customer_address}","${row.technician_name||''}","${row.job_status}","${row.created_at||''}"\r\n`;
+    });
+
+    const encodedUri = encodeURI(csv);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "Bijli_Mitra_Shift_Report_06AM_06PM.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  // Handle Post-Registration Auto-Fill and State Initialization
+  const justRegisteredPhone = sessionStorage.getItem('bm_just_registered_phone');
+  if (justRegisteredPhone) {
+    sessionStorage.removeItem('bm_just_registered_phone');
+    toggleCustomerAuthMode();
+    document.getElementById('authPhone').value = justRegisteredPhone;
+    document.getElementById('authMsg').textContent = "Account created! Please enter your 6-digit password to log in.";
+    document.getElementById('authMsg').style.color = "#0f8a4b";
+  }
+
+  // ===== Hindi / English toggle - app default English hai, Hindi optional =====
+  let currentLang = 'en';
+
+  const uiTranslations = {
+    en: {
+      termsText: `<b>Terms &amp; Conditions:</b><br>
+        1. A limited 30-day warranty applies only to the repair work performed.<br>
+        2. Warranty on newly installed spare parts is governed solely by the manufacturer's policy.<br>
+        3. Electrical parts that have been used, cut (wires), unsealed, or fitted are non-returnable.<br>
+        4. Kashvi Enterprises (Bijli Mitra) is not liable for damage caused by pre-existing faulty wiring, voltage fluctuations, or unauthorized third-party tampering.<br>
+        5. Transformer failures, phase issues (single/three phase), pole-related problems, and new electricity connections fall under the jurisdiction of the Bihar Electricity Board and are outside the scope of our company. In such cases, we can only offer guidance, not resolution.<br>
+        I agree to the ₹21 advance token and all the above terms.`,
+      advancePayAlert: `⚠️ Important: Payment confirmation is NOT automatic just from scanning the QR (UPI has no automatic callback for this). Before clicking "Payment Confirmed" below, please make sure the payment has actually gone through — for true automatic verification, a payment gateway like Razorpay/Cashfree is recommended in the future.`,
+      finalPayAlert: `⚠️ Only click "Payment Confirmed" below after the actual payment has gone through post-QR scan.`,
+      billSubmittedTitle: `Bill Successfully Generated`,
+      billSubmittedText: `The customer will see the payment QR on their own phone/profile. Your part of the job is complete here.`,
+      backToPoolBtn: `Back to Job Pool`,
+
+      // Home screen
+      homeMapTitle: `Begusarai Street Dispatch Map`,
+      homeSelectCat: `Select Service Category`,
+      catElecTitle: `⚡ Electrical Services`,
+      catElecDesc: `Wiring, Switches, Fans, MCB, Inverter`,
+      catElecPrice: `₹299 Base`,
+      catAcTitle: `❄️ AC Repair &amp; Service`,
+      catAcDesc: `Jet Pump Wash, Installation, Gas Refill`,
+      catAcPrice: `₹799 Base`,
+      catPlumbTitle: `🔧 Plumbing Works`,
+      catPlumbDesc: `Pipelines, Taps, Leakages, Tank Cleaning`,
+      catPlumbPrice: `₹299 Base`,
+      catGstNote: `(incl. 18% GST)`,
+      commercialTitle: `🏢 Commercial &amp; Bulk Order Desk`,
+      commercialText: `For bulk, commercial, or enterprise requirements (Hotels, Commercial Complexes, Hospitals, and Institutions) covering HVAC/AC, Electrical, or Plumbing maintenance, please contact our corporate desk at: <a href="mailto:kashvienterprises.bihar@gmail.com" style="color:#4338ca; font-weight:700;">kashvienterprises.bihar@gmail.com</a>`,
+
+      // Auth screen
+      googleBtn: `Continue with Google`,
+      orDivider: `— or use phone &amp; password —`,
+      fullNamePh: `Full Name (e.g. Ramesh Kumar)`,
+      selectAddrMap: `📍 Select Address from Map:`,
+      tapMapHint: `Tap your street/home location on the map below:`,
+      selectedAddrPh: `Selected Address (or type detailed landmark)`,
+      mobilePh: `10-Digit Mobile Number (e.g. 7549898581)`,
+      passwordPh: `6-Digit Password`,
+      techLoginLink: `🧑‍🔧 Staff/Technician Login`,
+      adminAccessLink: `🔐 Admin Access`,
+      techLoginHeading: `🧑‍🔧 Technician Login`,
+      techIdPh: `Technician ID (e.g. TECH-001)`,
+      techPinPh: `4-Digit PIN Assigned by Admin`,
+      techLoginBtn: `Login to Job Pool`,
+      adminLoginHeading: `🔐 Admin Login`,
+      adminEmailPh: `Authorized Admin Email`,
+      adminPassPh: `Admin Password (admin123)`,
+      adminLoginBtn: `Login as Admin`,
+      custRegTitle: `Customer Registration`,
+      custLoginTitle: `Customer Login`,
+      switchToLoginBtn: `Switch to Login`,
+      switchToSignupBtn: `Switch to Sign Up`,
+      createAcctBtn: `Create Account & Proceed`,
+      loginProceedBtn: `Login & Proceed`,
+
+      // Profile screen
+      logoutBtn: `Logout`,
+      myBookingHistory: `My Personal Booking History &amp; Status`,
+      refreshBtn: `🔄 Refresh`,
+      loadingBookings: `Loading your past bookings...`,
+
+      // Booking screen
+      backBtn: `← Back`,
+      addonsHeading: `Additional Work / Add-ons (Optional):`,
+      baseServicePack: `Base Service Pack (incl. GST)`,
+      selectedAddonsTotal: `Selected Add-ons Total`,
+      estTotalAmount: `Estimated Total Work Amount`,
+      advanceToken: `Advance Booking Token`,
+      dueAfterToken: `Due Amount After Token`,
+      tokenNote: `*Note: The ₹21 token is deducted on the final invoice bill.`,
+      serviceAddrLabel: `Service Address:`,
+      serviceAddrPh: `Your complete address (or select from map below)`,
+      mapPickerLabel: `📍 Map Location Picker`,
+      toggleMapBtn: `Toggle Map`,
+      tapPinHint: `Tap anywhere on map to pin exact location:`,
+      mobileNoLabel: `Customer Mobile Number:`,
+      proceedPayBtn: `Proceed to Pay Advance Token (₹21.00)`,
+
+      // Navigation
+      masterAdmin: `Master Admin`,
+      navLogout: `Logout`,
+      navAdmin: `Admin`,
+      navJobPool: `Job Pool`,
+      navCategories: `Categories`,
+      navProfileOrders: `Profile &amp; Orders`,
+      navSignIn: `Sign In`,
+      deskBookCategory: `Book Category`,
+      deskMyProfile: `My Profile &amp; History`,
+      deskTechPool: `Technician Job Pool`,
+      deskAdminMgmt: `Admin Management`
+    },
+    hi: {
+      termsText: `<b>नियम एवं शर्तें:</b><br>
+        1. केवल किए गए मरम्मत कार्य पर 30 दिन की सीमित वारंटी लागू होगी।<br>
+        2. नए लगाए गए स्पेयर पार्ट्स की वारंटी केवल निर्माता की नीति के अनुसार ही मान्य होगी।<br>
+        3. उपयोग किए जा चुके, काटे गए (तार), खोले गए, या फिट किए गए इलेक्ट्रिकल पार्ट्स वापस नहीं लिए जाएंगे।<br>
+        4. कश्वी एंटरप्राइज़ेज़ (बिजली मित्र) पहले से खराब वायरिंग, वोल्टेज उतार-चढ़ाव, या किसी तीसरे पक्ष की छेड़छाड़ से हुए नुकसान के लिए ज़िम्मेदार नहीं है।<br>
+        5. ट्रांसफ़ॉर्मर खराबी, फेज़ (सिंगल/थ्री फेज़) से जुड़ी समस्या, बिजली के खंभे की समस्या, या नया बिजली कनेक्शन — ये सभी बिहार बिजली विभाग के अधिकार क्षेत्र में आते हैं, हमारी कंपनी के अंतर्गत नहीं। ऐसे मामलों में हम केवल मार्गदर्शन दे सकते हैं, समाधान नहीं कर सकते।<br>
+        मैं ₹21 का अग्रिम टोकन व उपरोक्त सभी शर्तें स्वीकार करता/करती हूँ।`,
+      advancePayAlert: `⚠️ ज़रूरी: भुगतान की पुष्टि सिर्फ़ QR स्कैन से अपने-आप नहीं होती (UPI में ऐसा कोई automatic कॉलबैक नहीं होता)। नीचे "Payment Confirmed" बटन दबाने से पहले सुनिश्चित करें कि पेमेंट सच में हो चुका है — असली automatic verification के लिए भविष्य में Razorpay/Cashfree जैसा पेमेंट गेटवे जोड़ने की सलाह है।`,
+      finalPayAlert: `⚠️ QR स्कैन करने के बाद असली भुगतान होने पर ही नीचे "Payment Confirmed" दबाएं।`,
+      billSubmittedTitle: `बिल सफलतापूर्वक बन गया`,
+      billSubmittedText: `ग्राहक को उनके अपने फ़ोन/प्रोफ़ाइल में भुगतान QR दिखेगा। आपका काम यहां पूरा हुआ।`,
+      backToPoolBtn: `जॉब पूल पर वापस जाएं`,
+
+      // Home screen
+      homeMapTitle: `बेगूसराय स्ट्रीट डिस्पैच मैप`,
+      homeSelectCat: `सेवा श्रेणी चुनें`,
+      catElecTitle: `⚡ इलेक्ट्रिकल सेवाएं`,
+      catElecDesc: `वायरिंग, स्विच, पंखे, MCB, इन्वर्टर`,
+      catElecPrice: `₹299 शुरुआती`,
+      catAcTitle: `❄️ एसी मरम्मत एवं सेवा`,
+      catAcDesc: `जेट पंप वॉश, इंस्टॉलेशन, गैस रीफिल`,
+      catAcPrice: `₹799 शुरुआती`,
+      catPlumbTitle: `🔧 प्लंबिंग कार्य`,
+      catPlumbDesc: `पाइपलाइन, नल, रिसाव, टंकी सफ़ाई`,
+      catPlumbPrice: `₹299 शुरुआती`,
+      catGstNote: `(18% जीएसटी सहित)`,
+      commercialTitle: `🏢 कमर्शियल एवं बल्क ऑर्डर डेस्क`,
+      commercialText: `होटल, कमर्शियल कॉम्प्लेक्स, अस्पताल और संस्थानों के लिए बल्क/कमर्शियल/एंटरप्राइज़ ज़रूरतों (HVAC/AC, इलेक्ट्रिकल, या प्लंबिंग मेंटेनेंस) के लिए हमारे कॉर्पोरेट डेस्क से संपर्क करें: <a href="mailto:kashvienterprises.bihar@gmail.com" style="color:#4338ca; font-weight:700;">kashvienterprises.bihar@gmail.com</a>`,
+
+      // Auth screen
+      googleBtn: `Google से जारी रखें`,
+      orDivider: `— या फ़ोन और पासवर्ड इस्तेमाल करें —`,
+      fullNamePh: `पूरा नाम (जैसे: रमेश कुमार)`,
+      selectAddrMap: `📍 मैप से पता चुनें:`,
+      tapMapHint: `नीचे मैप पर अपनी गली/घर की लोकेशन पर टैप करें:`,
+      selectedAddrPh: `चुना गया पता (या विस्तृत लैंडमार्क लिखें)`,
+      mobilePh: `10 अंकों का मोबाइल नंबर (जैसे: 7549898581)`,
+      passwordPh: `6 अंकों का पासवर्ड`,
+      techLoginLink: `🧑‍🔧 स्टाफ़/टेक्नीशियन लॉगिन`,
+      adminAccessLink: `🔐 एडमिन एक्सेस`,
+      techLoginHeading: `🧑‍🔧 टेक्नीशियन लॉगिन`,
+      techIdPh: `टेक्नीशियन आईडी (जैसे: TECH-001)`,
+      techPinPh: `एडमिन द्वारा दिया गया 4-अंकों का पिन`,
+      techLoginBtn: `जॉब पूल में लॉगिन करें`,
+      adminLoginHeading: `🔐 एडमिन लॉगिन`,
+      adminEmailPh: `अधिकृत एडमिन ईमेल`,
+      adminPassPh: `एडमिन पासवर्ड (admin123)`,
+      adminLoginBtn: `एडमिन के रूप में लॉगिन करें`,
+      custRegTitle: `ग्राहक पंजीकरण`,
+      custLoginTitle: `ग्राहक लॉगिन`,
+      switchToLoginBtn: `लॉगिन पर जाएं`,
+      switchToSignupBtn: `साइन अप पर जाएं`,
+      createAcctBtn: `अकाउंट बनाएं और आगे बढ़ें`,
+      loginProceedBtn: `लॉगिन करें और आगे बढ़ें`,
+
+      // Profile screen
+      logoutBtn: `लॉगआउट`,
+      myBookingHistory: `मेरी बुकिंग हिस्ट्री एवं स्टेटस`,
+      refreshBtn: `🔄 रीफ़्रेश`,
+      loadingBookings: `आपकी पिछली बुकिंग लोड हो रही हैं...`,
+
+      // Booking screen
+      backBtn: `← वापस`,
+      addonsHeading: `अतिरिक्त कार्य / ऐड-ऑन (वैकल्पिक):`,
+      baseServicePack: `बेस सर्विस पैक (जीएसटी सहित)`,
+      selectedAddonsTotal: `चुने गए ऐड-ऑन कुल`,
+      estTotalAmount: `अनुमानित कुल राशि`,
+      advanceToken: `एडवांस बुकिंग टोकन`,
+      dueAfterToken: `टोकन के बाद बकाया राशि`,
+      tokenNote: `*नोट: ₹21 का टोकन फ़ाइनल इनवॉइस बिल में से घटाया जाएगा।`,
+      serviceAddrLabel: `सेवा पता:`,
+      serviceAddrPh: `आपका पूरा पता (या नीचे मैप से चुनें)`,
+      mapPickerLabel: `📍 मैप लोकेशन पिकर`,
+      toggleMapBtn: `मैप टॉगल करें`,
+      tapPinHint: `सही लोकेशन पिन करने के लिए मैप पर कहीं भी टैप करें:`,
+      mobileNoLabel: `ग्राहक का मोबाइल नंबर:`,
+      proceedPayBtn: `एडवांस टोकन (₹21.00) का भुगतान करें`,
+
+      // Navigation
+      masterAdmin: `मास्टर एडमिन`,
+      navLogout: `लॉगआउट`,
+      navAdmin: `एडमिन`,
+      navJobPool: `जॉब पूल`,
+      navCategories: `श्रेणियां`,
+      navProfileOrders: `प्रोफ़ाइल एवं ऑर्डर`,
+      navSignIn: `साइन इन`,
+      deskBookCategory: `श्रेणी बुक करें`,
+      deskMyProfile: `मेरी प्रोफ़ाइल एवं हिस्ट्री`,
+      deskTechPool: `टेक्नीशियन जॉब पूल`,
+      deskAdminMgmt: `एडमिन प्रबंधन`
+    }
+  };
+
+  function setLanguage(lang) {
+    currentLang = lang;
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (uiTranslations[lang][key] !== undefined) el.innerHTML = uiTranslations[lang][key];
+    });
+
+    document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+      const key = el.getAttribute('data-i18n-ph');
+      if (uiTranslations[lang][key] !== undefined) el.setAttribute('placeholder', uiTranslations[lang][key]);
+    });
+
+    document.querySelectorAll('.lang-option').forEach(el => {
+      el.classList.toggle('active', el.getAttribute('data-lang') === lang);
+    });
+
+    // Dynamically-generated text (nav bar, auth title/buttons) ko bhi turant refresh karein
+    applyAuthModeLanguage();
+    updateRoleBasedNavigation();
+  }
+
+  updateRoleBasedNavigation();
+  initSignupMap();
+  setInterval(checkCooldownState, 1000);
+
 </script>
 
 </body>
