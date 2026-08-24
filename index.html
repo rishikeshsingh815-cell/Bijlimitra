@@ -501,8 +501,10 @@
           🚀 Open in UPI App (PhonePe / GPay)
         </a>
 
-        <label style="font-size:12px; font-weight:600; color:#444; margin-bottom:4px; display:block;">UPI Transaction / Reference ID (from your payment app):</label>
-        <input type="text" id="advanceTxnRefInput" placeholder="e.g. last 12-digit UTR number shown after payment">
+        <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer; margin-bottom:10px; font-size:13px; color:#333;">
+          <input type="checkbox" id="advancePaidCheckbox" style="width:18px; height:18px; margin-top:1px;">
+          <span>I have completed the ₹21 payment via UPI</span>
+        </label>
         <p id="advanceTxnError" style="color:#c0392b; font-size:11px; margin-bottom:8px;"></p>
 
         <button class="btn secondary" onclick="broadcastJobToPool()">
@@ -722,8 +724,10 @@
       🚀 Open in UPI App (PhonePe / GPay)
     </a>
 
-    <label style="font-size:12px; font-weight:600; color:#444; margin-bottom:4px; display:block;">UPI Transaction / Reference ID (from your payment app):</label>
-    <input type="text" id="finalTxnRefInput" placeholder="e.g. last 12-digit UTR number shown after payment">
+    <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer; margin-bottom:10px; font-size:13px; color:#333;">
+      <input type="checkbox" id="finalPaidCheckbox" style="width:18px; height:18px; margin-top:1px;">
+      <span>I have completed the full payment via UPI</span>
+    </label>
     <p id="finalTxnError" style="color:#c0392b; font-size:11px; margin-bottom:8px;"></p>
 
     <button class="btn secondary" onclick="completeFinalSettlement()">
@@ -762,7 +766,7 @@
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3c21wbmV6cmVvZnF1Zm5zZHh6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxMzI1MDUsImV4cCI6MjEwMjcwODUwNX0.iOUgvymY8zCbsWo7iM_nNTOiJEAXXKw1Blsd_ArsKcQ';
   const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  const KASHVI_UPI_VPA = 'rishikeshsingh815@okaxis'; // aapki real UPI ID (pehle 'kashvienterprises.bihar@ybl' galat/nakli VPA thi)
+  const KASHVI_UPI_VPA = '8677900810@ybl'; // your current active/valid UPI ID
   const KASHVI_PAYEE_NAME = 'Kashvi Enterprises';
   const OVERTIME_RATE_PER_HOUR = 100;
   const FREE_HOURS_BEFORE_OVERTIME = 3;
@@ -1133,8 +1137,17 @@
   }
 
   // This event fires automatically after Google redirects back to the app
+  let googleAuthProcessed = false; // prevents the SIGNED_IN handler from firing repeatedly and causing a reload loop
+
   sbClient.auth.onAuthStateChange(async (event, session) => {
-    if (event !== 'SIGNED_IN' || !session?.user) return;
+    if (event !== 'SIGNED_IN' || !session?.user || googleAuthProcessed) return;
+    googleAuthProcessed = true;
+
+    // Strip the access_token out of the URL immediately - otherwise a later page
+    // refresh re-parses the same token and re-triggers this handler, causing a loop.
+    if (window.location.hash.includes('access_token')) {
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
 
     const email = session.user.email;
     const name = session.user.user_metadata?.full_name || session.user.user_metadata?.name || 'Customer';
@@ -1146,15 +1159,15 @@
     } catch(e){}
 
     if (existing && existing.phone && existing.address) {
-      // Already fully registered - log straight in
+      // Already fully registered - log straight in (no full page reload, just re-render)
       if (existing.is_blocked) {
         alert("Your account has been blocked by Admin. Please contact office at kashvienterprises.bihar@gmail.com");
         return;
       }
       currentUser = { name: existing.name || name, phone: existing.phone, address: existing.address, email };
       localStorage.setItem('bm_active_customer', JSON.stringify(currentUser));
-      window.location.hash = '#home';
-      window.location.reload();
+      updateRoleBasedNavigation();
+      navigateTo('home', true);
     } else {
       // New Google user, or an existing one missing phone/address - collect both before granting access
       pendingGoogleUser = { email, name };
@@ -1219,8 +1232,8 @@
     currentUser = { name: pendingGoogleUser.name, phone, address, email: pendingGoogleUser.email };
     localStorage.setItem('bm_active_customer', JSON.stringify(currentUser));
     document.getElementById('googlePhoneModal').style.display = 'none';
-    window.location.hash = '#home';
-    window.location.reload();
+    updateRoleBasedNavigation();
+    navigateTo('home', true);
   }
 
   async function handleCustomerAuthAction() {
@@ -1439,14 +1452,13 @@
   async function broadcastJobToPool() {
     if (!pendingAdvanceState) return;
 
-    // Payment validation enforcement: booking cannot be confirmed without a transaction reference.
-    // NOTE: This is a manual-verification safeguard, not automatic bank-side confirmation - a real
+    // Payment validation enforcement: booking cannot be confirmed without checking this box.
+    // NOTE: This is a simple manual-verification step, not automatic bank-side confirmation - a real
     // payment gateway (Razorpay/Cashfree) with webhook callbacks would be needed for that.
-    const txnRefInput = document.getElementById('advanceTxnRefInput');
-    const txnRef = txnRefInput.value.trim();
+    const paidCheckbox = document.getElementById('advancePaidCheckbox');
     const txnErrEl = document.getElementById('advanceTxnError');
-    if (txnRef.length < 4) {
-      txnErrEl.textContent = "Please enter the UPI transaction/reference ID shown in your payment app after paying.";
+    if (!paidCheckbox.checked) {
+      txnErrEl.textContent = "Please confirm you have completed the payment before proceeding.";
       return;
     }
     txnErrEl.textContent = "";
@@ -1467,7 +1479,7 @@
       base_fee: cfg.base,
       invoice_no: pendingAdvanceState.invoiceNo,
       payment_status: 'advance_received',
-      advance_txn_ref: txnRef
+      advance_txn_ref: 'customer_confirmed'
     };
 
     let insertedId = null;
@@ -1525,7 +1537,7 @@
           </div>
           <p style="font-size:12px; color:#333; font-weight:600;">🛠️ Service: ${catConfig.title}</p>
           <p style="font-size:11.5px; color:#555;">📋 Work Details: ${b.extra_services || 'Standard Base Service'}</p>
-          <p style="font-size:12px; color:#555;">🧑‍🔧 Assigned Tech: <b>${b.technician_name || 'Broadcasting in Pool (Waiting Tech...)'}</b></p>
+          <p style="font-size:12px; color:#555;">🧑‍🔧 Assigned Tech: <b>${b.technician_name || 'Broadcasting in Pool (Waiting Tech...)'}</b>${b.technician_phone ? ' (📞 ' + b.technician_phone + ')' : ''}</p>
           <p style="font-size:12px; color:#555;">📍 Work Address: ${b.customer_address}</p>
           <div style="background:#f0faf3; border:1px dashed #0f8a4b; border-radius:6px; padding:6px; margin:6px 0; font-size:11.5px;">
             🟢 Your Start PIN: <b>${b.start_pin}</b> (Give to tech upon arrival)<br>
@@ -1731,7 +1743,7 @@
         return;
       }
 
-      activeTechSession = { name: data.name, category: cat, id: data.id, techCode: data.tech_code };
+      activeTechSession = { name: data.name, category: cat, id: data.id, techCode: data.tech_code, phone: data.contact_phone || '' };
       document.getElementById('topAuthBadge').textContent = "🧑‍🔧 " + data.name + " (" + data.tech_code + ")";
       document.getElementById('techPoolHeader').textContent = `${data.name} [${data.tech_code}] (${cat.toUpperCase()} Pool)`;
       msg.textContent = "";
@@ -1859,12 +1871,19 @@
   async function claimPoolJob(jobId) {
     if (checkCooldownState()) return;
 
-    try {
-      await sbClient.from('bookings').update({ job_status: 'claimed', technician_name: activeTechSession.name }).eq('id', jobId);
-    } catch(e){}
+    const { error } = await sbClient.from('bookings').update({
+      job_status: 'claimed',
+      technician_name: activeTechSession.name,
+      technician_phone: activeTechSession.phone
+    }).eq('id', jobId);
+
+    if (error) {
+      alert("Could not accept the job (database error): " + error.message + "\nPlease try again.");
+      return;
+    }
 
     let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
-    localPool = localPool.map(j => (j.id === jobId || j.invoice_no === jobId) ? { ...j, job_status: 'claimed', technician_name: activeTechSession.name } : j);
+    localPool = localPool.map(j => (j.id === jobId || j.invoice_no === jobId) ? { ...j, job_status: 'claimed', technician_name: activeTechSession.name, technician_phone: activeTechSession.phone } : j);
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
 
     renderPoolJobs();
@@ -1876,27 +1895,40 @@
     const cooldownUntil = Date.now() + 15 * 60 * 1000;
     localStorage.setItem('tech_cooldown_until', cooldownUntil.toString());
 
-    try { await sbClient.from('bookings').update({ job_status: 'pending_acceptance', technician_name: null }).eq('id', jobId); } catch(e){}
+    const { error } = await sbClient.from('bookings').update({
+      job_status: 'pending_acceptance', technician_name: null, technician_phone: null
+    }).eq('id', jobId);
+
+    if (error) {
+      alert("Could not cancel the job (database error): " + error.message);
+      return;
+    }
 
     let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
-    localPool = localPool.map(j => (j.id === jobId || j.invoice_no === jobId) ? { ...j, job_status: 'pending_acceptance', technician_name: null } : j);
+    localPool = localPool.map(j => (j.id === jobId || j.invoice_no === jobId) ? { ...j, job_status: 'pending_acceptance', technician_name: null, technician_phone: null } : j);
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
 
     renderPoolJobs();
   }
 
-  // Start PIN verify hote hi start_time DB mein record hota hai - isi se overtime calculate hoga
+  // Start PIN verify hote hi start_time DB mein record hota hai - isi se overtime calculate hoga,
+  // aur Admin dashboard ko turant "Job Running" dikhne lagta hai (same bookings table read hoti hai)
   async function verifyStartPin(jobId, correctPin) {
     const entered = document.getElementById('startPinVerifyInput').value.trim();
     if (entered === correctPin) {
       const startTime = new Date().toISOString();
-      try { await sbClient.from('bookings').update({ job_status: 'in_progress', start_time: startTime }).eq('id', jobId); } catch(e){}
+      const { error } = await sbClient.from('bookings').update({ job_status: 'in_progress', start_time: startTime }).eq('id', jobId);
+
+      if (error) {
+        alert("Could not start the job (database error): " + error.message);
+        return;
+      }
 
       let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
       localPool = localPool.map(j => (j.id === jobId || j.invoice_no === jobId) ? { ...j, job_status: 'in_progress', start_time: startTime } : j);
       localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
 
-      alert("Start PIN verified successfully! Job marked In-Progress. Timer shuru ho gaya.");
+      alert("Start PIN verified successfully! Job marked In-Progress.");
       renderPoolJobs();
     } else {
       alert("Invalid Start PIN! Please check with customer.");
@@ -2118,12 +2150,11 @@
   async function completeFinalSettlement() {
     if (!currentSettlementJob) return;
 
-    // Payment validation enforcement - same manual-verification safeguard as the advance token step
-    const txnRefInput = document.getElementById('finalTxnRefInput');
-    const txnRef = txnRefInput.value.trim();
+    // Payment validation enforcement - simple checkbox confirmation, same as the advance token step
+    const paidCheckbox = document.getElementById('finalPaidCheckbox');
     const txnErrEl = document.getElementById('finalTxnError');
-    if (txnRef.length < 4) {
-      txnErrEl.textContent = "Please enter the UPI transaction/reference ID shown in your payment app after paying.";
+    if (!paidCheckbox.checked) {
+      txnErrEl.textContent = "Please confirm you have completed the payment before proceeding.";
       return;
     }
     txnErrEl.textContent = "";
@@ -2132,7 +2163,7 @@
       await sbClient.from('bookings').update({
         job_status: 'paid_completed',
         payment_status: 'settled_full',
-        final_txn_ref: txnRef
+        final_txn_ref: 'customer_confirmed'
       }).eq('id', currentSettlementJob.id);
     } catch(e){}
 
@@ -2141,7 +2172,7 @@
       ...j,
       job_status: 'paid_completed',
       payment_status: 'settled_full',
-      final_txn_ref: txnRef
+      final_txn_ref: 'customer_confirmed'
     } : j);
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
 
