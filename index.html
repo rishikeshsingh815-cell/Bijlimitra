@@ -1117,6 +1117,13 @@
     el.textContent = input.type === 'password' ? 'Show' : 'Hide';
   }
 
+  // Checks whether an id is a real Supabase UUID (as opposed to a fallback
+  // invoice_no string used only when a booking failed to sync to the database).
+  // This prevents "invalid input syntax for type uuid" crashes.
+  function isRealSupabaseId(id) {
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+  }
+
   function generateDynamicUpi(amount, note) {
     const upiUri = `upi://pay?pa=${KASHVI_UPI_VPA}&pn=${encodeURIComponent(KASHVI_PAYEE_NAME)}&am=${amount.toFixed(2)}&cu=INR&tn=${encodeURIComponent(note)}`;
     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(upiUri)}`;
@@ -1354,6 +1361,36 @@
   }
 
   // ==================== STEP 2: CATEGORY BOOKING, MANDATORY TERMS & ADVANCE ====================
+  // Category-specific Terms & Conditions - customer must accept the correct one for their service type
+  const CATEGORY_TERMS = {
+    electrician: `
+      <b>Electrical Service Terms &amp; Conditions:</b><br>
+      1. A limited 30-day warranty applies only to the repair work performed.<br>
+      2. Warranty on newly installed spare parts is governed solely by the manufacturer's policy.<br>
+      3. Electrical parts that have been used, cut (wires), unsealed, or fitted are non-returnable.<br>
+      4. Kashvi Enterprises (Bijli Mitra) is not liable for damage caused by pre-existing faulty wiring, voltage fluctuations, or unauthorized third-party tampering.<br>
+      5. Transformer failures, phase issues (single/three phase), pole-related problems, and new electricity connections fall under the jurisdiction of the Bihar Electricity Board and are outside the scope of our company. In such cases, we can only offer guidance, not resolution.<br>
+      I agree to the ₹21 advance token and all the above terms.`,
+    plumber: `
+      <b>Plumbing Service Terms &amp; Conditions:</b><br>
+      1. Inspection / Visiting Fee: A standard diagnostic or visiting charge applies if the technician inspects the issue but the customer decides not to proceed with the service.<br>
+      2. Materials and Spare Parts: All pipes, valves, fittings, and replacement hardware must be paid for by the customer. The initial quote covers labor only unless explicitly agreed otherwise.<br>
+      3. Pre-Existing Plumbing Risks: The technician is not liable for structural breakage of brittle, rusted, or previously corroded concealed pipes while attempting standard disassembly or repair. Additional repair work will incur extra charges.<br>
+      4. Site Access and Utilities: The customer must ensure safe access to the work area, clear obstructions, and provide access to the main water shut-off valve and electrical connections (if a pump or power tool is needed).<br>
+      5. Payment Terms: Full payment is due immediately upon completion of the work and post-service leakage testing via digital transfer or cash.<br>
+      6. Limited Service Warranty: A 7- to 15-day service warranty covers only the specific joint or component repaired. It does not cover new leaks in adjacent, older plumbing lines.<br>
+      I agree to the ₹21 advance token and all the above terms.`,
+    ac: `
+      <b>AC Technician Terms &amp; Conditions:</b><br>
+      1. Diagnosis and Visit Fee: If the technician inspects the AC unit and the customer declines the recommended repair or gas refilling, a fixed inspection fee must be paid.<br>
+      2. Parts and Consumables: Replacement components (such as capacitors, PCB boards, fan motors, and refrigerant gas) are billed separately from labor charges.<br>
+      3. Outdoor Unit Access &amp; Safety: If the outdoor compressor unit is installed in a high-risk location (such as on an exterior ledge without a railing), scaffolding, safety harnesses, or specialized ladders must be accommodated, and additional labor charges may apply for hazardous work.<br>
+      4. Utility Requirements: The customer must provide an active water connection and a functioning power outlet for pressure-jet cleaning and electrical testing.<br>
+      5. Gas Leakage &amp; Refilling Policy: Refrigerant refilling is performed only after identifying and fixing the leak. No warranty applies to gas top-ups if the customer declines a comprehensive leak test and repair.<br>
+      6. Testing and Post-Service Warranty: Cooling efficiency, airflow, and drainage will be verified in the customer's presence upon completion. A 30-day limited warranty applies to repaired components and gas charges; manufacturer warranties apply to newly installed spare parts.<br>
+      I agree to the ₹21 advance token and all the above terms.`
+  };
+
   function selectCategoryBooking(catKey) {
     if (!currentUser) { alert("Please Sign In or Register to book services."); navigateTo('auth'); return; }
 
@@ -1365,6 +1402,7 @@
     document.getElementById('custPhoneInput').value = currentUser.phone;
     document.getElementById('custAddressInput').value = currentUser.address || "";
     document.getElementById('bookingTermsCheckbox').checked = false;
+    document.getElementById('bookingTermsText').innerHTML = CATEGORY_TERMS[catKey] || CATEGORY_TERMS.electrician;
 
     const addonsContainer = document.getElementById('dynamicAddonsList');
     addonsContainer.innerHTML = cfg.addons.map(a => `
@@ -1871,6 +1909,14 @@
   async function claimPoolJob(jobId) {
     if (checkCooldownState()) return;
 
+    // If this job never got a real database id (e.g. it was created while the app
+    // couldn't reach Supabase - see note below), it only exists in this browser's
+    // local storage and cannot be claimed by another technician's device.
+    if (!isRealSupabaseId(jobId)) {
+      alert("This booking was never synced to the shared database (it only exists on the browser it was created in) - it cannot be claimed from here. This usually happens when the app is opened by double-clicking the downloaded file instead of the live website link. Please always open the app from its live hosted URL, not from a downloaded file.");
+      return;
+    }
+
     const { error } = await sbClient.from('bookings').update({
       job_status: 'claimed',
       technician_name: activeTechSession.name,
@@ -1895,6 +1941,15 @@
     const cooldownUntil = Date.now() + 15 * 60 * 1000;
     localStorage.setItem('tech_cooldown_until', cooldownUntil.toString());
 
+    if (!isRealSupabaseId(jobId)) {
+      alert("This booking was never synced to the shared database and only exists locally - it has been removed from your pool.");
+      let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
+      localPool = localPool.filter(j => j.id !== jobId && j.invoice_no !== jobId);
+      localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
+      renderPoolJobs();
+      return;
+    }
+
     const { error } = await sbClient.from('bookings').update({
       job_status: 'pending_acceptance', technician_name: null, technician_phone: null
     }).eq('id', jobId);
@@ -1917,6 +1972,16 @@
     const entered = document.getElementById('startPinVerifyInput').value.trim();
     if (entered === correctPin) {
       const startTime = new Date().toISOString();
+
+      if (!isRealSupabaseId(jobId)) {
+        let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
+        localPool = localPool.map(j => (j.id === jobId || j.invoice_no === jobId) ? { ...j, job_status: 'in_progress', start_time: startTime } : j);
+        localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
+        alert("Start PIN verified (local-only booking - not synced to shared database). Job marked In-Progress.");
+        renderPoolJobs();
+        return;
+      }
+
       const { error } = await sbClient.from('bookings').update({ job_status: 'in_progress', start_time: startTime }).eq('id', jobId);
 
       if (error) {
