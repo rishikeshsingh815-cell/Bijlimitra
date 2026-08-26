@@ -709,29 +709,17 @@
       <div class="price-row total"><span>Net Payable Balance</span><span id="payTotal" style="color:#0f8a4b;">₹0.00</span></div>
     </div>
 
-    <div class="pay-alert-box" data-i18n="finalPayAlert">
-      ⚠️ Only click "Payment Confirmed" below after the actual payment has gone through post-QR scan.
+    <div class="pay-alert-box">
+      ✅ Secure automatic payment via Cashfree - tap the button below to pay. Your invoice unlocks automatically once payment succeeds.
     </div>
 
-    <div class="qr-box">
-      <div style="font-size:12px; font-weight:700; color:#0f8a4b;">FINAL SETTLEMENT - DIRECT UPI</div>
-      <img id="finalQrImg" class="qr-img" alt="Final Bill UPI QR" />
-      <div id="finalAmountTag" style="font-size:20px; font-weight:800; color:#0f8a4b;">₹0.00</div>
-      <p style="font-size:11px; color:#888;">Scan with any UPI app (PhonePe, GPay, Paytm)</p>
+    <div style="text-align:center; margin-bottom:14px;">
+      <div style="font-size:24px; font-weight:800; color:#0f8a4b;" id="finalAmountTag">₹0.00</div>
+      <p style="font-size:11px; color:#888;">Card, UPI, NetBanking, Wallets - all supported</p>
     </div>
 
-    <a id="finalUpiIntentBtn" href="#" class="btn" style="display:block; text-align:center; text-decoration:none; margin-bottom:10px;">
-      🚀 Open in UPI App (PhonePe / GPay)
-    </a>
-
-    <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer; margin-bottom:10px; font-size:13px; color:#333;">
-      <input type="checkbox" id="finalPaidCheckbox" style="width:18px; height:18px; margin-top:1px;">
-      <span>I have completed the full payment via UPI</span>
-    </label>
-    <p id="finalTxnError" style="color:#c0392b; font-size:11px; margin-bottom:8px;"></p>
-
-    <button class="btn secondary" onclick="completeFinalSettlement()">
-      ✔ Payment Confirmed (Unlock &amp; Download PDF Invoice)
+    <button class="btn" onclick="payFinalBillWithCashfree()">
+      💳 Pay Now &amp; Download PDF Invoice
     </button>
   </div>
 </div>
@@ -760,6 +748,7 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
 
 <script>
   const SUPABASE_URL = 'https://uwsmpnezreofqufnsdxz.supabase.co';
@@ -1437,6 +1426,36 @@
     document.getElementById('priceTotalDueVal').textContent = `₹${dueAfterToken.toFixed(2)}`;
   }
 
+  // ===== Cashfree order create + checkout open karne ka common helper =====
+  // Edge Function ka URL - apna project ref daalein
+  const CASHFREE_EDGE_FUNCTION_URL = 'https://uwsmpnezreofqufnsdxz.supabase.co/functions/v1/create-cashfree-order';
+  const cashfree = window.Cashfree ? Cashfree({ mode: "sandbox" }) : null; // switch to "production" for live keys
+
+  async function openCashfreeCheckout(orderId, amount, phone, name, email) {
+    const res = await fetch(CASHFREE_EDGE_FUNCTION_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderId, amount, customerPhone: phone, customerName: name, customerEmail: email })
+    });
+    const data = await res.json();
+
+    if (!res.ok || !data.payment_session_id) {
+      alert("Could not start payment: " + (data.error || "Unknown error. Please try again."));
+      return false;
+    }
+
+    try {
+      await cashfree.checkout({
+        paymentSessionId: data.payment_session_id,
+        redirectTarget: "_modal" // opens as an overlay on the same page
+      });
+      return true;
+    } catch (e) {
+      alert("Payment window closed or failed: " + e.message);
+      return false;
+    }
+  }
+
   async function openDirectAdvancePayment() {
     const address = document.getElementById('custAddressInput').value.trim();
     const phone = currentUser ? currentUser.phone : document.getElementById('custPhoneInput').value.trim();
@@ -1468,23 +1487,41 @@
       addonsTotal += parseFloat(cb.getAttribute('data-price')) || 0;
     });
 
-    pendingAdvanceState = {
-      category: currentCategory,
-      customerName: currentUser.name || "Customer",
-      address,
-      phone,
-      invoiceNo,
-      startPin,
-      stopPin,
-      addonsList: selectedAddons.join(', ') || 'Base Scope Only',
-      addonsTotal: addonsTotal
+    const cfg = SERVICE_CONFIG[currentCategory];
+
+    // Booking create karte hain payment_status 'pending' ke saath -
+    // technician pool ise tabhi dikhayega jab webhook payment confirm kar de
+    const newBooking = {
+      customer_name: currentUser.name || "Customer",
+      customer_phone: phone,
+      customer_address: address,
+      service_type: currentCategory,
+      extra_services: selectedAddons.join(', ') || 'Base Scope Only',
+      extra_parts_cost: addonsTotal,
+      start_pin: startPin,
+      stop_pin: stopPin,
+      job_status: 'pending_acceptance',
+      technician_name: null,
+      base_fee: cfg.base,
+      invoice_no: invoiceNo,
+      payment_status: 'pending' // webhook will flip this to 'advance_received' on success
     };
 
-    const upi = generateDynamicUpi(21.00, `AdvanceToken-${invoiceNo}`);
-    document.getElementById('advanceQrImg').src = upi.qrUrl;
-    document.getElementById('advanceUpiIntentBtn').href = upi.upiUri;
+    const { error: insertError } = await sbClient.from('bookings').insert([newBooking]);
+    if (insertError) {
+      alert("Could not create booking: " + insertError.message);
+      return;
+    }
 
-    navigateTo('advance-pay');
+    // Ab Cashfree checkout kholein - amount ₹21
+    const success = await openCashfreeCheckout('ADV-' + invoiceNo, 21.00, phone, currentUser.name, currentUser.email);
+
+    if (success) {
+      alert(`Booking placed! Invoice: ${invoiceNo}. Payment is being verified automatically - you'll see it confirmed shortly in your Profile.`);
+      navigateTo('home', true);
+    }
+    // Agar payment cancel/fail ho jaye, booking 'pending' hi reh jayegi database mein -
+    // Admin ise "unpaid" dikh sakta hai aur chahe to manually clean kar sakta hai
   }
 
   async function broadcastJobToPool() {
@@ -1626,11 +1663,23 @@
     document.getElementById('payTotal').textContent = `₹${currentSettlementJob.netDue.toFixed(2)}`;
     document.getElementById('finalAmountTag').textContent = `₹${currentSettlementJob.netDue.toFixed(2)}`;
 
-    const upi = generateDynamicUpi(currentSettlementJob.netDue, `FinalSettlement-${currentSettlementJob.invoice_no}`);
-    document.getElementById('finalQrImg').src = upi.qrUrl;
-    document.getElementById('finalUpiIntentBtn').href = upi.upiUri;
-
     document.getElementById('customerPaymentModal').style.display = 'flex';
+  }
+
+  // "Pay Now" button calls this - opens Cashfree checkout directly (no manual QR/checkbox)
+  async function payFinalBillWithCashfree() {
+    if (!currentSettlementJob) return;
+    const success = await openCashfreeCheckout(
+      'FINAL-' + currentSettlementJob.invoice_no,
+      currentSettlementJob.netDue,
+      currentUser.phone, currentUser.name, currentUser.email
+    );
+    if (success) {
+      alert("Payment successful! Verifying and generating your Tax Invoice PDF...");
+      closeCustomerPaymentModal();
+      downloadOrderPdf(currentSettlementJob.id || currentSettlementJob.invoice_no);
+      loadCustomerOrders();
+    }
   }
 
   function closeCustomerPaymentModal() {
@@ -1875,6 +1924,7 @@
         .select('*')
         .eq('service_type', activeTechSession.category)
         .eq('job_status', 'pending_acceptance')
+        .neq('payment_status', 'pending') // hide bookings whose advance token hasn't been confirmed by Cashfree yet
         .order('created_at', { ascending: false });
       if (pool && pool.length > 0) poolJobs = pool;
     } catch(e){}
