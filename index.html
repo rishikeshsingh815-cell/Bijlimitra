@@ -406,7 +406,7 @@
       </div>
     </div>
 
-    <!-- 4. BOOKING SCREEN (CLEAN BASE PACKAGE, NO ADD-ONS) -->
+    <!-- 4. BOOKING SCREEN -->
     <div id="screen-booking" class="screen">
       <div class="desktop-inner">
         <button class="btn secondary" style="width:auto; padding:6px 14px; font-size:12px; margin-bottom:12px;" onclick="window.history.back()">← Back</button>
@@ -623,7 +623,7 @@
   </div>
 </div>
 
-<!-- 10. TECHNICIAN WORK COMPLETION & BILLING MODAL (WITH MANUAL ON-SITE SERVICE PRICING) -->
+<!-- 10. TECHNICIAN WORK COMPLETION & BILLING MODAL -->
 <div id="techCompletionModal" class="modal-backdrop">
   <div class="modal-content">
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px solid #0f8a4b; padding-bottom:8px; margin-bottom:12px;">
@@ -638,14 +638,12 @@
       <p style="color:#7c3aed; font-weight:700; margin-top:4px;" id="modalElapsedTimeText">Job duration: --</p>
     </div>
 
-    <!-- Category Services (Manual Price Entry by Tech) -->
     <div style="margin-bottom:12px;">
       <label style="font-weight:700; font-size:12.5px; display:block; margin-bottom:4px;" id="modalServicesHeading">Category Services Performed On-Site:</label>
       <p style="font-size:11px; color:#666; margin-bottom:6px;">Check service and enter price quoted to customer:</p>
       <div id="modalAddonsChecklist" style="max-height:160px; overflow-y:auto; border:1px solid #eee; border-radius:6px; padding:6px 10px;"></div>
     </div>
 
-    <!-- Spare Parts Catalog -->
     <div style="margin-bottom:12px;">
       <label style="font-weight:700; font-size:12.5px; display:block; margin-bottom:6px;">Spare Parts Used (GST-Coded):</label>
       <div id="modalPartsCatalog" style="border:1px solid #eee; border-radius:6px; padding:6px 10px;"></div>
@@ -757,15 +755,15 @@
     },
     ac: {
       title: 'AC Repair & Service',
-      base: 677.12,
-      gst: 121.88,
-      total: 799.00,
+      base: 338.14,
+      gst: 60.86,
+      total: 399.00,
       sac: '998715',
       scope: '✅ <b>Base Scope Included:</b> High-Pressure Jet Pump Service for 1 Split/Window AC'
     }
   };
 
-  // Trade-Wise On-Site Service Catalog (For Technician to pick & price manually)
+  // Trade-Wise On-Site Service Catalog
   const TRADE_SERVICES_CATALOG = {
     electrician: [
       'Ceiling / Exhaust Fan Installation',
@@ -1424,6 +1422,7 @@
     }
   }
 
+  // ==================== ADVANCE PAYMENT WITH IMMEDIATE DATABASE INSERT ====================
   async function openDirectAdvancePayment() {
     const address = document.getElementById('custAddressInput').value.trim();
     const phone = currentUser ? currentUser.phone : document.getElementById('custPhoneInput').value.trim();
@@ -1448,6 +1447,33 @@
     const stopPin = Math.floor(1000 + Math.random() * 9000).toString();
     const cfg = SERVICE_CONFIG[currentCategory];
 
+    // 1. Instantly insert booking into Supabase so it shows up in profile
+    const newBooking = {
+      customer_name: currentUser.name || "Customer",
+      customer_phone: phone,
+      customer_address: address,
+      service_type: currentCategory,
+      extra_services: 'Standard Base Scope',
+      extra_parts_cost: 0,
+      start_pin: startPin,
+      stop_pin: stopPin,
+      job_status: 'pending_acceptance',
+      technician_name: null,
+      base_fee: cfg.base,
+      invoice_no: invoiceNo,
+      payment_status: 'advance_received'
+    };
+
+    let insertedId = null;
+    try {
+      const { data } = await sbClient.from('bookings').insert([newBooking]).select().single();
+      if (data) insertedId = data.id;
+    } catch(e){}
+
+    let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
+    localPool.unshift({ ...newBooking, id: insertedId || newBooking.invoice_no });
+    localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
+
     pendingAdvanceState = {
       customerName: currentUser.name || "Customer",
       phone: phone,
@@ -1460,6 +1486,7 @@
       invoiceNo: invoiceNo
     };
 
+    // 2. Open Cashfree Checkout
     const cashfreeSuccess = await openCashfreeCheckout('ADV-' + invoiceNo, 21.00, phone, currentUser.name, currentUser.email);
 
     if (!cashfreeSuccess) {
@@ -1482,35 +1509,6 @@
       return;
     }
     txnErrEl.textContent = "";
-
-    const cfg = SERVICE_CONFIG[pendingAdvanceState.category];
-
-    const newBooking = {
-      customer_name: pendingAdvanceState.customerName,
-      customer_phone: pendingAdvanceState.phone,
-      customer_address: pendingAdvanceState.address,
-      service_type: pendingAdvanceState.category,
-      extra_services: pendingAdvanceState.addonsList,
-      extra_parts_cost: 0,
-      start_pin: pendingAdvanceState.startPin,
-      stop_pin: pendingAdvanceState.stopPin,
-      job_status: 'pending_acceptance',
-      technician_name: null,
-      base_fee: cfg.base,
-      invoice_no: pendingAdvanceState.invoiceNo,
-      payment_status: 'advance_received',
-      advance_txn_ref: 'customer_confirmed'
-    };
-
-    let insertedId = null;
-    try {
-      const { data } = await sbClient.from('bookings').insert([newBooking]).select().single();
-      if (data) insertedId = data.id;
-    } catch(e){}
-
-    let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
-    localPool.unshift({ ...newBooking, id: insertedId || newBooking.invoice_no });
-    localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
 
     alert(`Advance Payment Received! Booking ID: ${pendingAdvanceState.invoiceNo} is placed.`);
     goToCustomerProfile();
@@ -1986,7 +1984,6 @@
     document.getElementById('modalStopPinInput').value = "";
     document.getElementById('modalCustomPartsRows').innerHTML = "";
 
-    // Render Category-Specific Service List with Manual Price Input
     const categoryServices = TRADE_SERVICES_CATALOG[job.service_type] || [];
     document.getElementById('modalServicesHeading').textContent = `${cfg.title} Tasks Done On-Site:`;
     
@@ -2005,7 +2002,6 @@
       </div>
     `).join('') || '<p style="font-size:11px; color:#888;">No predefined services for this trade</p>';
 
-    // Render Category Spare Parts
     const catalog = SPARE_PARTS_CATALOG[job.service_type] || [];
     document.getElementById('modalPartsCatalog').innerHTML = catalog.map(p => `
       <div class="addon-item">
