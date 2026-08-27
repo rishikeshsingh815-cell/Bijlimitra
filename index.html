@@ -1447,7 +1447,7 @@
     try {
       await cashfree.checkout({
         paymentSessionId: data.payment_session_id,
-        redirectTarget: "_modal" // opens as an overlay on the same page
+        redirectTarget: "_self" // opens as an overlay on the same page
       });
       return true;
     } catch (e) {
@@ -2747,6 +2747,14 @@
   updateRoleBasedNavigation();
   initSignupMap();
   setInterval(checkCooldownState, 1000);
+// Payment complete hote hi customer ko direct profile par le jaane ke liye
+  window.addEventListener('load', () => {
+    if (window.location.search.includes('order_id') || window.location.hash === '#profile') {
+      setTimeout(() => {
+        goToCustomerProfile();
+      }, 300);
+    }
+  });
 
 </script>
 
