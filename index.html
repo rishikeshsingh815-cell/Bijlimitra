@@ -189,9 +189,9 @@
             <div style="text-align:right;"><b style="color:#0f8a4b;">₹299 Base</b><p style="font-size:11px; color:#888;">(incl. 18% GST)</p></div>
           </div>
         </div>
-        <div class="card" style="margin-top:16px; background:#f0f4ff; border:1.5px solid #6366f1;">
-          <h4 style="font-size:13px; color:#4338ca; margin-bottom:6px;">🏢 Commercial &amp; Bulk Order Desk</h4>
-          <p style="font-size:11.5px; color:#444; line-height:1.5;">For bulk, commercial, or enterprise requirements covering HVAC/AC, Electrical, or Plumbing maintenance, please contact our corporate desk at: <a href="mailto:kashvienterprises.bihar@gmail.com" style="color:#4338ca; font-weight:700;">kashvienterprises.bihar@gmail.com</a></p>
+        <div class="card" style="margin-top:16px; background:#f0faf3; border:1.5px solid #0f8a4b;">
+          <h4 style="font-size:13px; color:#0f8a4b; margin-bottom:6px;">🏢 Commercial &amp; Bulk Order Desk</h4>
+          <p style="font-size:11.5px; color:#444; line-height:1.5;">For bulk, commercial, or enterprise requirements covering HVAC/AC, Electrical, or Plumbing maintenance, please contact our corporate desk at: <a href="mailto:kashvienterprises.bihar@gmail.com" style="color:#0f8a4b; font-weight:700;">kashvienterprises.bihar@gmail.com</a></p>
         </div>
       </div>
     </div>
@@ -498,9 +498,10 @@
   const OVERTIME_RATE_PER_HOUR = 100;
   const FREE_HOURS_BEFORE_OVERTIME = 3;
 
+  // Sahi Base Taxable Rates (Base Total / 1.18)
   const SERVICE_CONFIG = {
-    electrician: { title: 'Electrical Services', base: 245.18, gst: 53.82, total: 299.00, sac: '998719', scope: '✅ <b>Base Scope:</b> Technician Visit + 1 Fan/Board Repair OR 2 Switch Replacements' },
-    plumber: { title: 'Plumbing Works', base: 245.18, gst: 53.82, total: 299.00, sac: '998722', scope: '✅ <b>Base Scope:</b> Plumber Visit + 1 Tap/Valve Leakage Repair OR Drain Unclogging' },
+    electrician: { title: 'Electrical Services', base: 253.39, gst: 45.61, total: 299.00, sac: '998719', scope: '✅ <b>Base Scope:</b> Technician Visit + 1 Fan/Board Repair OR 2 Switch Replacements' },
+    plumber: { title: 'Plumbing Works', base: 253.39, gst: 45.61, total: 299.00, sac: '998722', scope: '✅ <b>Base Scope:</b> Plumber Visit + 1 Tap/Valve Leakage Repair OR Drain Unclogging' },
     ac: { title: 'AC Repair & Service', base: 338.14, gst: 60.86, total: 399.00, sac: '998715', scope: '✅ <b>Base Scope:</b> High-Pressure Jet Pump Service for 1 Split/Window AC' }
   };
 
@@ -1012,6 +1013,7 @@
   }
   function closeCustomerPaymentModal() { document.getElementById('customerPaymentModal').style.display = 'none'; }
 
+  // PDF Generation with 100% Correct GST Calculations
   async function downloadOrderPdf(orderId) {
     let data = null;
     try { const res = await sbClient.from('bookings').select('*').or(`id.eq.${orderId},invoice_no.eq.${orderId}`).single(); data = res.data; } catch(e){}
@@ -1027,25 +1029,35 @@
 
     const cfg = SERVICE_CONFIG[data.service_type] || SERVICE_CONFIG.electrician;
     const base = cfg.base;
-    const addons = (data.extra_on_site_cost || 0) + (data.extra_material_cost || 0);
+    const extraServices = parseFloat(data.extra_on_site_cost) || 0;
+    const extraMaterials = parseFloat(data.extra_material_cost) || 0;
     const overtimeCharge = parseFloat(data.overtime_charge) || 0;
-    const subtotal = base + (addons / 1.18) + overtimeCharge;
-    const gst = subtotal * 0.18;
-    const netGrand = (subtotal + gst) - 21;
+
+    const taxableExtraServices = extraServices > 0 ? (extraServices / 1.18) : 0;
+    const taxableMaterials = extraMaterials > 0 ? (extraMaterials / 1.18) : 0;
+    const taxableOvertime = overtimeCharge > 0 ? (overtimeCharge / 1.18) : 0;
+    
+    const subtotal = base + taxableExtraServices + taxableMaterials + taxableOvertime;
+    const totalGross = cfg.total + extraServices + extraMaterials + overtimeCharge;
+    const totalGst = totalGross - subtotal;
+    const netGrand = totalGross - 21.00;
 
     let rowsHtml = `<tr><td>1</td><td>${cfg.title} (Base Service Pack)</td><td>${cfg.sac}</td><td>₹${base.toFixed(2)}</td><td>18%</td><td>₹${cfg.total.toFixed(2)}</td></tr>`;
     let sr = 2;
-    if ((data.extra_on_site_cost || 0) > 0) rowsHtml += `<tr><td>${sr++}</td><td>On-Site Category Services</td><td>${cfg.sac}</td><td>₹${(data.extra_on_site_cost / 1.18).toFixed(2)}</td><td>18%</td><td>₹${data.extra_on_site_cost.toFixed(2)}</td></tr>`;
+    if (extraServices > 0) rowsHtml += `<tr><td>${sr++}</td><td>On-Site Category Services</td><td>${cfg.sac}</td><td>₹${taxableExtraServices.toFixed(2)}</td><td>18%</td><td>₹${extraServices.toFixed(2)}</td></tr>`;
     try {
       const parts = JSON.parse(data.spare_parts_json || '[]');
-      parts.forEach(p => { rowsHtml += `<tr><td>${sr++}</td><td>${p.name} (Qty: ${p.qty})</td><td>${p.code}</td><td>₹${p.total.toFixed(2)}</td><td>18%</td><td>₹${(p.total * 1.18).toFixed(2)}</td></tr>`; });
+      parts.forEach(p => { 
+        const lineTotalWithGst = p.total * 1.18;
+        rowsHtml += `<tr><td>${sr++}</td><td>${p.name} (Qty: ${p.qty})</td><td>${p.code || 'HSN-GEN'}</td><td>₹${p.total.toFixed(2)}</td><td>18%</td><td>₹${lineTotalWithGst.toFixed(2)}</td></tr>`; 
+      });
     } catch(e){}
-    if (overtimeCharge > 0) rowsHtml += `<tr><td>${sr++}</td><td>Overtime Charge (${data.overtime_hours || 0} hr @ ₹100/hr)</td><td>-</td><td>₹${overtimeCharge.toFixed(2)}</td><td>18%</td><td>₹${(overtimeCharge * 1.18).toFixed(2)}</td></tr>`;
+    if (overtimeCharge > 0) rowsHtml += `<tr><td>${sr++}</td><td>Overtime Charge (${data.overtime_hours || 0} hr @ ₹100/hr)</td><td>-</td><td>₹${taxableOvertime.toFixed(2)}</td><td>18%</td><td>₹${overtimeCharge.toFixed(2)}</td></tr>`;
 
     document.getElementById('pdfItemsBody').innerHTML = rowsHtml;
     document.getElementById('pdfSubtotal').textContent = `₹${subtotal.toFixed(2)}`;
-    document.getElementById('pdfCgst').textContent = `₹${(gst / 2).toFixed(2)}`;
-    document.getElementById('pdfSgst').textContent = `₹${(gst / 2).toFixed(2)}`;
+    document.getElementById('pdfCgst').textContent = `₹${(totalGst / 2).toFixed(2)}`;
+    document.getElementById('pdfSgst').textContent = `₹${(totalGst / 2).toFixed(2)}`;
     document.getElementById('pdfGrandTotal').textContent = `₹${netGrand.toFixed(2)}`;
 
     const el = document.getElementById('invoicePdf');
