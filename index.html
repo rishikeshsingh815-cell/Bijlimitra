@@ -9,161 +9,39 @@
 
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: #f4f7f6;
-    color: #1a1a1a;
-    min-height: 100vh;
-  }
-
-  .app {
-    max-width: 480px;
-    margin: 0 auto;
-    min-height: 100vh;
-    background: #fff;
-    position: relative;
-    padding-bottom: 80px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.05);
-  }
-
-  .topbar {
-    background: linear-gradient(135deg, #0f8a4b, #0c6e3c);
-    color: #fff;
-    padding: 14px 16px;
-    position: sticky;
-    top: 0;
-    z-index: 500;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f4f7f6; color: #1a1a1a; min-height: 100vh; }
+  .app { max-width: 480px; margin: 0 auto; min-height: 100vh; background: #fff; position: relative; padding-bottom: 80px; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
+  .topbar { background: linear-gradient(135deg, #0f8a4b, #0c6e3c); color: #fff; padding: 14px 16px; position: sticky; top: 0; z-index: 500; display: flex; justify-content: space-between; align-items: center; }
   .topbar h1 { font-size: 18px; font-weight: 700; }
   .topbar p { font-size: 11.5px; opacity: 0.9; }
-
-  .user-badge {
-    background: rgba(255,255,255,0.22);
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
-    white-space: nowrap;
-    border: 1px solid rgba(255,255,255,0.3);
-  }
-
+  .user-badge { background: rgba(255,255,255,0.22); padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; cursor: pointer; white-space: nowrap; border: 1px solid rgba(255,255,255,0.3); }
   .screen { display: none; padding: 16px; animation: fadeIn 0.2s ease-in-out; }
   .screen.active { display: block; }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(3px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .card {
-    background: #fff;
-    border: 1.5px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 14px 16px;
-    margin-bottom: 12px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-  }
-
-  .category-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px;
-    margin-top: 10px;
-  }
-  .category-card {
-    border: 1.5px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    transition: 0.2s;
-  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
+  .card { background: #fff; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+  .category-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 10px; }
+  .category-card { border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; }
   .category-card:hover { border-color: #0f8a4b; background: #fafdfb; }
   .category-card h3 { font-size: 15px; color: #111; }
   .category-card p { font-size: 12px; color: #666; margin-top: 2px; }
-
-  .addon-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
-    border-bottom: 1px dashed #eee;
-    font-size: 12.5px;
-  }
+  .addon-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px dashed #eee; font-size: 12.5px; }
   .addon-item:last-child { border-bottom: none; }
   .addon-item label { display: flex; align-items: center; gap: 8px; cursor: pointer; flex: 1; }
-  .addon-item input { width: auto; margin: 0; }
-
-  .terms-box {
-    background: #fff8f0;
-    border: 1.5px solid #fbd38d;
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 11.5px;
-    color: #744210;
-    margin-bottom: 12px;
-    line-height: 1.4;
-  }
-
-  .btn {
-    width: 100%;
-    padding: 13px;
-    background: #0f8a4b;
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    font-size: 14.5px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: opacity 0.2s;
-  }
+  .terms-box { background: #fff8f0; border: 1.5px solid #fbd38d; border-radius: 8px; padding: 10px; font-size: 11.5px; color: #744210; margin-bottom: 12px; line-height: 1.4; }
+  .btn { width: 100%; padding: 13px; background: #0f8a4b; color: #fff; border: none; border-radius: 10px; font-size: 14.5px; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
   .btn:active { opacity: 0.85; }
   .btn.secondary { background: #fff; color: #0f8a4b; border: 1.5px solid #0f8a4b; }
   .btn.danger { background: #e74c3c; color: #fff; }
-
   .input-group { position: relative; margin-bottom: 12px; }
-  input, select, textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1.5px solid #ddd;
-    border-radius: 8px;
-    font-size: 14px;
-    outline: none;
-    background: #fff;
-  }
+  input, select, textarea { width: 100%; padding: 12px; border: 1.5px solid #ddd; border-radius: 8px; font-size: 14px; outline: none; background: #fff; }
   input:focus, select:focus, textarea:focus { border-color: #0f8a4b; }
-  .toggle-pw {
-    position: absolute;
-    right: 12px;
-    top: 12px;
-    font-size: 13px;
-    color: #0f8a4b;
-    cursor: pointer;
-    font-weight: 600;
-    user-select: none;
-  }
-
+  .toggle-pw { position: absolute; right: 12px; top: 12px; font-size: 13px; color: #0f8a4b; cursor: pointer; font-weight: 600; user-select: none; }
   .price-row { display: flex; justify-content: space-between; font-size: 13px; padding: 5px 0; color: #444; }
   .price-row.total { border-top: 1px dashed #ccc; margin-top: 6px; padding-top: 8px; font-weight: 700; font-size: 15px; color: #111; }
-
   .qr-box { background: #fff; border: 2px dashed #0f8a4b; border-radius: 12px; padding: 16px; text-align: center; margin-bottom: 14px; }
   .qr-img { width: 170px; height: 170px; margin: 8px auto; display: block; border-radius: 6px; border: 1px solid #ddd; }
-
-  .modal-backdrop {
-    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; padding: 16px;
-  }
-  .modal-content {
-    background: #fff; border-radius: 14px; max-width: 440px; width: 100%; max-height: 90vh;
-    overflow-y: auto; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: fadeIn 0.2s ease-in-out;
-  }
-
+  .modal-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; padding: 16px; }
+  .modal-content { background: #fff; border-radius: 14px; max-width: 440px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: fadeIn 0.2s ease-in-out; }
   .invoice-paper { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 16px; font-size: 12px; color: #222; }
   .inv-header { text-align: center; border-bottom: 2px solid #0f8a4b; padding-bottom: 8px; margin-bottom: 10px; }
   .inv-title { text-align: center; font-weight: 700; font-size: 13px; margin: 8px 0; }
@@ -172,28 +50,13 @@
   table.inv-table th, table.inv-table td { border: 1px solid #ddd; padding: 4px 5px; text-align: left; }
   table.inv-table th { background: #f0faf3; }
   .inv-summary { margin-left: auto; width: 65%; font-size: 11.5px; }
-
-  .bottomnav {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 480px;
-    background: #fff;
-    border-top: 1px solid #e2e8f0;
-    display: flex;
-    padding: 8px 0;
-    z-index: 500;
-  }
+  .bottomnav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #fff; border-top: 1px solid #e2e8f0; display: flex; padding: 8px 0; z-index: 500; }
   .nav-item { flex: 1; text-align: center; font-size: 11px; color: #888; cursor: pointer; }
   .nav-item.active { color: #0f8a4b; font-weight: 600; }
   .nav-icon { font-size: 18px; display: block; margin-bottom: 2px; }
-
   #homeMap { height: 180px; width: 100%; border-radius: 12px; margin-bottom: 12px; border: 1.5px solid #0f8a4b; }
   #signupMap { height: 190px; width: 100%; border-radius: 10px; border: 1.5px solid #0f8a4b; margin-top: 6px; }
   #bookingMap { height: 200px; width: 100%; border-radius: 10px; border: 1.5px solid #0f8a4b; margin-top: 6px; }
-
   @media (min-width: 900px) {
     .app { max-width: 100%; padding-bottom: 0; }
     .bottomnav { display: none; }
@@ -213,16 +76,13 @@
   <div class="desktop-sidebar" style="display:none;" id="desktopSidebar">
     <div style="padding:0 24px 4px; font-size:20px; font-weight:700; color:#0f8a4b;">⚡ Bijli Mitra</div>
     <div style="padding:0 24px 16px; font-size:12px; color:#666;">Begusarai, Bihar</div>
-    
     <div id="deskCustomerNav">
       <div class="desktop-nav-item active" id="deskNavHome" onclick="navigateTo('home')">🏠 Book Category</div>
       <div class="desktop-nav-item" id="deskNavProfile" onclick="goToCustomerProfile()">👤 My Profile &amp; History</div>
     </div>
-
     <div id="deskTechNav" style="display:none;">
       <div class="desktop-nav-item" id="deskNavTech" onclick="navigateTo('tech-pool')">🧑‍🔧 Technician Job Pool</div>
     </div>
-
     <div id="deskAdminNav" style="display:none;">
       <div class="desktop-nav-item" id="deskNavAdmin" onclick="navigateTo('admin')">🔐 Admin Management</div>
     </div>
@@ -230,16 +90,12 @@
 
   <div class="desktop-main" style="flex:1;">
   <div class="app" id="mainApp">
-
     <div class="topbar">
-      <div>
-        <h1>⚡ Bijli Mitra</h1>
-        <p>Begusarai, Bihar</p>
-      </div>
+      <div><h1>⚡ Bijli Mitra</h1><p>Begusarai, Bihar</p></div>
       <div class="user-badge" id="topAuthBadge" onclick="handleTopBadgeClick()">Sign In</div>
     </div>
 
-    <!-- 1. CUSTOMER AUTH SCREEN -->
+    <!-- 1. AUTH SCREEN -->
     <div id="screen-auth" class="screen">
       <div class="desktop-inner">
         <div class="card">
@@ -259,34 +115,19 @@
           </div>
 
           <div id="custSignupFields">
-            <div class="input-group">
-              <input type="text" id="custRegName" placeholder="Full Name">
-            </div>
-
-            <div class="input-group">
-              <input type="tel" id="authPhone" placeholder="10-Digit Mobile Number (Mandatory)" maxlength="10">
-            </div>
-
+            <div class="input-group"><input type="text" id="custRegName" placeholder="Full Name"></div>
+            <div class="input-group"><input type="tel" id="authPhone" placeholder="10-Digit Mobile Number (Mandatory)" maxlength="10"></div>
             <div class="card" style="padding:10px; background:#f0faf3; margin-bottom:12px;">
               <span style="font-size:12px; font-weight:700; color:#0f8a4b;">📍 Select Address from Map (Mandatory):</span>
               <p style="font-size:11px; color:#666; margin-top:2px;">Tap your exact location on the map:</p>
               <div id="signupMap"></div>
             </div>
-
-            <div class="input-group">
-              <input type="text" id="custRegAddress" placeholder="Selected Address (from map or type landmark)">
-            </div>
-
-            <button type="button" class="btn secondary" id="sendEmailOtpBtn" style="margin-bottom:12px;" onclick="sendEmailVerificationOtp()">
-              📨 Send Email Verification OTP
-            </button>
+            <div class="input-group"><input type="text" id="custRegAddress" placeholder="Selected Address (from map or type landmark)"></div>
+            <button type="button" class="btn secondary" id="sendEmailOtpBtn" style="margin-bottom:12px;" onclick="sendEmailVerificationOtp()">📨 Send Email Verification OTP</button>
           </div>
 
           <div id="otpPasswordCreationGroup" style="display:none;">
-            <div class="input-group">
-              <input type="text" id="authEmailOtp" placeholder="Enter 6-Digit Email OTP" maxlength="6" style="text-align:center; font-weight:700; letter-spacing:4px; border-color:#0f8a4b;">
-            </div>
-
+            <div class="input-group"><input type="text" id="authEmailOtp" placeholder="Enter 6-Digit Email OTP" maxlength="6" style="text-align:center; font-weight:700; letter-spacing:4px; border-color:#0f8a4b;"></div>
             <div class="input-group">
               <input type="password" id="authCreatePassword" placeholder="Create Password (Min. 6 characters)">
               <span class="toggle-pw" onclick="togglePasswordVisibility('authCreatePassword', this)">Show</span>
@@ -333,49 +174,24 @@
       <div class="desktop-inner">
         <h2 style="font-size:15.5px; margin-bottom:6px;">Begusarai Street Dispatch Map</h2>
         <div id="homeMap"></div>
-
         <h2 style="font-size:15.5px; margin-bottom:4px;">Select Service Category</h2>
         <div class="category-grid">
           <div class="category-card" onclick="selectCategoryBooking('electrician')">
-            <div>
-              <h3>⚡ Electrical Services</h3>
-              <p>Wiring, Switches, Fans, MCB, Inverter</p>
-            </div>
-            <div style="text-align:right;">
-              <b style="color:#0f8a4b;">₹299 Base</b>
-              <p style="font-size:11px; color:#888;">(incl. 18% GST)</p>
-            </div>
+            <div><h3>⚡ Electrical Services</h3><p>Wiring, Switches, Fans, MCB, Inverter</p></div>
+            <div style="text-align:right;"><b style="color:#0f8a4b;">₹299 Base</b><p style="font-size:11px; color:#888;">(incl. 18% GST)</p></div>
           </div>
-
           <div class="category-card" onclick="selectCategoryBooking('ac')">
-            <div>
-              <h3>❄️ AC Repair &amp; Service</h3>
-              <p>Jet Pump Wash, Installation, Gas Refill</p>
-            </div>
-            <div style="text-align:right;">
-              <b style="color:#0f8a4b;">₹399 Base</b>
-              <p style="font-size:11px; color:#888;">(incl. 18% GST)</p>
-            </div>
+            <div><h3>❄️ AC Repair &amp; Service</h3><p>Jet Pump Wash, Installation, Gas Refill</p></div>
+            <div style="text-align:right;"><b style="color:#0f8a4b;">₹399 Base</b><p style="font-size:11px; color:#888;">(incl. 18% GST)</p></div>
           </div>
-
           <div class="category-card" onclick="selectCategoryBooking('plumber')">
-            <div>
-              <h3>🔧 Plumbing Works</h3>
-              <p>Pipelines, Taps, Leakages, Tank Cleaning</p>
-            </div>
-            <div style="text-align:right;">
-              <b style="color:#0f8a4b;">₹299 Base</b>
-              <p style="font-size:11px; color:#888;">(incl. 18% GST)</p>
-            </div>
+            <div><h3>🔧 Plumbing Works</h3><p>Pipelines, Taps, Leakages, Tank Cleaning</p></div>
+            <div style="text-align:right;"><b style="color:#0f8a4b;">₹299 Base</b><p style="font-size:11px; color:#888;">(incl. 18% GST)</p></div>
           </div>
         </div>
-
         <div class="card" style="margin-top:16px; background:#f0f4ff; border:1.5px solid #6366f1;">
           <h4 style="font-size:13px; color:#4338ca; margin-bottom:6px;">🏢 Commercial &amp; Bulk Order Desk</h4>
-          <p style="font-size:11.5px; color:#444; line-height:1.5;">
-            For bulk, commercial, or enterprise requirements covering HVAC/AC, Electrical, or Plumbing maintenance, please contact our corporate desk at:
-            <a href="mailto:kashvienterprises.bihar@gmail.com" style="color:#4338ca; font-weight:700;">kashvienterprises.bihar@gmail.com</a>
-          </p>
+          <p style="font-size:11.5px; color:#444; line-height:1.5;">For bulk, commercial, or enterprise requirements covering HVAC/AC, Electrical, or Plumbing maintenance, please contact our corporate desk at: <a href="mailto:kashvienterprises.bihar@gmail.com" style="color:#4338ca; font-weight:700;">kashvienterprises.bihar@gmail.com</a></p>
         </div>
       </div>
     </div>
@@ -394,15 +210,11 @@
             <button class="btn secondary" style="width:auto; padding:4px 8px; font-size:11px;" onclick="customerLogout()">Logout</button>
           </div>
         </div>
-
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; margin-top:14px;">
           <h3 style="font-size:15px;">My Personal Booking History &amp; Status</h3>
           <button class="btn secondary" style="width:auto; padding:4px 8px; font-size:11px;" onclick="loadCustomerOrders()">🔄 Refresh</button>
         </div>
-
-        <div id="customerHistoryContainer">
-          <p style="color:#888; font-size:13px; text-align:center; padding:20px 0;">Loading your past bookings...</p>
-        </div>
+        <div id="customerHistoryContainer"><p style="color:#888; font-size:13px; text-align:center; padding:20px 0;">Loading your past bookings...</p></div>
       </div>
     </div>
 
@@ -410,39 +222,29 @@
     <div id="screen-booking" class="screen">
       <div class="desktop-inner">
         <button class="btn secondary" style="width:auto; padding:6px 14px; font-size:12px; margin-bottom:12px;" onclick="window.history.back()">← Back</button>
-
         <div class="card" style="border-left:4px solid #0f8a4b;">
           <h3 id="bookCatName" style="color:#0f8a4b; font-size:16px;">Service Booking</h3>
           <p id="bookBaseScopeDesc" style="font-size:12px; color:#444; margin-top:4px; line-height:1.4;">-</p>
         </div>
-
         <div class="card">
           <div class="price-row"><span>Base Service Pack (incl. GST)</span><span id="priceBaseVal">₹299.00</span></div>
-          <div class="price-row" style="font-weight:600; border-top:1px dashed #eee; margin-top:4px; padding-top:4px;">
-            <span>Estimated Total Work Amount</span><span id="priceTotalIncGst">₹299.00</span>
-          </div>
+          <div class="price-row" style="font-weight:600; border-top:1px dashed #eee; margin-top:4px; padding-top:4px;"><span>Estimated Total Work Amount</span><span id="priceTotalIncGst">₹299.00</span></div>
           <div class="price-row" style="color:#0f8a4b;"><span>Advance Booking Token</span><span>- ₹21.00</span></div>
           <div class="price-row total"><span>Due Amount After Token</span><span id="priceTotalDueVal">₹278.00</span></div>
           <p style="font-size:11px; color:#666; margin-top:6px;">*Note: Any additional work or spare parts will be inspected and billed on-site by the technician. The ₹21 token is deducted from the final bill.</p>
         </div>
-
         <label style="font-size:12px; font-weight:600; color:#444; margin-bottom:4px; display:block;">Service Address:</label>
         <input type="text" id="custAddressInput" placeholder="Enter complete service address">
-        
         <div class="card" style="padding:10px; background:#f0faf3; margin-bottom:12px;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <span style="font-size:12px; font-weight:700; color:#0f8a4b;">📍 Map Location Picker</span>
             <button type="button" class="btn secondary" style="width:auto; padding:4px 8px; font-size:11px;" onclick="toggleBookingMap()">Toggle Map</button>
           </div>
           <p style="font-size:11px; color:#666; margin-top:4px;">Tap anywhere on map to pin exact location:</p>
-          <div id="bookingMapContainer" style="display:block; margin-top:8px;">
-            <div id="bookingMap"></div>
-          </div>
+          <div id="bookingMapContainer" style="display:block; margin-top:8px;"><div id="bookingMap"></div></div>
         </div>
-
         <label style="font-size:12px; font-weight:600; color:#444; margin-bottom:4px; display:block;">Customer Mobile Number:</label>
         <input type="tel" id="custPhoneInput" placeholder="10-digit mobile number" maxlength="10" readonly style="background:#f9f9f9;">
-
         <div class="terms-box">
           <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer;">
             <input type="checkbox" id="bookingTermsCheckbox" style="width:18px; height:18px; margin-top:2px;">
@@ -456,7 +258,6 @@
             </span>
           </label>
         </div>
-
         <button class="btn" onclick="openDirectAdvancePayment()">Proceed to Pay Advance Token (₹21.00)</button>
       </div>
     </div>
@@ -468,27 +269,19 @@
           <h3>Pay Advance Token (₹21.00)</h3>
           <p>Complete payment using UPI to confirm your booking.</p>
         </div>
-
         <div class="qr-box">
           <div style="font-size:12px; font-weight:700; color:#0f8a4b;">KASHVI ENTERPRISES</div>
           <img id="advanceQrImg" class="qr-img" alt="Dynamic UPI QR" />
           <div style="font-size:18px; font-weight:800; color:#0f8a4b;">₹21.00</div>
           <p style="font-size:11px; color:#888;">Scan with PhonePe, GPay, Paytm</p>
         </div>
-
-        <a id="advanceUpiIntentBtn" href="#" class="btn" style="display:block; text-align:center; text-decoration:none; margin-bottom:10px;">
-          🚀 Open in UPI App (PhonePe / GPay)
-        </a>
-
+        <a id="advanceUpiIntentBtn" href="#" class="btn" style="display:block; text-align:center; text-decoration:none; margin-bottom:10px;">🚀 Open in UPI App (PhonePe / GPay)</a>
         <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer; margin-bottom:10px; font-size:13px; color:#333;">
           <input type="checkbox" id="advancePaidCheckbox" style="width:18px; height:18px; margin-top:1px;">
           <span>I have completed the ₹21 payment</span>
         </label>
         <p id="advanceTxnError" style="color:#c0392b; font-size:11px; margin-bottom:8px;"></p>
-
-        <button class="btn secondary" onclick="broadcastJobToPool()">
-          ✔ Payment Confirmed (Submit Booking)
-        </button>
+        <button class="btn secondary" onclick="broadcastJobToPool()">✔ Payment Confirmed (Submit Booking)</button>
       </div>
     </div>
 
@@ -503,13 +296,8 @@
               <button class="btn danger" style="width:auto; padding:4px 8px; font-size:11px;" onclick="techLogout()">Logout</button>
             </div>
           </div>
-
-          <div id="techCooldownNotice" style="display:none; background:#fee2e2; border:1px solid #e74c3c; padding:10px; border-radius:8px; font-size:12px; color:#991b1b; margin-bottom:10px;">
-            ⚠️ Cooldown Active: You canceled a claimed job. You can claim new jobs in: <b id="cooldownTimer">--:--</b>
-          </div>
-
+          <div id="techCooldownNotice" style="display:none; background:#fee2e2; border:1px solid #e74c3c; padding:10px; border-radius:8px; font-size:12px; color:#991b1b; margin-bottom:10px;">⚠️ Cooldown Active: You canceled a claimed job. You can claim new jobs in: <b id="cooldownTimer">--:--</b></div>
           <div id="activeClaimedJobSection"></div>
-
           <h4 style="font-size:13px; color:#666; margin:14px 0 8px;">Available Category Broadcasts:</h4>
           <div id="availablePoolList"></div>
         </div>
@@ -539,7 +327,6 @@
           <p>GSTIN: 10CPRPK8525A1Z4 | Udyam: UDYAM-BR-06-0067891</p>
         </div>
         <div class="inv-title">TAX INVOICE / SERVICE RECEIPT</div>
-
         <div class="inv-meta-grid">
           <div>Customer Name: <span id="pdfCustName">-</span></div>
           <div>Customer Phone: <span id="pdfCustPhone">-</span></div>
@@ -548,14 +335,10 @@
           <div>Technician: <span id="pdfTech">-</span></div>
           <div>Date: <span id="pdfDate">-</span></div>
         </div>
-
         <table class="inv-table">
-          <thead>
-            <tr><th>Sr</th><th>Description</th><th>SAC/HSN</th><th>Taxable Rate</th><th>GST (18%)</th><th>Total</th></tr>
-          </thead>
+          <thead><tr><th>Sr</th><th>Description</th><th>SAC/HSN</th><th>Taxable Rate</th><th>GST (18%)</th><th>Total</th></tr></thead>
           <tbody id="pdfItemsBody"></tbody>
         </table>
-
         <div class="inv-summary">
           <div class="price-row"><span>Taxable Subtotal</span><span id="pdfSubtotal">₹0.00</span></div>
           <div class="price-row"><span>CGST (9%)</span><span id="pdfCgst">₹0.00</span></div>
@@ -575,7 +358,6 @@
             <p style="font-size:11px; color:#555; margin-bottom:8px;">Download completed works and customer logs for today's shift.</p>
             <button class="btn" style="padding:10px; font-size:13px;" onclick="downloadShiftReport()">Download Shift Report (CSV)</button>
           </div>
-
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
             <h3 style="font-size:16px;">Global Activity, Techs &amp; Payments</h3>
             <div style="display:flex; gap:6px;">
@@ -584,7 +366,6 @@
             </div>
           </div>
           <div id="adminGlobalFeed" style="margin-bottom:16px;"></div>
-
           <div class="card">
             <h3>👷 Register New Technician &amp; Assign PIN</h3>
             <input type="text" id="newTechName" placeholder="Full Name" style="margin-bottom:8px;">
@@ -599,7 +380,6 @@
             <input type="password" id="newTechPin" placeholder="4-Digit Access PIN" maxlength="4" style="margin-bottom:10px;">
             <button class="btn secondary" onclick="registerTechnician()">Save Technician &amp; Generate PIN</button>
           </div>
-
           <div class="card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
               <h3>🧑‍🔧 Technician Fleet (Block/Unblock)</h3>
@@ -607,7 +387,6 @@
             </div>
             <div id="techFleetList"><p style="color:#888; font-size:12px;">Loading...</p></div>
           </div>
-
           <div class="card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
               <h3>🚫 Customer Accounts (Fraud Block)</h3>
@@ -618,7 +397,6 @@
         </div>
       </div>
     </div>
-
   </div>
   </div>
 </div>
@@ -630,32 +408,27 @@
       <h3 style="font-size:15px; color:#0f8a4b;">Work Completion &amp; Billing Calculation</h3>
       <span style="font-size:20px; font-weight:700; cursor:pointer;" onclick="closeTechCompletionModal()">&times;</span>
     </div>
-
     <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px; margin-bottom:12px; font-size:12px;">
       <b>Initial Customer Order:</b>
       <p style="color:#555; margin-top:2px;" id="modalInitialOrderText">Base Scope Package</p>
       <p style="color:#0f8a4b; font-weight:700; margin-top:4px;">Advance Token Paid: ₹21.00 (Adjusted)</p>
       <p style="color:#7c3aed; font-weight:700; margin-top:4px;" id="modalElapsedTimeText">Job duration: --</p>
     </div>
-
     <div style="margin-bottom:12px;">
       <label style="font-weight:700; font-size:12.5px; display:block; margin-bottom:4px;" id="modalServicesHeading">Category Services Performed On-Site:</label>
       <p style="font-size:11px; color:#666; margin-bottom:6px;">Check service and enter price quoted to customer:</p>
       <div id="modalAddonsChecklist" style="max-height:160px; overflow-y:auto; border:1px solid #eee; border-radius:6px; padding:6px 10px;"></div>
     </div>
-
     <div style="margin-bottom:12px;">
       <label style="font-weight:700; font-size:12.5px; display:block; margin-bottom:6px;">Spare Parts Used (GST-Coded):</label>
       <div id="modalPartsCatalog" style="border:1px solid #eee; border-radius:6px; padding:6px 10px;"></div>
       <div id="modalCustomPartsRows" style="margin-top:8px;"></div>
       <button type="button" class="btn secondary" style="margin-top:8px; padding:8px; font-size:12px;" onclick="addCustomPartRow()">+ Add Custom Part</button>
     </div>
-
     <div class="input-group">
       <label style="font-weight:700; font-size:12.5px; display:block; margin-bottom:4px;">Enter Customer 4-Digit Stop PIN:</label>
       <input type="text" id="modalStopPinInput" placeholder="Stop PIN" maxlength="4" style="text-align:center; font-size:16px; font-weight:700;">
     </div>
-
     <div class="card" style="background:#f0faf3; border:1px solid #0f8a4b; padding:10px; margin-bottom:12px;">
       <div class="price-row"><span>Base Service Pack:</span><span id="modalBaseDisp">₹0.00</span></div>
       <div class="price-row"><span>On-Site Extra Services:</span><span id="modalExtraWorkDisp">₹0.00</span></div>
@@ -664,7 +437,6 @@
       <div class="price-row" style="color:#0f8a4b;"><span>Advance Token Deducted:</span><span>- ₹21.00</span></div>
       <div class="price-row total"><span>Grand Total (Net Due):</span><span id="modalFinalNetDue" style="color:#0f8a4b;">₹0.00</span></div>
     </div>
-
     <button class="btn" style="background:#b8720a;" onclick="submitFinalCalculatedBill()">✔ Finalize &amp; Generate Customer Bill</button>
   </div>
 </div>
@@ -676,7 +448,6 @@
       <h3 style="font-size:15px; color:#0f8a4b;">Final Service Bill Settlement</h3>
       <span style="font-size:20px; font-weight:700; cursor:pointer;" onclick="closeCustomerPaymentModal()">&times;</span>
     </div>
-
     <div class="card">
       <div class="price-row"><span>Base Service Pack</span><span id="payBase">₹0.00</span></div>
       <div class="price-row"><span>On-Site Extra Services</span><span id="payTechExtraWork">₹0.00</span></div>
@@ -685,35 +456,27 @@
       <div class="price-row" style="color:#0f8a4b;"><span>Advance Token Deducted</span><span>- ₹21.00</span></div>
       <div class="price-row total"><span>Grand Total (Payable Balance)</span><span id="payTotal" style="color:#0f8a4b;">₹0.00</span></div>
     </div>
-
     <div style="text-align:center; margin-bottom:14px;">
       <div style="font-size:24px; font-weight:800; color:#0f8a4b;" id="finalAmountTag">₹0.00</div>
       <p style="font-size:11px; color:#888;">UPI, Cards &amp; NetBanking supported</p>
     </div>
-
-    <button class="btn" onclick="payFinalBillWithCashfree()">
-      💳 Pay Now &amp; Download PDF Invoice
-    </button>
+    <button class="btn" onclick="payFinalBillWithCashfree()">💳 Pay Now &amp; Download PDF Invoice</button>
   </div>
 </div>
 
-<!-- 12. MANDATORY PHONE & ADDRESS COLLECTION MODAL FOR GOOGLE USERS -->
+<!-- 12. GOOGLE USER MODAL -->
 <div id="googlePhoneModal" class="modal-backdrop">
   <div class="modal-content" style="max-width:380px;">
     <h3 style="font-size:15px; color:#0f8a4b; margin-bottom:6px;">Complete Your Profile</h3>
     <p style="font-size:12px; color:#555; margin-bottom:14px;">Your mobile number and exact street address are mandatory so our field technicians can reach you.</p>
-    
     <label style="font-size:12px; font-weight:600; color:#444; margin-bottom:4px; display:block;">10-Digit Mobile Number (Mandatory):</label>
     <input type="tel" id="googlePhoneInput" placeholder="Enter 10-digit mobile number" maxlength="10" style="margin-bottom:8px;">
-
     <div class="card" style="padding:10px; background:#f0faf3; margin-bottom:8px;">
       <span style="font-size:12px; font-weight:700; color:#0f8a4b;">📍 Select Exact Address from Map:</span>
       <div id="googleSignupMap" style="height:170px; border-radius:10px; border:1.5px solid #0f8a4b; margin-top:6px;"></div>
     </div>
-    
     <label style="font-size:12px; font-weight:600; color:#444; margin-bottom:4px; display:block;">Selected Address / Landmark:</label>
     <input type="text" id="googleAddressInput" placeholder="Selected address" style="margin-bottom:8px;">
-
     <p id="googlePhoneError" style="color:#c0392b; font-size:11px; margin-bottom:8px;"></p>
     <button class="btn" onclick="submitGooglePhone()">Save &amp; Continue</button>
   </div>
@@ -735,109 +498,29 @@
   const OVERTIME_RATE_PER_HOUR = 100;
   const FREE_HOURS_BEFORE_OVERTIME = 3;
 
-  // Base Service Packages
   const SERVICE_CONFIG = {
-    electrician: {
-      title: 'Electrical Services',
-      base: 245.18,
-      gst: 53.82,
-      total: 299.00,
-      sac: '998719',
-      scope: '✅ <b>Base Scope Included:</b> Technician Visit + 1 Fan/Board Repair OR 2 Switch Replacements'
-    },
-    plumber: {
-      title: 'Plumbing Works',
-      base: 245.18,
-      gst: 53.82,
-      total: 299.00,
-      sac: '998722',
-      scope: '✅ <b>Base Scope Included:</b> Plumber Visit + 1 Tap/Valve Leakage Repair OR Drain Unclogging'
-    },
-    ac: {
-      title: 'AC Repair & Service',
-      base: 338.14,
-      gst: 60.86,
-      total: 399.00,
-      sac: '998715',
-      scope: '✅ <b>Base Scope Included:</b> High-Pressure Jet Pump Service for 1 Split/Window AC'
-    }
+    electrician: { title: 'Electrical Services', base: 245.18, gst: 53.82, total: 299.00, sac: '998719', scope: '✅ <b>Base Scope:</b> Technician Visit + 1 Fan/Board Repair OR 2 Switch Replacements' },
+    plumber: { title: 'Plumbing Works', base: 245.18, gst: 53.82, total: 299.00, sac: '998722', scope: '✅ <b>Base Scope:</b> Plumber Visit + 1 Tap/Valve Leakage Repair OR Drain Unclogging' },
+    ac: { title: 'AC Repair & Service', base: 338.14, gst: 60.86, total: 399.00, sac: '998715', scope: '✅ <b>Base Scope:</b> High-Pressure Jet Pump Service for 1 Split/Window AC' }
   };
 
-  // Trade-Wise On-Site Service Catalog
   const TRADE_SERVICES_CATALOG = {
-    electrician: [
-      'Ceiling / Exhaust Fan Installation',
-      'Switch / Socket Replacement',
-      'Fan Regulator Replacement',
-      'LED Light / Batten Fitting',
-      'Switchboard Repair / Fitting',
-      'New Point Wiring Line',
-      'Power Point Wiring (16A/25A)',
-      'MCB / Isolator Replacement',
-      'Short Circuit / Fault Diagnosis',
-      'Other Electrical Service'
-    ],
-    plumber: [
-      'Tap / Valve Replacement',
-      'Jet Spray Installation',
-      'Waste Pipe Replacement',
-      'Flush Tank Kit Repair',
-      'New Flush Tank Installation',
-      'New Water Point Creation',
-      'Main Sewer Blockage Clearing',
-      'Water Tank Cleaning',
-      'Water Motor Pump Installation',
-      'Other Plumbing Work'
-    ],
-    ac: [
-      'Additional AC Jet Service',
-      'Water Leakage Repair',
-      'Capacitor Replacement',
-      'Full Refrigerant Gas Charging',
-      'New Copper Piping / Drain Point',
-      'AC Un-installation (Dismantling)',
-      'Complete New AC Installation',
-      'PCB Repair / Electrical Checkup',
-      'Other AC Service'
-    ]
+    electrician: ['Ceiling / Exhaust Fan Installation','Switch / Socket Replacement','Fan Regulator Replacement','LED Light / Batten Fitting','Switchboard Repair / Fitting','New Point Wiring Line','Power Point Wiring (16A/25A)','MCB / Isolator Replacement','Short Circuit / Fault Diagnosis','Other Electrical Service'],
+    plumber: ['Tap / Valve Replacement','Jet Spray Installation','Waste Pipe Replacement','Flush Tank Kit Repair','New Flush Tank Installation','New Water Point Creation','Main Sewer Blockage Clearing','Water Tank Cleaning','Water Motor Pump Installation','Other Plumbing Work'],
+    ac: ['Additional AC Jet Service','Water Leakage Repair','Capacitor Replacement','Full Refrigerant Gas Charging','New Copper Piping / Drain Point','AC Un-installation (Dismantling)','Complete New AC Installation','PCB Repair / Electrical Checkup','Other AC Service']
   };
 
-  // Trade-Wise Spare Parts Catalog (GST HSN Coded)
   const SPARE_PARTS_CATALOG = {
-    electrician: [
-      { name: 'MCB (Single Pole)', code: 'HSN 8536', rate: 99.00 },
-      { name: 'Switch / Socket', code: 'HSN 8536', rate: 30.00 },
-      { name: 'Wire (per meter)', code: 'HSN 8544', rate: 15.00 },
-      { name: 'Fan Capacitor', code: 'HSN 8532', rate: 60.00 }
-    ],
-    ac: [
-      { name: 'Refrigerant Gas R32', code: 'HSN 2903', rate: 1699.00 },
-      { name: 'Run Capacitor', code: 'HSN 8532', rate: 150.00 },
-      { name: 'Drain Pipe (per meter)', code: 'HSN 3917', rate: 40.00 }
-    ],
-    plumber: [
-      { name: 'PVC Pipe (per meter)', code: 'HSN 3917', rate: 60.00 },
-      { name: 'Bib Tap', code: 'HSN 8481', rate: 120.00 },
-      { name: 'Angle Valve', code: 'HSN 8481', rate: 90.00 }
-    ]
+    electrician: [{ name: 'MCB (Single Pole)', code: 'HSN 8536', rate: 99.00 },{ name: 'Switch / Socket', code: 'HSN 8536', rate: 30.00 },{ name: 'Wire (per meter)', code: 'HSN 8544', rate: 15.00 },{ name: 'Fan Capacitor', code: 'HSN 8532', rate: 60.00 }],
+    ac: [{ name: 'Refrigerant Gas R32', code: 'HSN 2903', rate: 1699.00 },{ name: 'Run Capacitor', code: 'HSN 8532', rate: 150.00 },{ name: 'Drain Pipe (per meter)', code: 'HSN 3917', rate: 40.00 }],
+    plumber: [{ name: 'PVC Pipe (per meter)', code: 'HSN 3917', rate: 60.00 },{ name: 'Bib Tap', code: 'HSN 8481', rate: 120.00 },{ name: 'Angle Valve', code: 'HSN 8481', rate: 90.00 }]
   };
 
   let currentUser = null;
   const savedCustomer = localStorage.getItem('bm_active_customer');
-  if (savedCustomer) {
-    try { currentUser = JSON.parse(savedCustomer); } catch(e){}
-  }
+  if (savedCustomer) { try { currentUser = JSON.parse(savedCustomer); } catch(e){} }
 
-  let isCustomerSignupMode = true;
-  let isOtpDispatched = false;
-  let currentCategory = 'electrician';
-  let pendingAdvanceState = null;
-  let activeTechSession = null;
-  let isAdminLoggedIn = false;
-  let currentSettlementJob = null;
-  let activeModalJob = null;
-  let bookingMap = null, bookingMapMarker = null;
-  let signupMap = null, signupMapMarker = null;
+  let isCustomerSignupMode = true, isOtpDispatched = false, currentCategory = 'electrician', pendingAdvanceState = null, activeTechSession = null, isAdminLoggedIn = false, currentSettlementJob = null, activeModalJob = null, bookingMap = null, bookingMapMarker = null, signupMap = null, signupMapMarker = null;
 
   async function hashPassword(plain) {
     const enc = new TextEncoder().encode(plain);
@@ -847,27 +530,17 @@
 
   const CUSTOMER_SESSION_TIMEOUT_MS = 15 * 60 * 1000;
   let customerInactivityTimer = null;
-
   function resetCustomerInactivityTimer() {
     if (customerInactivityTimer) clearTimeout(customerInactivityTimer);
-    if (currentUser) {
-      customerInactivityTimer = setTimeout(handleCustomerSessionExpiry, CUSTOMER_SESSION_TIMEOUT_MS);
-    }
+    if (currentUser) customerInactivityTimer = setTimeout(handleCustomerSessionExpiry, CUSTOMER_SESSION_TIMEOUT_MS);
   }
-
   function handleCustomerSessionExpiry() {
     if (!currentUser) return;
-    currentUser = null;
-    localStorage.removeItem('bm_active_customer');
+    currentUser = null; localStorage.removeItem('bm_active_customer');
     if (customerInactivityTimer) clearTimeout(customerInactivityTimer);
-    updateRoleBasedNavigation();
-    alert("Session expired. Please sign in again.");
-    window.location.reload();
+    updateRoleBasedNavigation(); alert("Session expired. Please sign in again."); window.location.reload();
   }
-
-  ['click', 'mousemove', 'keypress', 'touchstart', 'scroll'].forEach(evt => {
-    window.addEventListener(evt, resetCustomerInactivityTimer, { passive: true });
-  });
+  ['click', 'mousemove', 'keypress', 'touchstart', 'scroll'].forEach(evt => window.addEventListener(evt, resetCustomerInactivityTimer, { passive: true }));
 
   function updateRoleBasedNavigation() {
     const badge = document.getElementById('topAuthBadge');
@@ -878,80 +551,34 @@
 
     if (isAdminLoggedIn) {
       badge.innerHTML = `🔐 Master Admin (<span onclick="adminLogout()" style="text-decoration:underline;">Logout</span>)`;
-      deskCustomer.style.display = 'none';
-      deskTech.style.display = 'none';
-      deskAdmin.style.display = 'block';
-
-      mobNav.innerHTML = `
-        <div class="nav-item active" onclick="navigateTo('admin')"><span class="nav-icon">🔐</span>Admin</div>
-        <div class="nav-item" onclick="adminLogout()"><span class="nav-icon">🚪</span>Logout</div>
-      `;
+      deskCustomer.style.display = 'none'; deskTech.style.display = 'none'; deskAdmin.style.display = 'block';
+      mobNav.innerHTML = `<div class="nav-item active" onclick="navigateTo('admin')"><span class="nav-icon">🔐</span>Admin</div><div class="nav-item" onclick="adminLogout()"><span class="nav-icon">🚪</span>Logout</div>`;
     } else if (activeTechSession) {
       badge.innerHTML = `🧑‍🔧 ${activeTechSession.name} (<span onclick="techLogout()" style="text-decoration:underline;">Logout</span>)`;
-      deskCustomer.style.display = 'none';
-      deskTech.style.display = 'block';
-      deskAdmin.style.display = 'none';
-
-      mobNav.innerHTML = `
-        <div class="nav-item active" onclick="navigateTo('tech-pool')"><span class="nav-icon">🧑‍🔧</span>Job Pool</div>
-        <div class="nav-item" onclick="techLogout()"><span class="nav-icon">🚪</span>Logout</div>
-      `;
+      deskCustomer.style.display = 'none'; deskTech.style.display = 'block'; deskAdmin.style.display = 'none';
+      mobNav.innerHTML = `<div class="nav-item active" onclick="navigateTo('tech-pool')"><span class="nav-icon">🧑‍🔧</span>Job Pool</div><div class="nav-item" onclick="techLogout()"><span class="nav-icon">🚪</span>Logout</div>`;
     } else if (currentUser) {
       badge.innerHTML = `👤 ${currentUser.name || currentUser.phone} (<span onclick="customerLogout()" style="text-decoration:underline;">Logout</span>)`;
-      deskCustomer.style.display = 'block';
-      deskTech.style.display = 'none';
-      deskAdmin.style.display = 'none';
-
-      mobNav.innerHTML = `
-        <div class="nav-item active" id="mobNavHome" onclick="navigateTo('home')"><span class="nav-icon">🏠</span>Categories</div>
-        <div class="nav-item" id="mobNavProfile" onclick="goToCustomerProfile()"><span class="nav-icon">👤</span>Profile &amp; Orders</div>
-      `;
+      deskCustomer.style.display = 'block'; deskTech.style.display = 'none'; deskAdmin.style.display = 'none';
+      mobNav.innerHTML = `<div class="nav-item active" id="mobNavHome" onclick="navigateTo('home')"><span class="nav-icon">🏠</span>Categories</div><div class="nav-item" id="mobNavProfile" onclick="goToCustomerProfile()"><span class="nav-icon">👤</span>Profile &amp; Orders</div>`;
     } else {
       badge.textContent = "Sign In";
-      deskCustomer.style.display = 'block';
-      deskTech.style.display = 'none';
-      deskAdmin.style.display = 'none';
-
-      mobNav.innerHTML = `
-        <div class="nav-item active" id="mobNavHome" onclick="navigateTo('home')"><span class="nav-icon">🏠</span>Categories</div>
-        <div class="nav-item" onclick="navigateTo('auth')"><span class="nav-icon">👤</span>Sign In</div>
-      `;
+      deskCustomer.style.display = 'block'; deskTech.style.display = 'none'; deskAdmin.style.display = 'none';
+      mobNav.innerHTML = `<div class="nav-item active" id="mobNavHome" onclick="navigateTo('home')"><span class="nav-icon">🏠</span>Categories</div><div class="nav-item" onclick="navigateTo('auth')"><span class="nav-icon">👤</span>Sign In</div>`;
     }
   }
 
-  async function customerLogout() {
-    currentUser = null;
-    localStorage.removeItem('bm_active_customer');
-    if (customerInactivityTimer) clearTimeout(customerInactivityTimer);
-    try { await sbClient.auth.signOut(); } catch(e){}
-    window.location.reload();
-  }
-
-  function techLogout() {
-    activeTechSession = null;
-    window.location.reload();
-  }
-
-  function adminLogout() {
-    isAdminLoggedIn = false;
-    window.location.reload();
-  }
-
-  function handleTopBadgeClick() {
-    if (currentUser) goToCustomerProfile();
-    else if (activeTechSession) navigateTo('tech-pool');
-    else if (isAdminLoggedIn) navigateTo('admin');
-    else navigateTo('auth');
-  }
+  async function customerLogout() { currentUser = null; localStorage.removeItem('bm_active_customer'); if (customerInactivityTimer) clearTimeout(customerInactivityTimer); try { await sbClient.auth.signOut(); } catch(e){} window.location.reload(); }
+  function techLogout() { activeTechSession = null; window.location.reload(); }
+  function adminLogout() { isAdminLoggedIn = false; window.location.reload(); }
+  function handleTopBadgeClick() { if (currentUser) goToCustomerProfile(); else if (activeTechSession) navigateTo('tech-pool'); else if (isAdminLoggedIn) navigateTo('admin'); else navigateTo('auth'); }
 
   function showScreenOnly(screenId) {
     if (screenId === 'admin' && !isAdminLoggedIn) { alert("Access Denied: Admin login required."); navigateTo('auth'); return; }
     if (screenId === 'tech-pool' && !activeTechSession) { alert("Access Denied: Technician login required."); navigateTo('auth'); return; }
-
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     const target = document.getElementById('screen-' + screenId);
     if(target) target.classList.add('active');
-
     if (screenId === 'home' && homeMap) setTimeout(() => homeMap.invalidateSize(), 200);
     else if (screenId === 'auth' && signupMap) setTimeout(() => signupMap.invalidateSize(), 200);
     else if (screenId === 'booking' && bookingMap) setTimeout(() => bookingMap.invalidateSize(), 200);
@@ -960,10 +587,7 @@
 
   function navigateTo(screenId, replaceHistory = false) {
     showScreenOnly(screenId);
-    try {
-      if (replaceHistory) history.replaceState({ screen: screenId }, '', '#' + screenId);
-      else history.pushState({ screen: screenId }, '', '#' + screenId);
-    } catch(e) {}
+    try { if (replaceHistory) history.replaceState({ screen: screenId }, '', '#' + screenId); else history.pushState({ screen: screenId }, '', '#' + screenId); } catch(e) {}
   }
 
   window.addEventListener('popstate', (e) => {
@@ -981,45 +605,26 @@
     document.getElementById('custAuthFormTitle').textContent = isCustomerSignupMode ? "Customer Registration" : "Customer Login";
     document.getElementById('custAuthToggleBtn').textContent = isCustomerSignupMode ? "Switch to Login" : "Switch to Sign Up";
     document.getElementById('custAuthActionBtn').textContent = isCustomerSignupMode ? "Verify OTP & Register" : "Login & Proceed";
-    
     document.getElementById('custSignupFields').style.display = isCustomerSignupMode ? "block" : "none";
     document.getElementById('otpPasswordCreationGroup').style.display = "none";
     document.getElementById('loginPasswordGroup').style.display = isCustomerSignupMode ? "none" : "block";
-    
     document.getElementById('authMsg').textContent = "";
     document.getElementById('authCreatePassword').value = "";
     document.getElementById('authLoginPassword').value = "";
     document.getElementById('authEmailOtp').value = "";
-    
     if (isCustomerSignupMode && signupMap) setTimeout(() => signupMap.invalidateSize(), 200);
   }
 
-  const southWest = L.latLng(25.20, 85.80);
-  const northEast = L.latLng(25.75, 86.45);
-  const begusaraiBounds = L.latLngBounds(southWest, northEast);
-
-  const homeMap = L.map('homeMap', {
-    center: [25.4182, 86.1272],
-    zoom: 13,
-    minZoom: 11,
-    maxBounds: begusaraiBounds,
-    maxBoundsViscosity: 1.0
-  });
+  const southWest = L.latLng(25.20, 85.80), northEast = L.latLng(25.75, 86.45), begusaraiBounds = L.latLngBounds(southWest, northEast);
+  const homeMap = L.map('homeMap', { center: [25.4182, 86.1272], zoom: 13, minZoom: 11, maxBounds: begusaraiBounds, maxBoundsViscosity: 1.0 });
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { bounds: begusaraiBounds }).addTo(homeMap);
   L.marker([25.4182, 86.1272]).addTo(homeMap).bindPopup("<b>Begusarai Central Dispatch Hub</b>").openPopup();
 
   function initSignupMap() {
     if (signupMap) return;
-    signupMap = L.map('signupMap', {
-      center: [25.4182, 86.1272],
-      zoom: 13,
-      minZoom: 11,
-      maxBounds: begusaraiBounds,
-      maxBoundsViscosity: 1.0
-    });
+    signupMap = L.map('signupMap', { center: [25.4182, 86.1272], zoom: 13, minZoom: 11, maxBounds: begusaraiBounds, maxBoundsViscosity: 1.0 });
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { bounds: begusaraiBounds }).addTo(signupMap);
     signupMapMarker = L.marker([25.4182, 86.1272]).addTo(signupMap);
-
     signupMap.on('click', function(e) {
       signupMapMarker.setLatLng(e.latlng);
       reverseGeocodeAndFill(e.latlng.lat, e.latlng.lng, 'custRegAddress', signupMapMarker);
@@ -1028,21 +633,12 @@
 
   function initBookingMap() {
     if (bookingMap) return;
-    bookingMap = L.map('bookingMap', {
-      center: [25.4182, 86.1272],
-      zoom: 13,
-      minZoom: 11,
-      maxBounds: begusaraiBounds,
-      maxBoundsViscosity: 1.0
-    });
+    bookingMap = L.map('bookingMap', { center: [25.4182, 86.1272], zoom: 13, minZoom: 11, maxBounds: begusaraiBounds, maxBoundsViscosity: 1.0 });
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { bounds: begusaraiBounds }).addTo(bookingMap);
     bookingMapMarker = L.marker([25.4182, 86.1272]).addTo(bookingMap);
-
     bookingMap.on('click', function(e) {
       bookingMapMarker.setLatLng(e.latlng);
       reverseGeocodeAndFill(e.latlng.lat, e.latlng.lng, 'custAddressInput', bookingMapMarker);
-      window.lastPickedBookingLat = e.latlng.lat;
-      window.lastPickedBookingLng = e.latlng.lng;
     });
   }
 
@@ -1050,11 +646,8 @@
     const input = document.getElementById(inputId);
     const fallbackAddress = `Location [${lat.toFixed(4)}, ${lng.toFixed(4)}], Begusarai, Bihar`;
     input.value = "Finding address...";
-
     try {
-      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`, {
-        headers: { 'Accept-Language': 'en' }
-      });
+      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`, { headers: { 'Accept-Language': 'en' } });
       const data = await res.json();
       const address = data && data.display_name ? data.display_name : fallbackAddress;
       input.value = address;
@@ -1083,15 +676,10 @@
     return { upiUri, qrUrl };
   }
 
-  // ==================== GOOGLE OAUTH ====================
-  let pendingGoogleUser = null;
-  let googleSignupMap = null, googleSignupMapMarker = null;
-
+  // ==================== GOOGLE AUTH ====================
+  let pendingGoogleUser = null, googleSignupMap = null, googleSignupMapMarker = null;
   async function signInWithGoogle() {
-    const { error } = await sbClient.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: window.location.origin + window.location.pathname }
-    });
+    const { error } = await sbClient.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + window.location.pathname } });
     if (error) alert("Google login error: " + error.message);
   }
 
@@ -1099,52 +687,31 @@
   sbClient.auth.onAuthStateChange(async (event, session) => {
     if (event !== 'SIGNED_IN' || !session?.user || googleAuthProcessed) return;
     googleAuthProcessed = true;
-
-    if (window.location.hash.includes('access_token')) {
-      history.replaceState(null, '', window.location.pathname + window.location.search);
-    }
+    if (window.location.hash.includes('access_token')) history.replaceState(null, '', window.location.pathname + window.location.search);
 
     const email = session.user.email;
     const name = session.user.user_metadata?.full_name || session.user.user_metadata?.name || 'Customer';
-
     let existing = null;
-    try {
-      const { data } = await sbClient.from('customers').select('*').eq('email', email).single();
-      existing = data;
-    } catch(e){}
+    try { const { data } = await sbClient.from('customers').select('*').eq('email', email).single(); existing = data; } catch(e){}
 
     if (existing && existing.phone && existing.address) {
-      if (existing.is_blocked) {
-        alert("Your account has been blocked by Admin.");
-        return;
-      }
+      if (existing.is_blocked) { alert("Your account has been blocked by Admin."); return; }
       currentUser = { name: existing.name || name, phone: existing.phone, address: existing.address, email };
       localStorage.setItem('bm_active_customer', JSON.stringify(currentUser));
-      updateRoleBasedNavigation();
-      navigateTo('home', true);
+      updateRoleBasedNavigation(); navigateTo('home', true);
     } else {
       pendingGoogleUser = { email, name };
       document.getElementById('googlePhoneModal').style.display = 'flex';
-      if (existing) {
-        document.getElementById('googlePhoneInput').value = existing.phone || '';
-        document.getElementById('googleAddressInput').value = existing.address || '';
-      }
+      if (existing) { document.getElementById('googlePhoneInput').value = existing.phone || ''; document.getElementById('googleAddressInput').value = existing.address || ''; }
       setTimeout(initGoogleSignupMap, 150);
     }
   });
 
   function initGoogleSignupMap() {
     if (googleSignupMap) { googleSignupMap.invalidateSize(); return; }
-    googleSignupMap = L.map('googleSignupMap', {
-      center: [25.4182, 86.1272],
-      zoom: 13,
-      minZoom: 11,
-      maxBounds: begusaraiBounds,
-      maxBoundsViscosity: 1.0
-    });
+    googleSignupMap = L.map('googleSignupMap', { center: [25.4182, 86.1272], zoom: 13, minZoom: 11, maxBounds: begusaraiBounds, maxBoundsViscosity: 1.0 });
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { bounds: begusaraiBounds }).addTo(googleSignupMap);
     googleSignupMapMarker = L.marker([25.4182, 86.1272]).addTo(googleSignupMap);
-
     googleSignupMap.on('click', function(e) {
       googleSignupMapMarker.setLatLng(e.latlng);
       reverseGeocodeAndFill(e.latlng.lat, e.latlng.lng, 'googleAddressInput', googleSignupMapMarker);
@@ -1152,112 +719,51 @@
   }
 
   async function submitGooglePhone() {
-    const phoneInput = document.getElementById('googlePhoneInput');
-    const addressInput = document.getElementById('googleAddressInput');
-    const phone = phoneInput.value.trim();
-    const address = addressInput.value.trim();
+    const phone = document.getElementById('googlePhoneInput').value.trim();
+    const address = document.getElementById('googleAddressInput').value.trim();
     const errEl = document.getElementById('googlePhoneError');
-    const phoneRegex = /^[6-9]\d{9}$/;
-
-    if (!phoneRegex.test(phone)) {
-      errEl.textContent = "Please enter a valid 10-digit Indian mobile number.";
-      return;
-    }
-    if (!address) {
-      errEl.textContent = "Please select or type your exact address.";
-      return;
-    }
+    if (!/^[6-9]\d{9}$/.test(phone)) { errEl.textContent = "Please enter a valid 10-digit Indian mobile number."; return; }
+    if (!address) { errEl.textContent = "Please select or type your exact address."; return; }
     errEl.textContent = "";
     if (!pendingGoogleUser) return;
 
-    const { error: upsertError } = await sbClient.from('customers').upsert(
-      { email: pendingGoogleUser.email, name: pendingGoogleUser.name, phone, address },
-      { onConflict: 'email' }
-    );
-
-    if (upsertError) {
-      errEl.textContent = "Could not save details: " + upsertError.message;
-      return;
-    }
+    const { error } = await sbClient.from('customers').upsert({ email: pendingGoogleUser.email, name: pendingGoogleUser.name, phone, address }, { onConflict: 'email' });
+    if (error) { errEl.textContent = "Could not save details: " + error.message; return; }
 
     currentUser = { name: pendingGoogleUser.name, phone, address, email: pendingGoogleUser.email };
     localStorage.setItem('bm_active_customer', JSON.stringify(currentUser));
     document.getElementById('googlePhoneModal').style.display = 'none';
-    updateRoleBasedNavigation();
-    navigateTo('home', true);
+    updateRoleBasedNavigation(); navigateTo('home', true);
   }
 
-  // ==================== EMAIL OTP DISPATCH ====================
+  // ==================== EMAIL OTP & AUTH ====================
   async function sendEmailVerificationOtp() {
-    const emailInput = document.getElementById('authEmail');
-    const nameInput = document.getElementById('custRegName');
-    const phoneInput = document.getElementById('authPhone');
-    const addressInput = document.getElementById('custRegAddress');
+    const email = document.getElementById('authEmail').value.trim().toLowerCase();
+    const name = document.getElementById('custRegName').value.trim();
+    const phone = document.getElementById('authPhone').value.trim();
+    const address = document.getElementById('custRegAddress').value.trim();
     const msg = document.getElementById('authMsg');
 
-    const email = emailInput.value.trim().toLowerCase();
-    const name = nameInput.value.trim();
-    const phone = phoneInput.value.trim();
-    const address = addressInput.value.trim();
+    if (!email || !email.includes('@')) { msg.textContent = "Please enter a valid email address."; msg.style.color = "#c0392b"; return; }
+    if (!name) { msg.textContent = "Please enter your Full Name."; msg.style.color = "#c0392b"; return; }
+    if (!/^[6-9]\d{9}$/.test(phone)) { msg.textContent = "Mandatory: Enter a valid 10-digit Indian mobile number."; msg.style.color = "#c0392b"; return; }
+    if (!address) { msg.textContent = "Mandatory: Select or type your exact street address."; msg.style.color = "#c0392b"; return; }
 
-    if (!email || !email.includes('@')) {
-      msg.textContent = "Please enter a valid email address.";
-      msg.style.color = "#c0392b";
-      return;
-    }
-    if (!name) {
-      msg.textContent = "Please enter your Full Name.";
-      msg.style.color = "#c0392b";
-      return;
-    }
-    if (!/^[6-9]\d{9}$/.test(phone)) {
-      msg.textContent = "Mandatory: Enter a valid 10-digit Indian mobile number.";
-      msg.style.color = "#c0392b";
-      return;
-    }
-    if (!address) {
-      msg.textContent = "Mandatory: Select or type your exact street address.";
-      msg.style.color = "#c0392b";
-      return;
-    }
-
-    msg.textContent = "Sending 6-digit verification code to email...";
-    msg.style.color = "#0f8a4b";
-
+    msg.textContent = "Sending 6-digit verification code to email..."; msg.style.color = "#0f8a4b";
     try {
-      const { error } = await sbClient.auth.signInWithOtp({
-        email: email,
-        options: { shouldCreateUser: false }
-      });
-
-      if (error) {
-        msg.textContent = "Failed to send OTP: " + error.message;
-        msg.style.color = "#c0392b";
-        return;
-      }
-
+      const { error } = await sbClient.auth.signInWithOtp({ email: email, options: { shouldCreateUser: false } });
+      if (error) { msg.textContent = "Failed to send OTP: " + error.message; msg.style.color = "#c0392b"; return; }
       isOtpDispatched = true;
       document.getElementById('otpPasswordCreationGroup').style.display = 'block';
       document.getElementById('sendEmailOtpBtn').textContent = "🔄 Resend Email OTP";
-      msg.textContent = "OTP Sent! Enter the 6-digit code and create your password.";
-      msg.style.color = "#0f8a4b";
-    } catch(err) {
-      msg.textContent = "Error sending OTP: " + err.message;
-      msg.style.color = "#c0392b";
-    }
+      msg.textContent = "OTP Sent! Enter the 6-digit code and create your password."; msg.style.color = "#0f8a4b";
+    } catch(err) { msg.textContent = "Error sending OTP: " + err.message; msg.style.color = "#c0392b"; }
   }
 
-  // ==================== REGISTRATION & LOGIN LOGIC ====================
   async function handleCustomerAuthAction() {
-    const emailInput = document.getElementById('authEmail');
-    const email = emailInput.value.trim().toLowerCase();
+    const email = document.getElementById('authEmail').value.trim().toLowerCase();
     const msg = document.getElementById('authMsg');
-
-    if (!email || !email.includes('@')) {
-      msg.textContent = "Please enter a valid email address.";
-      msg.style.color = "#c0392b";
-      return;
-    }
+    if (!email || !email.includes('@')) { msg.textContent = "Please enter a valid email address."; msg.style.color = "#c0392b"; return; }
 
     if (isCustomerSignupMode) {
       const name = document.getElementById('custRegName').value.trim();
@@ -1266,100 +772,34 @@
       const otpToken = document.getElementById('authEmailOtp').value.trim();
       const newPassword = document.getElementById('authCreatePassword').value.trim();
 
-      if (!isOtpDispatched || otpToken.length !== 6) {
-        msg.textContent = "Please send OTP and enter the 6-digit code received on email.";
-        msg.style.color = "#c0392b";
-        return;
-      }
+      if (!isOtpDispatched || otpToken.length !== 6) { msg.textContent = "Please send OTP and enter the 6-digit code received on email."; msg.style.color = "#c0392b"; return; }
+      if (newPassword.length < 6) { msg.textContent = "Created Password must be at least 6 characters."; msg.style.color = "#c0392b"; return; }
 
-      if (newPassword.length < 6) {
-        msg.textContent = "Created Password must be at least 6 characters.";
-        msg.style.color = "#c0392b";
-        return;
-      }
-
-      msg.textContent = "Verifying OTP and creating your account...";
-      msg.style.color = "#0f8a4b";
-
-      const { error: verifyErr } = await sbClient.auth.verifyOtp({
-        email: email,
-        token: otpToken,
-        type: 'email'
-      });
-
-      if (verifyErr) {
-        msg.textContent = "Invalid or expired Email OTP: " + verifyErr.message;
-        msg.style.color = "#c0392b";
-        return;
-      }
+      msg.textContent = "Verifying OTP and creating your account..."; msg.style.color = "#0f8a4b";
+      const { error: verifyErr } = await sbClient.auth.verifyOtp({ email: email, token: otpToken, type: 'email' });
+      if (verifyErr) { msg.textContent = "Invalid or expired Email OTP: " + verifyErr.message; msg.style.color = "#c0392b"; return; }
 
       const hashedPassword = await hashPassword(newPassword);
-      const { error: insertErr } = await sbClient.from('customers').upsert([{
-        email, name, phone, address, password_hash: hashedPassword
-      }], { onConflict: 'email' });
-
-      if (insertErr) {
-        msg.textContent = "Registration database error: " + insertErr.message;
-        msg.style.color = "#c0392b";
-        return;
-      }
+      const { error: insertErr } = await sbClient.from('customers').upsert([{ email, name, phone, address, password_hash: hashedPassword }], { onConflict: 'email' });
+      if (insertErr) { msg.textContent = "Registration database error: " + insertErr.message; msg.style.color = "#c0392b"; return; }
 
       alert("Account Created Successfully! Please login using your email and password.");
       toggleCustomerAuthMode();
       document.getElementById('authEmail').value = email;
-      msg.textContent = "Account verified! Enter your password to log in.";
-      msg.style.color = "#0f8a4b";
+      msg.textContent = "Account verified! Enter your password to log in."; msg.style.color = "#0f8a4b";
     } else {
       const loginPassword = document.getElementById('authLoginPassword').value.trim();
-
-      if (loginPassword.length < 6) {
-        msg.textContent = "Password must be at least 6 characters.";
-        msg.style.color = "#c0392b";
-        return;
-      }
+      if (loginPassword.length < 6) { msg.textContent = "Password must be at least 6 characters."; msg.style.color = "#c0392b"; return; }
 
       const hashedPassword = await hashPassword(loginPassword);
       let { data: account } = await sbClient.from('customers').select('*').eq('email', email).single();
+      if (!account) { msg.textContent = "Account not found with this email. Please Sign Up."; msg.style.color = "#c0392b"; return; }
+      if (account.is_blocked) { msg.textContent = "This account has been blocked by Admin."; msg.style.color = "#c0392b"; return; }
+      if (account.password_hash !== hashedPassword) { msg.textContent = "Incorrect password. Please re-enter."; msg.style.color = "#c0392b"; return; }
 
-      if (!account) {
-        msg.textContent = "Account not found with this email. Please Sign Up.";
-        msg.style.color = "#c0392b";
-        return;
-      }
-
-      if (account.is_blocked) {
-        msg.textContent = "This account has been blocked by Admin.";
-        msg.style.color = "#c0392b";
-        return;
-      }
-
-      if (account.password_hash !== hashedPassword) {
-        msg.textContent = "Incorrect password. Please re-enter.";
-        msg.style.color = "#c0392b";
-        document.getElementById('authLoginPassword').value = "";
-        document.getElementById('authLoginPassword').focus();
-        return;
-      }
-
-      if (!account.phone || !account.address) {
-        pendingGoogleUser = { email: account.email, name: account.name };
-        document.getElementById('googlePhoneModal').style.display = 'flex';
-        document.getElementById('googlePhoneInput').value = account.phone || '';
-        document.getElementById('googleAddressInput').value = account.address || '';
-        setTimeout(initGoogleSignupMap, 150);
-        return;
-      }
-
-      currentUser = {
-        name: account.name || "Customer",
-        address: account.address,
-        phone: account.phone,
-        email: account.email
-      };
+      currentUser = { name: account.name || "Customer", address: account.address, phone: account.phone, email: account.email };
       localStorage.setItem('bm_active_customer', JSON.stringify(currentUser));
-
-      window.location.hash = '#home';
-      window.location.reload();
+      window.location.hash = '#home'; window.location.reload();
     }
   }
 
@@ -1369,28 +809,23 @@
     document.getElementById('profDispEmail').textContent = currentUser.email || "--";
     document.getElementById('profDispPhone').textContent = currentUser.phone || "--";
     document.getElementById('profDispAddress').textContent = currentUser.address || "Begusarai, Bihar";
-
     navigateTo('profile');
     loadCustomerOrders();
   }
 
-  // ==================== BOOKING INITIALIZATION ====================
+  // ==================== BOOKING & ADVANCE PAYMENT ====================
   function selectCategoryBooking(catKey) {
     if (!currentUser) { alert("Please Sign In or Register to book services."); navigateTo('auth'); return; }
-
     currentCategory = catKey;
     const cfg = SERVICE_CONFIG[catKey];
-
     document.getElementById('bookCatName').textContent = cfg.title;
     document.getElementById('bookBaseScopeDesc').innerHTML = cfg.scope;
     document.getElementById('custPhoneInput').value = currentUser.phone;
     document.getElementById('custAddressInput').value = currentUser.address || "";
     document.getElementById('bookingTermsCheckbox').checked = false;
-
     document.getElementById('priceBaseVal').textContent = `₹${cfg.total.toFixed(2)}`;
     document.getElementById('priceTotalIncGst').textContent = `₹${cfg.total.toFixed(2)}`;
     document.getElementById('priceTotalDueVal').textContent = `₹${(cfg.total - 21).toFixed(2)}`;
-
     navigateTo('booking');
     initBookingMap();
     setTimeout(() => { if (bookingMap) bookingMap.invalidateSize(); }, 200);
@@ -1407,47 +842,25 @@
         body: JSON.stringify({ orderId, amount, customerPhone: phone, customerName: name, customerEmail: email })
       });
       const data = await res.json();
-
-      if (!res.ok || !data.payment_session_id) {
-        throw new Error(data.error || "Payment session error");
-      }
-
-      await cashfree.checkout({
-        paymentSessionId: data.payment_session_id,
-        redirectTarget: "_self"
-      });
+      if (!res.ok || !data.payment_session_id) throw new Error(data.error || "Payment session error");
+      await cashfree.checkout({ paymentSessionId: data.payment_session_id, redirectTarget: "_self" });
       return true;
-    } catch (e) {
-      return false;
-    }
+    } catch (e) { return false; }
   }
 
-  // ==================== ADVANCE PAYMENT WITH IMMEDIATE DATABASE INSERT ====================
   async function openDirectAdvancePayment() {
     const address = document.getElementById('custAddressInput').value.trim();
     const phone = currentUser ? currentUser.phone : document.getElementById('custPhoneInput').value.trim();
     const termsAccepted = document.getElementById('bookingTermsCheckbox').checked;
 
     if (!address) { alert("Please enter or pin your service address."); return; }
-    if (!termsAccepted) {
-      alert("Mandatory: Please accept the Terms & Conditions to proceed.");
-      return;
-    }
-
-    try {
-      const { data: custCheck } = await sbClient.from('customers').select('is_blocked').eq('phone', phone).single();
-      if (custCheck && custCheck.is_blocked) {
-        alert("Your account has been blocked by Admin.");
-        return;
-      }
-    } catch(e){}
+    if (!termsAccepted) { alert("Mandatory: Please accept the Terms & Conditions to proceed."); return; }
 
     const invoiceNo = 'BM-' + Date.now().toString().slice(-6);
     const startPin = Math.floor(1000 + Math.random() * 9000).toString();
     const stopPin = Math.floor(1000 + Math.random() * 9000).toString();
     const cfg = SERVICE_CONFIG[currentCategory];
 
-    // 1. Instantly insert booking into Supabase so it shows up in profile
     const newBooking = {
       customer_name: currentUser.name || "Customer",
       customer_phone: phone,
@@ -1474,21 +887,9 @@
     localPool.unshift({ ...newBooking, id: insertedId || newBooking.invoice_no });
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
 
-    pendingAdvanceState = {
-      customerName: currentUser.name || "Customer",
-      phone: phone,
-      address: address,
-      category: currentCategory,
-      addonsList: 'Standard Base Scope',
-      addonsTotal: 0,
-      startPin: startPin,
-      stopPin: stopPin,
-      invoiceNo: invoiceNo
-    };
+    pendingAdvanceState = { customerName: currentUser.name || "Customer", phone, address, category: currentCategory, addonsList: 'Standard Base Scope', addonsTotal: 0, startPin, stopPin, invoiceNo };
 
-    // 2. Open Cashfree Checkout
     const cashfreeSuccess = await openCashfreeCheckout('ADV-' + invoiceNo, 21.00, phone, currentUser.name, currentUser.email);
-
     if (!cashfreeSuccess) {
       const upi = generateDynamicUpi(21.00, `Advance Token for ${invoiceNo}`);
       document.getElementById('advanceQrImg').src = upi.qrUrl;
@@ -1501,20 +902,15 @@
 
   async function broadcastJobToPool() {
     if (!pendingAdvanceState) return;
-
     const paidCheckbox = document.getElementById('advancePaidCheckbox');
     const txnErrEl = document.getElementById('advanceTxnError');
-    if (!paidCheckbox.checked) {
-      txnErrEl.textContent = "Please confirm you have completed the payment before proceeding.";
-      return;
-    }
+    if (!paidCheckbox.checked) { txnErrEl.textContent = "Please confirm you have completed the payment before proceeding."; return; }
     txnErrEl.textContent = "";
-
     alert(`Advance Payment Received! Booking ID: ${pendingAdvanceState.invoiceNo} is placed.`);
     goToCustomerProfile();
   }
 
-  // ==================== CUSTOMER ORDERS & CANCEL ====================
+  // ==================== CUSTOMER ORDERS & BILLING ====================
   async function loadCustomerOrders() {
     if (!currentUser) return;
     const container = document.getElementById('customerHistoryContainer');
@@ -1537,10 +933,7 @@
     }
 
     container.innerHTML = orders.map(b => {
-      const isPaid = b.job_status === 'paid_completed';
-      const isBillReady = b.job_status === 'work_completed';
-      const isPending = b.job_status === 'pending_acceptance';
-      const isCancelled = b.job_status === 'cancelled';
+      const isPaid = b.job_status === 'paid_completed', isBillReady = b.job_status === 'work_completed', isPending = b.job_status === 'pending_acceptance', isCancelled = b.job_status === 'cancelled';
       const catConfig = SERVICE_CONFIG[b.service_type] || SERVICE_CONFIG.electrician;
 
       let statusBadge = `<span style="color:#d97706; font-weight:700;">[ ⏳ PENDING POOL ACCEPT ]</span>`;
@@ -1560,29 +953,14 @@
           <p style="font-size:11.5px; color:#555;">📋 Work Details: ${b.extra_services || 'Base Package'}</p>
           <p style="font-size:12px; color:#555;">🧑‍🔧 Assigned Tech: <b>${b.technician_name || 'Broadcasting in Pool (Waiting Tech...)'}</b>${b.technician_phone ? ' (📞 ' + b.technician_phone + ')' : ''}</p>
           <p style="font-size:12px; color:#555;">📍 Work Address: ${b.customer_address}</p>
-          
           ${!isCancelled ? `
           <div style="background:#f0faf3; border:1px dashed #0f8a4b; border-radius:6px; padding:6px; margin:6px 0; font-size:11.5px;">
             🟢 Your Start PIN: <b>${b.start_pin}</b> (Give upon arrival)<br>
             🔴 Your Stop PIN: <b>${b.stop_pin}</b> (Give after work completes)
           </div>` : ''}
-
-          ${isPending ? `
-            <button class="btn danger" style="padding:7px; font-size:11.5px; margin-top:8px;" onclick="cancelCustomerBooking('${b.id || b.invoice_no}')">
-              ❌ Cancel Booking
-            </button>
-          ` : ''}
-
-          ${isBillReady ? `
-            <button class="btn" style="padding:8px; font-size:12px; margin-top:8px; background:#b8720a;" onclick='openCustomerSettlementFromProfile(${JSON.stringify(b).replace(/'/g,"&apos;")})'>
-              💳 Bill Ready - Pay Now (₹${(b.calculated_total || 0).toFixed(2)})
-            </button>
-          ` : ''}
-          ${isPaid ? `
-            <button class="btn secondary" style="padding:6px; font-size:11px; margin-top:8px;" onclick="downloadOrderPdf('${b.id || b.invoice_no}')">
-              📥 Download Official Tax Invoice PDF
-            </button>
-          ` : ''}
+          ${isPending ? `<button class="btn danger" style="padding:7px; font-size:11.5px; margin-top:8px;" onclick="cancelCustomerBooking('${b.id || b.invoice_no}')">❌ Cancel Booking</button>` : ''}
+          ${isBillReady ? `<button class="btn" style="padding:8px; font-size:12px; margin-top:8px; background:#b8720a;" onclick='openCustomerSettlementFromProfile(${JSON.stringify(b).replace(/'/g,"&apos;")})'>💳 Bill Ready - Pay Now (₹${(b.calculated_total || 0).toFixed(2)})</button>` : ''}
+          ${isPaid ? `<button class="btn secondary" style="padding:6px; font-size:11px; margin-top:8px;" onclick="downloadOrderPdf('${b.id || b.invoice_no}')">📥 Download Official Tax Invoice PDF</button>` : ''}
         </div>
       `;
     }).join('');
@@ -1590,17 +968,11 @@
 
   async function cancelCustomerBooking(orderId) {
     if (!confirm("Are you sure you want to cancel this booking?")) return;
-
-    try {
-      await sbClient.from('bookings').update({ job_status: 'cancelled' }).or(`id.eq.${orderId},invoice_no.eq.${orderId}`);
-    } catch(e){}
-
+    try { await sbClient.from('bookings').update({ job_status: 'cancelled' }).or(`id.eq.${orderId},invoice_no.eq.${orderId}`); } catch(e){}
     let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
     localPool = localPool.map(j => (j.id === orderId || j.invoice_no === orderId) ? { ...j, job_status: 'cancelled' } : j);
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
-
-    alert("Your booking has been cancelled.");
-    loadCustomerOrders();
+    alert("Your booking has been cancelled."); loadCustomerOrders();
   }
 
   function openCustomerSettlementFromProfile(booking) {
@@ -1614,65 +986,36 @@
       overtimeHours: parseFloat(booking.overtime_hours) || 0,
       netDue: parseFloat(booking.calculated_total) || 0
     };
-
     document.getElementById('payBase').textContent = `₹${currentSettlementJob.baseAmount.toFixed(2)}`;
     document.getElementById('payTechExtraWork').textContent = `₹${currentSettlementJob.extraOnSiteCost.toFixed(2)}`;
     document.getElementById('payParts').textContent = `₹${currentSettlementJob.extraMaterialCost.toFixed(2)}`;
-
     if (currentSettlementJob.overtimeCharge > 0) {
       document.getElementById('payOvertimeRow').style.display = 'flex';
       document.getElementById('payOvertimeLabel').textContent = `Overtime (${currentSettlementJob.overtimeHours} hr @ ₹100/hr)`;
       document.getElementById('payOvertimeVal').textContent = `₹${currentSettlementJob.overtimeCharge.toFixed(2)}`;
-    } else {
-      document.getElementById('payOvertimeRow').style.display = 'none';
-    }
-
+    } else { document.getElementById('payOvertimeRow').style.display = 'none'; }
     document.getElementById('payTotal').textContent = `₹${currentSettlementJob.netDue.toFixed(2)}`;
     document.getElementById('finalAmountTag').textContent = `₹${currentSettlementJob.netDue.toFixed(2)}`;
-
     document.getElementById('customerPaymentModal').style.display = 'flex';
   }
 
   async function payFinalBillWithCashfree() {
     if (!currentSettlementJob) return;
-
-    try {
-      await sbClient.from('bookings').update({
-        job_status: 'paid_completed',
-        payment_status: 'settled_full',
-        final_txn_ref: 'cashfree_paid'
-      }).or(`id.eq.${currentSettlementJob.id},invoice_no.eq.${currentSettlementJob.invoice_no}`);
-    } catch(e){}
-
+    try { await sbClient.from('bookings').update({ job_status: 'paid_completed', payment_status: 'settled_full', final_txn_ref: 'cashfree_paid' }).or(`id.eq.${currentSettlementJob.id},invoice_no.eq.${currentSettlementJob.invoice_no}`); } catch(e){}
     let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
-    localPool = localPool.map(j => (j.id === currentSettlementJob.id || j.invoice_no === currentSettlementJob.invoice_no) ? {
-      ...j,
-      job_status: 'paid_completed',
-      payment_status: 'settled_full'
-    } : j);
+    localPool = localPool.map(j => (j.id === currentSettlementJob.id || j.invoice_no === currentSettlementJob.invoice_no) ? { ...j, job_status: 'paid_completed', payment_status: 'settled_full' } : j);
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
-
     alert("Payment successful! Generating Tax Invoice PDF...");
     closeCustomerPaymentModal();
     downloadOrderPdf(currentSettlementJob.id || currentSettlementJob.invoice_no);
     loadCustomerOrders();
   }
-
-  function closeCustomerPaymentModal() {
-    document.getElementById('customerPaymentModal').style.display = 'none';
-  }
+  function closeCustomerPaymentModal() { document.getElementById('customerPaymentModal').style.display = 'none'; }
 
   async function downloadOrderPdf(orderId) {
     let data = null;
-    try {
-      const res = await sbClient.from('bookings').select('*').or(`id.eq.${orderId},invoice_no.eq.${orderId}`).single();
-      data = res.data;
-    } catch(e){}
-
-    if (!data) {
-      let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
-      data = localPool.find(j => j.id === orderId || j.invoice_no === orderId);
-    }
+    try { const res = await sbClient.from('bookings').select('*').or(`id.eq.${orderId},invoice_no.eq.${orderId}`).single(); data = res.data; } catch(e){}
+    if (!data) { let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]'); data = localPool.find(j => j.id === orderId || j.invoice_no === orderId); }
     if (!data) return;
 
     document.getElementById('pdfCustName').textContent = data.customer_name || currentUser.name || "Valued Customer";
@@ -1690,56 +1033,16 @@
     const gst = subtotal * 0.18;
     const netGrand = (subtotal + gst) - 21;
 
-    let rowsHtml = `
-      <tr>
-        <td>1</td>
-        <td>${cfg.title} (Base Service Pack)</td>
-        <td>${cfg.sac}</td>
-        <td>₹${base.toFixed(2)}</td>
-        <td>18%</td>
-        <td>₹${cfg.total.toFixed(2)}</td>
-      </tr>`;
+    let rowsHtml = `<tr><td>1</td><td>${cfg.title} (Base Service Pack)</td><td>${cfg.sac}</td><td>₹${base.toFixed(2)}</td><td>18%</td><td>₹${cfg.total.toFixed(2)}</td></tr>`;
     let sr = 2;
-    if ((data.extra_on_site_cost || 0) > 0) {
-      rowsHtml += `
-        <tr>
-          <td>${sr++}</td>
-          <td>On-Site Category Services</td>
-          <td>${cfg.sac}</td>
-          <td>₹${(data.extra_on_site_cost / 1.18).toFixed(2)}</td>
-          <td>18%</td>
-          <td>₹${data.extra_on_site_cost.toFixed(2)}</td>
-        </tr>`;
-    }
-
+    if ((data.extra_on_site_cost || 0) > 0) rowsHtml += `<tr><td>${sr++}</td><td>On-Site Category Services</td><td>${cfg.sac}</td><td>₹${(data.extra_on_site_cost / 1.18).toFixed(2)}</td><td>18%</td><td>₹${data.extra_on_site_cost.toFixed(2)}</td></tr>`;
     try {
       const parts = JSON.parse(data.spare_parts_json || '[]');
-      parts.forEach(p => {
-        rowsHtml += `
-          <tr>
-            <td>${sr++}</td>
-            <td>${p.name} (Qty: ${p.qty})</td>
-            <td>${p.code}</td>
-            <td>₹${p.total.toFixed(2)}</td>
-            <td>18%</td>
-            <td>₹${(p.total * 1.18).toFixed(2)}</td>
-          </tr>`;
-      });
+      parts.forEach(p => { rowsHtml += `<tr><td>${sr++}</td><td>${p.name} (Qty: ${p.qty})</td><td>${p.code}</td><td>₹${p.total.toFixed(2)}</td><td>18%</td><td>₹${(p.total * 1.18).toFixed(2)}</td></tr>`; });
     } catch(e){}
-    
-    if (overtimeCharge > 0) {
-      rowsHtml += `
-        <tr>
-          <td>${sr++}</td>
-          <td>Overtime Charge (${data.overtime_hours || 0} hr @ ₹100/hr)</td>
-          <td>-</td>
-          <td>₹${overtimeCharge.toFixed(2)}</td>
-          <td>18%</td>
-          <td>₹${(overtimeCharge * 1.18).toFixed(2)}</td>
-        </tr>`;
-    }
-    document.getElementById('pdfItemsBody').innerHTML = rowsHtml;
+    if (overtimeCharge > 0) rowsHtml += `<tr><td>${sr++}</td><td>Overtime Charge (${data.overtime_hours || 0} hr @ ₹100/hr)</td><td>-</td><td>₹${overtimeCharge.toFixed(2)}</td><td>18%</td><td>₹${(overtimeCharge * 1.18).toFixed(2)}</td></tr>`;
 
+    document.getElementById('pdfItemsBody').innerHTML = rowsHtml;
     document.getElementById('pdfSubtotal').textContent = `₹${subtotal.toFixed(2)}`;
     document.getElementById('pdfCgst').textContent = `₹${(gst / 2).toFixed(2)}`;
     document.getElementById('pdfSgst').textContent = `₹${(gst / 2).toFixed(2)}`;
@@ -1747,57 +1050,28 @@
 
     const el = document.getElementById('invoicePdf');
     document.getElementById('invoiceRenderWrapper').style.display = 'block';
-    html2pdf().from(el).set({
-      margin: 10,
-      filename: `${data.invoice_no}_Tax_Invoice.pdf`,
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    }).save().then(() => {
+    html2pdf().from(el).set({ margin: 10, filename: `${data.invoice_no}_Tax_Invoice.pdf`, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } }).save().then(() => {
       document.getElementById('invoiceRenderWrapper').style.display = 'none';
     });
   }
 
-  // ==================== TECHNICIAN POOL & CONFIRM JOB ====================
+  // ==================== TECH DASHBOARD & PIN VERIFICATION ====================
   async function loginTechnicianToPool() {
     const techId = document.getElementById('techIdInput').value.trim().toUpperCase();
     const cat = document.getElementById('techCategorySelect').value;
-    const pinInput = document.getElementById('techPinInput');
-    const pin = pinInput.value.trim();
+    const pin = document.getElementById('techPinInput').value.trim();
     const msg = document.getElementById('authMsg');
-
-    if (!techId || pin.length !== 4) {
-      msg.textContent = "Please enter valid Technician ID and 4-digit PIN.";
-      msg.style.color = "#c0392b";
-      return;
-    }
+    if (!techId || pin.length !== 4) { msg.textContent = "Please enter valid Technician ID and 4-digit PIN."; msg.style.color = "#c0392b"; return; }
 
     try {
       const { data } = await sbClient.from('technicians').select('*').eq('tech_code', techId).eq('phone', pin).eq('category', cat).single();
-
-      if (!data) {
-        msg.textContent = "Invalid Technician ID / PIN / Category.";
-        msg.style.color = "#c0392b";
-        return;
-      }
-
-      if (data.is_available === false) {
-        msg.textContent = "Technician account is blocked. Contact Admin.";
-        msg.style.color = "#c0392b";
-        return;
-      }
-
+      if (!data) { msg.textContent = "Invalid Technician ID / PIN / Category."; msg.style.color = "#c0392b"; return; }
+      if (data.is_available === false) { msg.textContent = "Technician account is blocked. Contact Admin."; msg.style.color = "#c0392b"; return; }
       activeTechSession = { name: data.name, category: cat, id: data.id, techCode: data.tech_code, phone: data.contact_phone || '' };
       document.getElementById('topAuthBadge').textContent = "🧑‍🔧 " + data.name + " (" + data.tech_code + ")";
       document.getElementById('techPoolHeader').textContent = `${data.name} [${data.tech_code}] (${cat.toUpperCase()} Pool)`;
-      msg.textContent = "";
-
-      updateRoleBasedNavigation();
-      navigateTo('tech-pool', true);
-      renderPoolJobs();
-    } catch(e) {
-      msg.textContent = "Login Error: " + e.message;
-      msg.style.color = "#c0392b";
-    }
+      msg.textContent = ""; updateRoleBasedNavigation(); navigateTo('tech-pool', true); renderPoolJobs();
+    } catch(e) { msg.textContent = "Login Error: " + e.message; msg.style.color = "#c0392b"; }
   }
 
   function checkCooldownState() {
@@ -1808,42 +1082,27 @@
       document.getElementById('cooldownTimer').textContent = `${Math.floor(remainingSec / 60)}m ${remainingSec % 60}s`;
       return true;
     }
-    document.getElementById('techCooldownNotice').style.display = 'none';
-    return false;
+    document.getElementById('techCooldownNotice').style.display = 'none'; return false;
   }
 
   async function renderPoolJobs() {
     if (!activeTechSession) return;
     const cooldownActive = checkCooldownState();
-
     let claimedJob = null;
     try {
-      const { data: claimed } = await sbClient.from('bookings')
-        .select('*')
-        .eq('technician_name', activeTechSession.name)
-        .in('job_status', ['claimed', 'in_progress', 'work_completed', 'paid_completed'])
-        .order('created_at', { ascending: false })
-        .limit(1);
+      const { data: claimed } = await sbClient.from('bookings').select('*').eq('technician_name', activeTechSession.name).in('job_status', ['claimed', 'in_progress', 'work_completed', 'paid_completed']).order('created_at', { ascending: false }).limit(1);
       if (claimed && claimed.length > 0) claimedJob = claimed[0];
     } catch(e){}
-
-    if (!claimedJob) {
-      let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
-      claimedJob = localPool.find(j => j.technician_name === activeTechSession.name && ['claimed','in_progress','work_completed','paid_completed'].includes(j.job_status));
-    }
+    if (!claimedJob) { let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]'); claimedJob = localPool.find(j => j.technician_name === activeTechSession.name && ['claimed','in_progress','work_completed','paid_completed'].includes(j.job_status)); }
 
     const activeSec = document.getElementById('activeClaimedJobSection');
     if (claimedJob) {
       activeSec.innerHTML = `
         <div class="card" style="border:2px solid #0f8a4b; background:#f0faf3;">
-          <div style="display:flex; justify-content:space-between;">
-            <b style="color:#0f8a4b;">Active Claimed Job: ${claimedJob.invoice_no}</b>
-            <span>[ ${claimedJob.job_status.toUpperCase()} ]</span>
-          </div>
+          <div style="display:flex; justify-content:space-between;"><b style="color:#0f8a4b;">Active Claimed Job: ${claimedJob.invoice_no}</b><span>[ ${claimedJob.job_status.toUpperCase()} ]</span></div>
           <p style="font-size:12px; margin:4px 0;">👤 Customer: <b>${claimedJob.customer_name || 'Customer'}</b> | 📞 ${claimedJob.customer_phone}</p>
           <p style="font-size:12px; margin-bottom:4px;">📍 Address: ${claimedJob.customer_address}</p>
           <p style="font-size:11.5px; color:#555;">📋 Work: <b>${claimedJob.extra_services || 'Base Package Only'}</b></p>
-          
           ${claimedJob.job_status === 'claimed' ? `
             <div style="margin-top:8px;">
               <p style="font-size:11.5px; color:#0f8a4b; font-weight:700; margin-bottom:4px;">Ask Start PIN from Customer upon arrival:</p>
@@ -1852,94 +1111,46 @@
               <button class="btn danger" style="margin-top:6px;" onclick="cancelClaimedJob('${claimedJob.id || claimedJob.invoice_no}')">Cancel Job (15-Min Penalty)</button>
             </div>
           ` : claimedJob.job_status === 'in_progress' ? `
-            <div style="margin-top:8px;">
-              <button class="btn" style="background:#b8720a;" onclick="openTechCompletionModal('${claimedJob.id || claimedJob.invoice_no}')">
-                📋 Work Finished: Fill Details &amp; Generate Bill
-              </button>
-            </div>
-          ` : `
-            <div style="margin-top:8px;">
-              <p style="font-size:11.5px; color:#0f8a4b; font-weight:700;">Bill generated - waiting for customer payment.</p>
-            </div>
-          `}
-        </div>
-      `;
-    } else {
-      activeSec.innerHTML = '';
-    }
+            <div style="margin-top:8px;"><button class="btn" style="background:#b8720a;" onclick="openTechCompletionModal('${claimedJob.id || claimedJob.invoice_no}')">📋 Work Finished: Fill Details &amp; Generate Bill</button></div>
+          ` : `<div style="margin-top:8px;"><p style="font-size:11.5px; color:#0f8a4b; font-weight:700;">Bill generated - waiting for customer payment.</p></div>`}
+        </div>`;
+    } else { activeSec.innerHTML = ''; }
 
     let poolJobs = [];
     try {
-      const { data: pool } = await sbClient.from('bookings')
-        .select('*')
-        .eq('service_type', activeTechSession.category)
-        .eq('job_status', 'pending_acceptance')
-        .order('created_at', { ascending: false });
+      const { data: pool } = await sbClient.from('bookings').select('*').eq('service_type', activeTechSession.category).eq('job_status', 'pending_acceptance').order('created_at', { ascending: false });
       if (pool && pool.length > 0) poolJobs = pool;
     } catch(e){}
-
-    if (poolJobs.length === 0) {
-      let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
-      poolJobs = localPool.filter(j => j.service_type === activeTechSession.category && j.job_status === 'pending_acceptance');
-    }
+    if (poolJobs.length === 0) { let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]'); poolJobs = localPool.filter(j => j.service_type === activeTechSession.category && j.job_status === 'pending_acceptance'); }
 
     const poolList = document.getElementById('availablePoolList');
-    if (!poolJobs || poolJobs.length === 0) {
-      poolList.innerHTML = '<p style="color:#888; font-size:12px; text-align:center; padding:16px 0;">No pending broadcasts in your pool right now.</p>';
-      return;
-    }
+    if (!poolJobs || poolJobs.length === 0) { poolList.innerHTML = '<p style="color:#888; font-size:12px; text-align:center; padding:16px 0;">No pending broadcasts in your pool right now.</p>'; return; }
 
     poolList.innerHTML = poolJobs.map(j => `
       <div class="card" style="border-left:4px solid #f39c12;">
-        <div style="display:flex; justify-content:space-between;">
-          <b>${j.invoice_no}</b>
-          <span style="font-weight:700; color:#0f8a4b;">${j.service_type?.toUpperCase()}</span>
-        </div>
+        <div style="display:flex; justify-content:space-between;"><b>${j.invoice_no}</b><span style="font-weight:700; color:#0f8a4b;">${j.service_type?.toUpperCase()}</span></div>
         <p style="font-size:12px; color:#333; margin:3px 0;">👤 ${j.customer_name || 'Customer'} (📞 ${j.customer_phone})</p>
         <p style="font-size:12px; color:#555;">📍 ${j.customer_address}</p>
-        <p style="font-size:11.5px; color:#666;">📋 Details: ${j.extra_services || 'Standard Base'}</p>
-        <button class="btn" style="margin-top:8px;" ${cooldownActive ? 'disabled' : ''} onclick="claimPoolJob('${j.id || j.invoice_no}')">
-          ${cooldownActive ? 'Claim Blocked (Cooldown)' : '⚡ Accept &amp; Claim Job'}
-        </button>
-      </div>
-    `).join('');
+        <button class="btn" style="margin-top:8px;" ${cooldownActive ? 'disabled' : ''} onclick="claimPoolJob('${j.id || j.invoice_no}')">${cooldownActive ? 'Claim Blocked (Cooldown)' : '⚡ Accept &amp; Claim Job'}</button>
+      </div>`).join('');
   }
 
   async function claimPoolJob(jobId) {
     if (checkCooldownState()) return;
-
-    try {
-      await sbClient.from('bookings').update({
-        job_status: 'claimed',
-        technician_name: activeTechSession.name,
-        technician_phone: activeTechSession.phone
-      }).or(`id.eq.${jobId},invoice_no.eq.${jobId}`);
-    } catch(e){}
-
+    try { await sbClient.from('bookings').update({ job_status: 'claimed', technician_name: activeTechSession.name, technician_phone: activeTechSession.phone }).or(`id.eq.${jobId},invoice_no.eq.${jobId}`); } catch(e){}
     let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
     localPool = localPool.map(j => (j.id === jobId || j.invoice_no === jobId) ? { ...j, job_status: 'claimed', technician_name: activeTechSession.name, technician_phone: activeTechSession.phone } : j);
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
-
-    alert("Job Confirmed & Accepted!");
-    renderPoolJobs();
+    alert("Job Confirmed & Accepted!"); renderPoolJobs();
   }
 
   async function cancelClaimedJob(jobId) {
-    if (!confirm("Canceling will return this job to pool and enforce a 15-minute cooldown. Continue?")) return;
-
-    const cooldownUntil = Date.now() + 15 * 60 * 1000;
-    localStorage.setItem('tech_cooldown_until', cooldownUntil.toString());
-
-    try {
-      await sbClient.from('bookings').update({
-        job_status: 'pending_acceptance', technician_name: null, technician_phone: null
-      }).or(`id.eq.${jobId},invoice_no.eq.${jobId}`);
-    } catch(e){}
-
+    if (!confirm("Canceling will enforce a 15-minute cooldown. Continue?")) return;
+    localStorage.setItem('tech_cooldown_until', (Date.now() + 15 * 60 * 1000).toString());
+    try { await sbClient.from('bookings').update({ job_status: 'pending_acceptance', technician_name: null, technician_phone: null }).or(`id.eq.${jobId},invoice_no.eq.${jobId}`); } catch(e){}
     let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
     localPool = localPool.map(j => (j.id === jobId || j.invoice_no === jobId) ? { ...j, job_status: 'pending_acceptance', technician_name: null, technician_phone: null } : j);
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
-
     renderPoolJobs();
   }
 
@@ -1947,79 +1158,47 @@
     const entered = document.getElementById('startPinVerifyInput').value.trim();
     if (entered === correctPin) {
       const startTime = new Date().toISOString();
-
-      try {
-        await sbClient.from('bookings').update({ job_status: 'in_progress', start_time: startTime }).or(`id.eq.${jobId},invoice_no.eq.${jobId}`);
-      } catch(e){}
-
+      try { await sbClient.from('bookings').update({ job_status: 'in_progress', start_time: startTime }).or(`id.eq.${jobId},invoice_no.eq.${jobId}`); } catch(e){}
       let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
       localPool = localPool.map(j => (j.id === jobId || j.invoice_no === jobId) ? { ...j, job_status: 'in_progress', start_time: startTime } : j);
       localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
-
-      alert("Start PIN verified successfully! Job marked In-Progress.");
-      renderPoolJobs();
-    } else {
-      alert("Invalid Start PIN! Please check with customer.");
-    }
+      alert("Start PIN verified successfully! Job marked In-Progress."); renderPoolJobs();
+    } else { alert("Invalid Start PIN! Please check with customer."); }
   }
 
-  // ==================== WORK COMPLETION MODAL WITH MANUAL SERVICE PRICING ====================
+  // ==================== WORK COMPLETION MODAL & BILLING ====================
   async function openTechCompletionModal(jobId) {
     let job = null;
-    try {
-      const { data } = await sbClient.from('bookings').select('*').or(`id.eq.${jobId},invoice_no.eq.${jobId}`).single();
-      job = data;
-    } catch(e){}
-
-    if (!job) {
-      let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
-      job = localPool.find(j => j.id === jobId || j.invoice_no === jobId);
-    }
+    try { const { data } = await sbClient.from('bookings').select('*').or(`id.eq.${jobId},invoice_no.eq.${jobId}`).single(); job = data; } catch(e){}
+    if (!job) { let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]'); job = localPool.find(j => j.id === jobId || j.invoice_no === jobId); }
     if (!job) return;
 
     activeModalJob = job;
     const cfg = SERVICE_CONFIG[job.service_type] || SERVICE_CONFIG.electrician;
-
     document.getElementById('modalInitialOrderText').textContent = `${cfg.title} (Base Scope)`;
     document.getElementById('modalStopPinInput').value = "";
     document.getElementById('modalCustomPartsRows').innerHTML = "";
 
     const categoryServices = TRADE_SERVICES_CATALOG[job.service_type] || [];
     document.getElementById('modalServicesHeading').textContent = `${cfg.title} Tasks Done On-Site:`;
-    
-    const checklistContainer = document.getElementById('modalAddonsChecklist');
-    checklistContainer.innerHTML = categoryServices.map((serviceName, idx) => `
+    document.getElementById('modalAddonsChecklist').innerHTML = categoryServices.map((sName, idx) => `
       <div class="addon-item">
-        <label style="flex:1.5;">
-          <input type="checkbox" class="modal-addon-cb" data-name="${serviceName}" onchange="toggleServicePriceInput(${idx}); recalculateModalFinalTotal();">
-          <span>${serviceName}</span>
-        </label>
-        <div style="display:flex; align-items:center; gap:4px;">
-          <span style="font-size:12px; font-weight:600; color:#555;">₹</span>
-          <input type="number" id="servicePrice_${idx}" class="modal-addon-price-input" data-name="${serviceName}"
-            placeholder="0.00" min="0" disabled style="width:75px; padding:6px; margin:0; text-align:right; font-weight:700;" oninput="recalculateModalFinalTotal()">
-        </div>
-      </div>
-    `).join('') || '<p style="font-size:11px; color:#888;">No predefined services for this trade</p>';
+        <label style="flex:1.5;"><input type="checkbox" class="modal-addon-cb" data-name="${sName}" onchange="toggleServicePriceInput(${idx}); recalculateModalFinalTotal();"><span>${sName}</span></label>
+        <div style="display:flex; align-items:center; gap:4px;"><span style="font-size:12px; font-weight:600; color:#555;">₹</span><input type="number" id="servicePrice_${idx}" class="modal-addon-price-input" placeholder="0.00" min="0" disabled style="width:75px; padding:6px; margin:0; text-align:right; font-weight:700;" oninput="recalculateModalFinalTotal()"></div>
+      </div>`).join('') || '<p style="font-size:11px; color:#888;">No predefined services for this trade</p>';
 
     const catalog = SPARE_PARTS_CATALOG[job.service_type] || [];
     document.getElementById('modalPartsCatalog').innerHTML = catalog.map(p => `
       <div class="addon-item">
-        <label style="flex:1;">
-          <span>${p.name} <span style="color:#888; font-size:10.5px;">(${p.code})</span></span>
-        </label>
-        <input type="number" class="catalog-part-qty" data-name="${p.name}" data-code="${p.code}" data-rate="${p.rate}"
-          min="0" value="0" style="width:60px; padding:6px; margin:0; text-align:center;" oninput="recalculateModalFinalTotal()">
+        <label style="flex:1;"><span>${p.name} <span style="color:#888; font-size:10.5px;">(${p.code})</span></span></label>
+        <input type="number" class="catalog-part-qty" data-name="${p.name}" data-code="${p.code}" data-rate="${p.rate}" min="0" value="0" style="width:60px; padding:6px; margin:0; text-align:center;" oninput="recalculateModalFinalTotal()">
         <span class="addon-price" style="width:60px; text-align:right;">₹${p.rate.toFixed(2)}/pc</span>
-      </div>
-    `).join('') || '<p style="font-size:11px; color:#888;">No catalog items</p>';
+      </div>`).join('') || '<p style="font-size:11px; color:#888;">No catalog items</p>';
 
     if (job.start_time) {
       const hrs = (Date.now() - new Date(job.start_time).getTime()) / 3600000;
       document.getElementById('modalElapsedTimeText').textContent = `Job duration so far: ${hrs.toFixed(2)} hours`;
-    } else {
-      document.getElementById('modalElapsedTimeText').textContent = 'Job duration: start time not recorded';
-    }
+    } else { document.getElementById('modalElapsedTimeText').textContent = 'Job duration: start time not recorded'; }
 
     recalculateModalFinalTotal();
     document.getElementById('techCompletionModal').style.display = 'flex';
@@ -2028,293 +1207,165 @@
   function toggleServicePriceInput(idx) {
     const input = document.getElementById(`servicePrice_${idx}`);
     if (input) {
-      const checkbox = input.closest('.addon-item').querySelector('.modal-addon-cb');
-      input.disabled = !checkbox.checked;
-      if (!checkbox.checked) input.value = '';
+      const cb = input.closest('.addon-item').querySelector('.modal-addon-cb');
+      input.disabled = !cb.checked;
+      if (!cb.checked) input.value = '';
     }
   }
-
-  function closeTechCompletionModal() {
-    document.getElementById('techCompletionModal').style.display = 'none';
-    activeModalJob = null;
-  }
+  function closeTechCompletionModal() { document.getElementById('techCompletionModal').style.display = 'none'; activeModalJob = null; }
 
   function addCustomPartRow() {
     const id = 'custpart' + Date.now();
     const row = document.createElement('div');
-    row.id = id;
-    row.style.cssText = 'display:flex; gap:6px; margin-bottom:6px;';
-    row.innerHTML = `
-      <input type="text" placeholder="Part Name" class="custom-part-name" style="flex:2; margin:0; padding:8px; font-size:12px;">
-      <input type="text" placeholder="HSN/SAC" class="custom-part-code" style="flex:1; margin:0; padding:8px; font-size:12px;">
-      <input type="number" placeholder="Qty" class="custom-part-qty" value="1" style="width:50px; margin:0; padding:8px; font-size:12px;" oninput="recalculateModalFinalTotal()">
-      <input type="number" placeholder="Rate ₹" class="custom-part-rate" style="width:65px; margin:0; padding:8px; font-size:12px;" oninput="recalculateModalFinalTotal()">
-      <button type="button" onclick="document.getElementById('${id}').remove(); recalculateModalFinalTotal();" style="background:#e74c3c; color:#fff; border:none; border-radius:6px; padding:0 10px;">✕</button>
-    `;
+    row.id = id; row.style.cssText = 'display:flex; gap:6px; margin-bottom:6px;';
+    row.innerHTML = `<input type="text" placeholder="Part Name" class="custom-part-name" style="flex:2; margin:0; padding:8px; font-size:12px;"><input type="text" placeholder="HSN/SAC" class="custom-part-code" style="flex:1; margin:0; padding:8px; font-size:12px;"><input type="number" placeholder="Qty" class="custom-part-qty" value="1" style="width:50px; margin:0; padding:8px; font-size:12px;" oninput="recalculateModalFinalTotal()"><input type="number" placeholder="Rate ₹" class="custom-part-rate" style="width:65px; margin:0; padding:8px; font-size:12px;" oninput="recalculateModalFinalTotal()"><button type="button" onclick="document.getElementById('${id}').remove(); recalculateModalFinalTotal();" style="background:#e74c3c; color:#fff; border:none; border-radius:6px; padding:0 10px;">✕</button>`;
     document.getElementById('modalCustomPartsRows').appendChild(row);
   }
 
   function getPartsBreakdown() {
-    let total = 0;
-    let lineItems = [];
-
+    let total = 0, lineItems = [];
     document.querySelectorAll('.catalog-part-qty').forEach(inp => {
       const qty = parseFloat(inp.value) || 0;
-      if (qty > 0) {
-        const rate = parseFloat(inp.getAttribute('data-rate'));
-        const lineTotal = qty * rate;
-        total += lineTotal;
-        lineItems.push({ name: inp.getAttribute('data-name'), code: inp.getAttribute('data-code'), qty, rate, total: lineTotal });
-      }
+      if (qty > 0) { const rate = parseFloat(inp.getAttribute('data-rate')), lineTotal = qty * rate; total += lineTotal; lineItems.push({ name: inp.getAttribute('data-name'), code: inp.getAttribute('data-code'), qty, rate, total: lineTotal }); }
     });
-
     document.querySelectorAll('#modalCustomPartsRows > div').forEach(row => {
-      const name = row.querySelector('.custom-part-name').value.trim();
-      const code = row.querySelector('.custom-part-code').value.trim() || '-';
-      const qty = parseFloat(row.querySelector('.custom-part-qty').value) || 0;
-      const rate = parseFloat(row.querySelector('.custom-part-rate').value) || 0;
-      if (name && qty > 0 && rate > 0) {
-        const lineTotal = qty * rate;
-        total += lineTotal;
-        lineItems.push({ name, code, qty, rate, total: lineTotal });
-      }
+      const name = row.querySelector('.custom-part-name').value.trim(), code = row.querySelector('.custom-part-code').value.trim() || '-', qty = parseFloat(row.querySelector('.custom-part-qty').value) || 0, rate = parseFloat(row.querySelector('.custom-part-rate').value) || 0;
+      if (name && qty > 0 && rate > 0) { const lineTotal = qty * rate; total += lineTotal; lineItems.push({ name, code, qty, rate, total: lineTotal }); }
     });
-
     return { total, lineItems };
   }
 
   function calculateOvertime(job) {
     if (!job || !job.start_time) return { hours: 0, charge: 0 };
-    const elapsedHours = (Date.now() - new Date(job.start_time).getTime()) / 3600000;
-    if (elapsedHours <= FREE_HOURS_BEFORE_OVERTIME) return { hours: 0, charge: 0 };
-    const extraHours = Math.ceil(elapsedHours - FREE_HOURS_BEFORE_OVERTIME);
-    return { hours: extraHours, charge: extraHours * OVERTIME_RATE_PER_HOUR };
+    const elapsed = (Date.now() - new Date(job.start_time).getTime()) / 3600000;
+    if (elapsed <= FREE_HOURS_BEFORE_OVERTIME) return { hours: 0, charge: 0 };
+    const extra = Math.ceil(elapsed - FREE_HOURS_BEFORE_OVERTIME);
+    return { hours: extra, charge: extra * OVERTIME_RATE_PER_HOUR };
   }
 
   function recalculateModalFinalTotal() {
     if (!activeModalJob) return;
     const cfg = SERVICE_CONFIG[activeModalJob.service_type] || SERVICE_CONFIG.electrician;
     const baseAmount = cfg.total;
-
     let extraOnSiteCost = 0;
     document.querySelectorAll('.modal-addon-cb:checked').forEach(cb => {
-      const parent = cb.closest('.addon-item');
-      const priceInput = parent.querySelector('.modal-addon-price-input');
-      const val = parseFloat(priceInput ? priceInput.value : 0) || 0;
-      extraOnSiteCost += val;
+      const pInput = cb.closest('.addon-item').querySelector('.modal-addon-price-input');
+      extraOnSiteCost += parseFloat(pInput ? pInput.value : 0) || 0;
     });
-
-    const partsBreakdown = getPartsBreakdown();
-    const extraMaterialCost = partsBreakdown.total;
-    const overtime = calculateOvertime(activeModalJob);
-
-    const grandTotal = baseAmount + extraOnSiteCost + extraMaterialCost + overtime.charge;
+    const parts = getPartsBreakdown(), overtime = calculateOvertime(activeModalJob);
+    const grandTotal = baseAmount + extraOnSiteCost + parts.total + overtime.charge;
     const netDue = grandTotal - 21;
 
     document.getElementById('modalBaseDisp').textContent = `₹${baseAmount.toFixed(2)}`;
     document.getElementById('modalExtraWorkDisp').textContent = `+₹${extraOnSiteCost.toFixed(2)}`;
-    document.getElementById('modalMaterialsDisp').textContent = `+₹${extraMaterialCost.toFixed(2)}`;
-
+    document.getElementById('modalMaterialsDisp').textContent = `+₹${parts.total.toFixed(2)}`;
     if (overtime.charge > 0) {
       document.getElementById('modalOvertimeRow').style.display = 'flex';
       document.getElementById('modalOvertimeLabel').textContent = `Overtime (${overtime.hours} hr @ ₹100/hr):`;
       document.getElementById('modalOvertimeDisp').textContent = `+₹${overtime.charge.toFixed(2)}`;
-    } else {
-      document.getElementById('modalOvertimeRow').style.display = 'none';
-    }
-
+    } else { document.getElementById('modalOvertimeRow').style.display = 'none'; }
     document.getElementById('modalFinalNetDue').textContent = `₹${netDue.toFixed(2)}`;
   }
 
   async function submitFinalCalculatedBill() {
     if (!activeModalJob) return;
-
     const enteredPin = document.getElementById('modalStopPinInput').value.trim();
-    const partsBreakdown = getPartsBreakdown();
-    const extraMaterialCost = partsBreakdown.total;
-
-    if (!enteredPin || enteredPin !== activeModalJob.stop_pin) {
-      alert("Invalid or missing Stop PIN! Please ask customer for correct 4-digit PIN.");
-      return;
-    }
+    const parts = getPartsBreakdown();
+    if (!enteredPin || enteredPin !== activeModalJob.stop_pin) { alert("Invalid Stop PIN! Please ask customer for correct 4-digit PIN."); return; }
 
     const cfg = SERVICE_CONFIG[activeModalJob.service_type] || SERVICE_CONFIG.electrician;
-    const baseAmount = cfg.total;
-
-    let extraOnSiteNames = [];
-    let extraOnSiteCost = 0;
+    let extraNames = [], extraOnSiteCost = 0;
     document.querySelectorAll('.modal-addon-cb:checked').forEach(cb => {
-      const parent = cb.closest('.addon-item');
-      const priceInput = parent.querySelector('.modal-addon-price-input');
-      const val = parseFloat(priceInput ? priceInput.value : 0) || 0;
-      extraOnSiteCost += val;
-      extraOnSiteNames.push(`${cb.getAttribute('data-name')} (₹${val.toFixed(2)})`);
+      const val = parseFloat(cb.closest('.addon-item').querySelector('.modal-addon-price-input')?.value || 0) || 0;
+      extraOnSiteCost += val; extraNames.push(`${cb.getAttribute('data-name')} (₹${val.toFixed(2)})`);
     });
 
     const overtime = calculateOvertime(activeModalJob);
-    const grandTotal = baseAmount + extraOnSiteCost + extraMaterialCost + overtime.charge;
+    const grandTotal = cfg.total + extraOnSiteCost + parts.total + overtime.charge;
     const netDue = grandTotal - 21;
-
-    const partsSummary = partsBreakdown.lineItems.map(p => `${p.name} x${p.qty} (${p.code})`).join(', ') || 'None';
-    const fullWorkDescription = `${cfg.title} (Base) | Services: ${extraOnSiteNames.join(', ') || 'None'} | Spares: ${partsSummary}`;
+    const partsSummary = parts.lineItems.map(p => `${p.name} x${p.qty}`).join(', ') || 'None';
+    const fullDesc = `${cfg.title} | Services: ${extraNames.join(', ') || 'None'} | Spares: ${partsSummary}`;
 
     const updatePayload = {
-      job_status: 'work_completed',
-      extra_services: fullWorkDescription,
-      extra_on_site_cost: extraOnSiteCost,
-      extra_material_cost: extraMaterialCost,
-      spare_parts_json: JSON.stringify(partsBreakdown.lineItems),
-      overtime_hours: overtime.hours,
-      overtime_charge: overtime.charge,
-      calculated_total: netDue,
-      end_time: new Date().toISOString()
+      job_status: 'work_completed', extra_services: fullDesc, extra_on_site_cost: extraOnSiteCost,
+      extra_material_cost: parts.total, spare_parts_json: JSON.stringify(parts.lineItems),
+      overtime_hours: overtime.hours, overtime_charge: overtime.charge, calculated_total: netDue, end_time: new Date().toISOString()
     };
 
-    try {
-      await sbClient.from('bookings').update(updatePayload).or(`id.eq.${activeModalJob.id},invoice_no.eq.${activeModalJob.invoice_no}`);
-    } catch(e){}
-
+    try { await sbClient.from('bookings').update(updatePayload).or(`id.eq.${activeModalJob.id},invoice_no.eq.${activeModalJob.invoice_no}`); } catch(e){}
     let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
     localPool = localPool.map(j => (j.id === activeModalJob.id || j.invoice_no === activeModalJob.invoice_no) ? { ...j, ...updatePayload } : j);
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
-
-    closeTechCompletionModal();
-    navigateTo('bill-submitted');
+    closeTechCompletionModal(); navigateTo('bill-submitted');
   }
 
   // ==================== ADMIN SURVEILLANCE ====================
   const ADMIN_ALLOWED_EMAILS = ['kashvienterprises.bihar@gmail.com', 'rishikeshsingh815@gmail.com'];
-
   function adminGlobalLogin() {
-    const emailInput = document.getElementById('adminEmailInput');
-    const passInput = document.getElementById('adminPassInput');
-    const email = emailInput.value.trim().toLowerCase();
-    const pass = passInput.value.trim();
+    const email = document.getElementById('adminEmailInput').value.trim().toLowerCase();
+    const pass = document.getElementById('adminPassInput').value.trim();
     const msg = document.getElementById('authMsg');
-
-    if (!ADMIN_ALLOWED_EMAILS.includes(email)) {
-      msg.textContent = "Unauthorized Admin email.";
-      msg.style.color = "#c0392b";
-      return;
-    }
-
+    if (!ADMIN_ALLOWED_EMAILS.includes(email)) { msg.textContent = "Unauthorized Admin email."; msg.style.color = "#c0392b"; return; }
     if (pass.length >= 6) {
-      isAdminLoggedIn = true;
-      msg.textContent = "";
-      updateRoleBasedNavigation();
-      navigateTo('admin', true);
-      loadAdminGlobalFeed();
-      loadTechnicianFleet();
-      loadCustomerAccounts();
-    } else {
-      msg.textContent = "Invalid Admin Password.";
-      msg.style.color = "#c0392b";
-    }
+      isAdminLoggedIn = true; msg.textContent = ""; updateRoleBasedNavigation(); navigateTo('admin', true);
+      loadAdminGlobalFeed(); loadTechnicianFleet(); loadCustomerAccounts();
+    } else { msg.textContent = "Invalid Admin Password."; msg.style.color = "#c0392b"; }
   }
 
   async function loadAdminGlobalFeed() {
     const feed = document.getElementById('adminGlobalFeed');
     feed.innerHTML = '<p style="color:#888; font-size:12px;">Loading global feed...</p>';
-
     let data = [];
-    try {
-      const res = await sbClient.from('bookings').select('*').order('created_at', { ascending: false });
-      if (res.data) data = res.data;
-    } catch(e){}
-
+    try { const res = await sbClient.from('bookings').select('*').order('created_at', { ascending: false }); if (res.data) data = res.data; } catch(e){}
     if (data.length === 0) data = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
-
-    if (data.length === 0) {
-      feed.innerHTML = '<p style="color:#888; font-size:12px;">No active records found.</p>';
-      return;
-    }
+    if (data.length === 0) { feed.innerHTML = '<p style="color:#888; font-size:12px;">No active records found.</p>'; return; }
 
     feed.innerHTML = data.map(b => {
-      const isPaid = b.job_status === 'paid_completed';
-      const isBillReady = b.job_status === 'work_completed';
-      let statusColor = '#d97706';
-      let statusText = (b.job_status || 'pending').toUpperCase();
-      if (isPaid) { statusColor = '#0f8a4b'; statusText = '✔ PAID & COMPLETED'; }
-      else if (isBillReady) { statusColor = '#b8720a'; statusText = '🧾 BILL READY'; }
-
+      const isPaid = b.job_status === 'paid_completed', isBillReady = b.job_status === 'work_completed';
+      let statusColor = '#d97706', statusText = (b.job_status || 'pending').toUpperCase();
+      if (isPaid) { statusColor = '#0f8a4b'; statusText = '✔ PAID & COMPLETED'; } else if (isBillReady) { statusColor = '#b8720a'; statusText = '🧾 BILL READY'; }
       return `
         <div class="card" style="font-size:12px; margin-bottom:8px; border-left:4px solid ${statusColor};">
-          <div style="display:flex; justify-content:space-between;">
-            <b>${b.invoice_no} [${b.service_type?.toUpperCase()}]</b>
-            <span style="font-weight:700; color:${statusColor};">${statusText}</span>
-          </div>
+          <div style="display:flex; justify-content:space-between;"><b>${b.invoice_no} [${b.service_type?.toUpperCase()}]</b><span style="font-weight:700; color:${statusColor};">${statusText}</span></div>
           <p style="margin-top:2px;">Customer: <b>${b.customer_name || 'Customer'}</b> (📞 ${b.customer_phone})</p>
           <p>Tech Assigned: <b>${b.technician_name || 'Unassigned'}</b></p>
           <p>🟢 Start PIN: <b>${b.start_pin}</b> | 🔴 Stop PIN: <b>${b.stop_pin}</b></p>
           <p style="color:#555;">Address: ${b.customer_address}</p>
-        </div>
-      `;
+        </div>`;
     }).join('');
   }
 
   async function registerTechnician() {
-    const name = document.getElementById('newTechName').value.trim();
-    const contactPhone = document.getElementById('newTechPhone').value.trim();
-    const category = document.getElementById('newTechCat').value;
-    const qualification = document.getElementById('newTechQualification').value.trim();
-    const experienceYears = document.getElementById('newTechExperience').value.trim();
-    const pin = document.getElementById('newTechPin').value.trim();
-
+    const name = document.getElementById('newTechName').value.trim(), contactPhone = document.getElementById('newTechPhone').value.trim(), category = document.getElementById('newTechCat').value, qualification = document.getElementById('newTechQualification').value.trim(), experienceYears = document.getElementById('newTechExperience').value.trim(), pin = document.getElementById('newTechPin').value.trim();
     if (!name || pin.length !== 4) { alert("Enter technician name and 4-digit PIN."); return; }
     if (!/^[6-9]\d{9}$/.test(contactPhone)) { alert("Enter a valid 10-digit phone number."); return; }
 
     let nextNum = 1;
     try {
-      const { data: existingTechs } = await sbClient.from('technicians').select('tech_code');
-      const nums = (existingTechs || [])
-        .map(t => t.tech_code)
-        .filter(Boolean)
-        .map(code => parseInt(String(code).replace('TECH-', ''), 10))
-        .filter(n => !isNaN(n));
+      const { data: techs } = await sbClient.from('technicians').select('tech_code');
+      const nums = (techs || []).map(t => parseInt(String(t.tech_code).replace('TECH-', ''), 10)).filter(n => !isNaN(n));
       if (nums.length > 0) nextNum = Math.max(...nums) + 1;
     } catch(e){}
-
     const techCode = 'TECH-' + String(nextNum).padStart(3, '0');
 
-    const { error } = await sbClient.from('technicians').insert([{
-      name, phone: pin, category, is_available: true, tech_code: techCode,
-      contact_phone: contactPhone, qualification: qualification || null,
-      experience_years: experienceYears ? parseInt(experienceYears, 10) : null
-    }]);
-
-    if (error) {
-      alert("Failed: " + error.message);
-      return;
-    }
-
-    document.getElementById('newTechName').value = '';
-    document.getElementById('newTechPhone').value = '';
-    document.getElementById('newTechPin').value = '';
-    alert(`Technician Registered!\nID: ${techCode}\nPIN: ${pin}`);
-    loadTechnicianFleet();
+    const { error } = await sbClient.from('technicians').insert([{ name, phone: pin, category, is_available: true, tech_code: techCode, contact_phone: contactPhone, qualification: qualification || null, experience_years: experienceYears ? parseInt(experienceYears, 10) : null }]);
+    if (error) { alert("Failed: " + error.message); return; }
+    alert(`Technician Registered!\nID: ${techCode}\nPIN: ${pin}`); loadTechnicianFleet();
   }
 
   async function loadTechnicianFleet() {
     const container = document.getElementById('techFleetList');
     if (!container) return;
     let techs = [];
-    try {
-      const { data } = await sbClient.from('technicians').select('*').order('created_at', { ascending: false });
-      if (data) techs = data;
-    } catch(e){}
-
+    try { const { data } = await sbClient.from('technicians').select('*').order('created_at', { ascending: false }); if (data) techs = data; } catch(e){}
     if (techs.length === 0) { container.innerHTML = '<p style="color:#888; font-size:12px;">No technicians found.</p>'; return; }
-
     container.innerHTML = techs.map(t => `
       <div style="padding:6px 0; border-bottom:1px solid #eee; font-size:12px;">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <span>${t.is_available === false ? '🔴' : '🟢'} <b>${t.tech_code || '-'}</b> ${t.name} (${t.category})</span>
-          <button class="btn ${t.is_available === false ? 'secondary' : 'danger'}" style="width:auto; padding:4px 10px; font-size:10.5px;" onclick="toggleTechnicianBlock('${t.id}', ${t.is_available === false})">
-            ${t.is_available === false ? 'Unblock' : 'Block'}
-          </button>
+          <button class="btn ${t.is_available === false ? 'secondary' : 'danger'}" style="width:auto; padding:4px 10px; font-size:10.5px;" onclick="toggleTechnicianBlock('${t.id}', ${t.is_available === false})">${t.is_available === false ? 'Unblock' : 'Block'}</button>
         </div>
-      </div>
-    `).join('');
+      </div>`).join('');
   }
 
   async function toggleTechnicianBlock(techId, shouldUnblock) {
@@ -2326,21 +1377,13 @@
     const container = document.getElementById('customerAccountsList');
     if (!container) return;
     let customers = [];
-    try {
-      const { data } = await sbClient.from('customers').select('*').order('created_at', { ascending: false });
-      if (data) customers = data;
-    } catch(e){}
-
+    try { const { data } = await sbClient.from('customers').select('*').order('created_at', { ascending: false }); if (data) customers = data; } catch(e){}
     if (customers.length === 0) { container.innerHTML = '<p style="color:#888; font-size:12px;">No customer accounts.</p>'; return; }
-
     container.innerHTML = customers.map(c => `
       <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid #eee; font-size:12px;">
         <span>${c.is_blocked ? '🚫' : '✅'} ${c.name || 'Customer'} (📞 ${c.phone})</span>
-        <button class="btn ${c.is_blocked ? 'secondary' : 'danger'}" style="width:auto; padding:4px 10px; font-size:10.5px;" onclick="toggleCustomerBlock('${c.phone}', ${!c.is_blocked})">
-          ${c.is_blocked ? 'Unblock' : 'Block'}
-        </button>
-      </div>
-    `).join('');
+        <button class="btn ${c.is_blocked ? 'secondary' : 'danger'}" style="width:auto; padding:4px 10px; font-size:10.5px;" onclick="toggleCustomerBlock('${c.phone}', ${!c.is_blocked})">${c.is_blocked ? 'Unblock' : 'Block'}</button>
+      </div>`).join('');
   }
 
   async function toggleCustomerBlock(phone, shouldBlock) {
@@ -2350,33 +1393,16 @@
 
   async function downloadShiftReport() {
     let data = [];
-    try {
-      const res = await sbClient.from('bookings').select('*');
-      if (res.data) data = res.data;
-    } catch(e){}
-
+    try { const res = await sbClient.from('bookings').select('*'); if (res.data) data = res.data; } catch(e){}
     if (data.length === 0) data = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
-
-    const shiftData = data.filter(b => {
-      const d = new Date(b.created_at || Date.now());
-      const hours = d.getHours();
-      return hours >= 6 && hours < 18;
-    });
-
+    const shiftData = data.filter(b => { const h = new Date(b.created_at || Date.now()).getHours(); return h >= 6 && h < 18; });
     if (shiftData.length === 0) { alert("No work records found."); return; }
 
     let csv = "data:text/csv;charset=utf-8,InvoiceNo,CustomerName,CustomerPhone,Address,Technician,Status,Date\r\n";
-    shiftData.forEach(row => {
-      csv += `"${row.invoice_no}","${row.customer_name||''}","${row.customer_phone}","${row.customer_address}","${row.technician_name||''}","${row.job_status}","${row.created_at||''}"\r\n`;
-    });
-
-    const encodedUri = encodeURI(csv);
+    shiftData.forEach(row => { csv += `"${row.invoice_no}","${row.customer_name||''}","${row.customer_phone}","${row.customer_address}","${row.technician_name||''}","${row.job_status}","${row.created_at||''}"\r\n`; });
     const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "Bijli_Mitra_Shift_Report.csv");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    link.setAttribute("href", encodeURI(csv)); link.setAttribute("download", "Bijli_Mitra_Shift_Report.csv");
+    document.body.appendChild(link); link.click(); document.body.removeChild(link);
   }
 
   updateRoleBasedNavigation();
@@ -2385,9 +1411,7 @@
 
   window.addEventListener('load', () => {
     if (window.location.search.includes('order_id') || window.location.hash === '#profile') {
-      setTimeout(() => {
-        goToCustomerProfile();
-      }, 300);
+      setTimeout(() => { goToCustomerProfile(); }, 300);
     }
   });
 </script>
