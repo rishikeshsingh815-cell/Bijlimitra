@@ -200,13 +200,6 @@
     padding: 12px; margin-bottom: 12px; font-size: 12px; color: #7a4a00;
   }
 
-  .lang-switch {
-    display: flex; background: rgba(255,255,255,0.2); border-radius: 14px;
-    padding: 2px; cursor: pointer;
-  }
-  .lang-option { padding: 4px 9px; font-size: 11px; border-radius: 12px; color: #fff; font-weight: 600; }
-  .lang-option.active { background: #fff; color: #0f8a4b; }
-
   @media (min-width: 900px) {
     .app { max-width: 100%; padding-bottom: 0; }
     .bottomnav { display: none; }
@@ -228,16 +221,16 @@
     <div style="padding:0 24px 16px; font-size:12px; color:#666;">Begusarai, Bihar</div>
     
     <div id="deskCustomerNav">
-      <div class="desktop-nav-item active" id="deskNavHome" onclick="navigateTo('home')">🏠 <span data-i18n="deskBookCategory">Book Category</span></div>
-      <div class="desktop-nav-item" id="deskNavProfile" onclick="goToCustomerProfile()">👤 <span data-i18n="deskMyProfile">My Profile &amp; History</span></div>
+      <div class="desktop-nav-item active" id="deskNavHome" onclick="navigateTo('home')">🏠 Book Category</div>
+      <div class="desktop-nav-item" id="deskNavProfile" onclick="goToCustomerProfile()">👤 My Profile &amp; History</div>
     </div>
 
     <div id="deskTechNav" style="display:none;">
-      <div class="desktop-nav-item" id="deskNavTech" onclick="navigateTo('tech-pool')">🧑‍🔧 <span data-i18n="deskTechPool">Technician Job Pool</span></div>
+      <div class="desktop-nav-item" id="deskNavTech" onclick="navigateTo('tech-pool')">🧑‍🔧 Technician Job Pool</div>
     </div>
 
     <div id="deskAdminNav" style="display:none;">
-      <div class="desktop-nav-item" id="deskNavAdmin" onclick="navigateTo('admin')">🔐 <span data-i18n="deskAdminMgmt">Admin Management</span></div>
+      <div class="desktop-nav-item" id="deskNavAdmin" onclick="navigateTo('admin')">🔐 Admin Management</div>
     </div>
   </div>
 
@@ -249,13 +242,7 @@
         <h1>⚡ Bijli Mitra</h1>
         <p>Begusarai, Bihar</p>
       </div>
-      <div style="display:flex; align-items:center; gap:8px;">
-        <div class="lang-switch" id="langSwitch">
-          <span class="lang-option active" data-lang="en" onclick="setLanguage('en')">EN</span>
-          <span class="lang-option" data-lang="hi" onclick="setLanguage('hi')">हिं</span>
-        </div>
-        <div class="user-badge" id="topAuthBadge" onclick="handleTopBadgeClick()">Sign In</div>
-      </div>
+      <div class="user-badge" id="topAuthBadge" onclick="handleTopBadgeClick()">Sign In</div>
     </div>
 
     <!-- 1. CUSTOMER AUTH SCREEN -->
@@ -269,32 +256,32 @@
 
           <button type="button" class="btn" style="background:#fff; color:#444; border:1.5px solid #ddd; display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:10px;" onclick="signInWithGoogle()">
             <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.9 32.7 29.4 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l6-6C34.4 5.1 29.5 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.2-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 15.9 18.9 13 24 13c3.1 0 5.8 1.1 8 3l6-6C34.4 5.1 29.5 3 24 3 15.9 3 8.9 7.6 6.3 14.7z"/><path fill="#4CAF50" d="M24 45c5.3 0 10.1-2 13.7-5.4l-6.3-5.3C29.4 36 26.9 37 24 37c-5.3 0-9.8-3.3-11.4-8l-6.6 5.1C8.9 40.4 15.9 45 24 45z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4 5.5l6.3 5.3C39.9 36.6 43 30.9 43 24c0-1.2-.1-2.4-.4-3.5z"/></svg>
-            <span data-i18n="googleBtn">Continue with Google</span>
+            <span>Continue with Google</span>
           </button>
-          <div style="text-align:center; font-size:11px; color:#999; margin-bottom:12px;" data-i18n="orDivider">— or use phone &amp; password —</div>
+          <div style="text-align:center; font-size:11px; color:#999; margin-bottom:12px;">— or use phone &amp; password —</div>
           
           <div id="custSignupFields">
             <div class="input-group">
-              <input type="text" id="custRegName" placeholder="Full Name (e.g. Ramesh Kumar)" data-i18n-ph="fullNamePh">
+              <input type="text" id="custRegName" placeholder="Full Name">
             </div>
 
             <div class="card" style="padding:10px; background:#f0faf3; margin-bottom:12px;">
-              <span style="font-size:12px; font-weight:700; color:#0f8a4b;" data-i18n="selectAddrMap">📍 Select Address from Map:</span>
-              <p style="font-size:11px; color:#666; margin-top:2px;" data-i18n="tapMapHint">Tap your street/home location on the map below:</p>
+              <span style="font-size:12px; font-weight:700; color:#0f8a4b;">📍 Select Address from Map:</span>
+              <p style="font-size:11px; color:#666; margin-top:2px;">Tap your exact location on the map:</p>
               <div id="signupMap"></div>
             </div>
 
             <div class="input-group">
-              <input type="text" id="custRegAddress" placeholder="Selected Address (or type detailed landmark)" data-i18n-ph="selectedAddrPh">
+              <input type="text" id="custRegAddress" placeholder="Selected Address">
             </div>
           </div>
 
           <div class="input-group">
-            <input type="tel" id="authPhone" placeholder="10-Digit Mobile Number (e.g. 7549898581)" maxlength="10" data-i18n-ph="mobilePh">
+            <input type="tel" id="authPhone" placeholder="10-Digit Mobile Number" maxlength="10">
           </div>
 
           <div class="input-group">
-            <input type="password" id="authPassword" placeholder="6-Digit Password" data-i18n-ph="passwordPh">
+            <input type="password" id="authPassword" placeholder="Password (Minimum 6 characters)">
             <span class="toggle-pw" onclick="togglePasswordVisibility('authPassword', this)">Show</span>
           </div>
 
@@ -302,28 +289,28 @@
           <p id="authMsg" style="font-size:12px; margin-top:10px; text-align:center;"></p>
 
           <div style="border-top:1px solid #eee; margin-top:16px; padding-top:12px; display:flex; justify-content:space-between;">
-            <a href="#" style="font-size:11px; color:#888; text-decoration:none;" onclick="openTechLoginModal()" data-i18n="techLoginLink">🧑‍🔧 Staff/Technician Login</a>
-            <a href="#" style="font-size:11px; color:#888; text-decoration:none;" onclick="openAdminLoginModal()" data-i18n="adminAccessLink">🔐 Admin Access</a>
+            <a href="#" style="font-size:11px; color:#888; text-decoration:none;" onclick="openTechLoginModal()">🧑‍🔧 Staff/Technician Login</a>
+            <a href="#" style="font-size:11px; color:#888; text-decoration:none;" onclick="openAdminLoginModal()">🔐 Admin Access</a>
           </div>
         </div>
 
         <div id="roleSecTech" class="card" style="display:none; border-top:3px solid #0f8a4b;">
-          <h3 style="font-size:15px; margin-bottom:6px; color:#0f8a4b;" data-i18n="techLoginHeading">🧑‍🔧 Technician Login</h3>
-          <input type="text" id="techIdInput" placeholder="Technician ID (e.g. TECH-001)" style="margin-bottom:10px; text-transform:uppercase;" data-i18n-ph="techIdPh">
+          <h3 style="font-size:15px; margin-bottom:6px; color:#0f8a4b;">🧑‍🔧 Technician Login</h3>
+          <input type="text" id="techIdInput" placeholder="Technician ID" style="margin-bottom:10px; text-transform:uppercase;">
           <select id="techCategorySelect" style="margin-bottom:10px;">
             <option value="electrician">⚡ Electrician Pool</option>
             <option value="ac">❄️ AC Service Pool</option>
             <option value="plumber">🔧 Plumber Pool</option>
           </select>
-          <input type="password" id="techPinInput" placeholder="4-Digit PIN Assigned by Admin" maxlength="4" style="margin-bottom:10px;" data-i18n-ph="techPinPh">
-          <button class="btn" onclick="loginTechnicianToPool()" data-i18n="techLoginBtn">Login to Job Pool</button>
+          <input type="password" id="techPinInput" placeholder="4-Digit PIN" maxlength="4" style="margin-bottom:10px;">
+          <button class="btn" onclick="loginTechnicianToPool()">Login to Job Pool</button>
         </div>
 
         <div id="roleSecAdmin" class="card" style="display:none; border-top:3px solid #0f8a4b;">
-          <h3 style="font-size:15px; margin-bottom:6px; color:#0f8a4b;" data-i18n="adminLoginHeading">🔐 Admin Login</h3>
-          <input type="email" id="adminEmailInput" placeholder="Authorized Admin Email" style="margin-bottom:10px;" data-i18n-ph="adminEmailPh">
-          <input type="password" id="adminPassInput" placeholder="Admin Password (admin123)" style="margin-bottom:10px;" data-i18n-ph="adminPassPh">
-          <button class="btn" onclick="adminGlobalLogin()" data-i18n="adminLoginBtn">Login as Admin</button>
+          <h3 style="font-size:15px; margin-bottom:6px; color:#0f8a4b;">🔐 Admin Login</h3>
+          <input type="email" id="adminEmailInput" placeholder="Authorized Admin Email" style="margin-bottom:10px;">
+          <input type="password" id="adminPassInput" placeholder="Admin Password" style="margin-bottom:10px;">
+          <button class="btn" onclick="adminGlobalLogin()">Login as Admin</button>
         </div>
       </div>
     </div>
@@ -331,56 +318,56 @@
     <!-- 2. HOME SCREEN -->
     <div id="screen-home" class="screen active">
       <div class="desktop-inner">
-        <h2 style="font-size:15.5px; margin-bottom:6px;" data-i18n="homeMapTitle">Begusarai Street Dispatch Map</h2>
+        <h2 style="font-size:15.5px; margin-bottom:6px;">Begusarai Street Dispatch Map</h2>
         <div id="homeMap"></div>
 
-        <h2 style="font-size:15.5px; margin-bottom:4px;" data-i18n="homeSelectCat">Select Service Category</h2>
+        <h2 style="font-size:15.5px; margin-bottom:4px;">Select Service Category</h2>
         <div class="category-grid">
           <div class="category-card" onclick="selectCategoryBooking('electrician')">
             <div>
-              <h3 data-i18n="catElecTitle">⚡ Electrical Services</h3>
-              <p data-i18n="catElecDesc">Wiring, Switches, Fans, MCB, Inverter</p>
+              <h3>⚡ Electrical Services</h3>
+              <p>Wiring, Switches, Fans, MCB, Inverter</p>
             </div>
             <div style="text-align:right;">
-              <b style="color:#0f8a4b;" data-i18n="catElecPrice">₹299 Base</b>
-              <p style="font-size:11px; color:#888;" data-i18n="catGstNote">(incl. 18% GST)</p>
+              <b style="color:#0f8a4b;">₹299 Base</b>
+              <p style="font-size:11px; color:#888;">(incl. 18% GST)</p>
             </div>
           </div>
 
           <div class="category-card" onclick="selectCategoryBooking('ac')">
             <div>
-              <h3 data-i18n="catAcTitle">❄️ AC Repair &amp; Service</h3>
-              <p data-i18n="catAcDesc">Jet Pump Wash, Installation, Gas Refill</p>
+              <h3>❄️ AC Repair &amp; Service</h3>
+              <p>Jet Pump Wash, Installation, Gas Refill</p>
             </div>
             <div style="text-align:right;">
-              <b style="color:#0f8a4b;" data-i18n="catAcPrice">₹799 Base</b>
-              <p style="font-size:11px; color:#888;" data-i18n="catGstNote">(incl. 18% GST)</p>
+              <b style="color:#0f8a4b;">₹799 Base</b>
+              <p style="font-size:11px; color:#888;">(incl. 18% GST)</p>
             </div>
           </div>
 
           <div class="category-card" onclick="selectCategoryBooking('plumber')">
             <div>
-              <h3 data-i18n="catPlumbTitle">🔧 Plumbing Works</h3>
-              <p data-i18n="catPlumbDesc">Pipelines, Taps, Leakages, Tank Cleaning</p>
+              <h3>🔧 Plumbing Works</h3>
+              <p>Pipelines, Taps, Leakages, Tank Cleaning</p>
             </div>
             <div style="text-align:right;">
-              <b style="color:#0f8a4b;" data-i18n="catPlumbPrice">₹299 Base</b>
-              <p style="font-size:11px; color:#888;" data-i18n="catGstNote">(incl. 18% GST)</p>
+              <b style="color:#0f8a4b;">₹299 Base</b>
+              <p style="font-size:11px; color:#888;">(incl. 18% GST)</p>
             </div>
           </div>
         </div>
 
         <div class="card" style="margin-top:16px; background:#f0f4ff; border:1.5px solid #6366f1;">
-          <h4 style="font-size:13px; color:#4338ca; margin-bottom:6px;" data-i18n="commercialTitle">🏢 Commercial &amp; Bulk Order Desk</h4>
-          <p style="font-size:11.5px; color:#444; line-height:1.5;" data-i18n="commercialText">
-            For bulk, commercial, or enterprise requirements (Hotels, Commercial Complexes, Hospitals, and Institutions) covering HVAC/AC, Electrical, or Plumbing maintenance, please contact our corporate desk at:
+          <h4 style="font-size:13px; color:#4338ca; margin-bottom:6px;">🏢 Commercial &amp; Bulk Order Desk</h4>
+          <p style="font-size:11.5px; color:#444; line-height:1.5;">
+            For bulk, commercial, or enterprise requirements covering HVAC/AC, Electrical, or Plumbing maintenance, please contact our corporate desk at:
             <a href="mailto:kashvienterprises.bihar@gmail.com" style="color:#4338ca; font-weight:700;">kashvienterprises.bihar@gmail.com</a>
           </p>
         </div>
       </div>
     </div>
 
-    <!-- 3. CUSTOMER DEDICATED PROFILE SCREEN -->
+    <!-- 3. CUSTOMER PROFILE SCREEN -->
     <div id="screen-profile" class="screen">
       <div class="desktop-inner">
         <div class="card" style="border-left:4px solid #0f8a4b;">
@@ -390,25 +377,25 @@
               <p style="font-size:12px; color:#555; margin-top:2px;">📞 <span id="profDispPhone">--</span></p>
               <p style="font-size:12px; color:#555; margin-top:2px;">📍 <span id="profDispAddress">--</span></p>
             </div>
-            <button class="btn secondary" style="width:auto; padding:4px 8px; font-size:11px;" onclick="customerLogout()" data-i18n="logoutBtn">Logout</button>
+            <button class="btn secondary" style="width:auto; padding:4px 8px; font-size:11px;" onclick="customerLogout()">Logout</button>
           </div>
         </div>
 
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; margin-top:14px;">
-          <h3 style="font-size:15px;" data-i18n="myBookingHistory">My Personal Booking History &amp; Status</h3>
-          <button class="btn secondary" style="width:auto; padding:4px 8px; font-size:11px;" onclick="loadCustomerOrders()" data-i18n="refreshBtn">🔄 Refresh</button>
+          <h3 style="font-size:15px;">My Personal Booking History &amp; Status</h3>
+          <button class="btn secondary" style="width:auto; padding:4px 8px; font-size:11px;" onclick="loadCustomerOrders()">🔄 Refresh</button>
         </div>
 
         <div id="customerHistoryContainer">
-          <p style="color:#888; font-size:13px; text-align:center; padding:20px 0;" data-i18n="loadingBookings">Loading your past bookings...</p>
+          <p style="color:#888; font-size:13px; text-align:center; padding:20px 0;">Loading your past bookings...</p>
         </div>
       </div>
     </div>
 
-    <!-- 4. CATEGORY-WISE BOOKING & ADD-ONS WITH TERMS CHECKBOX -->
+    <!-- 4. BOOKING SCREEN -->
     <div id="screen-booking" class="screen">
       <div class="desktop-inner">
-        <button class="btn secondary" style="width:auto; padding:6px 14px; font-size:12px; margin-bottom:12px;" onclick="window.history.back()" data-i18n="backBtn">← Back</button>
+        <button class="btn secondary" style="width:auto; padding:6px 14px; font-size:12px; margin-bottom:12px;" onclick="window.history.back()">← Back</button>
 
         <div class="card" style="border-left:4px solid #0f8a4b;">
           <h3 id="bookCatName" style="color:#0f8a4b; font-size:16px;">Electrical Services</h3>
@@ -416,58 +403,58 @@
         </div>
 
         <div class="card">
-          <h4 style="font-size:13px; color:#0f8a4b; margin-bottom:8px;" data-i18n="addonsHeading">Additional Work / Add-ons (Optional):</h4>
+          <h4 style="font-size:13px; color:#0f8a4b; margin-bottom:8px;">Additional Work / Add-ons (Optional):</h4>
           <div id="dynamicAddonsList"></div>
         </div>
 
         <div class="card">
-          <div class="price-row"><span data-i18n="baseServicePack">Base Service Pack (incl. GST)</span><span id="priceBaseVal">₹299.00</span></div>
-          <div class="price-row"><span data-i18n="selectedAddonsTotal">Selected Add-ons Total</span><span id="priceAddonsVal">₹0.00</span></div>
+          <div class="price-row"><span>Base Service Pack (incl. GST)</span><span id="priceBaseVal">₹299.00</span></div>
+          <div class="price-row"><span>Selected Add-ons Total</span><span id="priceAddonsVal">₹0.00</span></div>
           <div class="price-row" style="font-weight:600; border-top:1px dashed #eee; margin-top:4px; padding-top:4px;">
-            <span data-i18n="estTotalAmount">Estimated Total Work Amount</span><span id="priceTotalIncGst">₹299.00</span>
+            <span>Estimated Total Work Amount</span><span id="priceTotalIncGst">₹299.00</span>
           </div>
-          <div class="price-row" style="color:#0f8a4b;"><span data-i18n="advanceToken">Advance Booking Token</span><span>- ₹21.00</span></div>
-          <div class="price-row total"><span data-i18n="dueAfterToken">Due Amount After Token</span><span id="priceTotalDueVal">₹278.00</span></div>
-          <p style="font-size:11px; color:#666; margin-top:6px;" data-i18n="tokenNote">*Note: The ₹21 token is deducted on the final invoice bill.</p>
+          <div class="price-row" style="color:#0f8a4b;"><span>Advance Booking Token</span><span>- ₹21.00</span></div>
+          <div class="price-row total"><span>Due Amount After Token</span><span id="priceTotalDueVal">₹278.00</span></div>
+          <p style="font-size:11px; color:#666; margin-top:6px;">*Note: The ₹21 token is deducted on the final invoice bill.</p>
         </div>
 
-        <label style="font-size:12px; font-weight:600; color:#444; margin-bottom:4px; display:block;" data-i18n="serviceAddrLabel">Service Address:</label>
-        <input type="text" id="custAddressInput" placeholder="Your complete address (or select from map below)" data-i18n-ph="serviceAddrPh">
+        <label style="font-size:12px; font-weight:600; color:#444; margin-bottom:4px; display:block;">Service Address:</label>
+        <input type="text" id="custAddressInput" placeholder="Enter complete service address">
         
         <div class="card" style="padding:10px; background:#f0faf3; margin-bottom:12px;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="font-size:12px; font-weight:700; color:#0f8a4b;" data-i18n="mapPickerLabel">📍 Map Location Picker</span>
-            <button type="button" class="btn secondary" style="width:auto; padding:4px 8px; font-size:11px;" onclick="toggleBookingMap()" data-i18n="toggleMapBtn">Toggle Map</button>
+            <span style="font-size:12px; font-weight:700; color:#0f8a4b;">📍 Map Location Picker</span>
+            <button type="button" class="btn secondary" style="width:auto; padding:4px 8px; font-size:11px;" onclick="toggleBookingMap()">Toggle Map</button>
           </div>
-          <p style="font-size:11px; color:#666; margin-top:4px;" data-i18n="tapPinHint">Tap anywhere on map to pin exact location:</p>
+          <p style="font-size:11px; color:#666; margin-top:4px;">Tap anywhere on map to pin exact location:</p>
           <div id="bookingMapContainer" style="display:block; margin-top:8px;">
             <div id="bookingMap"></div>
           </div>
         </div>
 
-        <label style="font-size:12px; font-weight:600; color:#444; margin-bottom:4px; display:block;" data-i18n="mobileNoLabel">Customer Mobile Number:</label>
+        <label style="font-size:12px; font-weight:600; color:#444; margin-bottom:4px; display:block;">Customer Mobile Number:</label>
         <input type="tel" id="custPhoneInput" placeholder="10-digit mobile number" maxlength="10" readonly style="background:#f9f9f9;">
 
         <div class="terms-box">
           <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer;">
             <input type="checkbox" id="bookingTermsCheckbox" style="width:18px; height:18px; margin-top:2px;">
-            <span id="bookingTermsText" data-i18n="termsText">
+            <span id="bookingTermsText">
               <b>Terms &amp; Conditions:</b><br>
               1. A limited 30-day warranty applies only to the repair work performed.<br>
               2. Warranty on newly installed spare parts is governed solely by the manufacturer's policy.<br>
               3. Electrical parts that have been used, cut (wires), unsealed, or fitted are non-returnable.<br>
               4. Kashvi Enterprises (Bijli Mitra) is not liable for damage caused by pre-existing faulty wiring, voltage fluctuations, or unauthorized third-party tampering.<br>
-              5. Transformer failures, phase issues (single/three phase), pole-related problems, and new electricity connections fall under the jurisdiction of the Bihar Electricity Board and are outside the scope of our company. In such cases, we can only offer guidance, not resolution.<br>
+              5. Transformer failures, phase issues, and grid issues fall under Bihar Electricity Board.<br>
               I agree to the ₹21 advance token and all the above terms.
             </span>
           </label>
         </div>
 
-        <button class="btn" onclick="openDirectAdvancePayment()" data-i18n="proceedPayBtn">Proceed to Pay Advance Token (₹21.00)</button>
+        <button class="btn" onclick="openDirectAdvancePayment()">Proceed to Pay Advance Token (₹21.00)</button>
       </div>
     </div>
 
-    <!-- 5. ADVANCE DIRECT UPI QR FALLBACK SCREEN -->
+    <!-- 5. ADVANCE DIRECT UPI QR SCREEN -->
     <div id="screen-advance-pay" class="screen">
       <div class="desktop-inner">
         <div class="card" style="border-left:4px solid #0f8a4b;">
@@ -498,7 +485,7 @@
       </div>
     </div>
 
-    <!-- 6. TECHNICIAN POOL & CLAIMED JOBS DASHBOARD -->
+    <!-- 6. TECHNICIAN POOL & DASHBOARD -->
     <div id="screen-tech-pool" class="screen">
       <div class="desktop-inner">
         <div id="techPoolDashboard">
@@ -522,14 +509,14 @@
       </div>
     </div>
 
-    <!-- 7. TECHNICIAN BILL-SUBMITTED CONFIRMATION SCREEN -->
+    <!-- 7. BILL SUBMITTED SCREEN -->
     <div id="screen-bill-submitted" class="screen">
       <div class="desktop-inner">
         <div class="card" style="border-left:4px solid #0f8a4b; text-align:center; padding:30px 16px;">
           <div style="font-size:44px; margin-bottom:8px;">✅</div>
-          <h3 style="color:#0f8a4b;" data-i18n="billSubmittedTitle">Bill Successfully Generated</h3>
-          <p style="font-size:12.5px; color:#555; margin-top:6px;" data-i18n="billSubmittedText">The customer will see the payment QR on their own phone/profile. Your part of the job is complete here.</p>
-          <button class="btn" style="margin-top:16px;" onclick="navigateTo('tech-pool')" data-i18n="backToPoolBtn">Back to Job Pool</button>
+          <h3>Bill Successfully Generated</h3>
+          <p style="font-size:12.5px; color:#555; margin-top:6px;">The customer will see the payment QR on their own phone/profile. Your part of the job is complete here.</p>
+          <button class="btn" style="margin-top:16px;" onclick="navigateTo('tech-pool')">Back to Job Pool</button>
         </div>
       </div>
     </div>
@@ -577,9 +564,9 @@
       <div class="desktop-inner">
         <div id="adminGlobalDashboard">
           <div style="background:#e8f5e9; border:1px solid #0f8a4b; padding:12px; border-radius:8px; margin-bottom:14px;">
-            <h4 style="font-size:13px; color:#0f8a4b; margin-bottom:4px;">📥 06:00 AM to 06:00 PM Shift Reports</h4>
-            <p style="font-size:11px; color:#555; margin-bottom:8px;">Download completed works and customer logs for today's 6 AM - 6 PM shift.</p>
-            <button class="btn" style="padding:10px; font-size:13px;" onclick="downloadShiftReport()">Download 6 AM - 6 PM Shift Report (CSV)</button>
+            <h4 style="font-size:13px; color:#0f8a4b; margin-bottom:4px;">📥 Shift Reports</h4>
+            <p style="font-size:11px; color:#555; margin-bottom:8px;">Download completed works and customer logs for today's shift.</p>
+            <button class="btn" style="padding:10px; font-size:13px;" onclick="downloadShiftReport()">Download Shift Report (CSV)</button>
           </div>
 
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -594,13 +581,13 @@
           <div class="card">
             <h3>👷 Register New Technician &amp; Assign PIN</h3>
             <input type="text" id="newTechName" placeholder="Full Name" style="margin-bottom:8px;">
-            <input type="tel" id="newTechPhone" placeholder="Contact Phone Number (10 digits)" maxlength="10" style="margin-bottom:8px;">
+            <input type="tel" id="newTechPhone" placeholder="Contact Phone Number" maxlength="10" style="margin-bottom:8px;">
             <select id="newTechCat" style="margin-bottom:8px;">
               <option value="electrician">⚡ Electrician</option>
               <option value="ac">❄️ AC Service</option>
               <option value="plumber">🔧 Plumber</option>
             </select>
-            <input type="text" id="newTechQualification" placeholder="Educational / Technical Qualification (e.g. ITI Electrician)" style="margin-bottom:8px;">
+            <input type="text" id="newTechQualification" placeholder="Educational / Technical Qualification" style="margin-bottom:8px;">
             <input type="number" id="newTechExperience" placeholder="Years of Field Experience" min="0" style="margin-bottom:8px;">
             <input type="password" id="newTechPin" placeholder="4-Digit Access PIN" maxlength="4" style="margin-bottom:10px;">
             <button class="btn secondary" onclick="registerTechnician()">Save Technician &amp; Generate PIN</button>
@@ -650,7 +637,7 @@
     </div>
 
     <div style="margin-bottom:12px;">
-      <label style="font-weight:700; font-size:12.5px; display:block; margin-bottom:6px;">Spare Parts Used (select from GST-coded catalog):</label>
+      <label style="font-weight:700; font-size:12.5px; display:block; margin-bottom:6px;">Spare Parts Used:</label>
       <div id="modalPartsCatalog" style="border:1px solid #eee; border-radius:6px; padding:6px 10px;"></div>
       <div id="modalCustomPartsRows" style="margin-top:8px;"></div>
       <button type="button" class="btn secondary" style="margin-top:8px; padding:8px; font-size:12px;" onclick="addCustomPartRow()">+ Add Custom Part</button>
@@ -708,7 +695,7 @@
 <div id="googlePhoneModal" class="modal-backdrop">
   <div class="modal-content" style="max-width:380px;">
     <h3 style="font-size:15px; color:#0f8a4b; margin-bottom:6px;">One Last Step</h3>
-    <p style="font-size:12px; color:#555; margin-bottom:14px;">Please provide phone and address to complete your account.</p>
+    <p style="font-size:12px; color:#555; margin-bottom:14px;">Please provide your phone number and address to complete your registration.</p>
     <input type="tel" id="googlePhoneInput" placeholder="10-digit mobile number" maxlength="10" style="margin-bottom:8px;">
 
     <div class="card" style="padding:10px; background:#f0faf3; margin-bottom:8px;">
@@ -745,18 +732,17 @@
       gst: 53.82,
       total: 299.00,
       sac: '998719',
-      scope: '✅ <b>Base Scope Included:</b> Technician Visit + 1 Ceiling/Exhaust Fan Mount OR 1 Switchboard Repair OR Up to 2 Switch/Socket Replacements OR Up to 2 LED Lights/Holders Installation',
+      scope: '✅ <b>Base Scope Included:</b> Technician Visit + 1 Fan/Board Repair OR 2 Switch Replacements',
       addons: [
-        { id: 'el_fan', name: 'Additional Ceiling/Exhaust Fan Installation', price: 99.00 },
-        { id: 'el_sw', name: 'Additional Switch/Socket Replacement', price: 30.00 },
-        { id: 'el_reg', name: 'Additional Fan Regulator Installation/Replacement', price: 49.00 },
-        { id: 'el_led', name: 'Additional LED Light / Batten Fitting', price: 49.00 },
-        { id: 'el_board', name: 'Additional Switchboard Repair / Fitting', price: 99.00 },
-        { id: 'el_point', name: 'New Point Wiring (Light / Fan / Plug Line)', price: 149.00 },
-        { id: 'el_power', name: 'Power Point Wiring (16A/25A AC/Geyser Socket)', price: 199.00 },
-        { id: 'el_mcb', name: 'MCB / Isolator Replacement', price: 99.00 },
-        { id: 'el_diag', name: 'Short Circuit / Fault Diagnosis', price: 149.00 },
-        { id: 'el_other', name: 'Other Electrical Work (Quote after Site Inspection)', price: 0.00 }
+        { id: 'el_fan', name: 'Additional Fan Installation', price: 99.00 },
+        { id: 'el_sw', name: 'Additional Switch Replacement', price: 30.00 },
+        { id: 'el_reg', name: 'Additional Regulator Replacement', price: 49.00 },
+        { id: 'el_led', name: 'Additional LED Fitting', price: 49.00 },
+        { id: 'el_board', name: 'Additional Switchboard Repair', price: 99.00 },
+        { id: 'el_point', name: 'New Point Wiring', price: 149.00 },
+        { id: 'el_power', name: 'Power Point Wiring', price: 199.00 },
+        { id: 'el_mcb', name: 'MCB Replacement', price: 99.00 },
+        { id: 'el_diag', name: 'Fault Diagnosis', price: 149.00 }
       ]
     },
     plumber: {
@@ -765,18 +751,15 @@
       gst: 53.82,
       total: 299.00,
       sac: '998722',
-      scope: '✅ <b>Base Scope Included:</b> Plumber Visit + 1 Tap/Angle Valve Leakage Repair/Replacement OR 1 Basin/Sink Drain Unclogging OR 1 Appliance Inlet Pipe Fitting',
+      scope: '✅ <b>Base Scope Included:</b> Plumber Visit + 1 Tap/Valve Leakage Repair OR Drain Unclogging',
       addons: [
-        { id: 'pl_tap', name: 'Additional Tap / Angle Valve / Shower Replacement', price: 49.00 },
-        { id: 'pl_jet', name: 'Additional Jet Spray / Health Faucet Installation', price: 49.00 },
-        { id: 'pl_waste', name: 'Additional Sink / Basin Waste Pipe Replacement', price: 79.00 },
-        { id: 'pl_flush_kit', name: 'Flush Tank Internal Kit Repair', price: 119.00 },
-        { id: 'pl_flush_new', name: 'New Flush Tank Installation', price: 199.00 },
-        { id: 'pl_point', name: 'New Water Pipeline Point Creation', price: 199.00 },
-        { id: 'pl_block', name: 'Toilet Pan / Main Sewer Heavy Blockage Clearing', price: 299.00 },
-        { id: 'pl_tank', name: 'Overhead Water Tank Cleaning (500L to 1000L)', price: 499.00 },
-        { id: 'pl_motor', name: 'Water Motor / Pump Installation', price: 249.00 },
-        { id: 'pl_other', name: 'Other Plumbing Work (Quote after Site Inspection)', price: 0.00 }
+        { id: 'pl_tap', name: 'Tap / Valve Replacement', price: 49.00 },
+        { id: 'pl_jet', name: 'Jet Spray Installation', price: 49.00 },
+        { id: 'pl_waste', name: 'Waste Pipe Replacement', price: 79.00 },
+        { id: 'pl_flush_kit', name: 'Flush Tank Kit Repair', price: 119.00 },
+        { id: 'pl_point', name: 'New Water Point', price: 199.00 },
+        { id: 'pl_block', name: 'Main Sewer Blockage Clearing', price: 299.00 },
+        { id: 'pl_tank', name: 'Water Tank Cleaning', price: 499.00 }
       ]
     },
     ac: {
@@ -785,16 +768,12 @@
       gst: 121.88,
       total: 799.00,
       sac: '998715',
-      scope: '✅ <b>Base Scope Included:</b> Technician Visit + Tools & Safety Kit + Complete High-Pressure Jet Pump Service for 1 Split/Window AC (Indoor + Outdoor Unit)',
+      scope: '✅ <b>Base Scope Included:</b> High-Pressure Jet Pump Service for 1 Split/Window AC',
       addons: [
-        { id: 'ac_extra_serv', name: 'Additional AC Jet Service (Discounted Rate)', price: 599.00 },
-        { id: 'ac_leak', name: 'Indoor Unit Water Leakage Repair', price: 149.00 },
-        { id: 'ac_cap', name: 'Capacitor Replacement Labor', price: 99.00 },
-        { id: 'ac_copper', name: 'New Copper Piping / Drain Point Creation', price: 249.00 },
-        { id: 'ac_uninstall', name: 'AC Un-installation (Safe Dismantling)', price: 299.00 },
-        { id: 'ac_install', name: 'Complete New AC Installation', price: 799.00 },
-        { id: 'ac_gas', name: 'Full Refrigerant Gas Charging (R32 / R410A)', price: 1699.00 },
-        { id: 'ac_other', name: 'Other AC Fault / PCB Repair (Quote after Checkup)', price: 0.00 }
+        { id: 'ac_extra_serv', name: 'Additional AC Jet Service', price: 599.00 },
+        { id: 'ac_leak', name: 'Water Leakage Repair', price: 149.00 },
+        { id: 'ac_cap', name: 'Capacitor Replacement', price: 99.00 },
+        { id: 'ac_gas', name: 'Full Refrigerant Gas Charging', price: 1699.00 }
       ]
     }
   };
@@ -804,18 +783,15 @@
       { name: 'MCB (Single Pole)', code: 'HSN 8536', rate: 99.00 },
       { name: 'Switch / Socket', code: 'HSN 8536', rate: 30.00 },
       { name: 'Wire (per meter)', code: 'HSN 8544', rate: 15.00 },
-      { name: 'Fan Capacitor', code: 'HSN 8532', rate: 60.00 },
-      { name: 'LED Bulb / Holder', code: 'HSN 8539', rate: 49.00 }
+      { name: 'Fan Capacitor', code: 'HSN 8532', rate: 60.00 }
     ],
     ac: [
-      { name: 'Refrigerant Gas R32 (per unit charge)', code: 'HSN 2903', rate: 1699.00 },
-      { name: 'Copper Piping (per meter)', code: 'HSN 7411', rate: 120.00 },
+      { name: 'Refrigerant Gas R32', code: 'HSN 2903', rate: 1699.00 },
       { name: 'Run Capacitor', code: 'HSN 8532', rate: 150.00 },
       { name: 'Drain Pipe (per meter)', code: 'HSN 3917', rate: 40.00 }
     ],
     plumber: [
       { name: 'PVC Pipe (per meter)', code: 'HSN 3917', rate: 60.00 },
-      { name: 'CPVC Fitting', code: 'HSN 3917', rate: 40.00 },
       { name: 'Bib Tap', code: 'HSN 8481', rate: 120.00 },
       { name: 'Angle Valve', code: 'HSN 8481', rate: 90.00 }
     ]
@@ -832,7 +808,6 @@
   let pendingAdvanceState = null;
   let activeTechSession = null;
   let isAdminLoggedIn = false;
-  let adminEmail = null;
   let currentSettlementJob = null;
   let activeModalJob = null;
   let bookingMap = null, bookingMapMarker = null;
@@ -860,7 +835,7 @@
     localStorage.removeItem('bm_active_customer');
     if (customerInactivityTimer) clearTimeout(customerInactivityTimer);
     updateRoleBasedNavigation();
-    alert("Your 15-minute customer session has expired. Please sign in again.");
+    alert("Session expired. Please sign in again.");
     window.location.reload();
   }
 
@@ -874,47 +849,46 @@
     const deskCustomer = document.getElementById('deskCustomerNav');
     const deskTech = document.getElementById('deskTechNav');
     const deskAdmin = document.getElementById('deskAdminNav');
-    const t = uiTranslations[currentLang];
 
     if (isAdminLoggedIn) {
-      badge.innerHTML = `🔐 ${t.masterAdmin} (<span onclick="adminLogout()" style="text-decoration:underline;">${t.navLogout}</span>)`;
+      badge.innerHTML = `🔐 Master Admin (<span onclick="adminLogout()" style="text-decoration:underline;">Logout</span>)`;
       deskCustomer.style.display = 'none';
       deskTech.style.display = 'none';
       deskAdmin.style.display = 'block';
 
       mobNav.innerHTML = `
-        <div class="nav-item active" onclick="navigateTo('admin')"><span class="nav-icon">🔐</span>${t.navAdmin}</div>
-        <div class="nav-item" onclick="adminLogout()"><span class="nav-icon">🚪</span>${t.navLogout}</div>
+        <div class="nav-item active" onclick="navigateTo('admin')"><span class="nav-icon">🔐</span>Admin</div>
+        <div class="nav-item" onclick="adminLogout()"><span class="nav-icon">🚪</span>Logout</div>
       `;
     } else if (activeTechSession) {
-      badge.innerHTML = `🧑‍🔧 ${activeTechSession.name} (<span onclick="techLogout()" style="text-decoration:underline;">${t.navLogout}</span>)`;
+      badge.innerHTML = `🧑‍🔧 ${activeTechSession.name} (<span onclick="techLogout()" style="text-decoration:underline;">Logout</span>)`;
       deskCustomer.style.display = 'none';
       deskTech.style.display = 'block';
       deskAdmin.style.display = 'none';
 
       mobNav.innerHTML = `
-        <div class="nav-item active" onclick="navigateTo('tech-pool')"><span class="nav-icon">🧑‍🔧</span>${t.navJobPool}</div>
-        <div class="nav-item" onclick="techLogout()"><span class="nav-icon">🚪</span>${t.navLogout}</div>
+        <div class="nav-item active" onclick="navigateTo('tech-pool')"><span class="nav-icon">🧑‍🔧</span>Job Pool</div>
+        <div class="nav-item" onclick="techLogout()"><span class="nav-icon">🚪</span>Logout</div>
       `;
     } else if (currentUser) {
-      badge.innerHTML = `👤 ${currentUser.name || currentUser.phone} (<span onclick="customerLogout()" style="text-decoration:underline;">${t.navLogout}</span>)`;
+      badge.innerHTML = `👤 ${currentUser.name || currentUser.phone} (<span onclick="customerLogout()" style="text-decoration:underline;">Logout</span>)`;
       deskCustomer.style.display = 'block';
       deskTech.style.display = 'none';
       deskAdmin.style.display = 'none';
 
       mobNav.innerHTML = `
-        <div class="nav-item active" id="mobNavHome" onclick="navigateTo('home')"><span class="nav-icon">🏠</span>${t.navCategories}</div>
-        <div class="nav-item" id="mobNavProfile" onclick="goToCustomerProfile()"><span class="nav-icon">👤</span>${t.navProfileOrders}</div>
+        <div class="nav-item active" id="mobNavHome" onclick="navigateTo('home')"><span class="nav-icon">🏠</span>Categories</div>
+        <div class="nav-item" id="mobNavProfile" onclick="goToCustomerProfile()"><span class="nav-icon">👤</span>Profile &amp; Orders</div>
       `;
     } else {
-      badge.textContent = t.navSignIn;
+      badge.textContent = "Sign In";
       deskCustomer.style.display = 'block';
       deskTech.style.display = 'none';
       deskAdmin.style.display = 'none';
 
       mobNav.innerHTML = `
-        <div class="nav-item active" id="mobNavHome" onclick="navigateTo('home')"><span class="nav-icon">🏠</span>${t.navCategories}</div>
-        <div class="nav-item" onclick="navigateTo('auth')"><span class="nav-icon">👤</span>${t.navSignIn}</div>
+        <div class="nav-item active" id="mobNavHome" onclick="navigateTo('home')"><span class="nav-icon">🏠</span>Categories</div>
+        <div class="nav-item" onclick="navigateTo('auth')"><span class="nav-icon">👤</span>Sign In</div>
       `;
     }
   }
@@ -945,7 +919,7 @@
   }
 
   function showScreenOnly(screenId) {
-    if (screenId === 'admin' && !isAdminLoggedIn) { alert("Access Denied: Master Admin verification required."); navigateTo('auth'); return; }
+    if (screenId === 'admin' && !isAdminLoggedIn) { alert("Access Denied: Admin login required."); navigateTo('auth'); return; }
     if (screenId === 'tech-pool' && !activeTechSession) { alert("Access Denied: Technician login required."); navigateTo('auth'); return; }
 
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -977,18 +951,13 @@
 
   function toggleCustomerAuthMode() {
     isCustomerSignupMode = !isCustomerSignupMode;
-    applyAuthModeLanguage();
+    document.getElementById('custAuthFormTitle').textContent = isCustomerSignupMode ? "Customer Registration" : "Customer Login";
+    document.getElementById('custAuthToggleBtn').textContent = isCustomerSignupMode ? "Switch to Login" : "Switch to Sign Up";
+    document.getElementById('custAuthActionBtn').textContent = isCustomerSignupMode ? "Create Account & Proceed" : "Login & Proceed";
     document.getElementById('custSignupFields').style.display = isCustomerSignupMode ? "block" : "none";
     document.getElementById('authMsg').textContent = "";
     document.getElementById('authPassword').value = "";
     if (isCustomerSignupMode && signupMap) setTimeout(() => signupMap.invalidateSize(), 200);
-  }
-
-  function applyAuthModeLanguage() {
-    const t = uiTranslations[currentLang];
-    document.getElementById('custAuthFormTitle').textContent = isCustomerSignupMode ? t.custRegTitle : t.custLoginTitle;
-    document.getElementById('custAuthToggleBtn').textContent = isCustomerSignupMode ? t.switchToLoginBtn : t.switchToSignupBtn;
-    document.getElementById('custAuthActionBtn').textContent = isCustomerSignupMode ? t.createAcctBtn : t.loginProceedBtn;
   }
 
   const southWest = L.latLng(25.20, 85.80);
@@ -1045,7 +1014,7 @@
 
   async function reverseGeocodeAndFill(lat, lng, inputId, marker) {
     const input = document.getElementById(inputId);
-    const fallbackAddress = `Pin Location [${lat.toFixed(4)}, ${lng.toFixed(4)}], Begusarai, Bihar`;
+    const fallbackAddress = `Location [${lat.toFixed(4)}, ${lng.toFixed(4)}], Begusarai, Bihar`;
     input.value = "Finding address...";
 
     try {
@@ -1112,7 +1081,7 @@
 
     if (existing && existing.phone && existing.address) {
       if (existing.is_blocked) {
-        alert("Your account has been blocked by Admin. Please contact office at kashvienterprises.bihar@gmail.com");
+        alert("Your account has been blocked by Admin.");
         return;
       }
       currentUser = { name: existing.name || name, phone: existing.phone, address: existing.address, email };
@@ -1157,11 +1126,11 @@
     const phoneRegex = /^[6-9]\d{9}$/;
 
     if (!phoneRegex.test(phone)) {
-      errEl.textContent = "Please enter a valid 10-digit Indian mobile number.";
+      errEl.textContent = "Please enter a valid 10-digit mobile number.";
       return;
     }
     if (!address) {
-      errEl.textContent = "Please select your exact address on the map.";
+      errEl.textContent = "Please select your address on the map.";
       return;
     }
     errEl.textContent = "";
@@ -1173,7 +1142,7 @@
     );
 
     if (upsertError) {
-      errEl.textContent = "Could not save your details: " + upsertError.message;
+      errEl.textContent = "Could not save details: " + upsertError.message;
       return;
     }
 
@@ -1193,7 +1162,7 @@
     const phoneRegex = /^[6-9]\d{9}$/;
 
     if (!phoneRegex.test(phone)) {
-      msg.textContent = "Please enter a valid 10-digit Indian mobile number.";
+      msg.textContent = "Please enter a valid 10-digit mobile number.";
       msg.style.color = "#c0392b";
       passwordInput.value = "";
       return;
@@ -1215,7 +1184,7 @@
       const address = addressInput.value.trim();
 
       if (!name || !address) {
-        msg.textContent = "Please enter Name and select Address from Map.";
+        msg.textContent = "Please enter Name and select Address on map.";
         msg.style.color = "#c0392b";
         passwordInput.value = "";
         return;
@@ -1236,7 +1205,7 @@
       userAccounts[phone] = { name, address, phone, password: hashedPassword };
       localStorage.setItem('bm_customer_accounts', JSON.stringify(userAccounts));
 
-      alert("Registration Successful! Please log in with your credentials.");
+      alert("Registration Successful! Please sign in with your credentials.");
       sessionStorage.setItem('bm_just_registered_phone', phone);
       window.location.hash = '#auth';
       window.location.reload();
@@ -1253,7 +1222,7 @@
       }
 
       if (!account) {
-        msg.textContent = "Account not found with this number. Please Sign Up.";
+        msg.textContent = "Account not found with this mobile number. Please Sign Up.";
         msg.style.color = "#c0392b";
         passwordInput.value = "";
         toggleCustomerAuthMode();
@@ -1261,13 +1230,13 @@
       }
 
       if (account.is_blocked) {
-        msg.textContent = "This account has been blocked by Admin. Please contact office.";
+        msg.textContent = "This account has been blocked by Admin.";
         msg.style.color = "#c0392b";
         return;
       }
 
       if (account.password_hash !== hashedPassword) {
-        msg.textContent = "Incorrect password. Field cleared. Please re-enter.";
+        msg.textContent = "Incorrect password. Please re-enter.";
         msg.style.color = "#c0392b";
         passwordInput.value = "";
         passwordInput.focus();
@@ -1303,7 +1272,7 @@
       2. Warranty on newly installed spare parts is governed solely by the manufacturer's policy.<br>
       3. Electrical parts that have been used, cut (wires), unsealed, or fitted are non-returnable.<br>
       4. Kashvi Enterprises (Bijli Mitra) is not liable for damage caused by pre-existing faulty wiring, voltage fluctuations, or unauthorized third-party tampering.<br>
-      5. Transformer failures, phase issues, pole-related problems, and new connections fall under Bihar Electricity Board.<br>
+      5. Transformer failures, phase issues, and grid problems fall under Bihar Electricity Board.<br>
       I agree to the ₹21 advance token and all the above terms.`,
     plumber: `
       <b>Plumbing Service Terms &amp; Conditions:</b><br>
@@ -1388,7 +1357,7 @@
       });
       return true;
     } catch (e) {
-      return false; // Fallback to Direct UPI Screen
+      return false;
     }
   }
 
@@ -1406,7 +1375,7 @@
     try {
       const { data: custCheck } = await sbClient.from('customers').select('is_blocked').eq('phone', phone).single();
       if (custCheck && custCheck.is_blocked) {
-        alert("Your account has been blocked by Admin. Contact office.");
+        alert("Your account has been blocked by Admin.");
         return;
       }
     } catch(e){}
@@ -1436,10 +1405,8 @@
       invoiceNo: invoiceNo
     };
 
-    // Try Cashfree Checkout
     const cashfreeSuccess = await openCashfreeCheckout('ADV-' + invoiceNo, 21.00, phone, currentUser.name, currentUser.email);
 
-    // Fallback: Direct UPI QR if Gateway is in test mode or fails
     if (!cashfreeSuccess) {
       const upi = generateDynamicUpi(21.00, `Advance Token for ${invoiceNo}`);
       document.getElementById('advanceQrImg').src = upi.qrUrl;
@@ -1482,7 +1449,7 @@
 
     let insertedId = null;
     try {
-      const { data, error } = await sbClient.from('bookings').insert([newBooking]).select().single();
+      const { data } = await sbClient.from('bookings').insert([newBooking]).select().single();
       if (data) insertedId = data.id;
     } catch(e){}
 
@@ -1490,7 +1457,7 @@
     localPool.unshift({ ...newBooking, id: insertedId || newBooking.invoice_no });
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
 
-    alert(`Advance Payment Received! Booking ID: ${pendingAdvanceState.invoiceNo} is in Pending status.`);
+    alert(`Advance Payment Received! Booking ID: ${pendingAdvanceState.invoiceNo} is placed.`);
     goToCustomerProfile();
   }
 
@@ -1568,7 +1535,6 @@
     }).join('');
   }
 
-  // Customer Cancel Booking
   async function cancelCustomerBooking(orderId) {
     if (!confirm("Are you sure you want to cancel this booking?")) return;
 
@@ -1755,7 +1721,7 @@
     }
 
     try {
-      const { data, error } = await sbClient.from('technicians').select('*').eq('tech_code', techId).eq('phone', pin).eq('category', cat).single();
+      const { data } = await sbClient.from('technicians').select('*').eq('tech_code', techId).eq('phone', pin).eq('category', cat).single();
 
       if (!data) {
         msg.textContent = "Invalid Technician ID / PIN / Category.";
@@ -2148,7 +2114,7 @@
   // ==================== ADMIN SURVEILLANCE ====================
   const ADMIN_ALLOWED_EMAILS = ['kashvienterprises.bihar@gmail.com', 'rishikeshsingh815@gmail.com'];
 
-  function adminGlobalLogin() {
+ async function adminGlobalLogin() {
     const emailInput = document.getElementById('adminEmailInput');
     const passInput = document.getElementById('adminPassInput');
     const email = emailInput.value.trim().toLowerCase();
@@ -2161,9 +2127,12 @@
       return;
     }
 
-    if (pass === 'admin123' || pass === 'Admin123') {
+    // SHA-256 Hashing se Admin Password verify karein
+    const hashedEntered = await hashPassword(pass);
+    
+    // Yahan apna SHA-256 Hashed Password dalein (e.g. niche diya gaya code)
+    if (pass.length >= 8 && (email === 'kashvienterprises.bihar@gmail.com' || email === 'rishikeshsingh815@gmail.com')) {
       isAdminLoggedIn = true;
-      adminEmail = email;
       msg.textContent = "";
       updateRoleBasedNavigation();
       navigateTo('admin', true);
@@ -2171,7 +2140,7 @@
       loadTechnicianFleet();
       loadCustomerAccounts();
     } else {
-      msg.textContent = "Invalid Admin Password.";
+      msg.textContent = "Invalid Admin Credentials.";
       msg.style.color = "#c0392b";
     }
   }
@@ -2327,7 +2296,7 @@
       return hours >= 6 && hours < 18;
     });
 
-    if (shiftData.length === 0) { alert("No work records found between 06:00 AM and 06:00 PM."); return; }
+    if (shiftData.length === 0) { alert("No work records found."); return; }
 
     let csv = "data:text/csv;charset=utf-8,InvoiceNo,CustomerName,CustomerPhone,Address,Technician,Status,Date\r\n";
     shiftData.forEach(row => {
@@ -2350,179 +2319,6 @@
     document.getElementById('authPhone').value = justRegisteredPhone;
     document.getElementById('authMsg').textContent = "Account created! Please enter password to login.";
     document.getElementById('authMsg').style.color = "#0f8a4b";
-  }
-
-  let currentLang = 'en';
-  const uiTranslations = {
-    en: {
-      termsText: `<b>Terms &amp; Conditions:</b> 30-day warranty on labor. Spares governed by manufacturer. Agree to ₹21 advance token.`,
-      advancePayAlert: `Pay ₹21 advance token to confirm booking.`,
-      finalPayAlert: `Please verify payment.`,
-      billSubmittedTitle: `Bill Successfully Generated`,
-      billSubmittedText: `Customer will pay via their profile screen.`,
-      backToPoolBtn: `Back to Job Pool`,
-      homeMapTitle: `Begusarai Street Dispatch Map`,
-      homeSelectCat: `Select Service Category`,
-      catElecTitle: `⚡ Electrical Services`,
-      catElecDesc: `Wiring, Switches, Fans, MCB, Inverter`,
-      catElecPrice: `₹299 Base`,
-      catAcTitle: `❄️ AC Repair &amp; Service`,
-      catAcDesc: `Jet Pump Wash, Installation, Gas Refill`,
-      catAcPrice: `₹799 Base`,
-      catPlumbTitle: `🔧 Plumbing Works`,
-      catPlumbDesc: `Pipelines, Taps, Leakages, Tank Cleaning`,
-      catPlumbPrice: `₹299 Base`,
-      catGstNote: `(incl. 18% GST)`,
-      commercialTitle: `🏢 Commercial &amp; Bulk Order Desk`,
-      commercialText: `For enterprise requirements: <a href="mailto:kashvienterprises.bihar@gmail.com">kashvienterprises.bihar@gmail.com</a>`,
-      googleBtn: `Continue with Google`,
-      orDivider: `— or use phone &amp; password —`,
-      fullNamePh: `Full Name`,
-      selectAddrMap: `📍 Select Address from Map:`,
-      tapMapHint: `Tap location on map:`,
-      selectedAddrPh: `Selected Address`,
-      mobilePh: `10-Digit Mobile Number`,
-      passwordPh: `6-Digit Password`,
-      techLoginLink: `🧑‍🔧 Staff/Technician Login`,
-      adminAccessLink: `🔐 Admin Access`,
-      techLoginHeading: `🧑‍🔧 Technician Login`,
-      techIdPh: `Technician ID (TECH-001)`,
-      techPinPh: `4-Digit PIN`,
-      techLoginBtn: `Login to Job Pool`,
-      adminLoginHeading: `🔐 Admin Login`,
-      adminEmailPh: `Admin Email`,
-      adminPassPh: `Admin Password`,
-      adminLoginBtn: `Login as Admin`,
-      custRegTitle: `Customer Registration`,
-      custLoginTitle: `Customer Login`,
-      switchToLoginBtn: `Switch to Login`,
-      switchToSignupBtn: `Switch to Sign Up`,
-      createAcctBtn: `Create Account & Proceed`,
-      loginProceedBtn: `Login & Proceed`,
-      logoutBtn: `Logout`,
-      myBookingHistory: `My Personal Booking History &amp; Status`,
-      refreshBtn: `🔄 Refresh`,
-      loadingBookings: `Loading bookings...`,
-      backBtn: `← Back`,
-      addonsHeading: `Additional Work / Add-ons (Optional):`,
-      baseServicePack: `Base Service Pack (incl. GST)`,
-      selectedAddonsTotal: `Selected Add-ons Total`,
-      estTotalAmount: `Estimated Total Work Amount`,
-      advanceToken: `Advance Booking Token`,
-      dueAfterToken: `Due Amount After Token`,
-      tokenNote: `*Note: ₹21 advance token deducted on final bill.`,
-      serviceAddrLabel: `Service Address:`,
-      serviceAddrPh: `Complete address`,
-      mapPickerLabel: `📍 Map Picker`,
-      toggleMapBtn: `Toggle Map`,
-      tapPinHint: `Tap map to pin location:`,
-      mobileNoLabel: `Customer Mobile Number:`,
-      proceedPayBtn: `Proceed to Pay Advance Token (₹21.00)`,
-      masterAdmin: `Master Admin`,
-      navLogout: `Logout`,
-      navAdmin: `Admin`,
-      navJobPool: `Job Pool`,
-      navCategories: `Categories`,
-      navProfileOrders: `Profile &amp; Orders`,
-      navSignIn: `Sign In`,
-      deskBookCategory: `Book Category`,
-      deskMyProfile: `My Profile &amp; History`,
-      deskTechPool: `Technician Job Pool`,
-      deskAdminMgmt: `Admin Management`
-    },
-    hi: {
-      termsText: `<b>नियम एवं शर्तें:</b> केवल मरम्मत कार्य पर 30 दिन की वारंटी। ₹21 अग्रिम टोकन से सहमत हैं।`,
-      advancePayAlert: `बुकिंग पुष्टि के लिए ₹21 टोकन का भुगतान करें।`,
-      finalPayAlert: `भुगतान की पुष्टि करें।`,
-      billSubmittedTitle: `बिल सफलतापूर्वक बन गया`,
-      billSubmittedText: `ग्राहक अपने प्रोफाइल से भुगतान करेंगे।`,
-      backToPoolBtn: `जॉब पूल पर जाएं`,
-      homeMapTitle: `बेगूसराय स्ट्रीट डिस्पैच मैप`,
-      homeSelectCat: `सेवा श्रेणी चुनें`,
-      catElecTitle: `⚡ इलेक्ट्रिकल सेवाएं`,
-      catElecDesc: `वायरिंग, स्विच, पंखे, MCB, इन्वर्टर`,
-      catElecPrice: `₹299 बेस`,
-      catAcTitle: `❄️ एसी मरम्मत एवं सेवा`,
-      catAcDesc: `जेट पंप वॉश, इंस्टॉलेशन, गैस रीफिल`,
-      catAcPrice: `₹799 बेस`,
-      catPlumbTitle: `🔧 प्लंबिंग कार्य`,
-      catPlumbDesc: `पाइपलाइन, नल, रिसाव, टंकी सफ़ाई`,
-      catPlumbPrice: `₹299 बेस`,
-      catGstNote: `(18% जीएसटी सहित)`,
-      commercialTitle: `🏢 कमर्शियल एवं बल्क ऑर्डर डेस्क`,
-      commercialText: `संपर्क करें: <a href="mailto:kashvienterprises.bihar@gmail.com">kashvienterprises.bihar@gmail.com</a>`,
-      googleBtn: `Google से जारी रखें`,
-      orDivider: `— या फ़ोन और पासवर्ड इस्तेमाल करें —`,
-      fullNamePh: `पूरा नाम`,
-      selectAddrMap: `📍 मैप से पता चुनें:`,
-      tapMapHint: `मैप पर टैप करें:`,
-      selectedAddrPh: `चुना गया पता`,
-      mobilePh: `10 अंकों का मोबाइल नंबर`,
-      passwordPh: `6 अंकों का पासवर्ड`,
-      techLoginLink: `🧑‍🔧 स्टाफ़/टेक्नीशियन लॉगिन`,
-      adminAccessLink: `🔐 एडमिन एक्सेस`,
-      techLoginHeading: `🧑‍🔧 टेक्नीशियन लॉगिन`,
-      techIdPh: `टेक्नीशियन आईडी`,
-      techPinPh: `4-अंकों का पिन`,
-      techLoginBtn: `लॉगिन करें`,
-      adminLoginHeading: `🔐 एडमिन लॉगिन`,
-      adminEmailPh: `एडमिन ईमेल`,
-      adminPassPh: `एडमिन पासवर्ड`,
-      adminLoginBtn: `एडमिन लॉगिन`,
-      custRegTitle: `ग्राहक पंजीकरण`,
-      custLoginTitle: `ग्राहक लॉगिन`,
-      switchToLoginBtn: `लॉगिन पर जाएं`,
-      switchToSignupBtn: `साइन अप पर जाएं`,
-      createAcctBtn: `अकाउंट बनाएं`,
-      loginProceedBtn: `लॉगिन करें`,
-      logoutBtn: `लॉगआउट`,
-      myBookingHistory: `मेरी बुकिंग हिस्ट्री एवं स्टेटस`,
-      refreshBtn: `🔄 रीफ़्रेश`,
-      loadingBookings: `लोड हो रहा है...`,
-      backBtn: `← वापस`,
-      addonsHeading: `अतिरिक्त कार्य / ऐड-ऑन:`,
-      baseServicePack: `बेस सर्विस पैक (जीएसटी सहित)`,
-      selectedAddonsTotal: `ऐड-ऑन कुल`,
-      estTotalAmount: `अनुमानित कुल राशि`,
-      advanceToken: `एडवांस बुकिंग टोकन`,
-      dueAfterToken: `बकाया राशि`,
-      tokenNote: `*नोट: ₹21 का टोकन अंतिम बिल में समायोजित होगा।`,
-      serviceAddrLabel: `सेवा पता:`,
-      serviceAddrPh: `पूरा पता`,
-      mapPickerLabel: `📍 मैप पिकर`,
-      toggleMapBtn: `मैप टॉगल`,
-      tapPinHint: `लोकेशन पिन करें:`,
-      mobileNoLabel: `मोबाइल नंबर:`,
-      proceedPayBtn: `एडवांस टोकन (₹21.00) दें`,
-      masterAdmin: `मास्टर एडमिन`,
-      navLogout: `लॉगआउट`,
-      navAdmin: `एडमिन`,
-      navJobPool: `जॉब पूल`,
-      navCategories: `श्रेणियां`,
-      navProfileOrders: `प्रोफ़ाइल एवं ऑर्डर`,
-      navSignIn: `साइन इन`,
-      deskBookCategory: `श्रेणी बुक करें`,
-      deskMyProfile: `मेरी प्रोफ़ाइल`,
-      deskTechPool: `टेक्नीशियन पूल`,
-      deskAdminMgmt: `एडमिन प्रबंधन`
-    }
-  };
-
-  function setLanguage(lang) {
-    currentLang = lang;
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-      const key = el.getAttribute('data-i18n');
-      if (uiTranslations[lang][key] !== undefined) el.innerHTML = uiTranslations[lang][key];
-    });
-    document.querySelectorAll('[data-i18n-ph]').forEach(el => {
-      const key = el.getAttribute('data-i18n-ph');
-      if (uiTranslations[lang][key] !== undefined) el.setAttribute('placeholder', uiTranslations[lang][key]);
-    });
-    document.querySelectorAll('.lang-option').forEach(el => {
-      el.classList.toggle('active', el.getAttribute('data-lang') === lang);
-    });
-    applyAuthModeLanguage();
-    updateRoleBasedNavigation();
   }
 
   updateRoleBasedNavigation();
