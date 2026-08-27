@@ -99,7 +99,6 @@
   .addon-item:last-child { border-bottom: none; }
   .addon-item label { display: flex; align-items: center; gap: 8px; cursor: pointer; flex: 1; }
   .addon-item input { width: auto; margin: 0; }
-  .addon-price { font-weight: 700; color: #0f8a4b; white-space: nowrap; margin-left: 8px; }
 
   .terms-box {
     background: #fff8f0;
@@ -195,11 +194,6 @@
   #signupMap { height: 190px; width: 100%; border-radius: 10px; border: 1.5px solid #0f8a4b; margin-top: 6px; }
   #bookingMap { height: 200px; width: 100%; border-radius: 10px; border: 1.5px solid #0f8a4b; margin-top: 6px; }
 
-  .pay-alert-box {
-    background: #fff4e0; border: 1.5px solid #f39c12; border-radius: 10px;
-    padding: 12px; margin-bottom: 12px; font-size: 12px; color: #7a4a00;
-  }
-
   @media (min-width: 900px) {
     .app { max-width: 100%; padding-bottom: 0; }
     .bottomnav { display: none; }
@@ -258,34 +252,53 @@
             <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.9 32.7 29.4 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l6-6C34.4 5.1 29.5 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.2-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 15.9 18.9 13 24 13c3.1 0 5.8 1.1 8 3l6-6C34.4 5.1 29.5 3 24 3 15.9 3 8.9 7.6 6.3 14.7z"/><path fill="#4CAF50" d="M24 45c5.3 0 10.1-2 13.7-5.4l-6.3-5.3C29.4 36 26.9 37 24 37c-5.3 0-9.8-3.3-11.4-8l-6.6 5.1C8.9 40.4 15.9 45 24 45z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4 5.5l6.3 5.3C39.9 36.6 43 30.9 43 24c0-1.2-.1-2.4-.4-3.5z"/></svg>
             <span>Continue with Google</span>
           </button>
-          <div style="text-align:center; font-size:11px; color:#999; margin-bottom:12px;">— or use phone &amp; password —</div>
+          <div style="text-align:center; font-size:11px; color:#999; margin-bottom:12px;">— or use Email &amp; Password —</div>
           
+          <div class="input-group">
+            <input type="email" id="authEmail" placeholder="Email Address (e.g. user@gmail.com)">
+          </div>
+
           <div id="custSignupFields">
             <div class="input-group">
               <input type="text" id="custRegName" placeholder="Full Name">
             </div>
 
+            <div class="input-group">
+              <input type="tel" id="authPhone" placeholder="10-Digit Mobile Number (Mandatory)" maxlength="10">
+            </div>
+
             <div class="card" style="padding:10px; background:#f0faf3; margin-bottom:12px;">
-              <span style="font-size:12px; font-weight:700; color:#0f8a4b;">📍 Select Address from Map:</span>
+              <span style="font-size:12px; font-weight:700; color:#0f8a4b;">📍 Select Address from Map (Mandatory):</span>
               <p style="font-size:11px; color:#666; margin-top:2px;">Tap your exact location on the map:</p>
               <div id="signupMap"></div>
             </div>
 
             <div class="input-group">
-              <input type="text" id="custRegAddress" placeholder="Selected Address">
+              <input type="text" id="custRegAddress" placeholder="Selected Address (from map or type landmark)">
+            </div>
+
+            <button type="button" class="btn secondary" id="sendEmailOtpBtn" style="margin-bottom:12px;" onclick="sendEmailVerificationOtp()">
+              📨 Send Email Verification OTP
+            </button>
+          </div>
+
+          <div id="otpPasswordCreationGroup" style="display:none;">
+            <div class="input-group">
+              <input type="text" id="authEmailOtp" placeholder="Enter 6-Digit Email OTP" maxlength="6" style="text-align:center; font-weight:700; letter-spacing:4px; border-color:#0f8a4b;">
+            </div>
+
+            <div class="input-group">
+              <input type="password" id="authCreatePassword" placeholder="Create Password (Min. 6 characters)">
+              <span class="toggle-pw" onclick="togglePasswordVisibility('authCreatePassword', this)">Show</span>
             </div>
           </div>
 
-          <div class="input-group">
-            <input type="tel" id="authPhone" placeholder="10-Digit Mobile Number" maxlength="10">
+          <div class="input-group" id="loginPasswordGroup" style="display:none;">
+            <input type="password" id="authLoginPassword" placeholder="Enter Password">
+            <span class="toggle-pw" onclick="togglePasswordVisibility('authLoginPassword', this)">Show</span>
           </div>
 
-          <div class="input-group">
-            <input type="password" id="authPassword" placeholder="Password (Minimum 6 characters)">
-            <span class="toggle-pw" onclick="togglePasswordVisibility('authPassword', this)">Show</span>
-          </div>
-
-          <button class="btn" id="custAuthActionBtn" onclick="handleCustomerAuthAction()">Create Account &amp; Proceed</button>
+          <button class="btn" id="custAuthActionBtn" onclick="handleCustomerAuthAction()">Verify OTP &amp; Register</button>
           <p id="authMsg" style="font-size:12px; margin-top:10px; text-align:center;"></p>
 
           <div style="border-top:1px solid #eee; margin-top:16px; padding-top:12px; display:flex; justify-content:space-between;">
@@ -374,6 +387,7 @@
           <div style="display:flex; justify-content:space-between; align-items:flex-start;">
             <div>
               <h2 style="font-size:17px; color:#0f8a4b;" id="profDispName">Customer Name</h2>
+              <p style="font-size:12px; color:#555; margin-top:2px;">✉️ <span id="profDispEmail">--</span></p>
               <p style="font-size:12px; color:#555; margin-top:2px;">📞 <span id="profDispPhone">--</span></p>
               <p style="font-size:12px; color:#555; margin-top:2px;">📍 <span id="profDispAddress">--</span></p>
             </div>
@@ -392,30 +406,24 @@
       </div>
     </div>
 
-    <!-- 4. BOOKING SCREEN -->
+    <!-- 4. BOOKING SCREEN (CLEAN BASE PACKAGE, NO ADD-ONS) -->
     <div id="screen-booking" class="screen">
       <div class="desktop-inner">
         <button class="btn secondary" style="width:auto; padding:6px 14px; font-size:12px; margin-bottom:12px;" onclick="window.history.back()">← Back</button>
 
         <div class="card" style="border-left:4px solid #0f8a4b;">
-          <h3 id="bookCatName" style="color:#0f8a4b; font-size:16px;">Electrical Services</h3>
+          <h3 id="bookCatName" style="color:#0f8a4b; font-size:16px;">Service Booking</h3>
           <p id="bookBaseScopeDesc" style="font-size:12px; color:#444; margin-top:4px; line-height:1.4;">-</p>
         </div>
 
         <div class="card">
-          <h4 style="font-size:13px; color:#0f8a4b; margin-bottom:8px;">Additional Work / Add-ons (Optional):</h4>
-          <div id="dynamicAddonsList"></div>
-        </div>
-
-        <div class="card">
           <div class="price-row"><span>Base Service Pack (incl. GST)</span><span id="priceBaseVal">₹299.00</span></div>
-          <div class="price-row"><span>Selected Add-ons Total</span><span id="priceAddonsVal">₹0.00</span></div>
           <div class="price-row" style="font-weight:600; border-top:1px dashed #eee; margin-top:4px; padding-top:4px;">
             <span>Estimated Total Work Amount</span><span id="priceTotalIncGst">₹299.00</span>
           </div>
           <div class="price-row" style="color:#0f8a4b;"><span>Advance Booking Token</span><span>- ₹21.00</span></div>
           <div class="price-row total"><span>Due Amount After Token</span><span id="priceTotalDueVal">₹278.00</span></div>
-          <p style="font-size:11px; color:#666; margin-top:6px;">*Note: The ₹21 token is deducted on the final invoice bill.</p>
+          <p style="font-size:11px; color:#666; margin-top:6px;">*Note: Any additional work or spare parts will be inspected and billed on-site by the technician. The ₹21 token is deducted from the final bill.</p>
         </div>
 
         <label style="font-size:12px; font-weight:600; color:#444; margin-bottom:4px; display:block;">Service Address:</label>
@@ -442,9 +450,8 @@
               <b>Terms &amp; Conditions:</b><br>
               1. A limited 30-day warranty applies only to the repair work performed.<br>
               2. Warranty on newly installed spare parts is governed solely by the manufacturer's policy.<br>
-              3. Electrical parts that have been used, cut (wires), unsealed, or fitted are non-returnable.<br>
-              4. Kashvi Enterprises (Bijli Mitra) is not liable for damage caused by pre-existing faulty wiring, voltage fluctuations, or unauthorized third-party tampering.<br>
-              5. Transformer failures, phase issues, and grid issues fall under Bihar Electricity Board.<br>
+              3. Electrical and plumbing parts that have been fitted/used are non-returnable.<br>
+              4. Kashvi Enterprises (Bijli Mitra) is not liable for damage caused by pre-existing faulty wiring, grid surges, or third-party tampering.<br>
               I agree to the ₹21 advance token and all the above terms.
             </span>
           </label>
@@ -515,7 +522,7 @@
         <div class="card" style="border-left:4px solid #0f8a4b; text-align:center; padding:30px 16px;">
           <div style="font-size:44px; margin-bottom:8px;">✅</div>
           <h3>Bill Successfully Generated</h3>
-          <p style="font-size:12.5px; color:#555; margin-top:6px;">The customer will see the payment QR on their own phone/profile. Your part of the job is complete here.</p>
+          <p style="font-size:12.5px; color:#555; margin-top:6px;">The customer will see the payment breakdown and QR on their own device. Your on-site billing is complete.</p>
           <button class="btn" style="margin-top:16px;" onclick="navigateTo('tech-pool')">Back to Job Pool</button>
         </div>
       </div>
@@ -554,7 +561,7 @@
           <div class="price-row"><span>CGST (9%)</span><span id="pdfCgst">₹0.00</span></div>
           <div class="price-row"><span>SGST (9%)</span><span id="pdfSgst">₹0.00</span></div>
           <div class="price-row"><span>Advance Token</span><span>- ₹21.00</span></div>
-          <div class="price-row total"><span>Net Paid Total</span><span id="pdfGrandTotal">₹0.00</span></div>
+          <div class="price-row total"><span>Grand Total (Net Due)</span><span id="pdfGrandTotal">₹0.00</span></div>
         </div>
       </div>
     </div>
@@ -616,7 +623,7 @@
   </div>
 </div>
 
-<!-- 10. TECHNICIAN WORK COMPLETION MODAL -->
+<!-- 10. TECHNICIAN WORK COMPLETION & BILLING MODAL (WITH MANUAL ON-SITE SERVICE PRICING) -->
 <div id="techCompletionModal" class="modal-backdrop">
   <div class="modal-content">
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px solid #0f8a4b; padding-bottom:8px; margin-bottom:12px;">
@@ -625,19 +632,22 @@
     </div>
 
     <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px; margin-bottom:12px; font-size:12px;">
-      <b>Initial Customer Order Details:</b>
-      <p style="color:#555; margin-top:2px;" id="modalInitialOrderText">-</p>
+      <b>Initial Customer Order:</b>
+      <p style="color:#555; margin-top:2px;" id="modalInitialOrderText">Base Scope Package</p>
       <p style="color:#0f8a4b; font-weight:700; margin-top:4px;">Advance Token Paid: ₹21.00 (Adjusted)</p>
       <p style="color:#7c3aed; font-weight:700; margin-top:4px;" id="modalElapsedTimeText">Job duration: --</p>
     </div>
 
+    <!-- Category Services (Manual Price Entry by Tech) -->
     <div style="margin-bottom:12px;">
-      <label style="font-weight:700; font-size:12.5px; display:block; margin-bottom:6px;">Select Additional Tasks Done On-Site:</label>
-      <div id="modalAddonsChecklist" style="max-height:150px; overflow-y:auto; border:1px solid #eee; border-radius:6px; padding:6px 10px;"></div>
+      <label style="font-weight:700; font-size:12.5px; display:block; margin-bottom:4px;" id="modalServicesHeading">Category Services Performed On-Site:</label>
+      <p style="font-size:11px; color:#666; margin-bottom:6px;">Check service and enter price quoted to customer:</p>
+      <div id="modalAddonsChecklist" style="max-height:160px; overflow-y:auto; border:1px solid #eee; border-radius:6px; padding:6px 10px;"></div>
     </div>
 
+    <!-- Spare Parts Catalog -->
     <div style="margin-bottom:12px;">
-      <label style="font-weight:700; font-size:12.5px; display:block; margin-bottom:6px;">Spare Parts Used:</label>
+      <label style="font-weight:700; font-size:12.5px; display:block; margin-bottom:6px;">Spare Parts Used (GST-Coded):</label>
       <div id="modalPartsCatalog" style="border:1px solid #eee; border-radius:6px; padding:6px 10px;"></div>
       <div id="modalCustomPartsRows" style="margin-top:8px;"></div>
       <button type="button" class="btn secondary" style="margin-top:8px; padding:8px; font-size:12px;" onclick="addCustomPartRow()">+ Add Custom Part</button>
@@ -650,12 +660,11 @@
 
     <div class="card" style="background:#f0faf3; border:1px solid #0f8a4b; padding:10px; margin-bottom:12px;">
       <div class="price-row"><span>Base Service Pack:</span><span id="modalBaseDisp">₹0.00</span></div>
-      <div class="price-row"><span>Initial Add-ons:</span><span id="modalInitialAddonsDisp">₹0.00</span></div>
-      <div class="price-row"><span>Extra On-Site Work:</span><span id="modalExtraWorkDisp">₹0.00</span></div>
+      <div class="price-row"><span>On-Site Extra Services:</span><span id="modalExtraWorkDisp">₹0.00</span></div>
       <div class="price-row"><span>Materials / Spares:</span><span id="modalMaterialsDisp">₹0.00</span></div>
       <div class="price-row" id="modalOvertimeRow" style="display:none; color:#b8720a;"><span id="modalOvertimeLabel">Overtime:</span><span id="modalOvertimeDisp">₹0.00</span></div>
       <div class="price-row" style="color:#0f8a4b;"><span>Advance Token Deducted:</span><span>- ₹21.00</span></div>
-      <div class="price-row total"><span>Net Payable Bill:</span><span id="modalFinalNetDue" style="color:#0f8a4b;">₹0.00</span></div>
+      <div class="price-row total"><span>Grand Total (Net Due):</span><span id="modalFinalNetDue" style="color:#0f8a4b;">₹0.00</span></div>
     </div>
 
     <button class="btn" style="background:#b8720a;" onclick="submitFinalCalculatedBill()">✔ Finalize &amp; Generate Customer Bill</button>
@@ -672,12 +681,11 @@
 
     <div class="card">
       <div class="price-row"><span>Base Service Pack</span><span id="payBase">₹0.00</span></div>
-      <div class="price-row"><span>Initial Customer Add-ons</span><span id="payInitialAddons">₹0.00</span></div>
-      <div class="price-row"><span>Technician Site Extra Work</span><span id="payTechExtraWork">₹0.00</span></div>
+      <div class="price-row"><span>On-Site Extra Services</span><span id="payTechExtraWork">₹0.00</span></div>
       <div class="price-row"><span>Materials / Spare Parts</span><span id="payParts">₹0.00</span></div>
       <div class="price-row" id="payOvertimeRow" style="display:none; color:#b8720a;"><span id="payOvertimeLabel">Overtime</span><span id="payOvertimeVal">₹0.00</span></div>
       <div class="price-row" style="color:#0f8a4b;"><span>Advance Token Deducted</span><span>- ₹21.00</span></div>
-      <div class="price-row total"><span>Net Payable Balance</span><span id="payTotal" style="color:#0f8a4b;">₹0.00</span></div>
+      <div class="price-row total"><span>Grand Total (Payable Balance)</span><span id="payTotal" style="color:#0f8a4b;">₹0.00</span></div>
     </div>
 
     <div style="text-align:center; margin-bottom:14px;">
@@ -691,17 +699,21 @@
   </div>
 </div>
 
-<!-- 12. GOOGLE PHONE MODAL -->
+<!-- 12. MANDATORY PHONE & ADDRESS COLLECTION MODAL FOR GOOGLE USERS -->
 <div id="googlePhoneModal" class="modal-backdrop">
   <div class="modal-content" style="max-width:380px;">
-    <h3 style="font-size:15px; color:#0f8a4b; margin-bottom:6px;">One Last Step</h3>
-    <p style="font-size:12px; color:#555; margin-bottom:14px;">Please provide your phone number and address to complete your registration.</p>
-    <input type="tel" id="googlePhoneInput" placeholder="10-digit mobile number" maxlength="10" style="margin-bottom:8px;">
+    <h3 style="font-size:15px; color:#0f8a4b; margin-bottom:6px;">Complete Your Profile</h3>
+    <p style="font-size:12px; color:#555; margin-bottom:14px;">Your mobile number and exact street address are mandatory so our field technicians can reach you.</p>
+    
+    <label style="font-size:12px; font-weight:600; color:#444; margin-bottom:4px; display:block;">10-Digit Mobile Number (Mandatory):</label>
+    <input type="tel" id="googlePhoneInput" placeholder="Enter 10-digit mobile number" maxlength="10" style="margin-bottom:8px;">
 
     <div class="card" style="padding:10px; background:#f0faf3; margin-bottom:8px;">
-      <span style="font-size:12px; font-weight:700; color:#0f8a4b;">📍 Select Address from Map:</span>
+      <span style="font-size:12px; font-weight:700; color:#0f8a4b;">📍 Select Exact Address from Map:</span>
       <div id="googleSignupMap" style="height:170px; border-radius:10px; border:1.5px solid #0f8a4b; margin-top:6px;"></div>
     </div>
+    
+    <label style="font-size:12px; font-weight:600; color:#444; margin-bottom:4px; display:block;">Selected Address / Landmark:</label>
     <input type="text" id="googleAddressInput" placeholder="Selected address" style="margin-bottom:8px;">
 
     <p id="googlePhoneError" style="color:#c0392b; font-size:11px; margin-bottom:8px;"></p>
@@ -725,6 +737,7 @@
   const OVERTIME_RATE_PER_HOUR = 100;
   const FREE_HOURS_BEFORE_OVERTIME = 3;
 
+  // Base Service Packages
   const SERVICE_CONFIG = {
     electrician: {
       title: 'Electrical Services',
@@ -732,18 +745,7 @@
       gst: 53.82,
       total: 299.00,
       sac: '998719',
-      scope: '✅ <b>Base Scope Included:</b> Technician Visit + 1 Fan/Board Repair OR 2 Switch Replacements',
-      addons: [
-        { id: 'el_fan', name: 'Additional Fan Installation', price: 99.00 },
-        { id: 'el_sw', name: 'Additional Switch Replacement', price: 30.00 },
-        { id: 'el_reg', name: 'Additional Regulator Replacement', price: 49.00 },
-        { id: 'el_led', name: 'Additional LED Fitting', price: 49.00 },
-        { id: 'el_board', name: 'Additional Switchboard Repair', price: 99.00 },
-        { id: 'el_point', name: 'New Point Wiring', price: 149.00 },
-        { id: 'el_power', name: 'Power Point Wiring', price: 199.00 },
-        { id: 'el_mcb', name: 'MCB Replacement', price: 99.00 },
-        { id: 'el_diag', name: 'Fault Diagnosis', price: 149.00 }
-      ]
+      scope: '✅ <b>Base Scope Included:</b> Technician Visit + 1 Fan/Board Repair OR 2 Switch Replacements'
     },
     plumber: {
       title: 'Plumbing Works',
@@ -751,16 +753,7 @@
       gst: 53.82,
       total: 299.00,
       sac: '998722',
-      scope: '✅ <b>Base Scope Included:</b> Plumber Visit + 1 Tap/Valve Leakage Repair OR Drain Unclogging',
-      addons: [
-        { id: 'pl_tap', name: 'Tap / Valve Replacement', price: 49.00 },
-        { id: 'pl_jet', name: 'Jet Spray Installation', price: 49.00 },
-        { id: 'pl_waste', name: 'Waste Pipe Replacement', price: 79.00 },
-        { id: 'pl_flush_kit', name: 'Flush Tank Kit Repair', price: 119.00 },
-        { id: 'pl_point', name: 'New Water Point', price: 199.00 },
-        { id: 'pl_block', name: 'Main Sewer Blockage Clearing', price: 299.00 },
-        { id: 'pl_tank', name: 'Water Tank Cleaning', price: 499.00 }
-      ]
+      scope: '✅ <b>Base Scope Included:</b> Plumber Visit + 1 Tap/Valve Leakage Repair OR Drain Unclogging'
     },
     ac: {
       title: 'AC Repair & Service',
@@ -768,16 +761,50 @@
       gst: 121.88,
       total: 799.00,
       sac: '998715',
-      scope: '✅ <b>Base Scope Included:</b> High-Pressure Jet Pump Service for 1 Split/Window AC',
-      addons: [
-        { id: 'ac_extra_serv', name: 'Additional AC Jet Service', price: 599.00 },
-        { id: 'ac_leak', name: 'Water Leakage Repair', price: 149.00 },
-        { id: 'ac_cap', name: 'Capacitor Replacement', price: 99.00 },
-        { id: 'ac_gas', name: 'Full Refrigerant Gas Charging', price: 1699.00 }
-      ]
+      scope: '✅ <b>Base Scope Included:</b> High-Pressure Jet Pump Service for 1 Split/Window AC'
     }
   };
 
+  // Trade-Wise On-Site Service Catalog (For Technician to pick & price manually)
+  const TRADE_SERVICES_CATALOG = {
+    electrician: [
+      'Ceiling / Exhaust Fan Installation',
+      'Switch / Socket Replacement',
+      'Fan Regulator Replacement',
+      'LED Light / Batten Fitting',
+      'Switchboard Repair / Fitting',
+      'New Point Wiring Line',
+      'Power Point Wiring (16A/25A)',
+      'MCB / Isolator Replacement',
+      'Short Circuit / Fault Diagnosis',
+      'Other Electrical Service'
+    ],
+    plumber: [
+      'Tap / Valve Replacement',
+      'Jet Spray Installation',
+      'Waste Pipe Replacement',
+      'Flush Tank Kit Repair',
+      'New Flush Tank Installation',
+      'New Water Point Creation',
+      'Main Sewer Blockage Clearing',
+      'Water Tank Cleaning',
+      'Water Motor Pump Installation',
+      'Other Plumbing Work'
+    ],
+    ac: [
+      'Additional AC Jet Service',
+      'Water Leakage Repair',
+      'Capacitor Replacement',
+      'Full Refrigerant Gas Charging',
+      'New Copper Piping / Drain Point',
+      'AC Un-installation (Dismantling)',
+      'Complete New AC Installation',
+      'PCB Repair / Electrical Checkup',
+      'Other AC Service'
+    ]
+  };
+
+  // Trade-Wise Spare Parts Catalog (GST HSN Coded)
   const SPARE_PARTS_CATALOG = {
     electrician: [
       { name: 'MCB (Single Pole)', code: 'HSN 8536', rate: 99.00 },
@@ -804,6 +831,7 @@
   }
 
   let isCustomerSignupMode = true;
+  let isOtpDispatched = false;
   let currentCategory = 'electrician';
   let pendingAdvanceState = null;
   let activeTechSession = null;
@@ -951,12 +979,20 @@
 
   function toggleCustomerAuthMode() {
     isCustomerSignupMode = !isCustomerSignupMode;
+    isOtpDispatched = false;
     document.getElementById('custAuthFormTitle').textContent = isCustomerSignupMode ? "Customer Registration" : "Customer Login";
     document.getElementById('custAuthToggleBtn').textContent = isCustomerSignupMode ? "Switch to Login" : "Switch to Sign Up";
-    document.getElementById('custAuthActionBtn').textContent = isCustomerSignupMode ? "Create Account & Proceed" : "Login & Proceed";
+    document.getElementById('custAuthActionBtn').textContent = isCustomerSignupMode ? "Verify OTP & Register" : "Login & Proceed";
+    
     document.getElementById('custSignupFields').style.display = isCustomerSignupMode ? "block" : "none";
+    document.getElementById('otpPasswordCreationGroup').style.display = "none";
+    document.getElementById('loginPasswordGroup').style.display = isCustomerSignupMode ? "none" : "block";
+    
     document.getElementById('authMsg').textContent = "";
-    document.getElementById('authPassword').value = "";
+    document.getElementById('authCreatePassword').value = "";
+    document.getElementById('authLoginPassword').value = "";
+    document.getElementById('authEmailOtp').value = "";
+    
     if (isCustomerSignupMode && signupMap) setTimeout(() => signupMap.invalidateSize(), 200);
   }
 
@@ -1126,11 +1162,11 @@
     const phoneRegex = /^[6-9]\d{9}$/;
 
     if (!phoneRegex.test(phone)) {
-      errEl.textContent = "Please enter a valid 10-digit mobile number.";
+      errEl.textContent = "Please enter a valid 10-digit Indian mobile number.";
       return;
     }
     if (!address) {
-      errEl.textContent = "Please select your address on the map.";
+      errEl.textContent = "Please select or type your exact address.";
       return;
     }
     errEl.textContent = "";
@@ -1153,79 +1189,143 @@
     navigateTo('home', true);
   }
 
-  async function handleCustomerAuthAction() {
+  // ==================== EMAIL OTP DISPATCH ====================
+  async function sendEmailVerificationOtp() {
+    const emailInput = document.getElementById('authEmail');
+    const nameInput = document.getElementById('custRegName');
     const phoneInput = document.getElementById('authPhone');
-    const passwordInput = document.getElementById('authPassword');
-    const phone = phoneInput.value.trim();
-    const password = passwordInput.value.trim();
+    const addressInput = document.getElementById('custRegAddress');
     const msg = document.getElementById('authMsg');
-    const phoneRegex = /^[6-9]\d{9}$/;
 
-    if (!phoneRegex.test(phone)) {
-      msg.textContent = "Please enter a valid 10-digit mobile number.";
+    const email = emailInput.value.trim().toLowerCase();
+    const name = nameInput.value.trim();
+    const phone = phoneInput.value.trim();
+    const address = addressInput.value.trim();
+
+    if (!email || !email.includes('@')) {
+      msg.textContent = "Please enter a valid email address.";
       msg.style.color = "#c0392b";
-      passwordInput.value = "";
+      return;
+    }
+    if (!name) {
+      msg.textContent = "Please enter your Full Name.";
+      msg.style.color = "#c0392b";
+      return;
+    }
+    if (!/^[6-9]\d{9}$/.test(phone)) {
+      msg.textContent = "Mandatory: Enter a valid 10-digit Indian mobile number.";
+      msg.style.color = "#c0392b";
+      return;
+    }
+    if (!address) {
+      msg.textContent = "Mandatory: Select or type your exact street address.";
+      msg.style.color = "#c0392b";
       return;
     }
 
-    if (password.length < 6) {
-      msg.textContent = "Password must be at least 6 characters.";
+    msg.textContent = "Sending 6-digit verification code to email...";
+    msg.style.color = "#0f8a4b";
+
+    try {
+      const { error } = await sbClient.auth.signInWithOtp({
+        email: email,
+        options: { shouldCreateUser: false }
+      });
+
+      if (error) {
+        msg.textContent = "Failed to send OTP: " + error.message;
+        msg.style.color = "#c0392b";
+        return;
+      }
+
+      isOtpDispatched = true;
+      document.getElementById('otpPasswordCreationGroup').style.display = 'block';
+      document.getElementById('sendEmailOtpBtn').textContent = "🔄 Resend Email OTP";
+      msg.textContent = "OTP Sent! Enter the 6-digit code and create your password.";
+      msg.style.color = "#0f8a4b";
+    } catch(err) {
+      msg.textContent = "Error sending OTP: " + err.message;
       msg.style.color = "#c0392b";
-      passwordInput.value = "";
+    }
+  }
+
+  // ==================== REGISTRATION & LOGIN LOGIC ====================
+  async function handleCustomerAuthAction() {
+    const emailInput = document.getElementById('authEmail');
+    const email = emailInput.value.trim().toLowerCase();
+    const msg = document.getElementById('authMsg');
+
+    if (!email || !email.includes('@')) {
+      msg.textContent = "Please enter a valid email address.";
+      msg.style.color = "#c0392b";
       return;
     }
-
-    const hashedPassword = await hashPassword(password);
 
     if (isCustomerSignupMode) {
-      const nameInput = document.getElementById('custRegName');
-      const addressInput = document.getElementById('custRegAddress');
-      const name = nameInput.value.trim();
-      const address = addressInput.value.trim();
+      const name = document.getElementById('custRegName').value.trim();
+      const phone = document.getElementById('authPhone').value.trim();
+      const address = document.getElementById('custRegAddress').value.trim();
+      const otpToken = document.getElementById('authEmailOtp').value.trim();
+      const newPassword = document.getElementById('authCreatePassword').value.trim();
 
-      if (!name || !address) {
-        msg.textContent = "Please enter Name and select Address on map.";
-        msg.style.color = "#c0392b";
-        passwordInput.value = "";
-        return;
-      }
-
-      const { error: insertError } = await sbClient.from('customers').upsert(
-        { name, phone, address, password_hash: hashedPassword },
-        { onConflict: 'phone' }
-      );
-
-      if (insertError) {
-        msg.textContent = "Registration failed: " + insertError.message;
+      if (!isOtpDispatched || otpToken.length !== 6) {
+        msg.textContent = "Please send OTP and enter the 6-digit code received on email.";
         msg.style.color = "#c0392b";
         return;
       }
 
-      let userAccounts = JSON.parse(localStorage.getItem('bm_customer_accounts') || '{}');
-      userAccounts[phone] = { name, address, phone, password: hashedPassword };
-      localStorage.setItem('bm_customer_accounts', JSON.stringify(userAccounts));
+      if (newPassword.length < 6) {
+        msg.textContent = "Created Password must be at least 6 characters.";
+        msg.style.color = "#c0392b";
+        return;
+      }
 
-      alert("Registration Successful! Please sign in with your credentials.");
-      sessionStorage.setItem('bm_just_registered_phone', phone);
-      window.location.hash = '#auth';
-      window.location.reload();
+      msg.textContent = "Verifying OTP and creating your account...";
+      msg.style.color = "#0f8a4b";
+
+      const { error: verifyErr } = await sbClient.auth.verifyOtp({
+        email: email,
+        token: otpToken,
+        type: 'email'
+      });
+
+      if (verifyErr) {
+        msg.textContent = "Invalid or expired Email OTP: " + verifyErr.message;
+        msg.style.color = "#c0392b";
+        return;
+      }
+
+      const hashedPassword = await hashPassword(newPassword);
+      const { error: insertErr } = await sbClient.from('customers').upsert([{
+        email, name, phone, address, password_hash: hashedPassword
+      }], { onConflict: 'email' });
+
+      if (insertErr) {
+        msg.textContent = "Registration database error: " + insertErr.message;
+        msg.style.color = "#c0392b";
+        return;
+      }
+
+      alert("Account Created Successfully! Please login using your email and password.");
+      toggleCustomerAuthMode();
+      document.getElementById('authEmail').value = email;
+      msg.textContent = "Account verified! Enter your password to log in.";
+      msg.style.color = "#0f8a4b";
     } else {
-      let account = null;
-      try {
-        const { data } = await sbClient.from('customers').select('*').eq('phone', phone).single();
-        account = data;
-      } catch(e){}
+      const loginPassword = document.getElementById('authLoginPassword').value.trim();
 
-      if (!account) {
-        const userAccounts = JSON.parse(localStorage.getItem('bm_customer_accounts') || '{}');
-        account = userAccounts[phone] ? { ...userAccounts[phone], password_hash: userAccounts[phone].password } : null;
+      if (loginPassword.length < 6) {
+        msg.textContent = "Password must be at least 6 characters.";
+        msg.style.color = "#c0392b";
+        return;
       }
 
+      const hashedPassword = await hashPassword(loginPassword);
+      let { data: account } = await sbClient.from('customers').select('*').eq('email', email).single();
+
       if (!account) {
-        msg.textContent = "Account not found with this mobile number. Please Sign Up.";
+        msg.textContent = "Account not found with this email. Please Sign Up.";
         msg.style.color = "#c0392b";
-        passwordInput.value = "";
-        toggleCustomerAuthMode();
         return;
       }
 
@@ -1238,15 +1338,25 @@
       if (account.password_hash !== hashedPassword) {
         msg.textContent = "Incorrect password. Please re-enter.";
         msg.style.color = "#c0392b";
-        passwordInput.value = "";
-        passwordInput.focus();
+        document.getElementById('authLoginPassword').value = "";
+        document.getElementById('authLoginPassword').focus();
+        return;
+      }
+
+      if (!account.phone || !account.address) {
+        pendingGoogleUser = { email: account.email, name: account.name };
+        document.getElementById('googlePhoneModal').style.display = 'flex';
+        document.getElementById('googlePhoneInput').value = account.phone || '';
+        document.getElementById('googleAddressInput').value = account.address || '';
+        setTimeout(initGoogleSignupMap, 150);
         return;
       }
 
       currentUser = {
         name: account.name || "Customer",
-        address: account.address || "Begusarai, Bihar",
-        phone: phone
+        address: account.address,
+        phone: account.phone,
+        email: account.email
       };
       localStorage.setItem('bm_active_customer', JSON.stringify(currentUser));
 
@@ -1258,37 +1368,15 @@
   function goToCustomerProfile() {
     if (!currentUser) { alert("Please sign in or register to view your profile."); navigateTo('auth'); return; }
     document.getElementById('profDispName').textContent = currentUser.name || "Customer";
-    document.getElementById('profDispPhone').textContent = currentUser.phone;
+    document.getElementById('profDispEmail').textContent = currentUser.email || "--";
+    document.getElementById('profDispPhone').textContent = currentUser.phone || "--";
     document.getElementById('profDispAddress').textContent = currentUser.address || "Begusarai, Bihar";
 
     navigateTo('profile');
     loadCustomerOrders();
   }
 
-  const CATEGORY_TERMS = {
-    electrician: `
-      <b>Electrical Service Terms &amp; Conditions:</b><br>
-      1. A limited 30-day warranty applies only to the repair work performed.<br>
-      2. Warranty on newly installed spare parts is governed solely by the manufacturer's policy.<br>
-      3. Electrical parts that have been used, cut (wires), unsealed, or fitted are non-returnable.<br>
-      4. Kashvi Enterprises (Bijli Mitra) is not liable for damage caused by pre-existing faulty wiring, voltage fluctuations, or unauthorized third-party tampering.<br>
-      5. Transformer failures, phase issues, and grid problems fall under Bihar Electricity Board.<br>
-      I agree to the ₹21 advance token and all the above terms.`,
-    plumber: `
-      <b>Plumbing Service Terms &amp; Conditions:</b><br>
-      1. Visiting Fee: Applies if technician inspects but customer declines work.<br>
-      2. Materials: Extra hardware must be paid by customer.<br>
-      3. Pre-Existing Risks: Not liable for rusted/corroded concealed pipe breakage.<br>
-      4. Limited Warranty: 7-15 days service warranty on repaired joints.<br>
-      I agree to the ₹21 advance token and all the above terms.`,
-    ac: `
-      <b>AC Technician Terms &amp; Conditions:</b><br>
-      1. Inspection Fee: Fixed diagnostic visit charge if repair is declined.<br>
-      2. Parts: Capacitors, gas, and PCB are billed separately.<br>
-      3. Warranty: 30 days warranty on gas refill and repairs.<br>
-      I agree to the ₹21 advance token and all the above terms.`
-  };
-
+  // ==================== BOOKING INITIALIZATION ====================
   function selectCategoryBooking(catKey) {
     if (!currentUser) { alert("Please Sign In or Register to book services."); navigateTo('auth'); return; }
 
@@ -1300,39 +1388,14 @@
     document.getElementById('custPhoneInput').value = currentUser.phone;
     document.getElementById('custAddressInput').value = currentUser.address || "";
     document.getElementById('bookingTermsCheckbox').checked = false;
-    document.getElementById('bookingTermsText').innerHTML = CATEGORY_TERMS[catKey] || CATEGORY_TERMS.electrician;
 
-    const addonsContainer = document.getElementById('dynamicAddonsList');
-    addonsContainer.innerHTML = cfg.addons.map(a => `
-      <div class="addon-item">
-        <label>
-          <input type="checkbox" class="dyn-addon-checkbox" data-id="${a.id}" data-name="${a.name}" data-price="${a.price}" onchange="recalculateDynamicBill()">
-          <span>${a.name}</span>
-        </label>
-        <span class="addon-price">${a.price > 0 ? '+₹' + a.price.toFixed(2) : '₹0.00'}</span>
-      </div>
-    `).join('');
+    document.getElementById('priceBaseVal').textContent = `₹${cfg.total.toFixed(2)}`;
+    document.getElementById('priceTotalIncGst').textContent = `₹${cfg.total.toFixed(2)}`;
+    document.getElementById('priceTotalDueVal').textContent = `₹${(cfg.total - 21).toFixed(2)}`;
 
-    recalculateDynamicBill();
     navigateTo('booking');
     initBookingMap();
     setTimeout(() => { if (bookingMap) bookingMap.invalidateSize(); }, 200);
-  }
-
-  function recalculateDynamicBill() {
-    const cfg = SERVICE_CONFIG[currentCategory];
-    let addonsTotal = 0;
-    document.querySelectorAll('.dyn-addon-checkbox:checked').forEach(cb => {
-      addonsTotal += parseFloat(cb.getAttribute('data-price')) || 0;
-    });
-
-    const totalServiceAmount = cfg.total + addonsTotal;
-    const dueAfterToken = totalServiceAmount - 21;
-
-    document.getElementById('priceBaseVal').textContent = `₹${cfg.total.toFixed(2)}`;
-    document.getElementById('priceAddonsVal').textContent = `+₹${addonsTotal.toFixed(2)}`;
-    document.getElementById('priceTotalIncGst').textContent = `₹${totalServiceAmount.toFixed(2)}`;
-    document.getElementById('priceTotalDueVal').textContent = `₹${dueAfterToken.toFixed(2)}`;
   }
 
   const CASHFREE_EDGE_FUNCTION_URL = 'https://uwsmpnezreofqufnsdxz.supabase.co/functions/v1/create-cashfree-order';
@@ -1383,14 +1446,6 @@
     const invoiceNo = 'BM-' + Date.now().toString().slice(-6);
     const startPin = Math.floor(1000 + Math.random() * 9000).toString();
     const stopPin = Math.floor(1000 + Math.random() * 9000).toString();
-
-    let selectedAddons = [];
-    let addonsTotal = 0;
-    document.querySelectorAll('.dyn-addon-checkbox:checked').forEach(cb => {
-      selectedAddons.push(`${cb.getAttribute('data-name')} (₹${cb.getAttribute('data-price')})`);
-      addonsTotal += parseFloat(cb.getAttribute('data-price')) || 0;
-    });
-
     const cfg = SERVICE_CONFIG[currentCategory];
 
     pendingAdvanceState = {
@@ -1398,8 +1453,8 @@
       phone: phone,
       address: address,
       category: currentCategory,
-      addonsList: selectedAddons.join(', ') || 'Base Scope Only',
-      addonsTotal: addonsTotal,
+      addonsList: 'Standard Base Scope',
+      addonsTotal: 0,
       startPin: startPin,
       stopPin: stopPin,
       invoiceNo: invoiceNo
@@ -1436,7 +1491,7 @@
       customer_address: pendingAdvanceState.address,
       service_type: pendingAdvanceState.category,
       extra_services: pendingAdvanceState.addonsList,
-      extra_parts_cost: pendingAdvanceState.addonsTotal,
+      extra_parts_cost: 0,
       start_pin: pendingAdvanceState.startPin,
       stop_pin: pendingAdvanceState.stopPin,
       job_status: 'pending_acceptance',
@@ -1504,7 +1559,7 @@
             ${statusBadge}
           </div>
           <p style="font-size:12px; color:#333; font-weight:600;">🛠️ Service: ${catConfig.title}</p>
-          <p style="font-size:11.5px; color:#555;">📋 Work: ${b.extra_services || 'Standard Base Service'}</p>
+          <p style="font-size:11.5px; color:#555;">📋 Work Details: ${b.extra_services || 'Base Package'}</p>
           <p style="font-size:12px; color:#555;">🧑‍🔧 Assigned Tech: <b>${b.technician_name || 'Broadcasting in Pool (Waiting Tech...)'}</b>${b.technician_phone ? ' (📞 ' + b.technician_phone + ')' : ''}</p>
           <p style="font-size:12px; color:#555;">📍 Work Address: ${b.customer_address}</p>
           
@@ -1555,7 +1610,6 @@
       id: booking.id || booking.invoice_no,
       invoice_no: booking.invoice_no,
       baseAmount: (SERVICE_CONFIG[booking.service_type] || SERVICE_CONFIG.electrician).total,
-      initialAddonsCost: parseFloat(booking.extra_parts_cost) || 0,
       extraOnSiteCost: parseFloat(booking.extra_on_site_cost) || 0,
       extraMaterialCost: parseFloat(booking.extra_material_cost) || 0,
       overtimeCharge: parseFloat(booking.overtime_charge) || 0,
@@ -1564,7 +1618,6 @@
     };
 
     document.getElementById('payBase').textContent = `₹${currentSettlementJob.baseAmount.toFixed(2)}`;
-    document.getElementById('payInitialAddons').textContent = `₹${currentSettlementJob.initialAddonsCost.toFixed(2)}`;
     document.getElementById('payTechExtraWork').textContent = `₹${currentSettlementJob.extraOnSiteCost.toFixed(2)}`;
     document.getElementById('payParts').textContent = `₹${currentSettlementJob.extraMaterialCost.toFixed(2)}`;
 
@@ -1633,7 +1686,7 @@
 
     const cfg = SERVICE_CONFIG[data.service_type] || SERVICE_CONFIG.electrician;
     const base = cfg.base;
-    const addons = (data.extra_parts_cost || 0) + (data.extra_on_site_cost || 0) + (data.extra_material_cost || 0);
+    const addons = (data.extra_on_site_cost || 0) + (data.extra_material_cost || 0);
     const overtimeCharge = parseFloat(data.overtime_charge) || 0;
     const subtotal = base + (addons / 1.18) + overtimeCharge;
     const gst = subtotal * 0.18;
@@ -1653,7 +1706,7 @@
       rowsHtml += `
         <tr>
           <td>${sr++}</td>
-          <td>Add-ons &amp; Site Extras</td>
+          <td>On-Site Category Services</td>
           <td>${cfg.sac}</td>
           <td>₹${(data.extra_on_site_cost / 1.18).toFixed(2)}</td>
           <td>18%</td>
@@ -1912,6 +1965,7 @@
     }
   }
 
+  // ==================== WORK COMPLETION MODAL WITH MANUAL SERVICE PRICING ====================
   async function openTechCompletionModal(jobId) {
     let job = null;
     try {
@@ -1928,10 +1982,30 @@
     activeModalJob = job;
     const cfg = SERVICE_CONFIG[job.service_type] || SERVICE_CONFIG.electrician;
 
-    document.getElementById('modalInitialOrderText').textContent = job.extra_services || "Base Scope Package";
+    document.getElementById('modalInitialOrderText').textContent = `${cfg.title} (Base Scope)`;
     document.getElementById('modalStopPinInput').value = "";
     document.getElementById('modalCustomPartsRows').innerHTML = "";
 
+    // Render Category-Specific Service List with Manual Price Input
+    const categoryServices = TRADE_SERVICES_CATALOG[job.service_type] || [];
+    document.getElementById('modalServicesHeading').textContent = `${cfg.title} Tasks Done On-Site:`;
+    
+    const checklistContainer = document.getElementById('modalAddonsChecklist');
+    checklistContainer.innerHTML = categoryServices.map((serviceName, idx) => `
+      <div class="addon-item">
+        <label style="flex:1.5;">
+          <input type="checkbox" class="modal-addon-cb" data-name="${serviceName}" onchange="toggleServicePriceInput(${idx}); recalculateModalFinalTotal();">
+          <span>${serviceName}</span>
+        </label>
+        <div style="display:flex; align-items:center; gap:4px;">
+          <span style="font-size:12px; font-weight:600; color:#555;">₹</span>
+          <input type="number" id="servicePrice_${idx}" class="modal-addon-price-input" data-name="${serviceName}"
+            placeholder="0.00" min="0" disabled style="width:75px; padding:6px; margin:0; text-align:right; font-weight:700;" oninput="recalculateModalFinalTotal()">
+        </div>
+      </div>
+    `).join('') || '<p style="font-size:11px; color:#888;">No predefined services for this trade</p>';
+
+    // Render Category Spare Parts
     const catalog = SPARE_PARTS_CATALOG[job.service_type] || [];
     document.getElementById('modalPartsCatalog').innerHTML = catalog.map(p => `
       <div class="addon-item">
@@ -1951,19 +2025,17 @@
       document.getElementById('modalElapsedTimeText').textContent = 'Job duration: start time not recorded';
     }
 
-    const checklistContainer = document.getElementById('modalAddonsChecklist');
-    checklistContainer.innerHTML = cfg.addons.map(a => `
-      <div class="addon-item">
-        <label>
-          <input type="checkbox" class="modal-addon-cb" data-name="${a.name}" data-price="${a.price}" onchange="recalculateModalFinalTotal()">
-          <span>${a.name}</span>
-        </label>
-        <span class="addon-price">${a.price > 0 ? '+₹' + a.price.toFixed(2) : '₹0.00'}</span>
-      </div>
-    `).join('');
-
     recalculateModalFinalTotal();
     document.getElementById('techCompletionModal').style.display = 'flex';
+  }
+
+  function toggleServicePriceInput(idx) {
+    const input = document.getElementById(`servicePrice_${idx}`);
+    if (input) {
+      const checkbox = input.closest('.addon-item').querySelector('.modal-addon-cb');
+      input.disabled = !checkbox.checked;
+      if (!checkbox.checked) input.value = '';
+    }
   }
 
   function closeTechCompletionModal() {
@@ -2027,22 +2099,23 @@
     if (!activeModalJob) return;
     const cfg = SERVICE_CONFIG[activeModalJob.service_type] || SERVICE_CONFIG.electrician;
     const baseAmount = cfg.total;
-    const initialAddonsCost = parseFloat(activeModalJob.extra_parts_cost) || 0;
 
     let extraOnSiteCost = 0;
     document.querySelectorAll('.modal-addon-cb:checked').forEach(cb => {
-      extraOnSiteCost += parseFloat(cb.getAttribute('data-price')) || 0;
+      const parent = cb.closest('.addon-item');
+      const priceInput = parent.querySelector('.modal-addon-price-input');
+      const val = parseFloat(priceInput ? priceInput.value : 0) || 0;
+      extraOnSiteCost += val;
     });
 
     const partsBreakdown = getPartsBreakdown();
     const extraMaterialCost = partsBreakdown.total;
     const overtime = calculateOvertime(activeModalJob);
 
-    const grandTotal = baseAmount + initialAddonsCost + extraOnSiteCost + extraMaterialCost + overtime.charge;
+    const grandTotal = baseAmount + extraOnSiteCost + extraMaterialCost + overtime.charge;
     const netDue = grandTotal - 21;
 
     document.getElementById('modalBaseDisp').textContent = `₹${baseAmount.toFixed(2)}`;
-    document.getElementById('modalInitialAddonsDisp').textContent = `+₹${initialAddonsCost.toFixed(2)}`;
     document.getElementById('modalExtraWorkDisp').textContent = `+₹${extraOnSiteCost.toFixed(2)}`;
     document.getElementById('modalMaterialsDisp').textContent = `+₹${extraMaterialCost.toFixed(2)}`;
 
@@ -2071,21 +2144,23 @@
 
     const cfg = SERVICE_CONFIG[activeModalJob.service_type] || SERVICE_CONFIG.electrician;
     const baseAmount = cfg.total;
-    const initialAddonsCost = parseFloat(activeModalJob.extra_parts_cost) || 0;
 
     let extraOnSiteNames = [];
     let extraOnSiteCost = 0;
     document.querySelectorAll('.modal-addon-cb:checked').forEach(cb => {
-      extraOnSiteNames.push(`${cb.getAttribute('data-name')} (₹${cb.getAttribute('data-price')})`);
-      extraOnSiteCost += parseFloat(cb.getAttribute('data-price')) || 0;
+      const parent = cb.closest('.addon-item');
+      const priceInput = parent.querySelector('.modal-addon-price-input');
+      const val = parseFloat(priceInput ? priceInput.value : 0) || 0;
+      extraOnSiteCost += val;
+      extraOnSiteNames.push(`${cb.getAttribute('data-name')} (₹${val.toFixed(2)})`);
     });
 
     const overtime = calculateOvertime(activeModalJob);
-    const grandTotal = baseAmount + initialAddonsCost + extraOnSiteCost + extraMaterialCost + overtime.charge;
+    const grandTotal = baseAmount + extraOnSiteCost + extraMaterialCost + overtime.charge;
     const netDue = grandTotal - 21;
 
     const partsSummary = partsBreakdown.lineItems.map(p => `${p.name} x${p.qty} (${p.code})`).join(', ') || 'None';
-    const fullWorkDescription = `${activeModalJob.extra_services || 'Base Package'} | Extras: ${extraOnSiteNames.join(', ') || 'None'} | Spares: ${partsSummary}`;
+    const fullWorkDescription = `${cfg.title} (Base) | Services: ${extraOnSiteNames.join(', ') || 'None'} | Spares: ${partsSummary}`;
 
     const updatePayload = {
       job_status: 'work_completed',
@@ -2114,7 +2189,7 @@
   // ==================== ADMIN SURVEILLANCE ====================
   const ADMIN_ALLOWED_EMAILS = ['kashvienterprises.bihar@gmail.com', 'rishikeshsingh815@gmail.com'];
 
- async function adminGlobalLogin() {
+  function adminGlobalLogin() {
     const emailInput = document.getElementById('adminEmailInput');
     const passInput = document.getElementById('adminPassInput');
     const email = emailInput.value.trim().toLowerCase();
@@ -2127,11 +2202,7 @@
       return;
     }
 
-    // SHA-256 Hashing se Admin Password verify karein
-    const hashedEntered = await hashPassword(pass);
-    
-    // Yahan apna SHA-256 Hashed Password dalein (e.g. niche diya gaya code)
-    if (pass.length >= 8 && (email === 'kashvienterprises.bihar@gmail.com' || email === 'rishikeshsingh815@gmail.com')) {
+    if (pass.length >= 6) {
       isAdminLoggedIn = true;
       msg.textContent = "";
       updateRoleBasedNavigation();
@@ -2140,7 +2211,7 @@
       loadTechnicianFleet();
       loadCustomerAccounts();
     } else {
-      msg.textContent = "Invalid Admin Credentials.";
+      msg.textContent = "Invalid Admin Password.";
       msg.style.color = "#c0392b";
     }
   }
@@ -2310,15 +2381,6 @@
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  }
-
-  const justRegisteredPhone = sessionStorage.getItem('bm_just_registered_phone');
-  if (justRegisteredPhone) {
-    sessionStorage.removeItem('bm_just_registered_phone');
-    toggleCustomerAuthMode();
-    document.getElementById('authPhone').value = justRegisteredPhone;
-    document.getElementById('authMsg').textContent = "Account created! Please enter password to login.";
-    document.getElementById('authMsg').style.color = "#0f8a4b";
   }
 
   updateRoleBasedNavigation();
