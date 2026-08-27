@@ -1516,10 +1516,7 @@
     // Ab Cashfree checkout kholein - amount ₹21
     const success = await openCashfreeCheckout('ADV-' + invoiceNo, 21.00, phone, currentUser.name, currentUser.email);
 
-    if (success) {
-      alert(`Booking placed! Invoice: ${invoiceNo}. Payment is being verified automatically - you'll see it confirmed shortly in your Profile.`);
-      navigateTo('home', true);
-    }
+    
     // Agar payment cancel/fail ho jaye, booking 'pending' hi reh jayegi database mein -
     // Admin ise "unpaid" dikh sakta hai aur chahe to manually clean kar sakta hai
   }
