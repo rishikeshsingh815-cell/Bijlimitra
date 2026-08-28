@@ -3,71 +3,173 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Bijli Mitra - Professional Home Services</title>
+<title>Bijli Mitra - Professional Home Services Begusarai</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
+  :root {
+    --primary-red-grad: linear-gradient(135deg, #e11d48, #be123c, #9f1239);
+    --primary-red: #e11d48;
+    --primary-dark-red: #9f1239;
+    --soft-red-bg: #fff5f5;
+    --soft-red-card: #ffffff;
+    --soft-red-border: #fecdd3;
+    --soft-red-hover: #ffe4e6;
+    
+    /* Blue Highlights for Titles */
+    --title-blue: #1d4ed8;
+    --title-dark-blue: #1e3a8a;
+    --title-blue-badge: #eff6ff;
+    --title-blue-border: #bfdbfe;
+
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --success: #059669;
+    --warning: #d97706;
+  }
+
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #fdf6f6; color: #1a1a1a; min-height: 100vh; }
-  .app { max-width: 480px; margin: 0 auto; min-height: 100vh; background: #fff; position: relative; padding-bottom: 80px; box-shadow: 0 0 20px rgba(0,0,0,0.06); }
-  .topbar { background: linear-gradient(135deg, #d32f2f, #b71c1c); color: #fff; padding: 12px 16px; position: sticky; top: 0; z-index: 500; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(211,47,47,0.25); }
-  .brand-header-box { display: flex; align-items: center; gap: 10px; }
-  .tech-mascot-avatar { width: 44px; height: 44px; background: #fff; border-radius: 50%; padding: 2px; border: 2px solid #ffcdd2; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--soft-red-bg); color: var(--text-main); min-height: 100vh; overscroll-behavior-y: contain; }
+  .app { max-width: 480px; margin: 0 auto; min-height: 100vh; background: #fff; position: relative; padding-bottom: 84px; box-shadow: 0 10px 40px -10px rgba(225, 29, 72, 0.12); }
+  
+  /* Pull to Refresh Indicator */
+  #pullToRefreshIndicator {
+    position: fixed;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-60px);
+    background: #ffffff;
+    color: var(--title-blue);
+    border: 2px solid var(--title-blue-border);
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    z-index: 10000;
+    transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s;
+    opacity: 0;
+    pointer-events: none;
+  }
+  #pullToRefreshIndicator.visible {
+    transform: translateX(-50%) translateY(15px);
+    opacity: 1;
+  }
+
+  /* Topbar Styling */
+  .topbar { background: var(--primary-red-grad); color: #fff; padding: 13px 18px; position: sticky; top: 0; z-index: 500; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 18px rgba(225, 29, 72, 0.35); }
+  .brand-header-box { display: flex; align-items: center; gap: 12px; }
+  .tech-mascot-avatar { width: 44px; height: 44px; background: #fff; border-radius: 50%; padding: 2px; border: 2.5px solid #ffe4e6; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
   .tech-mascot-avatar svg { width: 100%; height: 100%; }
-  .topbar h1 { font-size: 17.5px; font-weight: 800; letter-spacing: 0.3px; }
-  .topbar p { font-size: 11.5px; opacity: 0.92; font-weight: 500; }
-  .user-badge { background: rgba(255,255,255,0.22); padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; cursor: pointer; white-space: nowrap; border: 1px solid rgba(255,255,255,0.35); }
-  .screen { display: none; padding: 16px; animation: fadeIn 0.2s ease-in-out; }
+  .topbar h1 { font-size: 18px; font-weight: 900; letter-spacing: -0.2px; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+  .topbar p { font-size: 11.5px; opacity: 0.95; font-weight: 600; }
+  .user-badge { background: rgba(255,255,255,0.25); backdrop-filter: blur(8px); padding: 7px 14px; border-radius: 30px; font-size: 11.5px; font-weight: 800; cursor: pointer; white-space: nowrap; border: 1.5px solid rgba(255,255,255,0.45); }
+  
+  /* Hero Trust Banner */
+  .hero-trust-banner { background: linear-gradient(180deg, #ffe4e6 0%, #ffffff 100%); border-bottom: 1.5px solid var(--soft-red-border); padding: 18px 18px 14px; margin-bottom: 14px; }
+  .trust-subtitle { font-size: 11.5px; font-weight: 900; color: var(--primary-red); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+  .hero-title { font-size: 21px; font-weight: 900; color: var(--title-dark-blue); line-height: 1.25; margin-bottom: 6px; letter-spacing: -0.3px; }
+  .hero-desc { font-size: 13px; color: #475569; line-height: 1.45; margin-bottom: 12px; font-weight: 500; }
+  .trust-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+  .trust-pill { background: #ffffff; color: var(--title-blue); border: 1.5px solid var(--title-blue-border); border-radius: 30px; padding: 5px 12px; font-size: 11.5px; font-weight: 800; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 2px 6px rgba(29,78,216,0.06); }
+  
+  /* Titles in Blue */
+  .section-title-blue { font-size: 16px; font-weight: 900; color: var(--title-blue); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; letter-spacing: -0.2px; }
+  
+  /* Layout & Cards */
+  .screen { display: none; padding: 16px; animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
   .screen.active { display: block; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
-  .card { background: #fff; border: 1.5px solid #fee2e2; border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  .card { background: var(--soft-red-card); border: 1.5px solid var(--soft-red-border); border-radius: 14px; padding: 16px 18px; margin-bottom: 14px; box-shadow: 0 4px 15px -3px rgba(225,29,72,0.04); }
+  
+  /* Category Selection Cards */
   .category-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 10px; }
-  .category-card { border: 1.5px solid #fee2e2; border-radius: 12px; padding: 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; background: #fff; }
-  .category-card:hover { border-color: #d32f2f; background: #fffafa; }
-  .category-card h3 { font-size: 15px; color: #111; }
-  .category-card p { font-size: 12px; color: #666; margin-top: 2px; }
-  .addon-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px dashed #fee2e2; font-size: 12.5px; }
+  .category-card { border: 2px solid var(--soft-red-border); border-radius: 14px; padding: 16px 18px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: all 0.2s ease; background: #ffffff; gap: 12px; }
+  .category-card:hover { border-color: var(--primary-red); background: var(--soft-red-hover); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(225,29,72,0.1); }
+  .category-card-left { display: flex; align-items: center; gap: 12px; }
+  
+  .cat-custom-icon-box { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 24px; box-shadow: 0 3px 8px rgba(0,0,0,0.08); }
+  .cat-icon-electrician { background: linear-gradient(135deg, #fef08a, #facc15); border: 1.5px solid #eab308; }
+  .cat-icon-ac { background: linear-gradient(135deg, #cffafe, #38bdf8); border: 1.5px solid #0284c7; }
+  .cat-icon-plumber { background: linear-gradient(135deg, #dcfce7, #4ade80); border: 1.5px solid #16a34a; }
+  
+  .category-card h3 { font-size: 15.5px; font-weight: 900; color: var(--title-blue); }
+  .category-card p { font-size: 12px; color: #475569; margin-top: 3px; font-weight: 500; }
+  .category-price-badge { text-align: right; flex-shrink: 0; }
+  .category-price-badge b { color: var(--primary-red); font-size: 16px; font-weight: 900; }
+  
+  .addon-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed var(--soft-red-border); font-size: 12.5px; }
   .addon-item:last-child { border-bottom: none; }
-  .addon-item label { display: flex; align-items: center; gap: 8px; cursor: pointer; flex: 1; }
-  .terms-box { background: #fff8f0; border: 1.5px solid #fbd38d; border-radius: 8px; padding: 10px; font-size: 11.5px; color: #744210; margin-bottom: 12px; line-height: 1.4; }
-  .btn { width: 100%; padding: 13px; background: #d32f2f; color: #fff; border: none; border-radius: 10px; font-size: 14.5px; font-weight: 700; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 6px rgba(211,47,47,0.25); }
-  .btn:active { opacity: 0.88; transform: scale(0.99); }
-  .btn.secondary { background: #fff; color: #d32f2f; border: 1.5px solid #d32f2f; box-shadow: none; }
-  .btn.danger { background: #991b1b; color: #fff; }
+  .addon-item label { display: flex; align-items: center; gap: 8px; cursor: pointer; flex: 1; font-weight: 600; }
+  
+  /* Bold Terms Box */
+  .terms-box { background: #fffbeb; border: 2px solid #fde68a; border-radius: 12px; padding: 14px; font-size: 12px; color: #78350f; margin-bottom: 14px; line-height: 1.55; }
+  .terms-box b { color: #92400e; font-weight: 900; }
+  
+  /* Buttons */
+  .btn { width: 100%; padding: 14px; background: var(--primary-red-grad); color: #fff; border: none; border-radius: 12px; font-size: 14.5px; font-weight: 800; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 14px rgba(225, 29, 72, 0.35); text-align: center; }
+  .btn:active { transform: scale(0.985); opacity: 0.92; }
+  .btn.secondary { background: #fff; color: var(--primary-red); border: 2px solid var(--primary-red); box-shadow: none; font-weight: 800; }
+  .btn.secondary:hover { background: var(--soft-red-hover); }
+  .btn.danger { background: linear-gradient(135deg, #ef4444, #b91c1c); color: #fff; }
+  .btn.warning { background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; }
+  
+  /* Inputs */
   .input-group { position: relative; margin-bottom: 12px; }
-  input, select, textarea { width: 100%; padding: 12px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 14px; outline: none; background: #fff; }
-  input:focus, select:focus, textarea:focus { border-color: #d32f2f; }
-  .toggle-pw { position: absolute; right: 12px; top: 12px; font-size: 13px; color: #d32f2f; cursor: pointer; font-weight: 600; user-select: none; }
-  .price-row { display: flex; justify-content: space-between; font-size: 13px; padding: 5px 0; color: #444; }
-  .price-row.total { border-top: 1.5px dashed #fca5a5; margin-top: 6px; padding-top: 8px; font-weight: 800; font-size: 15.5px; color: #b71c1c; }
-  .qr-box { background: #fff; border: 2px dashed #d32f2f; border-radius: 12px; padding: 16px; text-align: center; margin-bottom: 14px; }
-  .qr-img { width: 170px; height: 170px; margin: 8px auto; display: block; border-radius: 6px; border: 1px solid #fee2e2; }
-  .modal-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); z-index: 1000; align-items: center; justify-content: center; padding: 16px; }
-  .modal-content { background: #fff; border-radius: 14px; max-width: 440px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.25); animation: fadeIn 0.2s ease-in-out; }
-  .invoice-paper { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 16px; font-size: 12px; color: #222; }
-  .inv-header { text-align: center; border-bottom: 2px solid #d32f2f; padding-bottom: 8px; margin-bottom: 10px; }
-  .inv-title { text-align: center; font-weight: 700; font-size: 13px; margin: 8px 0; }
-  .inv-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; font-size: 11px; margin-bottom: 8px; }
-  table.inv-table { width: 100%; border-collapse: collapse; font-size: 10.5px; margin-bottom: 8px; }
-  table.inv-table th, table.inv-table td { border: 1px solid #ddd; padding: 4px 5px; text-align: left; }
-  table.inv-table th { background: #fff1f2; }
-  .inv-summary { margin-left: auto; width: 65%; font-size: 11.5px; }
-  .bottomnav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #fff; border-top: 1px solid #fee2e2; display: flex; padding: 8px 0; z-index: 500; }
-  .nav-item { flex: 1; text-align: center; font-size: 11px; color: #888; cursor: pointer; }
-  .nav-item.active { color: #d32f2f; font-weight: 700; }
-  .nav-icon { font-size: 18px; display: block; margin-bottom: 2px; }
-  #homeMap { height: 180px; width: 100%; border-radius: 12px; margin-bottom: 12px; border: 1.5px solid #d32f2f; }
-  #signupMap { height: 190px; width: 100%; border-radius: 10px; border: 1.5px solid #d32f2f; margin-top: 6px; }
-  #bookingMap { height: 200px; width: 100%; border-radius: 10px; border: 1.5px solid #d32f2f; margin-top: 6px; }
+  input, select, textarea { width: 100%; padding: 13px 14px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none; background: #fff; color: #0f172a; transition: border-color 0.2s; font-weight: 600; }
+  input:focus, select:focus, textarea:focus { border-color: var(--title-blue); box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.15); }
+  .toggle-pw { position: absolute; right: 14px; top: 13px; font-size: 13px; color: var(--title-blue); cursor: pointer; font-weight: 800; user-select: none; }
+  
+  /* Pricing rows */
+  .price-row { display: flex; justify-content: space-between; font-size: 13.5px; padding: 6px 0; color: #475569; font-weight: 600; }
+  .price-row.total { border-top: 2px dashed var(--soft-red-border); margin-top: 8px; padding-top: 10px; font-weight: 900; font-size: 16.5px; color: var(--primary-dark-red); }
+  
+  /* QR Containers */
+  .qr-box { background: #fff; border: 2.5px dashed var(--primary-red); border-radius: 16px; padding: 18px; text-align: center; margin-bottom: 16px; box-shadow: 0 4px 16px rgba(225,29,72,0.08); }
+  .qr-img { width: 190px; height: 190px; margin: 10px auto; display: block; border-radius: 10px; border: 1.5px solid var(--soft-red-border); }
+  
+  /* Modals */
+  .modal-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; padding: 16px; }
+  .modal-content { background: #fff; border-radius: 18px; max-width: 440px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 22px; box-shadow: 0 20px 40px rgba(0,0,0,0.25); animation: fadeIn 0.2s ease-in-out; border: 1.5px solid var(--soft-red-border); }
+  
+  /* Invoice Paper */
+  .invoice-paper { background: #fff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 18px; font-size: 12px; color: #1e293b; }
+  .inv-header { text-align: center; border-bottom: 2.5px solid var(--title-blue); padding-bottom: 10px; margin-bottom: 12px; }
+  .inv-title { text-align: center; font-weight: 900; font-size: 14px; margin: 8px 0; color: var(--title-blue); }
+  .inv-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px 12px; font-size: 11px; margin-bottom: 10px; font-weight: 600; }
+  table.inv-table { width: 100%; border-collapse: collapse; font-size: 10.5px; margin-bottom: 10px; }
+  table.inv-table th, table.inv-table td { border: 1px solid #cbd5e1; padding: 5px 6px; text-align: left; }
+  table.inv-table th { background: var(--title-blue-badge); color: var(--title-blue); font-weight: 900; }
+  .inv-summary { margin-left: auto; width: 68%; font-size: 11.5px; }
+  
+  /* Mobile Navigation */
+  .bottomnav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #ffffff; border-top: 1.5px solid var(--soft-red-border); display: flex; padding: 10px 0; z-index: 500; box-shadow: 0 -4px 20px rgba(225,29,72,0.06); }
+  .nav-item { flex: 1; text-align: center; font-size: 11px; color: #64748b; cursor: pointer; transition: color 0.2s; font-weight: 700; }
+  .nav-item.active { color: var(--title-blue); font-weight: 900; }
+  .nav-icon { font-size: 19px; display: block; margin-bottom: 3px; }
+  
+  #homeMap { height: 185px; width: 100%; border-radius: 14px; margin-bottom: 14px; border: 2px solid var(--primary-red); box-shadow: 0 4px 14px rgba(225,29,72,0.15); }
+  #signupMap { height: 190px; width: 100%; border-radius: 12px; border: 2px solid var(--primary-red); margin-top: 6px; }
+  #bookingMap { height: 200px; width: 100%; border-radius: 12px; border: 2px solid var(--primary-red); margin-top: 6px; }
+  
+  /* Reviews */
+  .star-rating { display: flex; gap: 8px; justify-content: center; margin: 12px 0; font-size: 28px; cursor: pointer; color: #cbd5e1; }
+  .star-rating .star.selected { color: #f59e0b; }
+  .review-item { border-bottom: 1px solid var(--soft-red-border); padding: 12px 0; font-size: 12px; }
+  .review-item:last-child { border-bottom: none; }
+
   @media (min-width: 900px) {
     .app { max-width: 100%; padding-bottom: 0; }
     .bottomnav { display: none; }
     .desktop-shell { display: flex; max-width: 1200px; margin: 0 auto; min-height: 100vh; }
-    .desktop-sidebar { width: 260px; flex-shrink: 0; border-right: 1px solid #fee2e2; padding: 20px 0; background: #fff; }
-    .desktop-nav-item { padding: 12px 24px; font-size: 14px; color: #555; cursor: pointer; display: flex; align-items: center; gap: 10px; }
-    .desktop-nav-item.active { color: #d32f2f; font-weight: 700; background: #fff1f2; border-right: 3px solid #d32f2f; }
-    .desktop-main { flex: 1; padding: 24px 32px; background: #fdf6f6; }
+    .desktop-sidebar { width: 270px; flex-shrink: 0; border-right: 1.5px solid var(--soft-red-border); padding: 24px 0; background: #fff; }
+    .desktop-nav-item { padding: 14px 24px; font-size: 14px; color: #64748b; cursor: pointer; display: flex; align-items: center; gap: 10px; font-weight: 700; }
+    .desktop-nav-item.active { color: var(--title-blue); font-weight: 900; background: var(--title-blue-badge); border-right: 3.5px solid var(--title-blue); }
+    .desktop-main { flex: 1; padding: 28px 36px; background: var(--soft-red-bg); }
     .screen { padding: 0; }
     .desktop-inner { max-width: 520px; margin: 0 auto; }
   }
@@ -75,33 +177,35 @@
 </head>
 <body>
 
+<div id="pullToRefreshIndicator">🔄 Syncing live data...</div>
+
 <div class="desktop-shell">
   <div class="desktop-sidebar" style="display:none;" id="desktopSidebar">
-    <div style="display:flex; align-items:center; gap:8px; padding:0 24px 16px;">
-      <div class="tech-mascot-avatar" style="width:36px; height:36px;">
+    <div style="display:flex; align-items:center; gap:10px; padding:0 24px 20px;">
+      <div class="tech-mascot-avatar" style="width:42px; height:42px;">
         <svg viewBox="0 0 100 100">
-          <circle cx="50" cy="50" r="48" fill="#fff" stroke="#d32f2f" stroke-width="2"/>
-          <path d="M30 36 C30 20, 70 20, 70 36 Z" fill="#d32f2f"/>
-          <rect x="25" y="34" width="50" height="6" rx="3" fill="#b71c1c"/>
-          <path d="M46 22 L54 22 L52 28 L48 28 Z" fill="#ffeb3b"/>
+          <circle cx="50" cy="50" r="48" fill="#fff" stroke="#e11d48" stroke-width="2.5"/>
+          <path d="M30 36 C30 20, 70 20, 70 36 Z" fill="#e11d48"/>
+          <rect x="25" y="34" width="50" height="6" rx="3" fill="#be123c"/>
+          <polygon points="50,22 47,28 51,28 49,34 54,27 50,27" fill="#fbbf24"/>
           <circle cx="50" cy="46" r="15" fill="#ffd1a4"/>
-          <circle cx="45" cy="44" r="2" fill="#222"/><circle cx="55" cy="44" r="2" fill="#222"/>
-          <path d="M46 51 Q50 56 54 51" stroke="#222" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <path d="M28 62 L72 62 L66 94 L34 94 Z" fill="#d32f2f"/>
+          <circle cx="45" cy="44" r="2.2" fill="#1e293b"/><circle cx="55" cy="44" r="2.2" fill="#1e293b"/>
+          <path d="M46 51 Q50 56 54 51" stroke="#1e293b" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+          <path d="M28 62 L72 62 L66 94 L34 94 Z" fill="#e11d48"/>
           <path d="M45 62 L55 62 L55 76 L45 76 Z" fill="#fff"/>
-          <rect x="14" y="66" width="16" height="12" rx="2" fill="#b71c1c"/>
-          <rect x="18" y="62" width="8" height="4" fill="#666"/>
-          <path d="M74 62 L84 76 L80 80 L70 66 Z" fill="#78909c"/>
+          <rect x="14" y="66" width="16" height="12" rx="2.5" fill="#be123c"/>
+          <rect x="18" y="62" width="8" height="4" fill="#475569"/>
+          <path d="M74 62 L84 76 L80 80 L70 66 Z" fill="#94a3b8"/>
         </svg>
       </div>
       <div>
-        <div style="font-size:18px; font-weight:800; color:#d32f2f;">Bijli Mitra</div>
-        <div style="font-size:11.5px; color:#777;">Begusarai, Bihar</div>
+        <div style="font-size:19px; font-weight:900; color:var(--title-blue); letter-spacing:-0.3px;">Bijli Mitra</div>
+        <div style="font-size:11.5px; color:#64748b; font-weight:700;">Begusarai, Bihar</div>
       </div>
     </div>
     <div id="deskCustomerNav">
       <div class="desktop-nav-item active" id="deskNavHome" onclick="navigateTo('home')">🏠 Book Category</div>
-      <div class="desktop-nav-item" id="deskNavProfile" onclick="goToCustomerProfile()">👤 My Profile &amp; History</div>
+      <div class="desktop-nav-item" id="deskNavProfile" onclick="goToCustomerProfile()">👤 My Profile &amp; Orders</div>
     </div>
     <div id="deskTechNav" style="display:none;">
       <div class="desktop-nav-item" id="deskNavTech" onclick="navigateTo('tech-pool')">🧑‍🔧 Technician Job Pool</div>
@@ -117,18 +221,18 @@
       <div class="brand-header-box">
         <div class="tech-mascot-avatar">
           <svg viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="48" fill="#fff" stroke="#d32f2f" stroke-width="2"/>
-            <path d="M30 36 C30 20, 70 20, 70 36 Z" fill="#d32f2f"/>
-            <rect x="25" y="34" width="50" height="6" rx="3" fill="#b71c1c"/>
-            <polygon points="50,22 47,28 51,28 49,34 54,27 50,27" fill="#ffeb3b"/>
+            <circle cx="50" cy="50" r="48" fill="#fff" stroke="#e11d48" stroke-width="2.5"/>
+            <path d="M30 36 C30 20, 70 20, 70 36 Z" fill="#e11d48"/>
+            <rect x="25" y="34" width="50" height="6" rx="3" fill="#be123c"/>
+            <polygon points="50,22 47,28 51,28 49,34 54,27 50,27" fill="#fbbf24"/>
             <circle cx="50" cy="46" r="15" fill="#ffd1a4"/>
-            <circle cx="45" cy="44" r="2" fill="#222"/><circle cx="55" cy="44" r="2" fill="#222"/>
-            <path d="M46 51 Q50 56 54 51" stroke="#222" stroke-width="2" fill="none" stroke-linecap="round"/>
-            <path d="M28 62 L72 62 L66 94 L34 94 Z" fill="#d32f2f"/>
+            <circle cx="45" cy="44" r="2.2" fill="#1e293b"/><circle cx="55" cy="44" r="2.2" fill="#1e293b"/>
+            <path d="M46 51 Q50 56 54 51" stroke="#1e293b" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+            <path d="M28 62 L72 62 L66 94 L34 94 Z" fill="#e11d48"/>
             <path d="M45 62 L55 62 L55 76 L45 76 Z" fill="#fff"/>
-            <rect x="14" y="66" width="16" height="12" rx="2" fill="#b71c1c"/>
-            <rect x="18" y="62" width="8" height="4" fill="#666"/>
-            <path d="M74 62 L84 76 L80 80 L70 66 Z" fill="#78909c"/>
+            <rect x="14" y="66" width="16" height="12" rx="2.5" fill="#be123c"/>
+            <rect x="18" y="62" width="8" height="4" fill="#475569"/>
+            <path d="M74 62 L84 76 L80 80 L70 66 Z" fill="#94a3b8"/>
           </svg>
         </div>
         <div>
@@ -142,17 +246,17 @@
     <!-- 1. AUTH SCREEN -->
     <div id="screen-auth" class="screen">
       <div class="desktop-inner">
-        <div class="card">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-            <h3 style="font-size:16px; color:#d32f2f;" id="custAuthFormTitle">Customer Registration</h3>
-            <button type="button" class="btn secondary" style="width:auto; padding:4px 8px; font-size:11px;" id="custAuthToggleBtn" onclick="toggleCustomerAuthMode()">Switch to Login</button>
+        <div class="card" style="border-top: 4.5px solid var(--title-blue);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h3 class="section-title-blue" style="margin-bottom:0;" id="custAuthFormTitle">Customer Registration</h3>
+            <button type="button" class="btn secondary" style="width:auto; padding:5px 10px; font-size:11px;" id="custAuthToggleBtn" onclick="toggleCustomerAuthMode()">Switch to Login</button>
           </div>
 
-          <button type="button" class="btn" style="background:#fff; color:#444; border:1.5px solid #ddd; display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:10px;" onclick="signInWithGoogle()">
+          <button type="button" class="btn" style="background:#fff; color:#334155; border:1.5px solid #cbd5e1; display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:12px; box-shadow:0 2px 6px rgba(0,0,0,0.04);" onclick="signInWithGoogle()">
             <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.9 32.7 29.4 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l6-6C34.4 5.1 29.5 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.2-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 15.9 18.9 13 24 13c3.1 0 5.8 1.1 8 3l6-6C34.4 5.1 29.5 3 24 3 15.9 3 8.9 7.6 6.3 14.7z"/><path fill="#4CAF50" d="M24 45c5.3 0 10.1-2 13.7-5.4l-6.3-5.3C29.4 36 26.9 37 24 37c-5.3 0-9.8-3.3-11.4-8l-6.6 5.1C8.9 40.4 15.9 45 24 45z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4 5.5l6.3 5.3C39.9 36.6 43 30.9 43 24c0-1.2-.1-2.4-.4-3.5z"/></svg>
-            <span>Continue with Google</span>
+            <span style="font-weight:800;">Continue with Google</span>
           </button>
-          <div style="text-align:center; font-size:11px; color:#999; margin-bottom:12px;">— or use Email &amp; Password —</div>
+          <div style="text-align:center; font-size:11px; color:#94a3b8; margin-bottom:12px; font-weight:700;">— or use Email &amp; Password —</div>
           
           <div class="input-group">
             <input type="email" id="authEmail" placeholder="Email Address (e.g. user@gmail.com)">
@@ -161,9 +265,9 @@
           <div id="custSignupFields">
             <div class="input-group"><input type="text" id="custRegName" placeholder="Full Name"></div>
             <div class="input-group"><input type="tel" id="authPhone" placeholder="10-Digit Mobile Number (Mandatory)" maxlength="10"></div>
-            <div class="card" style="padding:10px; background:#fff5f5; border:1px solid #fee2e2; margin-bottom:12px;">
-              <span style="font-size:12px; font-weight:700; color:#d32f2f;">📍 Select Address from Map (Mandatory):</span>
-              <p style="font-size:11px; color:#666; margin-top:2px;">Tap your exact location on the map:</p>
+            <div class="card" style="padding:12px; background:var(--soft-red-bg); border:1.5px solid var(--soft-red-border); margin-bottom:12px;">
+              <span style="font-size:12px; font-weight:900; color:var(--title-blue);">📍 Select Address from Map (Mandatory):</span>
+              <p style="font-size:11px; color:#64748b; margin-top:2px; font-weight:600;">Tap your exact location on the map:</p>
               <div id="signupMap"></div>
             </div>
             <div class="input-group"><input type="text" id="custRegAddress" placeholder="Selected Address (from map or type landmark)"></div>
@@ -171,7 +275,7 @@
           </div>
 
           <div id="otpPasswordCreationGroup" style="display:none;">
-            <div class="input-group"><input type="text" id="authEmailOtp" placeholder="Enter 6-Digit Email OTP" maxlength="6" style="text-align:center; font-weight:700; letter-spacing:4px; border-color:#d32f2f;"></div>
+            <div class="input-group"><input type="text" id="authEmailOtp" placeholder="Enter 6-Digit Email OTP" maxlength="6" style="text-align:center; font-weight:900; letter-spacing:4px; border-color:var(--title-blue); font-size:16px;"></div>
             <div class="input-group">
               <input type="password" id="authCreatePassword" placeholder="Create Password (Min. 6 characters)">
               <span class="toggle-pw" onclick="togglePasswordVisibility('authCreatePassword', this)">Show</span>
@@ -184,28 +288,29 @@
           </div>
 
           <button class="btn" id="custAuthActionBtn" onclick="handleCustomerAuthAction()">Verify OTP &amp; Register</button>
-          <p id="authMsg" style="font-size:12px; margin-top:10px; text-align:center;"></p>
+          <p id="authMsg" style="font-size:12px; margin-top:10px; text-align:center; font-weight:700;"></p>
 
-          <div style="border-top:1px solid #eee; margin-top:16px; padding-top:12px; display:flex; justify-content:space-between;">
-            <a href="#" style="font-size:11px; color:#888; text-decoration:none;" onclick="openTechLoginModal()">🧑‍🔧 Staff/Technician Login</a>
-            <a href="#" style="font-size:11px; color:#888; text-decoration:none;" onclick="openAdminLoginModal()">🔐 Admin Access</a>
+          <div style="border-top:1px solid #f1f5f9; margin-top:16px; padding-top:12px; display:flex; justify-content:space-between;">
+            <a href="#" style="font-size:11.5px; color:var(--title-blue); text-decoration:none; font-weight:800;" onclick="openTechLoginModal()">🧑‍🔧 Staff/Technician Login</a>
+            <a href="#" style="font-size:11.5px; color:var(--title-blue); text-decoration:none; font-weight:800;" onclick="openAdminLoginModal()">🔐 Admin Access</a>
           </div>
         </div>
 
-        <div id="roleSecTech" class="card" style="display:none; border-top:3px solid #d32f2f;">
-          <h3 style="font-size:15px; margin-bottom:6px; color:#d32f2f;">🧑‍🔧 Technician Login</h3>
-          <input type="text" id="techIdInput" placeholder="Technician ID" style="margin-bottom:10px; text-transform:uppercase;">
-          <select id="techCategorySelect" style="margin-bottom:10px;">
-            <option value="electrician">⚡ Electrician Pool</option>
+        <!-- TECHNICIAN LOGIN WITH 6-DIGIT PIN -->
+        <div id="roleSecTech" class="card" style="display:none; border-top:4px solid var(--title-blue);">
+          <h3 class="section-title-blue">🧑‍🔧 Technician Login</h3>
+          <input type="text" id="techIdInput" placeholder="Technician ID (e.g. TECH-001)" style="margin-bottom:10px; text-transform:uppercase; font-weight:800;">
+          <select id="techCategorySelect" style="margin-bottom:10px; font-weight:700;">
+            <option value="electrician">💡 Electrical Services Pool</option>
             <option value="ac">❄️ AC Service Pool</option>
-            <option value="plumber">🔧 Plumber Pool</option>
+            <option value="plumber">🔧 Plumbing Works Pool</option>
           </select>
-          <input type="password" id="techPinInput" placeholder="4-Digit PIN" maxlength="4" style="margin-bottom:10px;">
+          <input type="password" id="techPinInput" placeholder="Enter 6-Digit PIN" maxlength="6" style="margin-bottom:10px; text-align:center; letter-spacing:4px; font-weight:800;">
           <button class="btn" onclick="loginTechnicianToPool()">Login to Job Pool</button>
         </div>
 
-        <div id="roleSecAdmin" class="card" style="display:none; border-top:3px solid #d32f2f;">
-          <h3 style="font-size:15px; margin-bottom:6px; color:#d32f2f;">🔐 Admin Login</h3>
+        <div id="roleSecAdmin" class="card" style="display:none; border-top:4px solid var(--title-blue);">
+          <h3 class="section-title-blue">🔐 Master Admin Login</h3>
           <input type="email" id="adminEmailInput" placeholder="Authorized Admin Email" style="margin-bottom:10px;">
           <input type="password" id="adminPassInput" placeholder="Admin Password" style="margin-bottom:10px;">
           <button class="btn" onclick="adminGlobalLogin()">Login as Admin</button>
@@ -216,26 +321,75 @@
     <!-- 2. HOME SCREEN -->
     <div id="screen-home" class="screen active">
       <div class="desktop-inner">
-        <h2 style="font-size:15.5px; margin-bottom:6px; color:#222;">Begusarai Street Dispatch Map</h2>
-        <div id="homeMap"></div>
-        <h2 style="font-size:15.5px; margin-bottom:4px; color:#222;">Select Service Category</h2>
-        <div class="category-grid">
-          <div class="category-card" onclick="selectCategoryBooking('electrician')">
-            <div><h3>⚡ Electrical Services</h3><p>Wiring, Switches, Fans, MCB, Inverter</p></div>
-            <div style="text-align:right;"><b style="color:#d32f2f;">₹299 Base</b><p style="font-size:11px; color:#888;">(incl. 18% GST)</p></div>
-          </div>
-          <div class="category-card" onclick="selectCategoryBooking('ac')">
-            <div><h3>❄️ AC Repair &amp; Service</h3><p>Jet Pump Wash, Installation, Gas Refill</p></div>
-            <div style="text-align:right;"><b style="color:#d32f2f;">₹399 Base</b><p style="font-size:11px; color:#888;">(incl. 18% GST)</p></div>
-          </div>
-          <div class="category-card" onclick="selectCategoryBooking('plumber')">
-            <div><h3>🔧 Plumbing Works</h3><p>Pipelines, Taps, Leakages, Tank Cleaning</p></div>
-            <div style="text-align:right;"><b style="color:#d32f2f;">₹299 Base</b><p style="font-size:11px; color:#888;">(incl. 18% GST)</p></div>
+        
+        <!-- HERO TRUST BANNER -->
+        <div class="hero-trust-banner">
+          <div class="trust-subtitle">🛡️ ID-verified technicians • Insured service</div>
+          <h2 class="hero-title">Book a verified technician at home</h2>
+          <p class="hero-desc">AC, electrician, plumber and more — arriving in 30 minutes in Begusarai.</p>
+          <div class="trust-pills">
+            <span class="trust-pill">🔒 Secure payment</span>
+            <span class="trust-pill">🛡️ Free 30-Day Re-visit</span>
+            <span class="trust-pill">⚡ Local Begusarai Dispatch</span>
           </div>
         </div>
-        <div class="card" style="margin-top:16px; background:#fff5f5; border:1.5px solid #d32f2f;">
-          <h4 style="font-size:13px; color:#d32f2f; margin-bottom:6px;">🏢 Commercial &amp; Bulk Order Desk</h4>
-          <p style="font-size:11.5px; color:#444; line-height:1.5;">For bulk, commercial, or enterprise requirements covering HVAC/AC, Electrical, or Plumbing maintenance, please contact our corporate desk at: <a href="mailto:kashvienterprises.bihar@gmail.com" style="color:#d32f2f; font-weight:700;">kashvienterprises.bihar@gmail.com</a></p>
+
+        <h2 class="section-title-blue">🗺️ Begusarai Street Dispatch Map</h2>
+        <div id="homeMap"></div>
+        
+        <h2 class="section-title-blue" style="margin-top:14px;">⚡ Select Service Category</h2>
+        <div class="category-grid">
+          
+          <!-- 1. ELECTRICIAN (Wire + Bulb Visuals) -->
+          <div class="category-card" onclick="selectCategoryBooking('electrician')">
+            <div class="category-card-left">
+              <div class="cat-custom-icon-box cat-icon-electrician">💡</div>
+              <div>
+                <h3>⚡ Electrical Services</h3>
+                <p>Wiring, Switches, Fans, MCB, Inverter</p>
+                <div style="font-size:10.5px; color:#d97706; font-weight:800; margin-top:2px;">🔌 Line &amp; Wire Fitting • 💡 Bulb &amp; Fan Repair</div>
+              </div>
+            </div>
+            <div class="category-price-badge"><b>₹299 Base</b><p style="font-size:11px; color:#64748b; font-weight:600;">(incl. 18% GST)</p></div>
+          </div>
+
+          <!-- 2. AC REPAIR (AC + Flowing Air Visuals) -->
+          <div class="category-card" onclick="selectCategoryBooking('ac')">
+            <div class="category-card-left">
+              <div class="cat-custom-icon-box cat-icon-ac">❄️</div>
+              <div>
+                <h3>❄️ AC Repair &amp; Service</h3>
+                <p>Jet Pump Wash, Installation, Gas Refill</p>
+                <div style="font-size:10.5px; color:#0284c7; font-weight:800; margin-top:2px;">💨 Deep Jet Wash • 🌬️ Chilled Air Cooling</div>
+              </div>
+            </div>
+            <div class="category-price-badge"><b>₹399 Base</b><p style="font-size:11px; color:#64748b; font-weight:600;">(incl. 18% GST)</p></div>
+          </div>
+
+          <!-- 3. PLUMBING (Pipe + Valve + Socket Visuals) -->
+          <div class="category-card" onclick="selectCategoryBooking('plumber')">
+            <div class="category-card-left">
+              <div class="cat-custom-icon-box cat-icon-plumber">🔧</div>
+              <div>
+                <h3>🔧 Plumbing Works</h3>
+                <p>Pipelines, Taps, Leakages, Tank Cleaning</p>
+                <div style="font-size:10.5px; color:#16a34a; font-weight:800; margin-top:2px;">🚰 Pipe &amp; Valve Fittings • 🚿 Socket &amp; Tank Care</div>
+              </div>
+            </div>
+            <div class="category-price-badge"><b>₹299 Base</b><p style="font-size:11px; color:#64748b; font-weight:600;">(incl. 18% GST)</p></div>
+          </div>
+
+        </div>
+
+        <!-- REVIEWS FEED -->
+        <div class="card" style="margin-top:16px;">
+          <h3 class="section-title-blue">⭐ Verified Customer Reviews</h3>
+          <div id="homeReviewsContainer"><p style="font-size:12px; color:#64748b; font-weight:600;">Loading verified customer reviews...</p></div>
+        </div>
+
+        <div class="card" style="margin-top:12px; background:var(--soft-red-bg); border:1.5px solid var(--soft-red-border);">
+          <h4 class="section-title-blue" style="font-size:13.5px; margin-bottom:4px;">🏢 Commercial &amp; Bulk Order Desk</h4>
+          <p style="font-size:11.5px; color:#475569; line-height:1.5; font-weight:600;">For corporate or bulk requirements covering HVAC/AC, Electrical, or Plumbing maintenance, contact our corporate desk at: <a href="mailto:kashvienterprises.bihar@gmail.com" style="color:var(--title-blue); font-weight:900;">kashvienterprises.bihar@gmail.com</a></p>
         </div>
       </div>
     </div>
@@ -243,22 +397,22 @@
     <!-- 3. CUSTOMER PROFILE SCREEN -->
     <div id="screen-profile" class="screen">
       <div class="desktop-inner">
-        <div class="card" style="border-left:4px solid #d32f2f;">
+        <div class="card" style="border-left:5px solid var(--title-blue);">
           <div style="display:flex; justify-content:space-between; align-items:flex-start;">
             <div>
-              <h2 style="font-size:17px; color:#d32f2f;" id="profDispName">Customer Name</h2>
-              <p style="font-size:12px; color:#555; margin-top:2px;">✉️ <span id="profDispEmail">--</span></p>
-              <p style="font-size:12px; color:#555; margin-top:2px;">📞 <span id="profDispPhone">--</span></p>
-              <p style="font-size:12px; color:#555; margin-top:2px;">📍 <span id="profDispAddress">--</span></p>
+              <h2 class="section-title-blue" style="font-size:18px; margin-bottom:4px;" id="profDispName">Customer Name</h2>
+              <p style="font-size:12px; color:#475569; font-weight:600;">✉️ <span id="profDispEmail">--</span></p>
+              <p style="font-size:12px; color:#475569; font-weight:600; margin-top:2px;">📞 <span id="profDispPhone">--</span></p>
+              <p style="font-size:12px; color:#475569; font-weight:600; margin-top:2px;">📍 <span id="profDispAddress">--</span></p>
             </div>
-            <button class="btn secondary" style="width:auto; padding:4px 8px; font-size:11px;" onclick="customerLogout()">Logout</button>
+            <button class="btn secondary" style="width:auto; padding:5px 10px; font-size:11px;" onclick="customerLogout()">Logout</button>
           </div>
         </div>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; margin-top:14px;">
-          <h3 style="font-size:15px;">My Personal Booking History &amp; Status</h3>
-          <button class="btn secondary" style="width:auto; padding:4px 8px; font-size:11px;" onclick="loadCustomerOrders()">🔄 Refresh</button>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; margin-top:16px;">
+          <h3 class="section-title-blue" style="font-size:15px; margin-bottom:0;">My Booking History &amp; Warranty</h3>
+          <button class="btn secondary" style="width:auto; padding:5px 10px; font-size:11px;" onclick="loadCustomerOrders()">🔄 Refresh</button>
         </div>
-        <div id="customerHistoryContainer"><p style="color:#888; font-size:13px; text-align:center; padding:20px 0;">Loading your past bookings...</p></div>
+        <div id="customerHistoryContainer"><p style="color:#64748b; font-size:13px; text-align:center; padding:20px 0; font-weight:600;">Loading your past bookings...</p></div>
       </div>
     </div>
 
@@ -266,39 +420,41 @@
     <div id="screen-booking" class="screen">
       <div class="desktop-inner">
         <button class="btn secondary" style="width:auto; padding:6px 14px; font-size:12px; margin-bottom:12px;" onclick="window.history.back()">← Back</button>
-        <div class="card" style="border-left:4px solid #d32f2f;">
-          <h3 id="bookCatName" style="color:#d32f2f; font-size:16px;">Service Booking</h3>
-          <p id="bookBaseScopeDesc" style="font-size:12px; color:#444; margin-top:4px; line-height:1.4;">-</p>
+        <div class="card" style="border-left:5px solid var(--title-blue);">
+          <h3 class="section-title-blue" id="bookCatName" style="font-size:17px;">Service Booking</h3>
+          <p id="bookBaseScopeDesc" style="font-size:12px; color:#475569; margin-top:4px; line-height:1.45; font-weight:600;">-</p>
         </div>
         <div class="card">
           <div class="price-row"><span>Base Service Pack (incl. GST)</span><span id="priceBaseVal">₹299.00</span></div>
-          <div class="price-row" style="font-weight:600; border-top:1px dashed #eee; margin-top:4px; padding-top:4px;"><span>Estimated Total Work Amount</span><span id="priceTotalIncGst">₹299.00</span></div>
-          <div class="price-row" style="color:#d32f2f;"><span>Advance Booking Token</span><span>- ₹21.00</span></div>
+          <div class="price-row" style="font-weight:800; border-top:1px dashed #cbd5e1; margin-top:4px; padding-top:4px;"><span>Estimated Total Work Amount</span><span id="priceTotalIncGst">₹299.00</span></div>
+          <div class="price-row" style="color:var(--primary-red); font-weight:800;"><span>Advance Booking Token</span><span>- ₹21.00</span></div>
           <div class="price-row total"><span>Due Amount After Token</span><span id="priceTotalDueVal">₹278.00</span></div>
-          <p style="font-size:11px; color:#666; margin-top:6px;">*Note: Any additional work or spare parts will be inspected and billed on-site by the technician. The ₹21 token is deducted from the final bill.</p>
+          <p style="font-size:11.5px; color:#991b1b; font-weight:900; margin-top:8px; background:#fff1f2; padding:8px 10px; border-radius:8px; border:1px solid #fecdd3;">⚠️ <b>CANCELLATION POLICY:</b> The ₹21.00 advance booking token is strictly <b>NON-REFUNDABLE</b> once booked.</p>
         </div>
-        <label style="font-size:12px; font-weight:600; color:#444; margin-bottom:4px; display:block;">Service Address:</label>
+        <label style="font-size:12px; font-weight:800; color:var(--title-blue); margin-bottom:4px; display:block;">Service Address:</label>
         <input type="text" id="custAddressInput" placeholder="Enter complete service address">
-        <div class="card" style="padding:10px; background:#fff5f5; border:1px solid #fee2e2; margin-bottom:12px;">
+        <div class="card" style="padding:12px; background:var(--soft-red-bg); border:1.5px solid var(--soft-red-border); margin-bottom:12px;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="font-size:12px; font-weight:700; color:#d32f2f;">📍 Map Location Picker</span>
+            <span style="font-size:12px; font-weight:900; color:var(--title-blue);">📍 Map Location Picker</span>
             <button type="button" class="btn secondary" style="width:auto; padding:4px 8px; font-size:11px;" onclick="toggleBookingMap()">Toggle Map</button>
           </div>
-          <p style="font-size:11px; color:#666; margin-top:4px;">Tap anywhere on map to pin exact location:</p>
+          <p style="font-size:11px; color:#64748b; margin-top:4px; font-weight:600;">Tap anywhere on map to pin exact location:</p>
           <div id="bookingMapContainer" style="display:block; margin-top:8px;"><div id="bookingMap"></div></div>
         </div>
-        <label style="font-size:12px; font-weight:600; color:#444; margin-bottom:4px; display:block;">Customer Mobile Number:</label>
-        <input type="tel" id="custPhoneInput" placeholder="10-digit mobile number" maxlength="10" readonly style="background:#f9f9f9;">
+        <label style="font-size:12px; font-weight:800; color:var(--title-blue); margin-bottom:4px; display:block;">Customer Mobile Number:</label>
+        <input type="tel" id="custPhoneInput" placeholder="10-digit mobile number" maxlength="10" readonly style="background:#f8fafc; font-weight:800;">
+        
+        <!-- BOLD TERMS & CONDITIONS -->
         <div class="terms-box">
-          <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer;">
-            <input type="checkbox" id="bookingTermsCheckbox" style="width:18px; height:18px; margin-top:2px;">
+          <label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer;">
+            <input type="checkbox" id="bookingTermsCheckbox" style="width:20px; height:20px; margin-top:2px;">
             <span id="bookingTermsText">
-              <b>Terms &amp; Conditions:</b><br>
-              1. A limited 30-day warranty applies only to the repair work performed.<br>
-              2. Warranty on newly installed spare parts is governed solely by the manufacturer's policy.<br>
-              3. Electrical and plumbing parts that have been fitted/used are non-returnable.<br>
-              4. Kashvi Enterprises (Bijli Mitra) is not liable for damage caused by pre-existing faulty wiring, grid surges, or third-party tampering.<br>
-              I agree to the ₹21 advance token and all the above terms.
+              <b>TERMS &amp; CONDITIONS (LEGAL):</b><br>
+              • <b>1. NON-REFUNDABLE TOKEN:</b> The <b>₹21.00 advance booking token</b> is strictly <b>NON-REFUNDABLE</b> if cancelled by the customer.<br>
+              • <b>2. 30-DAY WARRANTY &amp; FREE RE-VISIT:</b> A <b>30-Day limited warranty</b> covers only the specific repair workmanship performed.<br>
+              • <b>3. SPARE PARTS POLICY:</b> Replaced spare parts carry the <b>manufacturer warranty only</b>; fitted electrical/plumbing parts are <b>non-returnable</b>.<br>
+              • <b>4. LIABILITY:</b> Kashvi Enterprises (Bijli Mitra) is <b>not liable</b> for internal wiring decay, grid fluctuations, or unauthorized tampering.<br>
+              <b>I agree to pay the non-refundable ₹21 token and accept all terms above.</b>
             </span>
           </label>
         </div>
@@ -309,22 +465,22 @@
     <!-- 5. ADVANCE DIRECT UPI QR SCREEN -->
     <div id="screen-advance-pay" class="screen">
       <div class="desktop-inner">
-        <div class="card" style="border-left:4px solid #d32f2f;">
-          <h3>Pay Advance Token (₹21.00)</h3>
-          <p>Complete payment using UPI to confirm your booking.</p>
+        <div class="card" style="border-left:5px solid var(--title-blue);">
+          <h3 class="section-title-blue">Pay Advance Token (₹21.00)</h3>
+          <p style="font-size:12px; color:#64748b; font-weight:600;">Scan and complete payment using UPI to confirm your booking.</p>
         </div>
         <div class="qr-box">
-          <div style="font-size:12px; font-weight:700; color:#d32f2f;">KASHVI ENTERPRISES</div>
+          <div style="font-size:12px; font-weight:900; color:var(--title-blue); letter-spacing:0.5px;">KASHVI ENTERPRISES</div>
           <img id="advanceQrImg" class="qr-img" alt="Dynamic UPI QR" />
-          <div style="font-size:18px; font-weight:800; color:#d32f2f;">₹21.00</div>
-          <p style="font-size:11px; color:#888;">Scan with PhonePe, GPay, Paytm</p>
+          <div style="font-size:24px; font-weight:900; color:var(--primary-dark-red);">₹21.00</div>
+          <p style="font-size:11px; color:#64748b; margin-top:2px; font-weight:700;">Scan with PhonePe, GPay, Paytm (Non-Refundable)</p>
         </div>
         <a id="advanceUpiIntentBtn" href="#" class="btn" style="display:block; text-align:center; text-decoration:none; margin-bottom:10px;">🚀 Open in UPI App (PhonePe / GPay)</a>
-        <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer; margin-bottom:10px; font-size:13px; color:#333;">
+        <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer; margin-bottom:10px; font-size:13px; color:#334155; font-weight:700;">
           <input type="checkbox" id="advancePaidCheckbox" style="width:18px; height:18px; margin-top:1px;">
-          <span>I have completed the ₹21 payment</span>
+          <span>I have completed the ₹21.00 payment</span>
         </label>
-        <p id="advanceTxnError" style="color:#c0392b; font-size:11px; margin-bottom:8px;"></p>
+        <p id="advanceTxnError" style="color:#c0392b; font-size:11.5px; margin-bottom:8px; font-weight:700;"></p>
         <button class="btn secondary" onclick="broadcastJobToPool()">✔ Payment Confirmed (Submit Booking)</button>
       </div>
     </div>
@@ -334,15 +490,15 @@
       <div class="desktop-inner">
         <div id="techPoolDashboard">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <h3 style="font-size:16px;" id="techPoolHeader">Live Job Pool</h3>
+            <h3 class="section-title-blue" id="techPoolHeader" style="margin-bottom:0;">Live Job Pool</h3>
             <div style="display:flex; gap:6px;">
-              <button class="btn secondary" style="width:auto; padding:4px 10px; font-size:11px;" onclick="renderPoolJobs()">🔄 Refresh</button>
-              <button class="btn danger" style="width:auto; padding:4px 8px; font-size:11px;" onclick="techLogout()">Logout</button>
+              <button class="btn secondary" style="width:auto; padding:5px 10px; font-size:11px;" onclick="renderPoolJobs()">🔄 Refresh</button>
+              <button class="btn danger" style="width:auto; padding:5px 8px; font-size:11px;" onclick="techLogout()">Logout</button>
             </div>
           </div>
-          <div id="techCooldownNotice" style="display:none; background:#fee2e2; border:1px solid #e74c3c; padding:10px; border-radius:8px; font-size:12px; color:#991b1b; margin-bottom:10px;">⚠️ Cooldown Active: You canceled a claimed job. You can claim new jobs in: <b id="cooldownTimer">--:--</b></div>
+          <div id="techCooldownNotice" style="display:none; background:#fee2e2; border:1.5px solid var(--primary-red); padding:10px; border-radius:8px; font-size:12px; color:#991b1b; margin-bottom:10px; font-weight:700;">⚠️ Cooldown Active: You canceled a claimed job. You can claim new jobs in: <b id="cooldownTimer">--:--</b></div>
           <div id="activeClaimedJobSection"></div>
-          <h4 style="font-size:13px; color:#666; margin:14px 0 8px;">Available Category Broadcasts:</h4>
+          <h4 style="font-size:13px; color:var(--title-blue); margin:14px 0 8px; font-weight:900;">Available Category Broadcasts:</h4>
           <div id="availablePoolList"></div>
         </div>
       </div>
@@ -351,10 +507,10 @@
     <!-- 7. BILL SUBMITTED SCREEN -->
     <div id="screen-bill-submitted" class="screen">
       <div class="desktop-inner">
-        <div class="card" style="border-left:4px solid #d32f2f; text-align:center; padding:30px 16px;">
-          <div style="font-size:44px; margin-bottom:8px;">✅</div>
-          <h3>Bill Successfully Generated</h3>
-          <p style="font-size:12.5px; color:#555; margin-top:6px;">The customer will see the payment breakdown and QR on their own device. Your on-site billing is complete.</p>
+        <div class="card" style="border-left:5px solid var(--success); text-align:center; padding:32px 16px;">
+          <div style="font-size:46px; margin-bottom:8px;">✅</div>
+          <h3 style="color:var(--success); font-weight:900;">Payment Successfully Received</h3>
+          <p style="font-size:12.5px; color:#475569; margin-top:6px; line-height:1.5; font-weight:600;">Tax Invoice PDF has been generated and synchronized across Customer, Technician, and Admin dashboards.</p>
           <button class="btn" style="margin-top:16px;" onclick="navigateTo('tech-pool')">Back to Job Pool</button>
         </div>
       </div>
@@ -370,7 +526,7 @@
           <p>Email: kashvienterprises.bihar@gmail.com</p>
           <p>GSTIN: 10CPRPK8525A1Z4 | Udyam: UDYAM-BR-06-0067891</p>
         </div>
-        <div class="inv-title">TAX INVOICE / SERVICE RECEIPT</div>
+        <div class="inv-title" id="pdfDocTypeTitle">TAX INVOICE / SERVICE RECEIPT</div>
         <div class="inv-meta-grid">
           <div>Customer Name: <span id="pdfCustName">-</span></div>
           <div>Customer Phone: <span id="pdfCustPhone">-</span></div>
@@ -387,8 +543,11 @@
           <div class="price-row"><span>Taxable Subtotal</span><span id="pdfSubtotal">₹0.00</span></div>
           <div class="price-row"><span>CGST (9%)</span><span id="pdfCgst">₹0.00</span></div>
           <div class="price-row"><span>SGST (9%)</span><span id="pdfSgst">₹0.00</span></div>
-          <div class="price-row"><span>Advance Token</span><span>- ₹21.00</span></div>
-          <div class="price-row total"><span>Grand Total (Net Due)</span><span id="pdfGrandTotal">₹0.00</span></div>
+          <div class="price-row" id="pdfAdvanceTokenRow"><span>Advance Token</span><span>- ₹21.00</span></div>
+          <div class="price-row total"><span id="pdfGrandTotalLabel">Grand Total (Net Due)</span><span id="pdfGrandTotal">₹0.00</span></div>
+        </div>
+        <div id="pdfCancellationNote" style="display:none; margin-top:14px; padding:8px; border:1px dashed var(--primary-red); color:var(--primary-dark-red); font-size:10.5px; text-align:center; font-weight:800;">
+          * Note: Booking was cancelled by customer. The ₹21.00 token is non-refundable towards administrative dispatch charges.
         </div>
       </div>
     </div>
@@ -397,13 +556,13 @@
     <div id="screen-admin" class="screen">
       <div class="desktop-inner">
         <div id="adminGlobalDashboard">
-          <div style="background:#fff5f5; border:1px solid #d32f2f; padding:12px; border-radius:8px; margin-bottom:14px;">
-            <h4 style="font-size:13px; color:#d32f2f; margin-bottom:4px;">📥 Shift Reports</h4>
-            <p style="font-size:11px; color:#555; margin-bottom:8px;">Download completed works and customer logs for today's shift.</p>
+          <div style="background:var(--title-blue-badge); border:1.5px solid var(--title-blue-border); padding:14px; border-radius:12px; margin-bottom:14px;">
+            <h4 class="section-title-blue" style="font-size:14px; margin-bottom:4px;">📥 Shift Reports</h4>
+            <p style="font-size:11px; color:#475569; margin-bottom:8px; font-weight:600;">Download completed works and customer logs for today's shift.</p>
             <button class="btn" style="padding:10px; font-size:13px;" onclick="downloadShiftReport()">Download Shift Report (CSV)</button>
           </div>
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <h3 style="font-size:16px;">Global Activity, Techs &amp; Payments</h3>
+            <h3 class="section-title-blue" style="margin-bottom:0;">Global Activity &amp; Accounts</h3>
             <div style="display:flex; gap:6px;">
               <button class="btn secondary" style="width:auto; padding:5px 10px; font-size:11px;" onclick="loadAdminGlobalFeed()">🔄 Refresh</button>
               <button class="btn danger" style="width:auto; padding:5px 8px; font-size:11px;" onclick="adminLogout()">Logout</button>
@@ -411,32 +570,32 @@
           </div>
           <div id="adminGlobalFeed" style="margin-bottom:16px;"></div>
           <div class="card">
-            <h3>👷 Register New Technician &amp; Assign PIN</h3>
+            <h3 class="section-title-blue" style="font-size:15px;">👷 Register Technician (6-Digit Encrypted PIN)</h3>
             <input type="text" id="newTechName" placeholder="Full Name" style="margin-bottom:8px;">
             <input type="tel" id="newTechPhone" placeholder="Contact Phone Number" maxlength="10" style="margin-bottom:8px;">
-            <select id="newTechCat" style="margin-bottom:8px;">
+            <select id="newTechCat" style="margin-bottom:8px; font-weight:700;">
               <option value="electrician">⚡ Electrician</option>
               <option value="ac">❄️ AC Service</option>
               <option value="plumber">🔧 Plumber</option>
             </select>
             <input type="text" id="newTechQualification" placeholder="Educational / Technical Qualification" style="margin-bottom:8px;">
             <input type="number" id="newTechExperience" placeholder="Years of Field Experience" min="0" style="margin-bottom:8px;">
-            <input type="password" id="newTechPin" placeholder="4-Digit Access PIN" maxlength="4" style="margin-bottom:10px;">
-            <button class="btn secondary" onclick="registerTechnician()">Save Technician &amp; Generate PIN</button>
+            <input type="password" id="newTechPin" placeholder="Enter 6-Digit Access PIN" maxlength="6" style="margin-bottom:10px; text-align:center; letter-spacing:4px; font-weight:800;">
+            <button class="btn secondary" onclick="registerTechnician()">Save Technician &amp; Hash 6-Digit PIN</button>
           </div>
           <div class="card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-              <h3>🧑‍🔧 Technician Fleet (Block/Unblock)</h3>
+              <h3 class="section-title-blue" style="font-size:14.5px; margin-bottom:0;">🧑‍🔧 Technician Fleet</h3>
               <button class="btn secondary" style="width:auto; padding:4px 10px; font-size:11px;" onclick="loadTechnicianFleet()">🔄</button>
             </div>
-            <div id="techFleetList"><p style="color:#888; font-size:12px;">Loading...</p></div>
+            <div id="techFleetList"><p style="color:#64748b; font-size:12px;">Loading...</p></div>
           </div>
           <div class="card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-              <h3>🚫 Customer Accounts (Fraud Block)</h3>
+              <h3 class="section-title-blue" style="font-size:14.5px; margin-bottom:0;">🚫 Customer Accounts</h3>
               <button class="btn secondary" style="width:auto; padding:4px 10px; font-size:11px;" onclick="loadCustomerAccounts()">🔄</button>
             </div>
-            <div id="customerAccountsList"><p style="color:#888; font-size:12px;">Loading...</p></div>
+            <div id="customerAccountsList"><p style="color:#64748b; font-size:12px;">Loading...</p></div>
           </div>
         </div>
       </div>
@@ -448,80 +607,90 @@
 <!-- 10. TECHNICIAN WORK COMPLETION & BILLING MODAL -->
 <div id="techCompletionModal" class="modal-backdrop">
   <div class="modal-content">
-    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px solid #d32f2f; padding-bottom:8px; margin-bottom:12px;">
-      <h3 style="font-size:15px; color:#d32f2f;">Work Completion &amp; Billing Calculation</h3>
-      <span style="font-size:20px; font-weight:700; cursor:pointer;" onclick="closeTechCompletionModal()">&times;</span>
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2.5px solid var(--title-blue); padding-bottom:10px; margin-bottom:12px;">
+      <h3 class="section-title-blue" style="margin-bottom:0;">Work Completion &amp; Billing</h3>
+      <span style="font-size:22px; font-weight:900; cursor:pointer;" onclick="closeTechCompletionModal()">&times;</span>
     </div>
-    <div style="background:#fff5f5; border:1px solid #fee2e2; border-radius:8px; padding:10px; margin-bottom:12px; font-size:12px;">
+    <div style="background:var(--soft-red-bg); border:1.5px solid var(--soft-red-border); border-radius:10px; padding:12px; margin-bottom:12px; font-size:12px;">
       <b>Initial Customer Order:</b>
-      <p style="color:#555; margin-top:2px;" id="modalInitialOrderText">Base Scope Package</p>
-      <p style="color:#d32f2f; font-weight:700; margin-top:4px;">Advance Token Paid: ₹21.00 (Adjusted)</p>
-      <p style="color:#b71c1c; font-weight:700; margin-top:4px;" id="modalElapsedTimeText">Job duration: --</p>
+      <p style="color:#475569; margin-top:2px; font-weight:600;" id="modalInitialOrderText">Base Scope Package</p>
+      <p style="color:var(--primary-red); font-weight:800; margin-top:4px;">Advance Token Paid: ₹21.00 (Adjusted)</p>
+      <p style="color:var(--title-blue); font-weight:800; margin-top:4px;" id="modalElapsedTimeText">Job duration: --</p>
     </div>
     <div style="margin-bottom:12px;">
-      <label style="font-weight:700; font-size:12.5px; display:block; margin-bottom:4px;" id="modalServicesHeading">Category Services Performed On-Site:</label>
-      <p style="font-size:11px; color:#666; margin-bottom:6px;">Check service and enter price quoted to customer:</p>
-      <div id="modalAddonsChecklist" style="max-height:160px; overflow-y:auto; border:1px solid #fee2e2; border-radius:6px; padding:6px 10px;"></div>
+      <label style="font-weight:800; font-size:12.5px; color:var(--title-blue); display:block; margin-bottom:4px;" id="modalServicesHeading">Category Services Performed On-Site:</label>
+      <p style="font-size:11px; color:#64748b; margin-bottom:6px; font-weight:600;">Check service and enter price quoted to customer:</p>
+      <div id="modalAddonsChecklist" style="max-height:160px; overflow-y:auto; border:1.5px solid #cbd5e1; border-radius:8px; padding:6px 10px;"></div>
     </div>
     <div style="margin-bottom:12px;">
-      <label style="font-weight:700; font-size:12.5px; display:block; margin-bottom:6px;">Spare Parts Used (GST-Coded):</label>
-      <div id="modalPartsCatalog" style="border:1px solid #fee2e2; border-radius:6px; padding:6px 10px;"></div>
+      <label style="font-weight:800; font-size:12.5px; color:var(--title-blue); display:block; margin-bottom:6px;">Spare Parts Used (GST-Coded):</label>
+      <div id="modalPartsCatalog" style="border:1.5px solid #cbd5e1; border-radius:8px; padding:6px 10px;"></div>
       <div id="modalCustomPartsRows" style="margin-top:8px;"></div>
       <button type="button" class="btn secondary" style="margin-top:8px; padding:8px; font-size:12px;" onclick="addCustomPartRow()">+ Add Custom Part</button>
     </div>
     <div class="input-group">
-      <label style="font-weight:700; font-size:12.5px; display:block; margin-bottom:4px;">Enter Customer 4-Digit Stop PIN:</label>
-      <input type="text" id="modalStopPinInput" placeholder="Stop PIN" maxlength="4" style="text-align:center; font-size:16px; font-weight:700;">
+      <label style="font-weight:800; font-size:12.5px; color:var(--title-blue); display:block; margin-bottom:4px;">Enter Customer 4-Digit Stop PIN:</label>
+      <input type="text" id="modalStopPinInput" placeholder="Stop PIN" maxlength="4" style="text-align:center; font-size:16px; font-weight:900;">
     </div>
-    <div class="card" style="background:#fff5f5; border:1px solid #d32f2f; padding:10px; margin-bottom:12px;">
+    <div class="card" style="background:var(--soft-red-bg); border:1.5px solid var(--soft-red-border); padding:12px; margin-bottom:12px;">
       <div class="price-row"><span>Base Service Pack:</span><span id="modalBaseDisp">₹0.00</span></div>
       <div class="price-row"><span>On-Site Extra Services:</span><span id="modalExtraWorkDisp">₹0.00</span></div>
       <div class="price-row"><span>Materials / Spares:</span><span id="modalMaterialsDisp">₹0.00</span></div>
-      <div class="price-row" id="modalOvertimeRow" style="display:none; color:#b8720a;"><span id="modalOvertimeLabel">Overtime:</span><span id="modalOvertimeDisp">₹0.00</span></div>
-      <div class="price-row" style="color:#d32f2f;"><span>Advance Token Deducted:</span><span>- ₹21.00</span></div>
-      <div class="price-row total"><span>Grand Total (Net Due):</span><span id="modalFinalNetDue" style="color:#d32f2f;">₹0.00</span></div>
+      <div class="price-row" id="modalOvertimeRow" style="display:none; color:var(--warning);"><span id="modalOvertimeLabel">Overtime:</span><span id="modalOvertimeDisp">₹0.00</span></div>
+      <div class="price-row" style="color:var(--primary-red); font-weight:800;"><span>Advance Token Deducted:</span><span>- ₹21.00</span></div>
+      <div class="price-row total"><span>Grand Total (Net Due):</span><span id="modalFinalNetDue" style="color:var(--primary-dark-red);">₹0.00</span></div>
     </div>
-    <button class="btn" style="background:#b71c1c;" onclick="submitFinalCalculatedBill()">✔ Finalize &amp; Generate Customer Bill</button>
+    <button class="btn" onclick="openTechnicianCollectionQr()">📱 Generate Customer Payment QR (On-Site)</button>
   </div>
 </div>
 
-<!-- 11. CUSTOMER FINAL PAYMENT MODAL -->
-<div id="customerPaymentModal" class="modal-backdrop">
+<!-- 11. TECHNICIAN ON-SITE PAYMENT QR MODAL -->
+<div id="techPaymentQrModal" class="modal-backdrop">
+  <div class="modal-content" style="text-align:center;">
+    <h3 class="section-title-blue" style="justify-content:center; font-size:17px; margin-bottom:4px;">Customer Final Settlement</h3>
+    <p style="font-size:12px; color:#64748b; font-weight:600;">Show this QR code to the customer on-site to scan &amp; pay:</p>
+    <div class="qr-box" style="margin:14px 0;">
+      <div style="font-size:12px; font-weight:900; color:var(--title-blue); letter-spacing:0.5px;">KASHVI ENTERPRISES</div>
+      <img id="techOnsiteQrImg" class="qr-img" alt="Payment QR" />
+      <div style="font-size:24px; font-weight:900; color:var(--primary-dark-red);" id="techOnsiteQrAmount">₹0.00</div>
+      <p style="font-size:11px; color:#64748b; margin-top:2px; font-weight:700;">UPI (GPay / PhonePe / Paytm)</p>
+    </div>
+    <button class="btn" style="background:linear-gradient(135deg, #059669, #047857);" onclick="confirmTechnicianSettlementDone()">✔ Confirm Payment Received &amp; Issue Invoice</button>
+    <button class="btn secondary" style="margin-top:8px;" onclick="closeTechPaymentQrModal()">Cancel / Modify Bill</button>
+  </div>
+</div>
+
+<!-- 12. CUSTOMER REVIEW MODAL -->
+<div id="customerReviewModal" class="modal-backdrop">
   <div class="modal-content">
-    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px solid #d32f2f; padding-bottom:8px; margin-bottom:12px;">
-      <h3 style="font-size:15px; color:#d32f2f;">Final Service Bill Settlement</h3>
-      <span style="font-size:20px; font-weight:700; cursor:pointer;" onclick="closeCustomerPaymentModal()">&times;</span>
+    <h3 class="section-title-blue" style="justify-content:center; font-size:17px; margin-bottom:6px;">Rate Your Experience</h3>
+    <p style="font-size:12px; color:#64748b; text-align:center; margin-bottom:10px; font-weight:600;">How was the service provided by Bijli Mitra?</p>
+    <div class="star-rating" id="reviewStarRating">
+      <span class="star" onclick="setReviewRating(1)">★</span>
+      <span class="star" onclick="setReviewRating(2)">★</span>
+      <span class="star" onclick="setReviewRating(3)">★</span>
+      <span class="star" onclick="setReviewRating(4)">★</span>
+      <span class="star selected" onclick="setReviewRating(5)">★</span>
     </div>
-    <div class="card">
-      <div class="price-row"><span>Base Service Pack</span><span id="payBase">₹0.00</span></div>
-      <div class="price-row"><span>On-Site Extra Services</span><span id="payTechExtraWork">₹0.00</span></div>
-      <div class="price-row"><span>Materials / Spare Parts</span><span id="payParts">₹0.00</span></div>
-      <div class="price-row" id="payOvertimeRow" style="display:none; color:#b8720a;"><span id="payOvertimeLabel">Overtime</span><span id="payOvertimeVal">₹0.00</span></div>
-      <div class="price-row" style="color:#d32f2f;"><span>Advance Token Deducted</span><span>- ₹21.00</span></div>
-      <div class="price-row total"><span>Grand Total (Payable Balance)</span><span id="payTotal" style="color:#d32f2f;">₹0.00</span></div>
-    </div>
-    <div style="text-align:center; margin-bottom:14px;">
-      <div style="font-size:24px; font-weight:800; color:#d32f2f;" id="finalAmountTag">₹0.00</div>
-      <p style="font-size:11px; color:#888;">UPI, Cards &amp; NetBanking supported</p>
-    </div>
-    <button class="btn" onclick="payFinalBillWithCashfree()">💳 Pay Now &amp; Download PDF Invoice</button>
+    <textarea id="customerReviewComment" placeholder="Write your honest review or feedback here..." rows="3" style="margin-bottom:12px;"></textarea>
+    <button class="btn" onclick="submitCustomerReview()">Submit Review to Website</button>
   </div>
 </div>
 
-<!-- 12. GOOGLE USER MODAL -->
+<!-- 13. GOOGLE USER MODAL -->
 <div id="googlePhoneModal" class="modal-backdrop">
   <div class="modal-content" style="max-width:380px;">
-    <h3 style="font-size:15px; color:#d32f2f; margin-bottom:6px;">Complete Your Profile</h3>
-    <p style="font-size:12px; color:#555; margin-bottom:14px;">Your mobile number and exact street address are mandatory so our field technicians can reach you.</p>
-    <label style="font-size:12px; font-weight:600; color:#444; margin-bottom:4px; display:block;">10-Digit Mobile Number (Mandatory):</label>
-    <input type="tel" id="googlePhoneInput" placeholder="Enter 10-digit mobile number" maxlength="10" style="margin-bottom:8px;">
-    <div class="card" style="padding:10px; background:#fff5f5; border:1px solid #fee2e2; margin-bottom:8px;">
-      <span style="font-size:12px; font-weight:700; color:#d32f2f;">📍 Select Exact Address from Map:</span>
-      <div id="googleSignupMap" style="height:170px; border-radius:10px; border:1.5px solid #d32f2f; margin-top:6px;"></div>
+    <h3 class="section-title-blue" style="font-size:16px; margin-bottom:6px;">Complete Your Profile</h3>
+    <p style="font-size:12px; color:#64748b; margin-bottom:14px; font-weight:600;">Your mobile number and exact street address are mandatory so our field technicians can reach you.</p>
+    <label style="font-size:12px; font-weight:800; color:var(--title-blue); margin-bottom:4px; display:block;">10-Digit Mobile Number (Mandatory):</label>
+    <input type="tel" id="googlePhoneInput" placeholder="Enter 10-digit mobile number" maxlength="10" style="margin-bottom:8px; font-weight:800;">
+    <div class="card" style="padding:10px; background:var(--soft-red-bg); border:1.5px solid var(--soft-red-border); margin-bottom:8px;">
+      <span style="font-size:12px; font-weight:900; color:var(--title-blue);">📍 Select Exact Address from Map:</span>
+      <div id="googleSignupMap" style="height:170px; border-radius:10px; border:2px solid var(--primary-red); margin-top:6px;"></div>
     </div>
-    <label style="font-size:12px; font-weight:600; color:#444; margin-bottom:4px; display:block;">Selected Address / Landmark:</label>
+    <label style="font-size:12px; font-weight:800; color:var(--title-blue); margin-bottom:4px; display:block;">Selected Address / Landmark:</label>
     <input type="text" id="googleAddressInput" placeholder="Selected address" style="margin-bottom:8px;">
-    <p id="googlePhoneError" style="color:#c0392b; font-size:11px; margin-bottom:8px;"></p>
+    <p id="googlePhoneError" style="color:#c0392b; font-size:11px; margin-bottom:8px; font-weight:700;"></p>
     <button class="btn" onclick="submitGooglePhone()">Save &amp; Continue</button>
   </div>
 </div>
@@ -564,13 +733,60 @@
   const savedCustomer = localStorage.getItem('bm_active_customer');
   if (savedCustomer) { try { currentUser = JSON.parse(savedCustomer); } catch(e){} }
 
-  let isCustomerSignupMode = true, isOtpDispatched = false, currentCategory = 'electrician', pendingAdvanceState = null, activeTechSession = null, isAdminLoggedIn = false, currentSettlementJob = null, activeModalJob = null, bookingMap = null, bookingMapMarker = null, signupMap = null, signupMapMarker = null;
+  let isCustomerSignupMode = true, isOtpDispatched = false, currentCategory = 'electrician', pendingAdvanceState = null, activeTechSession = null, isAdminLoggedIn = false, activeModalJob = null, bookingMap = null, bookingMapMarker = null, signupMap = null, signupMapMarker = null, selectedReviewScore = 5, pendingReviewJobId = null, pendingTechCalculatedPayload = null;
 
   async function hashPassword(plain) {
     const enc = new TextEncoder().encode(plain);
     const buf = await crypto.subtle.digest('SHA-256', enc);
     return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
   }
+
+  /* ==================== PULL TO REFRESH LOGIC ==================== */
+  let touchStartY = 0;
+  let touchCurrentY = 0;
+  let isPulling = false;
+
+  window.addEventListener('touchstart', (e) => {
+    if (window.scrollY === 0) {
+      touchStartY = e.touches[0].clientY;
+      isPulling = true;
+    }
+  }, { passive: true });
+
+  window.addEventListener('touchmove', (e) => {
+    if (!isPulling) return;
+    touchCurrentY = e.touches[0].clientY;
+    const distance = touchCurrentY - touchStartY;
+    if (distance > 70 && window.scrollY === 0) {
+      const indicator = document.getElementById('pullToRefreshIndicator');
+      indicator.classList.add('visible');
+    }
+  }, { passive: true });
+
+  window.addEventListener('touchend', async () => {
+    if (!isPulling) return;
+    const distance = touchCurrentY - touchStartY;
+    if (distance > 70 && window.scrollY === 0) {
+      const indicator = document.getElementById('pullToRefreshIndicator');
+      indicator.classList.add('visible');
+      
+      // Perform Context Refresh
+      if (activeTechSession) {
+        await renderPoolJobs();
+      } else if (currentUser) {
+        await loadCustomerOrders();
+      } else {
+        await loadHomeReviews();
+      }
+      
+      setTimeout(() => {
+        indicator.classList.remove('visible');
+      }, 700);
+    }
+    isPulling = false;
+    touchStartY = 0;
+    touchCurrentY = 0;
+  }, { passive: true });
 
   const CUSTOMER_SESSION_TIMEOUT_MS = 15 * 60 * 1000;
   let customerInactivityTimer = null;
@@ -793,14 +1009,14 @@
     if (!/^[6-9]\d{9}$/.test(phone)) { msg.textContent = "Mandatory: Enter a valid 10-digit Indian mobile number."; msg.style.color = "#c0392b"; return; }
     if (!address) { msg.textContent = "Mandatory: Select or type your exact street address."; msg.style.color = "#c0392b"; return; }
 
-    msg.textContent = "Sending 6-digit verification code to email..."; msg.style.color = "#d32f2f";
+    msg.textContent = "Sending 6-digit verification code to email..."; msg.style.color = "var(--title-blue)";
     try {
       const { error } = await sbClient.auth.signInWithOtp({ email: email, options: { shouldCreateUser: true } });
       if (error) { msg.textContent = "Failed to send OTP: " + error.message; msg.style.color = "#c0392b"; return; }
       isOtpDispatched = true;
       document.getElementById('otpPasswordCreationGroup').style.display = 'block';
       document.getElementById('sendEmailOtpBtn').textContent = "🔄 Resend Email OTP";
-      msg.textContent = "OTP Sent! Enter the 6-digit code and create your password."; msg.style.color = "#d32f2f";
+      msg.textContent = "OTP Sent! Enter the 6-digit code and create your password."; msg.style.color = "var(--title-blue)";
     } catch(err) { msg.textContent = "Error sending OTP: " + err.message; msg.style.color = "#c0392b"; }
   }
 
@@ -819,7 +1035,7 @@
       if (!isOtpDispatched || otpToken.length !== 6) { msg.textContent = "Please send OTP and enter the 6-digit code received on email."; msg.style.color = "#c0392b"; return; }
       if (newPassword.length < 6) { msg.textContent = "Created Password must be at least 6 characters."; msg.style.color = "#c0392b"; return; }
 
-      msg.textContent = "Verifying OTP and creating your account..."; msg.style.color = "#d32f2f";
+      msg.textContent = "Verifying OTP and creating your account..."; msg.style.color = "var(--title-blue)";
       const { error: verifyErr } = await sbClient.auth.verifyOtp({ email: email, token: otpToken, type: 'email' });
       if (verifyErr) { msg.textContent = "Invalid or expired Email OTP: " + verifyErr.message; msg.style.color = "#c0392b"; return; }
 
@@ -830,7 +1046,7 @@
       alert("Account Created Successfully! Please login using your email and password.");
       toggleCustomerAuthMode();
       document.getElementById('authEmail').value = email;
-      msg.textContent = "Account verified! Enter your password to log in."; msg.style.color = "#d32f2f";
+      msg.textContent = "Account verified! Enter your password to log in."; msg.style.color = "var(--title-blue)";
     } else {
       const loginPassword = document.getElementById('authLoginPassword').value.trim();
       if (loginPassword.length < 6) { msg.textContent = "Password must be at least 6 characters."; msg.style.color = "#c0392b"; return; }
@@ -898,7 +1114,7 @@
     const termsAccepted = document.getElementById('bookingTermsCheckbox').checked;
 
     if (!address) { alert("Please enter or pin your service address."); return; }
-    if (!termsAccepted) { alert("Mandatory: Please accept the Terms & Conditions to proceed."); return; }
+    if (!termsAccepted) { alert("Mandatory: Please accept the Terms & Conditions (₹21 non-refundable token) to proceed."); return; }
 
     const invoiceNo = 'BM-' + Date.now().toString().slice(-6);
     const startPin = Math.floor(1000 + Math.random() * 9000).toString();
@@ -948,17 +1164,50 @@
     if (!pendingAdvanceState) return;
     const paidCheckbox = document.getElementById('advancePaidCheckbox');
     const txnErrEl = document.getElementById('advanceTxnError');
-    if (!paidCheckbox.checked) { txnErrEl.textContent = "Please confirm you have completed the payment before proceeding."; return; }
+    if (!paidCheckbox.checked) { txnErrEl.textContent = "Please confirm you have completed the ₹21 payment."; return; }
     txnErrEl.textContent = "";
     alert(`Advance Payment Received! Booking ID: ${pendingAdvanceState.invoiceNo} is placed.`);
     goToCustomerProfile();
+  }
+
+  // ==================== RE-VISIT (WARRANTY CLAIM) ====================
+  async function claimFreeRevisit(parentInvoiceNo, serviceType) {
+    if (!confirm("Claim Free Re-visit under 30-Day Warranty?\nOur technician will inspect the previous repair work at ₹0 Base Fee.")) return;
+    
+    const invoiceNo = 'REV-' + Date.now().toString().slice(-6);
+    const startPin = Math.floor(1000 + Math.random() * 9000).toString();
+    const stopPin = Math.floor(1000 + Math.random() * 9000).toString();
+
+    const revisitBooking = {
+      customer_name: currentUser.name || "Customer",
+      customer_phone: currentUser.phone,
+      customer_address: currentUser.address,
+      service_type: serviceType,
+      extra_services: `30-Day Free Revisit (Warranty Claim for ${parentInvoiceNo})`,
+      extra_parts_cost: 0,
+      start_pin: startPin,
+      stop_pin: stopPin,
+      job_status: 'pending_acceptance',
+      technician_name: null,
+      base_fee: 0,
+      invoice_no: invoiceNo,
+      payment_status: 'warranty_revisit'
+    };
+
+    try { await sbClient.from('bookings').insert([revisitBooking]); } catch(e){}
+    let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
+    localPool.unshift(revisitBooking);
+    localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
+
+    alert(`Re-visit Booked Free of Charge! Order ID: ${invoiceNo}\nBroadcasting to nearest technicians.`);
+    loadCustomerOrders();
   }
 
   // ==================== CUSTOMER ORDERS & BILLING ====================
   async function loadCustomerOrders() {
     if (!currentUser) return;
     const container = document.getElementById('customerHistoryContainer');
-    container.innerHTML = '<p style="color:#888; font-size:13px; text-align:center; padding:20px 0;">Loading your booking history...</p>';
+    container.innerHTML = '<p style="color:#64748b; font-size:13px; text-align:center; padding:20px 0; font-weight:600;">Loading your booking history...</p>';
 
     let orders = [];
     try {
@@ -972,7 +1221,7 @@
     }
 
     if (orders.length === 0) {
-      container.innerHTML = '<div style="text-align:center; color:#888; padding:24px 0; font-size:13px;">You have no active or past bookings.</div>';
+      container.innerHTML = '<div style="text-align:center; color:#64748b; padding:24px 0; font-size:13px; font-weight:600;">You have no active or past bookings.</div>';
       return;
     }
 
@@ -980,89 +1229,113 @@
       const isPaid = b.job_status === 'paid_completed', isBillReady = b.job_status === 'work_completed', isPending = b.job_status === 'pending_acceptance', isCancelled = b.job_status === 'cancelled';
       const catConfig = SERVICE_CONFIG[b.service_type] || SERVICE_CONFIG.electrician;
 
-      let statusBadge = `<span style="color:#d97706; font-weight:700;">[ ⏳ PENDING POOL ACCEPT ]</span>`;
-      if (b.job_status === 'claimed') statusBadge = `<span style="color:#2563eb; font-weight:700;">[ 🧑‍🔧 ACCEPTED BY TECH ]</span>`;
-      else if (b.job_status === 'in_progress') statusBadge = `<span style="color:#7c3aed; font-weight:700;">[ ⚡ WORK IN PROGRESS ]</span>`;
-      else if (isBillReady) statusBadge = `<span style="color:#b8720a; font-weight:700;">[ 🧾 BILL READY - PAYMENT PENDING ]</span>`;
-      else if (isPaid) statusBadge = `<span style="color:#d32f2f; font-weight:700;">[ ✔ COMPLETED &amp; PAID ]</span>`;
-      else if (isCancelled) statusBadge = `<span style="color:#e74c3c; font-weight:700;">[ ❌ CANCELLED ]</span>`;
+      let statusBadge = `<span style="color:var(--warning); font-weight:900;">[ ⏳ PENDING POOL ACCEPT ]</span>`;
+      if (b.job_status === 'claimed') statusBadge = `<span style="color:var(--title-blue); font-weight:900;">[ 🧑‍🔧 ACCEPTED BY TECH ]</span>`;
+      else if (b.job_status === 'in_progress') statusBadge = `<span style="color:#7c3aed; font-weight:900;">[ ⚡ WORK IN PROGRESS ]</span>`;
+      else if (isBillReady) statusBadge = `<span style="color:var(--warning); font-weight:900;">[ 🧾 BILL READY - PAYMENT PENDING ]</span>`;
+      else if (isPaid) statusBadge = `<span style="color:var(--success); font-weight:900;">[ ✔ COMPLETED &amp; PAID ]</span>`;
+      else if (isCancelled) statusBadge = `<span style="color:#991b1b; font-weight:900;">[ ❌ CANCELLED (₹21 Non-Refundable) ]</span>`;
 
       return `
-        <div class="card" style="border-left:4px solid ${isPaid ? '#d32f2f' : (isCancelled ? '#e74c3c' : (isBillReady ? '#b8720a' : '#f39c12'))};">
+        <div class="card" style="border-left:5px solid ${isPaid ? 'var(--success)' : (isCancelled ? '#991b1b' : (isBillReady ? '#b8720a' : 'var(--title-blue)'))};">
           <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
-            <b>${b.invoice_no || 'BM-ORDER'}</b>
+            <b style="font-weight:900; color:var(--title-blue);">${b.invoice_no || 'BM-ORDER'}</b>
             ${statusBadge}
           </div>
-          <p style="font-size:12px; color:#333; font-weight:600;">🛠️ Service: ${catConfig.title}</p>
-          <p style="font-size:11.5px; color:#555;">📋 Work Details: ${b.extra_services || 'Base Package'}</p>
-          <p style="font-size:12px; color:#555;">🧑‍🔧 Assigned Tech: <b>${b.technician_name || 'Broadcasting in Pool (Waiting Tech...)'}</b>${b.technician_phone ? ' (📞 ' + b.technician_phone + ')' : ''}</p>
-          <p style="font-size:12px; color:#555;">📍 Work Address: ${b.customer_address}</p>
+          <p style="font-size:12px; color:#1e293b; font-weight:800;">🛠️ Service: ${catConfig.title}</p>
+          <p style="font-size:11.5px; color:#64748b; font-weight:600;">📋 Work Details: ${b.extra_services || 'Base Package'}</p>
+          <p style="font-size:12px; color:#64748b; font-weight:600;">🧑‍🔧 Assigned Tech: <b>${b.technician_name || 'Broadcasting in Pool (Waiting Tech...)'}</b>${b.technician_phone ? ' (📞 ' + b.technician_phone + ')' : ''}</p>
+          <p style="font-size:12px; color:#64748b; font-weight:600;">📍 Work Address: ${b.customer_address}</p>
+          
           ${!isCancelled ? `
-          <div style="background:#fff5f5; border:1px dashed #d32f2f; border-radius:6px; padding:6px; margin:6px 0; font-size:11.5px;">
+          <div style="background:var(--soft-red-bg); border:1.5px dashed var(--soft-red-border); border-radius:8px; padding:8px; margin:8px 0; font-size:11.5px; font-weight:700;">
             🔴 Your Start PIN: <b>${b.start_pin}</b> (Give upon arrival)<br>
             🔴 Your Stop PIN: <b>${b.stop_pin}</b> (Give after work completes)
           </div>` : ''}
-          ${isPending ? `<button class="btn danger" style="padding:7px; font-size:11.5px; margin-top:8px;" onclick="cancelCustomerBooking('${b.id || b.invoice_no}')">❌ Cancel Booking</button>` : ''}
-          ${isBillReady ? `<button class="btn" style="padding:8px; font-size:12px; margin-top:8px; background:#b8720a;" onclick='openCustomerSettlementFromProfile(${JSON.stringify(b).replace(/'/g,"&apos;")})'>💳 Bill Ready - Pay Now (₹${(b.calculated_total || 0).toFixed(2)})</button>` : ''}
-          ${isPaid ? `<button class="btn secondary" style="padding:6px; font-size:11px; margin-top:8px;" onclick="downloadOrderPdf('${b.id || b.invoice_no}')">📥 Download Official Tax Invoice PDF</button>` : ''}
+
+          ${isPending ? `<button class="btn danger" style="padding:8px; font-size:11.5px; margin-top:8px;" onclick="cancelCustomerBooking('${b.id || b.invoice_no}')">❌ Cancel Booking (₹21 Non-Refundable)</button>` : ''}
+          
+          ${isCancelled ? `<button class="btn secondary" style="padding:7px; font-size:11px; margin-top:8px;" onclick="downloadCancellationReceiptPdf('${b.id || b.invoice_no}')">📄 Download Cancellation Fee Receipt (₹21.00 Non-Refundable)</button>` : ''}
+
+          ${isPaid ? `
+            <div style="display:flex; flex-direction:column; gap:6px; margin-top:8px;">
+              <button class="btn secondary" style="padding:7px; font-size:11.5px;" onclick="downloadOrderPdf('${b.id || b.invoice_no}')">📥 Download Official Tax Invoice PDF</button>
+              <button class="btn warning" style="padding:7px; font-size:11.5px;" onclick="claimFreeRevisit('${b.invoice_no}', '${b.service_type}')">🛡️ Claim 30-Day Free Re-visit</button>
+              <button class="btn" style="padding:7px; font-size:11.5px; background:var(--title-blue);" onclick="openReviewModalForJob('${b.id || b.invoice_no}')">⭐ Leave a Review / Feedback</button>
+            </div>
+          ` : ''}
         </div>
       `;
     }).join('');
   }
 
   async function cancelCustomerBooking(orderId) {
-    if (!confirm("Are you sure you want to cancel this booking?")) return;
-    try { await sbClient.from('bookings').update({ job_status: 'cancelled' }).or(`id.eq.${orderId},invoice_no.eq.${orderId}`); } catch(e){}
+    if (!confirm("Cancellation Policy Warning:\nAre you sure you want to cancel? As per terms, the ₹21.00 advance booking token is strictly NON-REFUNDABLE.")) return;
+    try { await sbClient.from('bookings').update({ job_status: 'cancelled', payment_status: 'cancelled_non_refundable' }).or(`id.eq.${orderId},invoice_no.eq.${orderId}`); } catch(e){}
     let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
-    localPool = localPool.map(j => (j.id === orderId || j.invoice_no === orderId) ? { ...j, job_status: 'cancelled' } : j);
+    localPool = localPool.map(j => (j.id === orderId || j.invoice_no === orderId) ? { ...j, job_status: 'cancelled', payment_status: 'cancelled_non_refundable' } : j);
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
-    alert("Your booking has been cancelled."); loadCustomerOrders();
-  }
-
-  function openCustomerSettlementFromProfile(booking) {
-    currentSettlementJob = {
-      id: booking.id || booking.invoice_no,
-      invoice_no: booking.invoice_no,
-      baseAmount: (SERVICE_CONFIG[booking.service_type] || SERVICE_CONFIG.electrician).total,
-      extraOnSiteCost: parseFloat(booking.extra_on_site_cost) || 0,
-      extraMaterialCost: parseFloat(booking.extra_material_cost) || 0,
-      overtimeCharge: parseFloat(booking.overtime_charge) || 0,
-      overtimeHours: parseFloat(booking.overtime_hours) || 0,
-      netDue: parseFloat(booking.calculated_total) || 0
-    };
-    document.getElementById('payBase').textContent = `₹${currentSettlementJob.baseAmount.toFixed(2)}`;
-    document.getElementById('payTechExtraWork').textContent = `₹${currentSettlementJob.extraOnSiteCost.toFixed(2)}`;
-    document.getElementById('payParts').textContent = `₹${currentSettlementJob.extraMaterialCost.toFixed(2)}`;
-    if (currentSettlementJob.overtimeCharge > 0) {
-      document.getElementById('payOvertimeRow').style.display = 'flex';
-      document.getElementById('payOvertimeLabel').textContent = `Overtime (${currentSettlementJob.overtimeHours} hr @ ₹100/hr)`;
-      document.getElementById('payOvertimeVal').textContent = `₹${currentSettlementJob.overtimeCharge.toFixed(2)}`;
-    } else { document.getElementById('payOvertimeRow').style.display = 'none'; }
-    document.getElementById('payTotal').textContent = `₹${currentSettlementJob.netDue.toFixed(2)}`;
-    document.getElementById('finalAmountTag').textContent = `₹${currentSettlementJob.netDue.toFixed(2)}`;
-    document.getElementById('customerPaymentModal').style.display = 'flex';
-  }
-
-  async function payFinalBillWithCashfree() {
-    if (!currentSettlementJob) return;
-    try { await sbClient.from('bookings').update({ job_status: 'paid_completed', payment_status: 'settled_full', final_txn_ref: 'cashfree_paid' }).or(`id.eq.${currentSettlementJob.id},invoice_no.eq.${currentSettlementJob.invoice_no}`); } catch(e){}
-    let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
-    localPool = localPool.map(j => (j.id === currentSettlementJob.id || j.invoice_no === currentSettlementJob.invoice_no) ? { ...j, job_status: 'paid_completed', payment_status: 'settled_full' } : j);
-    localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
-    alert("Payment successful! Generating Tax Invoice PDF...");
-    closeCustomerPaymentModal();
-    downloadOrderPdf(currentSettlementJob.id || currentSettlementJob.invoice_no);
+    alert("Your booking has been cancelled. An official cancellation fee receipt (₹21.00 Non-Refundable) is ready for download.");
     loadCustomerOrders();
   }
-  function closeCustomerPaymentModal() { document.getElementById('customerPaymentModal').style.display = 'none'; }
 
+  // ==================== CANCELLATION RECEIPT PDF ====================
+  async function downloadCancellationReceiptPdf(orderId) {
+    let data = null;
+    try { const res = await sbClient.from('bookings').select('*').or(`id.eq.${orderId},invoice_no.eq.${orderId}`).single(); data = res.data; } catch(e){}
+    if (!data) { let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]'); data = localPool.find(j => j.id === orderId || j.invoice_no === orderId); }
+    if (!data) return;
+
+    document.getElementById('pdfDocTypeTitle').textContent = "CANCELLATION & ADMINISTRATIVE FEE RECEIPT";
+    document.getElementById('pdfCustName').textContent = data.customer_name || currentUser.name || "Customer";
+    document.getElementById('pdfCustPhone').textContent = data.customer_phone;
+    document.getElementById('pdfInvNo').textContent = data.invoice_no + '-CNL';
+    document.getElementById('pdfCustAddr').textContent = data.customer_address;
+    document.getElementById('pdfTech').textContent = 'Direct Dispatch Desk';
+    document.getElementById('pdfDate').textContent = new Date(data.created_at || Date.now()).toLocaleDateString('en-IN');
+
+    const taxableFee = 21.00 / 1.18;
+    const gstVal = 21.00 - taxableFee;
+
+    document.getElementById('pdfItemsBody').innerHTML = `
+      <tr>
+        <td>1</td>
+        <td>Booking Cancellation &amp; Administrative Dispatch Fee (Non-Refundable)</td>
+        <td>998719</td>
+        <td>₹${taxableFee.toFixed(2)}</td>
+        <td>18%</td>
+        <td>₹21.00</td>
+      </tr>
+    `;
+
+    document.getElementById('pdfSubtotal').textContent = `₹${taxableFee.toFixed(2)}`;
+    document.getElementById('pdfCgst').textContent = `₹${(gstVal / 2).toFixed(2)}`;
+    document.getElementById('pdfSgst').textContent = `₹${(gstVal / 2).toFixed(2)}`;
+    document.getElementById('pdfAdvanceTokenRow').style.display = 'none';
+    document.getElementById('pdfGrandTotalLabel').textContent = "Total Fee Paid (Non-Refundable)";
+    document.getElementById('pdfGrandTotal').textContent = `₹21.00`;
+    document.getElementById('pdfCancellationNote').style.display = 'block';
+
+    const el = document.getElementById('invoicePdf');
+    document.getElementById('invoiceRenderWrapper').style.display = 'block';
+    html2pdf().from(el).set({ margin: 10, filename: `${data.invoice_no}_Cancellation_Receipt.pdf`, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } }).save().then(() => {
+      document.getElementById('invoiceRenderWrapper').style.display = 'none';
+      document.getElementById('pdfAdvanceTokenRow').style.display = 'flex';
+      document.getElementById('pdfCancellationNote').style.display = 'none';
+      document.getElementById('pdfDocTypeTitle').textContent = "TAX INVOICE / SERVICE RECEIPT";
+      document.getElementById('pdfGrandTotalLabel').textContent = "Grand Total (Net Due)";
+    });
+  }
+
+  // ==================== OFFICIAL TAX INVOICE PDF ====================
   async function downloadOrderPdf(orderId) {
     let data = null;
     try { const res = await sbClient.from('bookings').select('*').or(`id.eq.${orderId},invoice_no.eq.${orderId}`).single(); data = res.data; } catch(e){}
     if (!data) { let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]'); data = localPool.find(j => j.id === orderId || j.invoice_no === orderId); }
     if (!data) return;
 
-    document.getElementById('pdfCustName').textContent = data.customer_name || currentUser.name || "Valued Customer";
+    document.getElementById('pdfDocTypeTitle').textContent = "TAX INVOICE / SERVICE RECEIPT";
+    document.getElementById('pdfCustName').textContent = data.customer_name || currentUser?.name || "Valued Customer";
     document.getElementById('pdfCustPhone').textContent = data.customer_phone;
     document.getElementById('pdfInvNo').textContent = data.invoice_no;
     document.getElementById('pdfCustAddr').textContent = data.customer_address;
@@ -1070,7 +1343,8 @@
     document.getElementById('pdfDate').textContent = new Date(data.created_at || Date.now()).toLocaleDateString('en-IN');
 
     const cfg = SERVICE_CONFIG[data.service_type] || SERVICE_CONFIG.electrician;
-    const base = cfg.base;
+    const base = parseFloat(data.base_fee) === 0 ? 0 : cfg.base;
+    const baseTotal = parseFloat(data.base_fee) === 0 ? 0 : cfg.total;
     const extraServices = parseFloat(data.extra_on_site_cost) || 0;
     const extraMaterials = parseFloat(data.extra_material_cost) || 0;
     const overtimeCharge = parseFloat(data.overtime_charge) || 0;
@@ -1080,11 +1354,13 @@
     const taxableOvertime = overtimeCharge > 0 ? (overtimeCharge / 1.18) : 0;
     
     const subtotal = base + taxableExtraServices + taxableMaterials + taxableOvertime;
-    const totalGross = cfg.total + extraServices + extraMaterials + overtimeCharge;
+    const totalGross = baseTotal + extraServices + extraMaterials + overtimeCharge;
     const totalGst = totalGross - subtotal;
-    const netGrand = totalGross - 21.00;
+    const isRevisit = data.payment_status === 'warranty_revisit';
+    const advanceDeducted = isRevisit ? 0 : 21.00;
+    const netGrand = totalGross - advanceDeducted;
 
-    let rowsHtml = `<tr><td>1</td><td>${cfg.title} (Base Service Pack)</td><td>${cfg.sac}</td><td>₹${base.toFixed(2)}</td><td>18%</td><td>₹${cfg.total.toFixed(2)}</td></tr>`;
+    let rowsHtml = `<tr><td>1</td><td>${cfg.title} ${isRevisit ? '(30-Day Warranty Re-visit - ₹0 Base)' : '(Base Service Pack)'}</td><td>${cfg.sac}</td><td>₹${base.toFixed(2)}</td><td>18%</td><td>₹${baseTotal.toFixed(2)}</td></tr>`;
     let sr = 2;
     if (extraServices > 0) rowsHtml += `<tr><td>${sr++}</td><td>On-Site Category Services</td><td>${cfg.sac}</td><td>₹${taxableExtraServices.toFixed(2)}</td><td>18%</td><td>₹${extraServices.toFixed(2)}</td></tr>`;
     try {
@@ -1100,7 +1376,9 @@
     document.getElementById('pdfSubtotal').textContent = `₹${subtotal.toFixed(2)}`;
     document.getElementById('pdfCgst').textContent = `₹${(totalGst / 2).toFixed(2)}`;
     document.getElementById('pdfSgst').textContent = `₹${(totalGst / 2).toFixed(2)}`;
-    document.getElementById('pdfGrandTotal').textContent = `₹${netGrand.toFixed(2)}`;
+    document.getElementById('pdfAdvanceTokenRow').style.display = isRevisit ? 'none' : 'flex';
+    document.getElementById('pdfGrandTotalLabel').textContent = "Grand Total (Net Settled)";
+    document.getElementById('pdfGrandTotal').textContent = `₹${Math.max(0, netGrand).toFixed(2)}`;
 
     const el = document.getElementById('invoicePdf');
     document.getElementById('invoiceRenderWrapper').style.display = 'block';
@@ -1109,18 +1387,50 @@
     });
   }
 
-  // ==================== TECH DASHBOARD & PIN VERIFICATION ====================
+  // ==================== TECH DASHBOARD & ON-SITE PAYMENT QR (6-DIGIT HASH) ====================
   async function loginTechnicianToPool() {
     const techId = document.getElementById('techIdInput').value.trim().toUpperCase();
     const cat = document.getElementById('techCategorySelect').value;
     const pin = document.getElementById('techPinInput').value.trim();
     const msg = document.getElementById('authMsg');
-    if (!techId || pin.length !== 4) { msg.textContent = "Please enter valid Technician ID and 4-digit PIN."; msg.style.color = "#c0392b"; return; }
+    
+    if (!techId || pin.length !== 6) { 
+      msg.textContent = "Please enter valid Technician ID and 6-digit PIN."; 
+      msg.style.color = "#c0392b"; 
+      return; 
+    }
+
+    const pinHash = await hashPassword(pin);
 
     try {
-      const { data } = await sbClient.from('technicians').select('*').eq('tech_code', techId).eq('phone', pin).eq('category', cat).single();
-      if (!data) { msg.textContent = "Invalid Technician ID / PIN / Category."; msg.style.color = "#c0392b"; return; }
-      if (data.is_available === false) { msg.textContent = "Technician account is blocked. Contact Admin."; msg.style.color = "#c0392b"; return; }
+      // Check PIN hash matching for security
+      let { data } = await sbClient.from('technicians').select('*').eq('tech_code', techId).eq('category', cat).single();
+      
+      if (!data) { 
+        msg.textContent = "Invalid Technician ID / Category."; 
+        msg.style.color = "#c0392b"; 
+        return; 
+      }
+      
+      if (data.pin_hash && data.pin_hash !== pinHash) {
+        msg.textContent = "Incorrect 6-digit PIN."; 
+        msg.style.color = "#c0392b"; 
+        return;
+      }
+      
+      // Backward compatibility fallback
+      if (!data.pin_hash && data.phone !== pin) {
+        msg.textContent = "Incorrect 6-digit PIN."; 
+        msg.style.color = "#c0392b"; 
+        return;
+      }
+
+      if (data.is_available === false) { 
+        msg.textContent = "Technician account is blocked. Contact Admin."; 
+        msg.style.color = "#c0392b"; 
+        return; 
+      }
+
       activeTechSession = { name: data.name, category: cat, id: data.id, techCode: data.tech_code, phone: data.contact_phone || '' };
       document.getElementById('topAuthBadge').textContent = "🧑‍🔧 " + data.name + " (" + data.tech_code + ")";
       document.getElementById('techPoolHeader').textContent = `${data.name} [${data.tech_code}] (${cat.toUpperCase()} Pool)`;
@@ -1152,21 +1462,21 @@
     const activeSec = document.getElementById('activeClaimedJobSection');
     if (claimedJob) {
       activeSec.innerHTML = `
-        <div class="card" style="border:2px solid #d32f2f; background:#fff5f5;">
-          <div style="display:flex; justify-content:space-between;"><b style="color:#d32f2f;">Active Claimed Job: ${claimedJob.invoice_no}</b><span>[ ${claimedJob.job_status.toUpperCase()} ]</span></div>
-          <p style="font-size:12px; margin:4px 0;">👤 Customer: <b>${claimedJob.customer_name || 'Customer'}</b> | 📞 ${claimedJob.customer_phone}</p>
-          <p style="font-size:12px; margin-bottom:4px;">📍 Address: ${claimedJob.customer_address}</p>
-          <p style="font-size:11.5px; color:#555;">📋 Work: <b>${claimedJob.extra_services || 'Base Package Only'}</b></p>
+        <div class="card" style="border:2px solid var(--title-blue); background:var(--soft-red-bg);">
+          <div style="display:flex; justify-content:space-between;"><b style="color:var(--title-blue); font-weight:900;">Active Claimed Job: ${claimedJob.invoice_no}</b><span style="font-weight:900;">[ ${claimedJob.job_status.toUpperCase()} ]</span></div>
+          <p style="font-size:12px; margin:4px 0; font-weight:700;">👤 Customer: <b>${claimedJob.customer_name || 'Customer'}</b> | 📞 ${claimedJob.customer_phone}</p>
+          <p style="font-size:12px; margin-bottom:4px; font-weight:600;">📍 Address: ${claimedJob.customer_address}</p>
+          <p style="font-size:11.5px; color:#475569; font-weight:600;">📋 Work: <b>${claimedJob.extra_services || 'Base Package Only'}</b></p>
           ${claimedJob.job_status === 'claimed' ? `
             <div style="margin-top:8px;">
-              <p style="font-size:11.5px; color:#d32f2f; font-weight:700; margin-bottom:4px;">Ask Start PIN from Customer upon arrival:</p>
-              <input type="text" id="startPinVerifyInput" placeholder="Enter 4-Digit Start PIN" maxlength="4" style="text-align:center; font-size:16px; font-weight:700; margin-bottom:6px;">
+              <p style="font-size:11.5px; color:var(--title-blue); font-weight:900; margin-bottom:4px;">Ask Start PIN from Customer upon arrival:</p>
+              <input type="text" id="startPinVerifyInput" placeholder="Enter 4-Digit Start PIN" maxlength="4" style="text-align:center; font-size:16px; font-weight:900; margin-bottom:6px;">
               <button class="btn" onclick="verifyStartPin('${claimedJob.id || claimedJob.invoice_no}', '${claimedJob.start_pin}')">Verify Start PIN &amp; Begin Job</button>
               <button class="btn danger" style="margin-top:6px;" onclick="cancelClaimedJob('${claimedJob.id || claimedJob.invoice_no}')">Cancel Job (15-Min Penalty)</button>
             </div>
           ` : claimedJob.job_status === 'in_progress' ? `
-            <div style="margin-top:8px;"><button class="btn" style="background:#b8720a;" onclick="openTechCompletionModal('${claimedJob.id || claimedJob.invoice_no}')">📋 Work Finished: Fill Details &amp; Generate Bill</button></div>
-          ` : `<div style="margin-top:8px;"><p style="font-size:11.5px; color:#d32f2f; font-weight:700;">Bill generated - waiting for customer payment.</p></div>`}
+            <div style="margin-top:8px;"><button class="btn" style="background:linear-gradient(135deg, #d97706, #b45309);" onclick="openTechCompletionModal('${claimedJob.id || claimedJob.invoice_no}')">📋 Work Finished: Calculate &amp; Generate QR</button></div>
+          ` : `<div style="margin-top:8px;"><p style="font-size:11.5px; color:var(--success); font-weight:900;">Payment confirmed - job completed.</p><button class="btn secondary" style="margin-top:6px; font-size:11px;" onclick="downloadOrderPdf('${claimedJob.id || claimedJob.invoice_no}')">📄 Download Job Tax Invoice PDF</button></div>`}
         </div>`;
     } else { activeSec.innerHTML = ''; }
 
@@ -1178,13 +1488,14 @@
     if (poolJobs.length === 0) { let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]'); poolJobs = localPool.filter(j => j.service_type === activeTechSession.category && j.job_status === 'pending_acceptance'); }
 
     const poolList = document.getElementById('availablePoolList');
-    if (!poolJobs || poolJobs.length === 0) { poolList.innerHTML = '<p style="color:#888; font-size:12px; text-align:center; padding:16px 0;">No pending broadcasts in your pool right now.</p>'; return; }
+    if (!poolJobs || poolJobs.length === 0) { poolList.innerHTML = '<p style="color:#64748b; font-size:12px; text-align:center; padding:16px 0; font-weight:600;">No pending broadcasts in your pool right now.</p>'; return; }
 
     poolList.innerHTML = poolJobs.map(j => `
-      <div class="card" style="border-left:4px solid #f39c12;">
-        <div style="display:flex; justify-content:space-between;"><b>${j.invoice_no}</b><span style="font-weight:700; color:#d32f2f;">${j.service_type?.toUpperCase()}</span></div>
-        <p style="font-size:12px; color:#333; margin:3px 0;">👤 ${j.customer_name || 'Customer'} (📞 ${j.customer_phone})</p>
-        <p style="font-size:12px; color:#555;">📍 ${j.customer_address}</p>
+      <div class="card" style="border-left:5px solid var(--warning);">
+        <div style="display:flex; justify-content:space-between;"><b>${j.invoice_no}</b><span style="font-weight:900; color:var(--title-blue);">${j.service_type?.toUpperCase()}</span></div>
+        <p style="font-size:12px; color:#1e293b; margin:3px 0; font-weight:700;">👤 ${j.customer_name || 'Customer'} (📞 ${j.customer_phone})</p>
+        <p style="font-size:12px; color:#64748b; font-weight:600;">📍 ${j.customer_address}</p>
+        <p style="font-size:11px; color:var(--primary-dark-red); font-weight:800;">${j.payment_status === 'warranty_revisit' ? '🛡️ Free 30-Day Warranty Re-visit' : '⚡ Regular Service'}</p>
         <button class="btn" style="margin-top:8px;" ${cooldownActive ? 'disabled' : ''} onclick="claimPoolJob('${j.id || j.invoice_no}')">${cooldownActive ? 'Claim Blocked (Cooldown)' : '⚡ Accept &amp; Claim Job'}</button>
       </div>`).join('');
   }
@@ -1220,7 +1531,7 @@
     } else { alert("Invalid Start PIN! Please check with customer."); }
   }
 
-  // ==================== WORK COMPLETION MODAL & BILLING ====================
+  // ==================== WORK COMPLETION & DYNAMIC TECH QR ====================
   async function openTechCompletionModal(jobId) {
     let job = null;
     try { const { data } = await sbClient.from('bookings').select('*').or(`id.eq.${jobId},invoice_no.eq.${jobId}`).single(); job = data; } catch(e){}
@@ -1229,7 +1540,8 @@
 
     activeModalJob = job;
     const cfg = SERVICE_CONFIG[job.service_type] || SERVICE_CONFIG.electrician;
-    document.getElementById('modalInitialOrderText').textContent = `${cfg.title} (Base Scope)`;
+    const isRevisit = job.payment_status === 'warranty_revisit';
+    document.getElementById('modalInitialOrderText').textContent = isRevisit ? `${cfg.title} (30-Day Warranty Re-visit - ₹0 Base)` : `${cfg.title} (Base Scope)`;
     document.getElementById('modalStopPinInput').value = "";
     document.getElementById('modalCustomPartsRows').innerHTML = "";
 
@@ -1238,16 +1550,16 @@
     document.getElementById('modalAddonsChecklist').innerHTML = categoryServices.map((sName, idx) => `
       <div class="addon-item">
         <label style="flex:1.5;"><input type="checkbox" class="modal-addon-cb" data-name="${sName}" onchange="toggleServicePriceInput(${idx}); recalculateModalFinalTotal();"><span>${sName}</span></label>
-        <div style="display:flex; align-items:center; gap:4px;"><span style="font-size:12px; font-weight:600; color:#555;">₹</span><input type="number" id="servicePrice_${idx}" class="modal-addon-price-input" placeholder="0.00" min="0" disabled style="width:75px; padding:6px; margin:0; text-align:right; font-weight:700;" oninput="recalculateModalFinalTotal()"></div>
-      </div>`).join('') || '<p style="font-size:11px; color:#888;">No predefined services for this trade</p>';
+        <div style="display:flex; align-items:center; gap:4px;"><span style="font-size:12px; font-weight:700; color:#64748b;">₹</span><input type="number" id="servicePrice_${idx}" class="modal-addon-price-input" placeholder="0.00" min="0" disabled style="width:75px; padding:6px; margin:0; text-align:right; font-weight:800;" oninput="recalculateModalFinalTotal()"></div>
+      </div>`).join('') || '<p style="font-size:11px; color:#64748b;">No predefined services for this trade</p>';
 
     const catalog = SPARE_PARTS_CATALOG[job.service_type] || [];
     document.getElementById('modalPartsCatalog').innerHTML = catalog.map(p => `
       <div class="addon-item">
-        <label style="flex:1;"><span>${p.name} <span style="color:#888; font-size:10.5px;">(${p.code})</span></span></label>
-        <input type="number" class="catalog-part-qty" data-name="${p.name}" data-code="${p.code}" data-rate="${p.rate}" min="0" value="0" style="width:60px; padding:6px; margin:0; text-align:center;" oninput="recalculateModalFinalTotal()">
-        <span class="addon-price" style="width:60px; text-align:right;">₹${p.rate.toFixed(2)}/pc</span>
-      </div>`).join('') || '<p style="font-size:11px; color:#888;">No catalog items</p>';
+        <label style="flex:1;"><span>${p.name} <span style="color:#64748b; font-size:10.5px;">(${p.code})</span></span></label>
+        <input type="number" class="catalog-part-qty" data-name="${p.name}" data-code="${p.code}" data-rate="${p.rate}" min="0" value="0" style="width:60px; padding:6px; margin:0; text-align:center; font-weight:800;" oninput="recalculateModalFinalTotal()">
+        <span class="addon-price" style="width:60px; text-align:right; font-weight:800;">₹${p.rate.toFixed(2)}/pc</span>
+      </div>`).join('') || '<p style="font-size:11px; color:#64748b;">No catalog items</p>';
 
     if (job.start_time) {
       const hrs = (Date.now() - new Date(job.start_time).getTime()) / 3600000;
@@ -1272,7 +1584,7 @@
     const id = 'custpart' + Date.now();
     const row = document.createElement('div');
     row.id = id; row.style.cssText = 'display:flex; gap:6px; margin-bottom:6px;';
-    row.innerHTML = `<input type="text" placeholder="Part Name" class="custom-part-name" style="flex:2; margin:0; padding:8px; font-size:12px;"><input type="text" placeholder="HSN/SAC" class="custom-part-code" style="flex:1; margin:0; padding:8px; font-size:12px;"><input type="number" placeholder="Qty" class="custom-part-qty" value="1" style="width:50px; margin:0; padding:8px; font-size:12px;" oninput="recalculateModalFinalTotal()"><input type="number" placeholder="Rate ₹" class="custom-part-rate" style="width:65px; margin:0; padding:8px; font-size:12px;" oninput="recalculateModalFinalTotal()"><button type="button" onclick="document.getElementById('${id}').remove(); recalculateModalFinalTotal();" style="background:#e74c3c; color:#fff; border:none; border-radius:6px; padding:0 10px;">✕</button>`;
+    row.innerHTML = `<input type="text" placeholder="Part Name" class="custom-part-name" style="flex:2; margin:0; padding:8px; font-size:12px;"><input type="text" placeholder="HSN/SAC" class="custom-part-code" style="flex:1; margin:0; padding:8px; font-size:12px;"><input type="number" placeholder="Qty" class="custom-part-qty" value="1" style="width:50px; margin:0; padding:8px; font-size:12px; font-weight:800;" oninput="recalculateModalFinalTotal()"><input type="number" placeholder="Rate ₹" class="custom-part-rate" style="width:65px; margin:0; padding:8px; font-size:12px; font-weight:800;" oninput="recalculateModalFinalTotal()"><button type="button" onclick="document.getElementById('${id}').remove(); recalculateModalFinalTotal();" style="background:#ef4444; color:#fff; border:none; border-radius:6px; padding:0 10px; font-weight:800;">✕</button>`;
     document.getElementById('modalCustomPartsRows').appendChild(row);
   }
 
@@ -1300,15 +1612,17 @@
   function recalculateModalFinalTotal() {
     if (!activeModalJob) return;
     const cfg = SERVICE_CONFIG[activeModalJob.service_type] || SERVICE_CONFIG.electrician;
-    const baseAmount = cfg.total;
+    const isRevisit = activeModalJob.payment_status === 'warranty_revisit';
+    const baseAmount = isRevisit ? 0 : cfg.total;
     let extraOnSiteCost = 0;
     document.querySelectorAll('.modal-addon-cb:checked').forEach(cb => {
       const pInput = cb.closest('.addon-item').querySelector('.modal-addon-price-input');
       extraOnSiteCost += parseFloat(pInput ? pInput.value : 0) || 0;
     });
     const parts = getPartsBreakdown(), overtime = calculateOvertime(activeModalJob);
+    const advanceDeduction = isRevisit ? 0 : 21.00;
     const grandTotal = baseAmount + extraOnSiteCost + parts.total + overtime.charge;
-    const netDue = grandTotal - 21;
+    const netDue = Math.max(0, grandTotal - advanceDeduction);
 
     document.getElementById('modalBaseDisp').textContent = `₹${baseAmount.toFixed(2)}`;
     document.getElementById('modalExtraWorkDisp').textContent = `+₹${extraOnSiteCost.toFixed(2)}`;
@@ -1321,13 +1635,15 @@
     document.getElementById('modalFinalNetDue').textContent = `₹${netDue.toFixed(2)}`;
   }
 
-  async function submitFinalCalculatedBill() {
+  function openTechnicianCollectionQr() {
     if (!activeModalJob) return;
     const enteredPin = document.getElementById('modalStopPinInput').value.trim();
-    const parts = getPartsBreakdown();
-    if (!enteredPin || enteredPin !== activeModalJob.stop_pin) { alert("Invalid Stop PIN! Please ask customer for correct 4-digit PIN."); return; }
+    if (!enteredPin || enteredPin !== activeModalJob.stop_pin) { alert("Invalid Stop PIN! Please ask customer for correct 4-digit Stop PIN."); return; }
 
+    const parts = getPartsBreakdown();
     const cfg = SERVICE_CONFIG[activeModalJob.service_type] || SERVICE_CONFIG.electrician;
+    const isRevisit = activeModalJob.payment_status === 'warranty_revisit';
+    const baseAmount = isRevisit ? 0 : cfg.total;
     let extraNames = [], extraOnSiteCost = 0;
     document.querySelectorAll('.modal-addon-cb:checked').forEach(cb => {
       const val = parseFloat(cb.closest('.addon-item').querySelector('.modal-addon-price-input')?.value || 0) || 0;
@@ -1335,22 +1651,106 @@
     });
 
     const overtime = calculateOvertime(activeModalJob);
-    const grandTotal = cfg.total + extraOnSiteCost + parts.total + overtime.charge;
-    const netDue = grandTotal - 21;
+    const advanceDeduction = isRevisit ? 0 : 21.00;
+    const grandTotal = baseAmount + extraOnSiteCost + parts.total + overtime.charge;
+    const netDue = Math.max(0, grandTotal - advanceDeduction);
     const partsSummary = parts.lineItems.map(p => `${p.name} x${p.qty}`).join(', ') || 'None';
     const fullDesc = `${cfg.title} | Services: ${extraNames.join(', ') || 'None'} | Spares: ${partsSummary}`;
 
-    const updatePayload = {
-      job_status: 'work_completed', extra_services: fullDesc, extra_on_site_cost: extraOnSiteCost,
+    pendingTechCalculatedPayload = {
+      job_status: 'paid_completed', payment_status: 'settled_full', extra_services: fullDesc, extra_on_site_cost: extraOnSiteCost,
       extra_material_cost: parts.total, spare_parts_json: JSON.stringify(parts.lineItems),
       overtime_hours: overtime.hours, overtime_charge: overtime.charge, calculated_total: netDue, end_time: new Date().toISOString()
     };
 
-    try { await sbClient.from('bookings').update(updatePayload).or(`id.eq.${activeModalJob.id},invoice_no.eq.${activeModalJob.invoice_no}`); } catch(e){}
+    const upi = generateDynamicUpi(netDue, `Final Settlement ${activeModalJob.invoice_no}`);
+    document.getElementById('techOnsiteQrImg').src = upi.qrUrl;
+    document.getElementById('techOnsiteQrAmount').textContent = `₹${netDue.toFixed(2)}`;
+    document.getElementById('techPaymentQrModal').style.display = 'flex';
+  }
+
+  function closeTechPaymentQrModal() { document.getElementById('techPaymentQrModal').style.display = 'none'; }
+
+  async function confirmTechnicianSettlementDone() {
+    if (!activeModalJob || !pendingTechCalculatedPayload) return;
+    try { await sbClient.from('bookings').update(pendingTechCalculatedPayload).or(`id.eq.${activeModalJob.id},invoice_no.eq.${activeModalJob.invoice_no}`); } catch(e){}
     let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
-    localPool = localPool.map(j => (j.id === activeModalJob.id || j.invoice_no === activeModalJob.invoice_no) ? { ...j, ...updatePayload } : j);
+    localPool = localPool.map(j => (j.id === activeModalJob.id || j.invoice_no === activeModalJob.invoice_no) ? { ...j, ...pendingTechCalculatedPayload } : j);
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
-    closeTechCompletionModal(); navigateTo('bill-submitted');
+    
+    closeTechPaymentQrModal();
+    closeTechCompletionModal();
+    alert("Payment Confirmed! Final Tax Invoice PDF synchronized across all accounts.");
+    navigateTo('bill-submitted');
+  }
+
+  // ==================== REVIEWS & RATINGS SYSTEM ====================
+  function setReviewRating(score) {
+    selectedReviewScore = score;
+    const stars = document.querySelectorAll('#reviewStarRating .star');
+    stars.forEach((s, idx) => {
+      if (idx < score) s.classList.add('selected');
+      else s.classList.remove('selected');
+    });
+  }
+
+  function openReviewModalForJob(jobId) {
+    pendingReviewJobId = jobId;
+    document.getElementById('customerReviewComment').value = '';
+    setReviewRating(5);
+    document.getElementById('customerReviewModal').style.display = 'flex';
+  }
+
+  async function submitCustomerReview() {
+    if (!currentUser) return;
+    const comment = document.getElementById('customerReviewComment').value.trim();
+    if (!comment) { alert("Please write a short review / feedback message."); return; }
+
+    const newReview = {
+      customer_name: currentUser.name || "Verified Customer",
+      rating: selectedReviewScore,
+      comment: comment,
+      created_at: new Date().toISOString()
+    };
+
+    try { await sbClient.from('reviews').insert([newReview]); } catch(e){}
+    let localReviews = JSON.parse(localStorage.getItem('bm_local_reviews') || '[]');
+    localReviews.unshift(newReview);
+    localStorage.setItem('bm_local_reviews', JSON.stringify(localReviews));
+
+    document.getElementById('customerReviewModal').style.display = 'none';
+    alert("Thank you! Your verified review has been published on the homepage.");
+    loadHomeReviews();
+  }
+
+  async function loadHomeReviews() {
+    const container = document.getElementById('homeReviewsContainer');
+    let reviews = [];
+    try {
+      const { data } = await sbClient.from('reviews').select('*').order('created_at', { ascending: false }).limit(4);
+      if (data && data.length > 0) reviews = data;
+    } catch(e){}
+
+    if (reviews.length === 0) {
+      reviews = JSON.parse(localStorage.getItem('bm_local_reviews') || '[]');
+    }
+
+    if (reviews.length === 0) {
+      reviews = [
+        { customer_name: 'Amit Kumar (Masnadpur)', rating: 5, comment: 'Technician arrived in 20 minutes and fixed my main MCB tripping immediately. Very professional!' },
+        { customer_name: 'Rahul Sharma (Bihat)', rating: 5, comment: 'AC jet pump service was top notch. Fast billing and transparent GST invoice.' }
+      ];
+    }
+
+    container.innerHTML = reviews.map(r => `
+      <div class="review-item">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
+          <b style="color:var(--title-blue); font-weight:900;">${r.customer_name} <span style="color:var(--success); font-size:10.5px;">(✔ Verified Service)</span></b>
+          <span style="color:#f59e0b; font-weight:900;">${'★'.repeat(r.rating || 5)}</span>
+        </div>
+        <p style="color:#475569; font-size:12px; line-height:1.45; font-weight:600;">"${r.comment}"</p>
+      </div>
+    `).join('');
   }
 
   // ==================== ADMIN SURVEILLANCE ====================
@@ -1368,31 +1768,47 @@
 
   async function loadAdminGlobalFeed() {
     const feed = document.getElementById('adminGlobalFeed');
-    feed.innerHTML = '<p style="color:#888; font-size:12px;">Loading global feed...</p>';
+    feed.innerHTML = '<p style="color:#64748b; font-size:12px; font-weight:600;">Loading global feed...</p>';
     let data = [];
     try { const res = await sbClient.from('bookings').select('*').order('created_at', { ascending: false }); if (res.data) data = res.data; } catch(e){}
     if (data.length === 0) data = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
-    if (data.length === 0) { feed.innerHTML = '<p style="color:#888; font-size:12px;">No active records found.</p>'; return; }
+    if (data.length === 0) { feed.innerHTML = '<p style="color:#64748b; font-size:12px; font-weight:600;">No active records found.</p>'; return; }
 
     feed.innerHTML = data.map(b => {
-      const isPaid = b.job_status === 'paid_completed', isBillReady = b.job_status === 'work_completed';
-      let statusColor = '#d97706', statusText = (b.job_status || 'pending').toUpperCase();
-      if (isPaid) { statusColor = '#d32f2f'; statusText = '✔ PAID & COMPLETED'; } else if (isBillReady) { statusColor = '#b8720a'; statusText = '🧾 BILL READY'; }
+      const isPaid = b.job_status === 'paid_completed', isBillReady = b.job_status === 'work_completed', isCancelled = b.job_status === 'cancelled';
+      let statusColor = 'var(--warning)', statusText = (b.job_status || 'pending').toUpperCase();
+      if (isPaid) { statusColor = 'var(--success)'; statusText = '✔ PAID & COMPLETED'; } 
+      else if (isBillReady) { statusColor = '#b8720a'; statusText = '🧾 BILL READY'; }
+      else if (isCancelled) { statusColor = '#991b1b'; statusText = '❌ CANCELLED (₹21)'; }
       return `
-        <div class="card" style="font-size:12px; margin-bottom:8px; border-left:4px solid ${statusColor};">
-          <div style="display:flex; justify-content:space-between;"><b>${b.invoice_no} [${b.service_type?.toUpperCase()}]</b><span style="font-weight:700; color:${statusColor};">${statusText}</span></div>
-          <p style="margin-top:2px;">Customer: <b>${b.customer_name || 'Customer'}</b> (📞 ${b.customer_phone})</p>
-          <p>Tech Assigned: <b>${b.technician_name || 'Unassigned'}</b></p>
-          <p>🔴 Start PIN: <b>${b.start_pin}</b> | 🔴 Stop PIN: <b>${b.stop_pin}</b></p>
-          <p style="color:#555;">Address: ${b.customer_address}</p>
+        <div class="card" style="font-size:12px; margin-bottom:8px; border-left:5px solid ${statusColor};">
+          <div style="display:flex; justify-content:space-between;"><b style="font-weight:900; color:var(--title-blue);">${b.invoice_no} [${b.service_type?.toUpperCase()}]</b><span style="font-weight:900; color:${statusColor};">${statusText}</span></div>
+          <p style="margin-top:2px; font-weight:700;">Customer: <b>${b.customer_name || 'Customer'}</b> (📞 ${b.customer_phone})</p>
+          <p style="font-weight:600;">Tech Assigned: <b>${b.technician_name || 'Unassigned'}</b></p>
+          <p style="font-weight:700;">🔴 Start PIN: <b>${b.start_pin}</b> | 🔴 Stop PIN: <b>${b.stop_pin}</b></p>
+          <p style="color:#64748b; font-weight:600;">Address: ${b.customer_address}</p>
+          ${isPaid ? `<button class="btn secondary" style="width:auto; padding:4px 10px; font-size:11px; margin-top:6px;" onclick="downloadOrderPdf('${b.id || b.invoice_no}')">📥 View Tax Invoice</button>` : ''}
+          ${isCancelled ? `<button class="btn secondary" style="width:auto; padding:4px 10px; font-size:11px; margin-top:6px;" onclick="downloadCancellationReceiptPdf('${b.id || b.invoice_no}')">📄 View Cancellation Receipt</button>` : ''}
         </div>`;
     }).join('');
   }
 
   async function registerTechnician() {
-    const name = document.getElementById('newTechName').value.trim(), contactPhone = document.getElementById('newTechPhone').value.trim(), category = document.getElementById('newTechCat').value, qualification = document.getElementById('newTechQualification').value.trim(), experienceYears = document.getElementById('newTechExperience').value.trim(), pin = document.getElementById('newTechPin').value.trim();
-    if (!name || pin.length !== 4) { alert("Enter technician name and 4-digit PIN."); return; }
-    if (!/^[6-9]\d{9}$/.test(contactPhone)) { alert("Enter a valid 10-digit phone number."); return; }
+    const name = document.getElementById('newTechName').value.trim(), 
+          contactPhone = document.getElementById('newTechPhone').value.trim(), 
+          category = document.getElementById('newTechCat').value, 
+          qualification = document.getElementById('newTechQualification').value.trim(), 
+          experienceYears = document.getElementById('newTechExperience').value.trim(), 
+          pin = document.getElementById('newTechPin').value.trim();
+
+    if (!name || pin.length !== 6) { 
+      alert("Please enter technician name and a secure 6-digit PIN."); 
+      return; 
+    }
+    if (!/^[6-9]\d{9}$/.test(contactPhone)) { 
+      alert("Enter a valid 10-digit Indian phone number."); 
+      return; 
+    }
 
     let nextNum = 1;
     try {
@@ -1401,10 +1817,23 @@
       if (nums.length > 0) nextNum = Math.max(...nums) + 1;
     } catch(e){}
     const techCode = 'TECH-' + String(nextNum).padStart(3, '0');
+    const pinHash = await hashPassword(pin);
 
-    const { error } = await sbClient.from('technicians').insert([{ name, phone: pin, category, is_available: true, tech_code: techCode, contact_phone: contactPhone, qualification: qualification || null, experience_years: experienceYears ? parseInt(experienceYears, 10) : null }]);
-    if (error) { alert("Failed: " + error.message); return; }
-    alert(`Technician Registered!\nID: ${techCode}\nPIN: ${pin}`); loadTechnicianFleet();
+    const { error } = await sbClient.from('technicians').insert([{ 
+      name, 
+      phone: pin, // backwards compatibility
+      pin_hash: pinHash,
+      category, 
+      is_available: true, 
+      tech_code: techCode, 
+      contact_phone: contactPhone, 
+      qualification: qualification || null, 
+      experience_years: experienceYears ? parseInt(experienceYears, 10) : null 
+    }]);
+
+    if (error) { alert("Failed to register technician: " + error.message); return; }
+    alert(`Technician Successfully Registered!\nID: ${techCode}\nSecure 6-Digit PIN: ${pin}`); 
+    loadTechnicianFleet();
   }
 
   async function loadTechnicianFleet() {
@@ -1412,9 +1841,9 @@
     if (!container) return;
     let techs = [];
     try { const { data } = await sbClient.from('technicians').select('*').order('created_at', { ascending: false }); if (data) techs = data; } catch(e){}
-    if (techs.length === 0) { container.innerHTML = '<p style="color:#888; font-size:12px;">No technicians found.</p>'; return; }
+    if (techs.length === 0) { container.innerHTML = '<p style="color:#64748b; font-size:12px;">No technicians found.</p>'; return; }
     container.innerHTML = techs.map(t => `
-      <div style="padding:6px 0; border-bottom:1px solid #fee2e2; font-size:12px;">
+      <div style="padding:8px 0; border-bottom:1px solid var(--soft-red-border); font-size:12px;">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <span>${t.is_available === false ? '🔴' : '🟢'} <b>${t.tech_code || '-'}</b> ${t.name} (${t.category})</span>
           <button class="btn ${t.is_available === false ? 'secondary' : 'danger'}" style="width:auto; padding:4px 10px; font-size:10.5px;" onclick="toggleTechnicianBlock('${t.id}', ${t.is_available === false})">${t.is_available === false ? 'Unblock' : 'Block'}</button>
@@ -1432,10 +1861,10 @@
     if (!container) return;
     let customers = [];
     try { const { data } = await sbClient.from('customers').select('*').order('created_at', { ascending: false }); if (data) customers = data; } catch(e){}
-    if (customers.length === 0) { container.innerHTML = '<p style="color:#888; font-size:12px;">No customer accounts.</p>'; return; }
+    if (customers.length === 0) { container.innerHTML = '<p style="color:#64748b; font-size:12px;">No customer accounts.</p>'; return; }
     container.innerHTML = customers.map(c => `
-      <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid #fee2e2; font-size:12px;">
-        <span>${c.is_blocked ? '🚫' : '✅'} ${c.name || 'Customer'} (📞 ${c.phone})</span>
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--soft-red-border); font-size:12px;">
+        <span>${c.is_blocked ? '🚫' : '✅'} <b>${c.name || 'Customer'}</b> (📞 ${c.phone})</span>
         <button class="btn ${c.is_blocked ? 'secondary' : 'danger'}" style="width:auto; padding:4px 10px; font-size:10.5px;" onclick="toggleCustomerBlock('${c.phone}', ${!c.is_blocked})">${c.is_blocked ? 'Unblock' : 'Block'}</button>
       </div>`).join('');
   }
@@ -1461,6 +1890,7 @@
 
   updateRoleBasedNavigation();
   initSignupMap();
+  loadHomeReviews();
   setInterval(checkCooldownState, 1000);
 
   window.addEventListener('load', () => {
