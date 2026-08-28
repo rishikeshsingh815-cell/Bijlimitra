@@ -9,62 +9,65 @@
 
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f4f7f6; color: #1a1a1a; min-height: 100vh; }
-  .app { max-width: 480px; margin: 0 auto; min-height: 100vh; background: #fff; position: relative; padding-bottom: 80px; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
-  .topbar { background: linear-gradient(135deg, #0f8a4b, #0c6e3c); color: #fff; padding: 14px 16px; position: sticky; top: 0; z-index: 500; display: flex; justify-content: space-between; align-items: center; }
-  .topbar h1 { font-size: 18px; font-weight: 700; }
-  .topbar p { font-size: 11.5px; opacity: 0.9; }
-  .user-badge { background: rgba(255,255,255,0.22); padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; cursor: pointer; white-space: nowrap; border: 1px solid rgba(255,255,255,0.3); }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #fdf6f6; color: #1a1a1a; min-height: 100vh; }
+  .app { max-width: 480px; margin: 0 auto; min-height: 100vh; background: #fff; position: relative; padding-bottom: 80px; box-shadow: 0 0 20px rgba(0,0,0,0.06); }
+  .topbar { background: linear-gradient(135deg, #d32f2f, #b71c1c); color: #fff; padding: 12px 16px; position: sticky; top: 0; z-index: 500; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(211,47,47,0.25); }
+  .brand-header-box { display: flex; align-items: center; gap: 10px; }
+  .tech-mascot-avatar { width: 44px; height: 44px; background: #fff; border-radius: 50%; padding: 2px; border: 2px solid #ffcdd2; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+  .tech-mascot-avatar svg { width: 100%; height: 100%; }
+  .topbar h1 { font-size: 17.5px; font-weight: 800; letter-spacing: 0.3px; }
+  .topbar p { font-size: 11.5px; opacity: 0.92; font-weight: 500; }
+  .user-badge { background: rgba(255,255,255,0.22); padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; cursor: pointer; white-space: nowrap; border: 1px solid rgba(255,255,255,0.35); }
   .screen { display: none; padding: 16px; animation: fadeIn 0.2s ease-in-out; }
   .screen.active { display: block; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
-  .card { background: #fff; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+  .card { background: #fff; border: 1.5px solid #fee2e2; border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
   .category-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 10px; }
-  .category-card { border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; }
-  .category-card:hover { border-color: #0f8a4b; background: #fafdfb; }
+  .category-card { border: 1.5px solid #fee2e2; border-radius: 12px; padding: 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; background: #fff; }
+  .category-card:hover { border-color: #d32f2f; background: #fffafa; }
   .category-card h3 { font-size: 15px; color: #111; }
   .category-card p { font-size: 12px; color: #666; margin-top: 2px; }
-  .addon-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px dashed #eee; font-size: 12.5px; }
+  .addon-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px dashed #fee2e2; font-size: 12.5px; }
   .addon-item:last-child { border-bottom: none; }
   .addon-item label { display: flex; align-items: center; gap: 8px; cursor: pointer; flex: 1; }
   .terms-box { background: #fff8f0; border: 1.5px solid #fbd38d; border-radius: 8px; padding: 10px; font-size: 11.5px; color: #744210; margin-bottom: 12px; line-height: 1.4; }
-  .btn { width: 100%; padding: 13px; background: #0f8a4b; color: #fff; border: none; border-radius: 10px; font-size: 14.5px; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
-  .btn:active { opacity: 0.85; }
-  .btn.secondary { background: #fff; color: #0f8a4b; border: 1.5px solid #0f8a4b; }
-  .btn.danger { background: #e74c3c; color: #fff; }
+  .btn { width: 100%; padding: 13px; background: #d32f2f; color: #fff; border: none; border-radius: 10px; font-size: 14.5px; font-weight: 700; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 6px rgba(211,47,47,0.25); }
+  .btn:active { opacity: 0.88; transform: scale(0.99); }
+  .btn.secondary { background: #fff; color: #d32f2f; border: 1.5px solid #d32f2f; box-shadow: none; }
+  .btn.danger { background: #991b1b; color: #fff; }
   .input-group { position: relative; margin-bottom: 12px; }
-  input, select, textarea { width: 100%; padding: 12px; border: 1.5px solid #ddd; border-radius: 8px; font-size: 14px; outline: none; background: #fff; }
-  input:focus, select:focus, textarea:focus { border-color: #0f8a4b; }
-  .toggle-pw { position: absolute; right: 12px; top: 12px; font-size: 13px; color: #0f8a4b; cursor: pointer; font-weight: 600; user-select: none; }
+  input, select, textarea { width: 100%; padding: 12px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 14px; outline: none; background: #fff; }
+  input:focus, select:focus, textarea:focus { border-color: #d32f2f; }
+  .toggle-pw { position: absolute; right: 12px; top: 12px; font-size: 13px; color: #d32f2f; cursor: pointer; font-weight: 600; user-select: none; }
   .price-row { display: flex; justify-content: space-between; font-size: 13px; padding: 5px 0; color: #444; }
-  .price-row.total { border-top: 1px dashed #ccc; margin-top: 6px; padding-top: 8px; font-weight: 700; font-size: 15px; color: #111; }
-  .qr-box { background: #fff; border: 2px dashed #0f8a4b; border-radius: 12px; padding: 16px; text-align: center; margin-bottom: 14px; }
-  .qr-img { width: 170px; height: 170px; margin: 8px auto; display: block; border-radius: 6px; border: 1px solid #ddd; }
-  .modal-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; padding: 16px; }
-  .modal-content { background: #fff; border-radius: 14px; max-width: 440px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: fadeIn 0.2s ease-in-out; }
+  .price-row.total { border-top: 1.5px dashed #fca5a5; margin-top: 6px; padding-top: 8px; font-weight: 800; font-size: 15.5px; color: #b71c1c; }
+  .qr-box { background: #fff; border: 2px dashed #d32f2f; border-radius: 12px; padding: 16px; text-align: center; margin-bottom: 14px; }
+  .qr-img { width: 170px; height: 170px; margin: 8px auto; display: block; border-radius: 6px; border: 1px solid #fee2e2; }
+  .modal-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); z-index: 1000; align-items: center; justify-content: center; padding: 16px; }
+  .modal-content { background: #fff; border-radius: 14px; max-width: 440px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.25); animation: fadeIn 0.2s ease-in-out; }
   .invoice-paper { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 16px; font-size: 12px; color: #222; }
-  .inv-header { text-align: center; border-bottom: 2px solid #0f8a4b; padding-bottom: 8px; margin-bottom: 10px; }
+  .inv-header { text-align: center; border-bottom: 2px solid #d32f2f; padding-bottom: 8px; margin-bottom: 10px; }
   .inv-title { text-align: center; font-weight: 700; font-size: 13px; margin: 8px 0; }
   .inv-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; font-size: 11px; margin-bottom: 8px; }
   table.inv-table { width: 100%; border-collapse: collapse; font-size: 10.5px; margin-bottom: 8px; }
   table.inv-table th, table.inv-table td { border: 1px solid #ddd; padding: 4px 5px; text-align: left; }
-  table.inv-table th { background: #f0faf3; }
+  table.inv-table th { background: #fff1f2; }
   .inv-summary { margin-left: auto; width: 65%; font-size: 11.5px; }
-  .bottomnav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #fff; border-top: 1px solid #e2e8f0; display: flex; padding: 8px 0; z-index: 500; }
+  .bottomnav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #fff; border-top: 1px solid #fee2e2; display: flex; padding: 8px 0; z-index: 500; }
   .nav-item { flex: 1; text-align: center; font-size: 11px; color: #888; cursor: pointer; }
-  .nav-item.active { color: #0f8a4b; font-weight: 600; }
+  .nav-item.active { color: #d32f2f; font-weight: 700; }
   .nav-icon { font-size: 18px; display: block; margin-bottom: 2px; }
-  #homeMap { height: 180px; width: 100%; border-radius: 12px; margin-bottom: 12px; border: 1.5px solid #0f8a4b; }
-  #signupMap { height: 190px; width: 100%; border-radius: 10px; border: 1.5px solid #0f8a4b; margin-top: 6px; }
-  #bookingMap { height: 200px; width: 100%; border-radius: 10px; border: 1.5px solid #0f8a4b; margin-top: 6px; }
+  #homeMap { height: 180px; width: 100%; border-radius: 12px; margin-bottom: 12px; border: 1.5px solid #d32f2f; }
+  #signupMap { height: 190px; width: 100%; border-radius: 10px; border: 1.5px solid #d32f2f; margin-top: 6px; }
+  #bookingMap { height: 200px; width: 100%; border-radius: 10px; border: 1.5px solid #d32f2f; margin-top: 6px; }
   @media (min-width: 900px) {
     .app { max-width: 100%; padding-bottom: 0; }
     .bottomnav { display: none; }
     .desktop-shell { display: flex; max-width: 1200px; margin: 0 auto; min-height: 100vh; }
-    .desktop-sidebar { width: 260px; flex-shrink: 0; border-right: 1px solid #eee; padding: 20px 0; background: #fff; }
+    .desktop-sidebar { width: 260px; flex-shrink: 0; border-right: 1px solid #fee2e2; padding: 20px 0; background: #fff; }
     .desktop-nav-item { padding: 12px 24px; font-size: 14px; color: #555; cursor: pointer; display: flex; align-items: center; gap: 10px; }
-    .desktop-nav-item.active { color: #0f8a4b; font-weight: 600; background: #f0faf3; border-right: 3px solid #0f8a4b; }
-    .desktop-main { flex: 1; padding: 24px 32px; background: #f9fbfa; }
+    .desktop-nav-item.active { color: #d32f2f; font-weight: 700; background: #fff1f2; border-right: 3px solid #d32f2f; }
+    .desktop-main { flex: 1; padding: 24px 32px; background: #fdf6f6; }
     .screen { padding: 0; }
     .desktop-inner { max-width: 520px; margin: 0 auto; }
   }
@@ -74,8 +77,28 @@
 
 <div class="desktop-shell">
   <div class="desktop-sidebar" style="display:none;" id="desktopSidebar">
-    <div style="padding:0 24px 4px; font-size:20px; font-weight:700; color:#0f8a4b;">⚡ Bijli Mitra</div>
-    <div style="padding:0 24px 16px; font-size:12px; color:#666;">Begusarai, Bihar</div>
+    <div style="display:flex; align-items:center; gap:8px; padding:0 24px 16px;">
+      <div class="tech-mascot-avatar" style="width:36px; height:36px;">
+        <svg viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="48" fill="#fff" stroke="#d32f2f" stroke-width="2"/>
+          <path d="M30 36 C30 20, 70 20, 70 36 Z" fill="#d32f2f"/>
+          <rect x="25" y="34" width="50" height="6" rx="3" fill="#b71c1c"/>
+          <path d="M46 22 L54 22 L52 28 L48 28 Z" fill="#ffeb3b"/>
+          <circle cx="50" cy="46" r="15" fill="#ffd1a4"/>
+          <circle cx="45" cy="44" r="2" fill="#222"/><circle cx="55" cy="44" r="2" fill="#222"/>
+          <path d="M46 51 Q50 56 54 51" stroke="#222" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M28 62 L72 62 L66 94 L34 94 Z" fill="#d32f2f"/>
+          <path d="M45 62 L55 62 L55 76 L45 76 Z" fill="#fff"/>
+          <rect x="14" y="66" width="16" height="12" rx="2" fill="#b71c1c"/>
+          <rect x="18" y="62" width="8" height="4" fill="#666"/>
+          <path d="M74 62 L84 76 L80 80 L70 66 Z" fill="#78909c"/>
+        </svg>
+      </div>
+      <div>
+        <div style="font-size:18px; font-weight:800; color:#d32f2f;">Bijli Mitra</div>
+        <div style="font-size:11.5px; color:#777;">Begusarai, Bihar</div>
+      </div>
+    </div>
     <div id="deskCustomerNav">
       <div class="desktop-nav-item active" id="deskNavHome" onclick="navigateTo('home')">🏠 Book Category</div>
       <div class="desktop-nav-item" id="deskNavProfile" onclick="goToCustomerProfile()">👤 My Profile &amp; History</div>
@@ -91,7 +114,28 @@
   <div class="desktop-main" style="flex:1;">
   <div class="app" id="mainApp">
     <div class="topbar">
-      <div><h1>⚡ Bijli Mitra</h1><p>Begusarai, Bihar</p></div>
+      <div class="brand-header-box">
+        <div class="tech-mascot-avatar">
+          <svg viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="48" fill="#fff" stroke="#d32f2f" stroke-width="2"/>
+            <path d="M30 36 C30 20, 70 20, 70 36 Z" fill="#d32f2f"/>
+            <rect x="25" y="34" width="50" height="6" rx="3" fill="#b71c1c"/>
+            <polygon points="50,22 47,28 51,28 49,34 54,27 50,27" fill="#ffeb3b"/>
+            <circle cx="50" cy="46" r="15" fill="#ffd1a4"/>
+            <circle cx="45" cy="44" r="2" fill="#222"/><circle cx="55" cy="44" r="2" fill="#222"/>
+            <path d="M46 51 Q50 56 54 51" stroke="#222" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <path d="M28 62 L72 62 L66 94 L34 94 Z" fill="#d32f2f"/>
+            <path d="M45 62 L55 62 L55 76 L45 76 Z" fill="#fff"/>
+            <rect x="14" y="66" width="16" height="12" rx="2" fill="#b71c1c"/>
+            <rect x="18" y="62" width="8" height="4" fill="#666"/>
+            <path d="M74 62 L84 76 L80 80 L70 66 Z" fill="#78909c"/>
+          </svg>
+        </div>
+        <div>
+          <h1>Bijli Mitra</h1>
+          <p>Begusarai, Bihar</p>
+        </div>
+      </div>
       <div class="user-badge" id="topAuthBadge" onclick="handleTopBadgeClick()">Sign In</div>
     </div>
 
@@ -100,7 +144,7 @@
       <div class="desktop-inner">
         <div class="card">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-            <h3 style="font-size:16px; color:#0f8a4b;" id="custAuthFormTitle">Customer Registration</h3>
+            <h3 style="font-size:16px; color:#d32f2f;" id="custAuthFormTitle">Customer Registration</h3>
             <button type="button" class="btn secondary" style="width:auto; padding:4px 8px; font-size:11px;" id="custAuthToggleBtn" onclick="toggleCustomerAuthMode()">Switch to Login</button>
           </div>
 
@@ -117,8 +161,8 @@
           <div id="custSignupFields">
             <div class="input-group"><input type="text" id="custRegName" placeholder="Full Name"></div>
             <div class="input-group"><input type="tel" id="authPhone" placeholder="10-Digit Mobile Number (Mandatory)" maxlength="10"></div>
-            <div class="card" style="padding:10px; background:#f0faf3; margin-bottom:12px;">
-              <span style="font-size:12px; font-weight:700; color:#0f8a4b;">📍 Select Address from Map (Mandatory):</span>
+            <div class="card" style="padding:10px; background:#fff5f5; border:1px solid #fee2e2; margin-bottom:12px;">
+              <span style="font-size:12px; font-weight:700; color:#d32f2f;">📍 Select Address from Map (Mandatory):</span>
               <p style="font-size:11px; color:#666; margin-top:2px;">Tap your exact location on the map:</p>
               <div id="signupMap"></div>
             </div>
@@ -127,7 +171,7 @@
           </div>
 
           <div id="otpPasswordCreationGroup" style="display:none;">
-            <div class="input-group"><input type="text" id="authEmailOtp" placeholder="Enter 6-Digit Email OTP" maxlength="6" style="text-align:center; font-weight:700; letter-spacing:4px; border-color:#0f8a4b;"></div>
+            <div class="input-group"><input type="text" id="authEmailOtp" placeholder="Enter 6-Digit Email OTP" maxlength="6" style="text-align:center; font-weight:700; letter-spacing:4px; border-color:#d32f2f;"></div>
             <div class="input-group">
               <input type="password" id="authCreatePassword" placeholder="Create Password (Min. 6 characters)">
               <span class="toggle-pw" onclick="togglePasswordVisibility('authCreatePassword', this)">Show</span>
@@ -148,8 +192,8 @@
           </div>
         </div>
 
-        <div id="roleSecTech" class="card" style="display:none; border-top:3px solid #0f8a4b;">
-          <h3 style="font-size:15px; margin-bottom:6px; color:#0f8a4b;">🧑‍🔧 Technician Login</h3>
+        <div id="roleSecTech" class="card" style="display:none; border-top:3px solid #d32f2f;">
+          <h3 style="font-size:15px; margin-bottom:6px; color:#d32f2f;">🧑‍🔧 Technician Login</h3>
           <input type="text" id="techIdInput" placeholder="Technician ID" style="margin-bottom:10px; text-transform:uppercase;">
           <select id="techCategorySelect" style="margin-bottom:10px;">
             <option value="electrician">⚡ Electrician Pool</option>
@@ -160,8 +204,8 @@
           <button class="btn" onclick="loginTechnicianToPool()">Login to Job Pool</button>
         </div>
 
-        <div id="roleSecAdmin" class="card" style="display:none; border-top:3px solid #0f8a4b;">
-          <h3 style="font-size:15px; margin-bottom:6px; color:#0f8a4b;">🔐 Admin Login</h3>
+        <div id="roleSecAdmin" class="card" style="display:none; border-top:3px solid #d32f2f;">
+          <h3 style="font-size:15px; margin-bottom:6px; color:#d32f2f;">🔐 Admin Login</h3>
           <input type="email" id="adminEmailInput" placeholder="Authorized Admin Email" style="margin-bottom:10px;">
           <input type="password" id="adminPassInput" placeholder="Admin Password" style="margin-bottom:10px;">
           <button class="btn" onclick="adminGlobalLogin()">Login as Admin</button>
@@ -172,26 +216,26 @@
     <!-- 2. HOME SCREEN -->
     <div id="screen-home" class="screen active">
       <div class="desktop-inner">
-        <h2 style="font-size:15.5px; margin-bottom:6px;">Begusarai Street Dispatch Map</h2>
+        <h2 style="font-size:15.5px; margin-bottom:6px; color:#222;">Begusarai Street Dispatch Map</h2>
         <div id="homeMap"></div>
-        <h2 style="font-size:15.5px; margin-bottom:4px;">Select Service Category</h2>
+        <h2 style="font-size:15.5px; margin-bottom:4px; color:#222;">Select Service Category</h2>
         <div class="category-grid">
           <div class="category-card" onclick="selectCategoryBooking('electrician')">
             <div><h3>⚡ Electrical Services</h3><p>Wiring, Switches, Fans, MCB, Inverter</p></div>
-            <div style="text-align:right;"><b style="color:#0f8a4b;">₹299 Base</b><p style="font-size:11px; color:#888;">(incl. 18% GST)</p></div>
+            <div style="text-align:right;"><b style="color:#d32f2f;">₹299 Base</b><p style="font-size:11px; color:#888;">(incl. 18% GST)</p></div>
           </div>
           <div class="category-card" onclick="selectCategoryBooking('ac')">
             <div><h3>❄️ AC Repair &amp; Service</h3><p>Jet Pump Wash, Installation, Gas Refill</p></div>
-            <div style="text-align:right;"><b style="color:#0f8a4b;">₹399 Base</b><p style="font-size:11px; color:#888;">(incl. 18% GST)</p></div>
+            <div style="text-align:right;"><b style="color:#d32f2f;">₹399 Base</b><p style="font-size:11px; color:#888;">(incl. 18% GST)</p></div>
           </div>
           <div class="category-card" onclick="selectCategoryBooking('plumber')">
             <div><h3>🔧 Plumbing Works</h3><p>Pipelines, Taps, Leakages, Tank Cleaning</p></div>
-            <div style="text-align:right;"><b style="color:#0f8a4b;">₹299 Base</b><p style="font-size:11px; color:#888;">(incl. 18% GST)</p></div>
+            <div style="text-align:right;"><b style="color:#d32f2f;">₹299 Base</b><p style="font-size:11px; color:#888;">(incl. 18% GST)</p></div>
           </div>
         </div>
-        <div class="card" style="margin-top:16px; background:#f0faf3; border:1.5px solid #0f8a4b;">
-          <h4 style="font-size:13px; color:#0f8a4b; margin-bottom:6px;">🏢 Commercial &amp; Bulk Order Desk</h4>
-          <p style="font-size:11.5px; color:#444; line-height:1.5;">For bulk, commercial, or enterprise requirements covering HVAC/AC, Electrical, or Plumbing maintenance, please contact our corporate desk at: <a href="mailto:kashvienterprises.bihar@gmail.com" style="color:#0f8a4b; font-weight:700;">kashvienterprises.bihar@gmail.com</a></p>
+        <div class="card" style="margin-top:16px; background:#fff5f5; border:1.5px solid #d32f2f;">
+          <h4 style="font-size:13px; color:#d32f2f; margin-bottom:6px;">🏢 Commercial &amp; Bulk Order Desk</h4>
+          <p style="font-size:11.5px; color:#444; line-height:1.5;">For bulk, commercial, or enterprise requirements covering HVAC/AC, Electrical, or Plumbing maintenance, please contact our corporate desk at: <a href="mailto:kashvienterprises.bihar@gmail.com" style="color:#d32f2f; font-weight:700;">kashvienterprises.bihar@gmail.com</a></p>
         </div>
       </div>
     </div>
@@ -199,10 +243,10 @@
     <!-- 3. CUSTOMER PROFILE SCREEN -->
     <div id="screen-profile" class="screen">
       <div class="desktop-inner">
-        <div class="card" style="border-left:4px solid #0f8a4b;">
+        <div class="card" style="border-left:4px solid #d32f2f;">
           <div style="display:flex; justify-content:space-between; align-items:flex-start;">
             <div>
-              <h2 style="font-size:17px; color:#0f8a4b;" id="profDispName">Customer Name</h2>
+              <h2 style="font-size:17px; color:#d32f2f;" id="profDispName">Customer Name</h2>
               <p style="font-size:12px; color:#555; margin-top:2px;">✉️ <span id="profDispEmail">--</span></p>
               <p style="font-size:12px; color:#555; margin-top:2px;">📞 <span id="profDispPhone">--</span></p>
               <p style="font-size:12px; color:#555; margin-top:2px;">📍 <span id="profDispAddress">--</span></p>
@@ -222,22 +266,22 @@
     <div id="screen-booking" class="screen">
       <div class="desktop-inner">
         <button class="btn secondary" style="width:auto; padding:6px 14px; font-size:12px; margin-bottom:12px;" onclick="window.history.back()">← Back</button>
-        <div class="card" style="border-left:4px solid #0f8a4b;">
-          <h3 id="bookCatName" style="color:#0f8a4b; font-size:16px;">Service Booking</h3>
+        <div class="card" style="border-left:4px solid #d32f2f;">
+          <h3 id="bookCatName" style="color:#d32f2f; font-size:16px;">Service Booking</h3>
           <p id="bookBaseScopeDesc" style="font-size:12px; color:#444; margin-top:4px; line-height:1.4;">-</p>
         </div>
         <div class="card">
           <div class="price-row"><span>Base Service Pack (incl. GST)</span><span id="priceBaseVal">₹299.00</span></div>
           <div class="price-row" style="font-weight:600; border-top:1px dashed #eee; margin-top:4px; padding-top:4px;"><span>Estimated Total Work Amount</span><span id="priceTotalIncGst">₹299.00</span></div>
-          <div class="price-row" style="color:#0f8a4b;"><span>Advance Booking Token</span><span>- ₹21.00</span></div>
+          <div class="price-row" style="color:#d32f2f;"><span>Advance Booking Token</span><span>- ₹21.00</span></div>
           <div class="price-row total"><span>Due Amount After Token</span><span id="priceTotalDueVal">₹278.00</span></div>
           <p style="font-size:11px; color:#666; margin-top:6px;">*Note: Any additional work or spare parts will be inspected and billed on-site by the technician. The ₹21 token is deducted from the final bill.</p>
         </div>
         <label style="font-size:12px; font-weight:600; color:#444; margin-bottom:4px; display:block;">Service Address:</label>
         <input type="text" id="custAddressInput" placeholder="Enter complete service address">
-        <div class="card" style="padding:10px; background:#f0faf3; margin-bottom:12px;">
+        <div class="card" style="padding:10px; background:#fff5f5; border:1px solid #fee2e2; margin-bottom:12px;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="font-size:12px; font-weight:700; color:#0f8a4b;">📍 Map Location Picker</span>
+            <span style="font-size:12px; font-weight:700; color:#d32f2f;">📍 Map Location Picker</span>
             <button type="button" class="btn secondary" style="width:auto; padding:4px 8px; font-size:11px;" onclick="toggleBookingMap()">Toggle Map</button>
           </div>
           <p style="font-size:11px; color:#666; margin-top:4px;">Tap anywhere on map to pin exact location:</p>
@@ -265,14 +309,14 @@
     <!-- 5. ADVANCE DIRECT UPI QR SCREEN -->
     <div id="screen-advance-pay" class="screen">
       <div class="desktop-inner">
-        <div class="card" style="border-left:4px solid #0f8a4b;">
+        <div class="card" style="border-left:4px solid #d32f2f;">
           <h3>Pay Advance Token (₹21.00)</h3>
           <p>Complete payment using UPI to confirm your booking.</p>
         </div>
         <div class="qr-box">
-          <div style="font-size:12px; font-weight:700; color:#0f8a4b;">KASHVI ENTERPRISES</div>
+          <div style="font-size:12px; font-weight:700; color:#d32f2f;">KASHVI ENTERPRISES</div>
           <img id="advanceQrImg" class="qr-img" alt="Dynamic UPI QR" />
-          <div style="font-size:18px; font-weight:800; color:#0f8a4b;">₹21.00</div>
+          <div style="font-size:18px; font-weight:800; color:#d32f2f;">₹21.00</div>
           <p style="font-size:11px; color:#888;">Scan with PhonePe, GPay, Paytm</p>
         </div>
         <a id="advanceUpiIntentBtn" href="#" class="btn" style="display:block; text-align:center; text-decoration:none; margin-bottom:10px;">🚀 Open in UPI App (PhonePe / GPay)</a>
@@ -307,7 +351,7 @@
     <!-- 7. BILL SUBMITTED SCREEN -->
     <div id="screen-bill-submitted" class="screen">
       <div class="desktop-inner">
-        <div class="card" style="border-left:4px solid #0f8a4b; text-align:center; padding:30px 16px;">
+        <div class="card" style="border-left:4px solid #d32f2f; text-align:center; padding:30px 16px;">
           <div style="font-size:44px; margin-bottom:8px;">✅</div>
           <h3>Bill Successfully Generated</h3>
           <p style="font-size:12.5px; color:#555; margin-top:6px;">The customer will see the payment breakdown and QR on their own device. Your on-site billing is complete.</p>
@@ -353,8 +397,8 @@
     <div id="screen-admin" class="screen">
       <div class="desktop-inner">
         <div id="adminGlobalDashboard">
-          <div style="background:#e8f5e9; border:1px solid #0f8a4b; padding:12px; border-radius:8px; margin-bottom:14px;">
-            <h4 style="font-size:13px; color:#0f8a4b; margin-bottom:4px;">📥 Shift Reports</h4>
+          <div style="background:#fff5f5; border:1px solid #d32f2f; padding:12px; border-radius:8px; margin-bottom:14px;">
+            <h4 style="font-size:13px; color:#d32f2f; margin-bottom:4px;">📥 Shift Reports</h4>
             <p style="font-size:11px; color:#555; margin-bottom:8px;">Download completed works and customer logs for today's shift.</p>
             <button class="btn" style="padding:10px; font-size:13px;" onclick="downloadShiftReport()">Download Shift Report (CSV)</button>
           </div>
@@ -404,24 +448,24 @@
 <!-- 10. TECHNICIAN WORK COMPLETION & BILLING MODAL -->
 <div id="techCompletionModal" class="modal-backdrop">
   <div class="modal-content">
-    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px solid #0f8a4b; padding-bottom:8px; margin-bottom:12px;">
-      <h3 style="font-size:15px; color:#0f8a4b;">Work Completion &amp; Billing Calculation</h3>
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px solid #d32f2f; padding-bottom:8px; margin-bottom:12px;">
+      <h3 style="font-size:15px; color:#d32f2f;">Work Completion &amp; Billing Calculation</h3>
       <span style="font-size:20px; font-weight:700; cursor:pointer;" onclick="closeTechCompletionModal()">&times;</span>
     </div>
-    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px; margin-bottom:12px; font-size:12px;">
+    <div style="background:#fff5f5; border:1px solid #fee2e2; border-radius:8px; padding:10px; margin-bottom:12px; font-size:12px;">
       <b>Initial Customer Order:</b>
       <p style="color:#555; margin-top:2px;" id="modalInitialOrderText">Base Scope Package</p>
-      <p style="color:#0f8a4b; font-weight:700; margin-top:4px;">Advance Token Paid: ₹21.00 (Adjusted)</p>
-      <p style="color:#7c3aed; font-weight:700; margin-top:4px;" id="modalElapsedTimeText">Job duration: --</p>
+      <p style="color:#d32f2f; font-weight:700; margin-top:4px;">Advance Token Paid: ₹21.00 (Adjusted)</p>
+      <p style="color:#b71c1c; font-weight:700; margin-top:4px;" id="modalElapsedTimeText">Job duration: --</p>
     </div>
     <div style="margin-bottom:12px;">
       <label style="font-weight:700; font-size:12.5px; display:block; margin-bottom:4px;" id="modalServicesHeading">Category Services Performed On-Site:</label>
       <p style="font-size:11px; color:#666; margin-bottom:6px;">Check service and enter price quoted to customer:</p>
-      <div id="modalAddonsChecklist" style="max-height:160px; overflow-y:auto; border:1px solid #eee; border-radius:6px; padding:6px 10px;"></div>
+      <div id="modalAddonsChecklist" style="max-height:160px; overflow-y:auto; border:1px solid #fee2e2; border-radius:6px; padding:6px 10px;"></div>
     </div>
     <div style="margin-bottom:12px;">
       <label style="font-weight:700; font-size:12.5px; display:block; margin-bottom:6px;">Spare Parts Used (GST-Coded):</label>
-      <div id="modalPartsCatalog" style="border:1px solid #eee; border-radius:6px; padding:6px 10px;"></div>
+      <div id="modalPartsCatalog" style="border:1px solid #fee2e2; border-radius:6px; padding:6px 10px;"></div>
       <div id="modalCustomPartsRows" style="margin-top:8px;"></div>
       <button type="button" class="btn secondary" style="margin-top:8px; padding:8px; font-size:12px;" onclick="addCustomPartRow()">+ Add Custom Part</button>
     </div>
@@ -429,23 +473,23 @@
       <label style="font-weight:700; font-size:12.5px; display:block; margin-bottom:4px;">Enter Customer 4-Digit Stop PIN:</label>
       <input type="text" id="modalStopPinInput" placeholder="Stop PIN" maxlength="4" style="text-align:center; font-size:16px; font-weight:700;">
     </div>
-    <div class="card" style="background:#f0faf3; border:1px solid #0f8a4b; padding:10px; margin-bottom:12px;">
+    <div class="card" style="background:#fff5f5; border:1px solid #d32f2f; padding:10px; margin-bottom:12px;">
       <div class="price-row"><span>Base Service Pack:</span><span id="modalBaseDisp">₹0.00</span></div>
       <div class="price-row"><span>On-Site Extra Services:</span><span id="modalExtraWorkDisp">₹0.00</span></div>
       <div class="price-row"><span>Materials / Spares:</span><span id="modalMaterialsDisp">₹0.00</span></div>
       <div class="price-row" id="modalOvertimeRow" style="display:none; color:#b8720a;"><span id="modalOvertimeLabel">Overtime:</span><span id="modalOvertimeDisp">₹0.00</span></div>
-      <div class="price-row" style="color:#0f8a4b;"><span>Advance Token Deducted:</span><span>- ₹21.00</span></div>
-      <div class="price-row total"><span>Grand Total (Net Due):</span><span id="modalFinalNetDue" style="color:#0f8a4b;">₹0.00</span></div>
+      <div class="price-row" style="color:#d32f2f;"><span>Advance Token Deducted:</span><span>- ₹21.00</span></div>
+      <div class="price-row total"><span>Grand Total (Net Due):</span><span id="modalFinalNetDue" style="color:#d32f2f;">₹0.00</span></div>
     </div>
-    <button class="btn" style="background:#b8720a;" onclick="submitFinalCalculatedBill()">✔ Finalize &amp; Generate Customer Bill</button>
+    <button class="btn" style="background:#b71c1c;" onclick="submitFinalCalculatedBill()">✔ Finalize &amp; Generate Customer Bill</button>
   </div>
 </div>
 
 <!-- 11. CUSTOMER FINAL PAYMENT MODAL -->
 <div id="customerPaymentModal" class="modal-backdrop">
   <div class="modal-content">
-    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px solid #0f8a4b; padding-bottom:8px; margin-bottom:12px;">
-      <h3 style="font-size:15px; color:#0f8a4b;">Final Service Bill Settlement</h3>
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px solid #d32f2f; padding-bottom:8px; margin-bottom:12px;">
+      <h3 style="font-size:15px; color:#d32f2f;">Final Service Bill Settlement</h3>
       <span style="font-size:20px; font-weight:700; cursor:pointer;" onclick="closeCustomerPaymentModal()">&times;</span>
     </div>
     <div class="card">
@@ -453,11 +497,11 @@
       <div class="price-row"><span>On-Site Extra Services</span><span id="payTechExtraWork">₹0.00</span></div>
       <div class="price-row"><span>Materials / Spare Parts</span><span id="payParts">₹0.00</span></div>
       <div class="price-row" id="payOvertimeRow" style="display:none; color:#b8720a;"><span id="payOvertimeLabel">Overtime</span><span id="payOvertimeVal">₹0.00</span></div>
-      <div class="price-row" style="color:#0f8a4b;"><span>Advance Token Deducted</span><span>- ₹21.00</span></div>
-      <div class="price-row total"><span>Grand Total (Payable Balance)</span><span id="payTotal" style="color:#0f8a4b;">₹0.00</span></div>
+      <div class="price-row" style="color:#d32f2f;"><span>Advance Token Deducted</span><span>- ₹21.00</span></div>
+      <div class="price-row total"><span>Grand Total (Payable Balance)</span><span id="payTotal" style="color:#d32f2f;">₹0.00</span></div>
     </div>
     <div style="text-align:center; margin-bottom:14px;">
-      <div style="font-size:24px; font-weight:800; color:#0f8a4b;" id="finalAmountTag">₹0.00</div>
+      <div style="font-size:24px; font-weight:800; color:#d32f2f;" id="finalAmountTag">₹0.00</div>
       <p style="font-size:11px; color:#888;">UPI, Cards &amp; NetBanking supported</p>
     </div>
     <button class="btn" onclick="payFinalBillWithCashfree()">💳 Pay Now &amp; Download PDF Invoice</button>
@@ -467,13 +511,13 @@
 <!-- 12. GOOGLE USER MODAL -->
 <div id="googlePhoneModal" class="modal-backdrop">
   <div class="modal-content" style="max-width:380px;">
-    <h3 style="font-size:15px; color:#0f8a4b; margin-bottom:6px;">Complete Your Profile</h3>
+    <h3 style="font-size:15px; color:#d32f2f; margin-bottom:6px;">Complete Your Profile</h3>
     <p style="font-size:12px; color:#555; margin-bottom:14px;">Your mobile number and exact street address are mandatory so our field technicians can reach you.</p>
     <label style="font-size:12px; font-weight:600; color:#444; margin-bottom:4px; display:block;">10-Digit Mobile Number (Mandatory):</label>
     <input type="tel" id="googlePhoneInput" placeholder="Enter 10-digit mobile number" maxlength="10" style="margin-bottom:8px;">
-    <div class="card" style="padding:10px; background:#f0faf3; margin-bottom:8px;">
-      <span style="font-size:12px; font-weight:700; color:#0f8a4b;">📍 Select Exact Address from Map:</span>
-      <div id="googleSignupMap" style="height:170px; border-radius:10px; border:1.5px solid #0f8a4b; margin-top:6px;"></div>
+    <div class="card" style="padding:10px; background:#fff5f5; border:1px solid #fee2e2; margin-bottom:8px;">
+      <span style="font-size:12px; font-weight:700; color:#d32f2f;">📍 Select Exact Address from Map:</span>
+      <div id="googleSignupMap" style="height:170px; border-radius:10px; border:1.5px solid #d32f2f; margin-top:6px;"></div>
     </div>
     <label style="font-size:12px; font-weight:600; color:#444; margin-bottom:4px; display:block;">Selected Address / Landmark:</label>
     <input type="text" id="googleAddressInput" placeholder="Selected address" style="margin-bottom:8px;">
@@ -498,7 +542,6 @@
   const OVERTIME_RATE_PER_HOUR = 100;
   const FREE_HOURS_BEFORE_OVERTIME = 3;
 
-  // Sahi Base Taxable Rates (Base Total / 1.18)
   const SERVICE_CONFIG = {
     electrician: { title: 'Electrical Services', base: 253.39, gst: 45.61, total: 299.00, sac: '998719', scope: '✅ <b>Base Scope:</b> Technician Visit + 1 Fan/Board Repair OR 2 Switch Replacements' },
     plumber: { title: 'Plumbing Works', base: 253.39, gst: 45.61, total: 299.00, sac: '998722', scope: '✅ <b>Base Scope:</b> Plumber Visit + 1 Tap/Valve Leakage Repair OR Drain Unclogging' },
@@ -750,14 +793,14 @@
     if (!/^[6-9]\d{9}$/.test(phone)) { msg.textContent = "Mandatory: Enter a valid 10-digit Indian mobile number."; msg.style.color = "#c0392b"; return; }
     if (!address) { msg.textContent = "Mandatory: Select or type your exact street address."; msg.style.color = "#c0392b"; return; }
 
-    msg.textContent = "Sending 6-digit verification code to email..."; msg.style.color = "#0f8a4b";
+    msg.textContent = "Sending 6-digit verification code to email..."; msg.style.color = "#d32f2f";
     try {
-      const { error } = await sbClient.auth.signInWithOtp({ email: email, options: { shouldCreateUser: false } });
+      const { error } = await sbClient.auth.signInWithOtp({ email: email, options: { shouldCreateUser: true } });
       if (error) { msg.textContent = "Failed to send OTP: " + error.message; msg.style.color = "#c0392b"; return; }
       isOtpDispatched = true;
       document.getElementById('otpPasswordCreationGroup').style.display = 'block';
       document.getElementById('sendEmailOtpBtn').textContent = "🔄 Resend Email OTP";
-      msg.textContent = "OTP Sent! Enter the 6-digit code and create your password."; msg.style.color = "#0f8a4b";
+      msg.textContent = "OTP Sent! Enter the 6-digit code and create your password."; msg.style.color = "#d32f2f";
     } catch(err) { msg.textContent = "Error sending OTP: " + err.message; msg.style.color = "#c0392b"; }
   }
 
@@ -776,7 +819,7 @@
       if (!isOtpDispatched || otpToken.length !== 6) { msg.textContent = "Please send OTP and enter the 6-digit code received on email."; msg.style.color = "#c0392b"; return; }
       if (newPassword.length < 6) { msg.textContent = "Created Password must be at least 6 characters."; msg.style.color = "#c0392b"; return; }
 
-      msg.textContent = "Verifying OTP and creating your account..."; msg.style.color = "#0f8a4b";
+      msg.textContent = "Verifying OTP and creating your account..."; msg.style.color = "#d32f2f";
       const { error: verifyErr } = await sbClient.auth.verifyOtp({ email: email, token: otpToken, type: 'email' });
       if (verifyErr) { msg.textContent = "Invalid or expired Email OTP: " + verifyErr.message; msg.style.color = "#c0392b"; return; }
 
@@ -787,7 +830,7 @@
       alert("Account Created Successfully! Please login using your email and password.");
       toggleCustomerAuthMode();
       document.getElementById('authEmail').value = email;
-      msg.textContent = "Account verified! Enter your password to log in."; msg.style.color = "#0f8a4b";
+      msg.textContent = "Account verified! Enter your password to log in."; msg.style.color = "#d32f2f";
     } else {
       const loginPassword = document.getElementById('authLoginPassword').value.trim();
       if (loginPassword.length < 6) { msg.textContent = "Password must be at least 6 characters."; msg.style.color = "#c0392b"; return; }
@@ -941,11 +984,11 @@
       if (b.job_status === 'claimed') statusBadge = `<span style="color:#2563eb; font-weight:700;">[ 🧑‍🔧 ACCEPTED BY TECH ]</span>`;
       else if (b.job_status === 'in_progress') statusBadge = `<span style="color:#7c3aed; font-weight:700;">[ ⚡ WORK IN PROGRESS ]</span>`;
       else if (isBillReady) statusBadge = `<span style="color:#b8720a; font-weight:700;">[ 🧾 BILL READY - PAYMENT PENDING ]</span>`;
-      else if (isPaid) statusBadge = `<span style="color:#0f8a4b; font-weight:700;">[ ✔ COMPLETED &amp; PAID ]</span>`;
+      else if (isPaid) statusBadge = `<span style="color:#d32f2f; font-weight:700;">[ ✔ COMPLETED &amp; PAID ]</span>`;
       else if (isCancelled) statusBadge = `<span style="color:#e74c3c; font-weight:700;">[ ❌ CANCELLED ]</span>`;
 
       return `
-        <div class="card" style="border-left:4px solid ${isPaid ? '#0f8a4b' : (isCancelled ? '#e74c3c' : (isBillReady ? '#b8720a' : '#f39c12'))};">
+        <div class="card" style="border-left:4px solid ${isPaid ? '#d32f2f' : (isCancelled ? '#e74c3c' : (isBillReady ? '#b8720a' : '#f39c12'))};">
           <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
             <b>${b.invoice_no || 'BM-ORDER'}</b>
             ${statusBadge}
@@ -955,8 +998,8 @@
           <p style="font-size:12px; color:#555;">🧑‍🔧 Assigned Tech: <b>${b.technician_name || 'Broadcasting in Pool (Waiting Tech...)'}</b>${b.technician_phone ? ' (📞 ' + b.technician_phone + ')' : ''}</p>
           <p style="font-size:12px; color:#555;">📍 Work Address: ${b.customer_address}</p>
           ${!isCancelled ? `
-          <div style="background:#f0faf3; border:1px dashed #0f8a4b; border-radius:6px; padding:6px; margin:6px 0; font-size:11.5px;">
-            🟢 Your Start PIN: <b>${b.start_pin}</b> (Give upon arrival)<br>
+          <div style="background:#fff5f5; border:1px dashed #d32f2f; border-radius:6px; padding:6px; margin:6px 0; font-size:11.5px;">
+            🔴 Your Start PIN: <b>${b.start_pin}</b> (Give upon arrival)<br>
             🔴 Your Stop PIN: <b>${b.stop_pin}</b> (Give after work completes)
           </div>` : ''}
           ${isPending ? `<button class="btn danger" style="padding:7px; font-size:11.5px; margin-top:8px;" onclick="cancelCustomerBooking('${b.id || b.invoice_no}')">❌ Cancel Booking</button>` : ''}
@@ -1013,7 +1056,6 @@
   }
   function closeCustomerPaymentModal() { document.getElementById('customerPaymentModal').style.display = 'none'; }
 
-  // PDF Generation with 100% Correct GST Calculations
   async function downloadOrderPdf(orderId) {
     let data = null;
     try { const res = await sbClient.from('bookings').select('*').or(`id.eq.${orderId},invoice_no.eq.${orderId}`).single(); data = res.data; } catch(e){}
@@ -1110,21 +1152,21 @@
     const activeSec = document.getElementById('activeClaimedJobSection');
     if (claimedJob) {
       activeSec.innerHTML = `
-        <div class="card" style="border:2px solid #0f8a4b; background:#f0faf3;">
-          <div style="display:flex; justify-content:space-between;"><b style="color:#0f8a4b;">Active Claimed Job: ${claimedJob.invoice_no}</b><span>[ ${claimedJob.job_status.toUpperCase()} ]</span></div>
+        <div class="card" style="border:2px solid #d32f2f; background:#fff5f5;">
+          <div style="display:flex; justify-content:space-between;"><b style="color:#d32f2f;">Active Claimed Job: ${claimedJob.invoice_no}</b><span>[ ${claimedJob.job_status.toUpperCase()} ]</span></div>
           <p style="font-size:12px; margin:4px 0;">👤 Customer: <b>${claimedJob.customer_name || 'Customer'}</b> | 📞 ${claimedJob.customer_phone}</p>
           <p style="font-size:12px; margin-bottom:4px;">📍 Address: ${claimedJob.customer_address}</p>
           <p style="font-size:11.5px; color:#555;">📋 Work: <b>${claimedJob.extra_services || 'Base Package Only'}</b></p>
           ${claimedJob.job_status === 'claimed' ? `
             <div style="margin-top:8px;">
-              <p style="font-size:11.5px; color:#0f8a4b; font-weight:700; margin-bottom:4px;">Ask Start PIN from Customer upon arrival:</p>
+              <p style="font-size:11.5px; color:#d32f2f; font-weight:700; margin-bottom:4px;">Ask Start PIN from Customer upon arrival:</p>
               <input type="text" id="startPinVerifyInput" placeholder="Enter 4-Digit Start PIN" maxlength="4" style="text-align:center; font-size:16px; font-weight:700; margin-bottom:6px;">
               <button class="btn" onclick="verifyStartPin('${claimedJob.id || claimedJob.invoice_no}', '${claimedJob.start_pin}')">Verify Start PIN &amp; Begin Job</button>
               <button class="btn danger" style="margin-top:6px;" onclick="cancelClaimedJob('${claimedJob.id || claimedJob.invoice_no}')">Cancel Job (15-Min Penalty)</button>
             </div>
           ` : claimedJob.job_status === 'in_progress' ? `
             <div style="margin-top:8px;"><button class="btn" style="background:#b8720a;" onclick="openTechCompletionModal('${claimedJob.id || claimedJob.invoice_no}')">📋 Work Finished: Fill Details &amp; Generate Bill</button></div>
-          ` : `<div style="margin-top:8px;"><p style="font-size:11.5px; color:#0f8a4b; font-weight:700;">Bill generated - waiting for customer payment.</p></div>`}
+          ` : `<div style="margin-top:8px;"><p style="font-size:11.5px; color:#d32f2f; font-weight:700;">Bill generated - waiting for customer payment.</p></div>`}
         </div>`;
     } else { activeSec.innerHTML = ''; }
 
@@ -1140,7 +1182,7 @@
 
     poolList.innerHTML = poolJobs.map(j => `
       <div class="card" style="border-left:4px solid #f39c12;">
-        <div style="display:flex; justify-content:space-between;"><b>${j.invoice_no}</b><span style="font-weight:700; color:#0f8a4b;">${j.service_type?.toUpperCase()}</span></div>
+        <div style="display:flex; justify-content:space-between;"><b>${j.invoice_no}</b><span style="font-weight:700; color:#d32f2f;">${j.service_type?.toUpperCase()}</span></div>
         <p style="font-size:12px; color:#333; margin:3px 0;">👤 ${j.customer_name || 'Customer'} (📞 ${j.customer_phone})</p>
         <p style="font-size:12px; color:#555;">📍 ${j.customer_address}</p>
         <button class="btn" style="margin-top:8px;" ${cooldownActive ? 'disabled' : ''} onclick="claimPoolJob('${j.id || j.invoice_no}')">${cooldownActive ? 'Claim Blocked (Cooldown)' : '⚡ Accept &amp; Claim Job'}</button>
@@ -1335,13 +1377,13 @@
     feed.innerHTML = data.map(b => {
       const isPaid = b.job_status === 'paid_completed', isBillReady = b.job_status === 'work_completed';
       let statusColor = '#d97706', statusText = (b.job_status || 'pending').toUpperCase();
-      if (isPaid) { statusColor = '#0f8a4b'; statusText = '✔ PAID & COMPLETED'; } else if (isBillReady) { statusColor = '#b8720a'; statusText = '🧾 BILL READY'; }
+      if (isPaid) { statusColor = '#d32f2f'; statusText = '✔ PAID & COMPLETED'; } else if (isBillReady) { statusColor = '#b8720a'; statusText = '🧾 BILL READY'; }
       return `
         <div class="card" style="font-size:12px; margin-bottom:8px; border-left:4px solid ${statusColor};">
           <div style="display:flex; justify-content:space-between;"><b>${b.invoice_no} [${b.service_type?.toUpperCase()}]</b><span style="font-weight:700; color:${statusColor};">${statusText}</span></div>
           <p style="margin-top:2px;">Customer: <b>${b.customer_name || 'Customer'}</b> (📞 ${b.customer_phone})</p>
           <p>Tech Assigned: <b>${b.technician_name || 'Unassigned'}</b></p>
-          <p>🟢 Start PIN: <b>${b.start_pin}</b> | 🔴 Stop PIN: <b>${b.stop_pin}</b></p>
+          <p>🔴 Start PIN: <b>${b.start_pin}</b> | 🔴 Stop PIN: <b>${b.stop_pin}</b></p>
           <p style="color:#555;">Address: ${b.customer_address}</p>
         </div>`;
     }).join('');
@@ -1372,7 +1414,7 @@
     try { const { data } = await sbClient.from('technicians').select('*').order('created_at', { ascending: false }); if (data) techs = data; } catch(e){}
     if (techs.length === 0) { container.innerHTML = '<p style="color:#888; font-size:12px;">No technicians found.</p>'; return; }
     container.innerHTML = techs.map(t => `
-      <div style="padding:6px 0; border-bottom:1px solid #eee; font-size:12px;">
+      <div style="padding:6px 0; border-bottom:1px solid #fee2e2; font-size:12px;">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <span>${t.is_available === false ? '🔴' : '🟢'} <b>${t.tech_code || '-'}</b> ${t.name} (${t.category})</span>
           <button class="btn ${t.is_available === false ? 'secondary' : 'danger'}" style="width:auto; padding:4px 10px; font-size:10.5px;" onclick="toggleTechnicianBlock('${t.id}', ${t.is_available === false})">${t.is_available === false ? 'Unblock' : 'Block'}</button>
@@ -1392,7 +1434,7 @@
     try { const { data } = await sbClient.from('customers').select('*').order('created_at', { ascending: false }); if (data) customers = data; } catch(e){}
     if (customers.length === 0) { container.innerHTML = '<p style="color:#888; font-size:12px;">No customer accounts.</p>'; return; }
     container.innerHTML = customers.map(c => `
-      <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid #eee; font-size:12px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid #fee2e2; font-size:12px;">
         <span>${c.is_blocked ? '🚫' : '✅'} ${c.name || 'Customer'} (📞 ${c.phone})</span>
         <button class="btn ${c.is_blocked ? 'secondary' : 'danger'}" style="width:auto; padding:4px 10px; font-size:10.5px;" onclick="toggleCustomerBlock('${c.phone}', ${!c.is_blocked})">${c.is_blocked ? 'Unblock' : 'Block'}</button>
       </div>`).join('');
