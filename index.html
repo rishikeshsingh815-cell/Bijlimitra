@@ -734,6 +734,7 @@
     <div style="margin-bottom:12px;">
       <label style="font-weight:800; font-size:12.5px; color:var(--title-blue); display:block; margin-bottom:4px;" id="modalServicesHeading">Category Services Performed On-Site:</label>
       <p style="font-size:11px; color:#64748b; margin-bottom:6px; font-weight:600;">Check service and enter price quoted to customer:</p>
+      <div id="modalCustomerSelectedServices" style="margin-bottom:10px; padding:9px 10px; background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:8px;"></div>
       <div id="modalAddonsChecklist" style="max-height:160px; overflow-y:auto; border:1.5px solid #cbd5e1; border-radius:8px; padding:6px 10px;"></div>
     </div>
     <div style="margin-bottom:12px;">
@@ -1590,6 +1591,12 @@
     const items = getStoredElectricalItems(data);
     const selectedTotal=data.service_type==='electrician'?items.reduce((s,x)=>s+((Number(x.qty)||0)*(Number(x.unitPrice)||0)),0):0;
     const additionalTotal=parseFloat(data.extra_on_site_cost)||0;
+    let additionalOnsiteItems = [];
+    try { additionalOnsiteItems = JSON.parse(data.additional_on_site_services_json || '[]'); } catch(e) {}
+    if (!additionalOnsiteItems.length && data.additional_on_site_service) {
+      additionalOnsiteItems = [{ name: data.additional_on_site_service, qty: 1, unitPrice: Number(data.additional_on_site_service_price) || 0, total: Number(data.additional_on_site_service_price) || 0 }];
+    }
+
     const materials=parseFloat(data.extra_material_cost)||0;
     const gross=inspectionFee+selectedTotal+additionalTotal+materials;
     const advance=isRevisit?0:21;
@@ -1606,7 +1613,10 @@
       if(qty>0&&total>0) rows+=`<tr><td style="text-align:center;">${sr++}</td><td>${x.name} (Qty: ${qty})</td><td style="text-align:center;">${cfg.sac||'998719'}</td><td class="num">₹${(total/1.18).toFixed(2)}</td><td style="text-align:center;">18%</td><td class="num">₹${total.toFixed(2)}</td></tr>`;
     });
 
-    if(additionalTotal>0) rows+=`<tr><td style="text-align:center;">${sr++}</td><td>Additional On-Site Service</td><td style="text-align:center;">${cfg.sac||'998719'}</td><td class="num">₹${(additionalTotal/1.18).toFixed(2)}</td><td style="text-align:center;">18%</td><td class="num">₹${additionalTotal.toFixed(2)}</td></tr>`;
+    additionalOnsiteItems.forEach(x => {
+      const qty = Number(x.qty) || 0, unit = Number(x.unitPrice) || 0, total = Number(x.total) || qty * unit;
+      if (qty > 0 && total > 0) rows += `<tr><td style="text-align:center;">${sr++}</td><td>Additional On-Site: ${x.name} (Qty: ${qty})</td><td style="text-align:center;">${cfg.sac||'998719'}</td><td class="num">₹${(total/1.18).toFixed(2)}</td><td style="text-align:center;">18%</td><td class="num">₹${total.toFixed(2)}</td></tr>`;
+    });
 
     try{const parts=JSON.parse(data.spare_parts_json||'[]'); parts.forEach(p=>{const t=Number(p.total)||0; const grossPart=t*1.18; rows+=`<tr><td style="text-align:center;">${sr++}</td><td>${p.name} (Qty: ${p.qty})</td><td style="text-align:center;">${p.code||'HSN-8536'}</td><td class="num">₹${t.toFixed(2)}</td><td style="text-align:center;">18%</td><td class="num">₹${grossPart.toFixed(2)}</td></tr>`;});}catch(e){}
 
@@ -1806,19 +1816,55 @@
     if (!job) return;
 
     activeModalJob = job;
+    resetTechnicianOnsiteServices();
     const cfg = SERVICE_CONFIG[job.service_type] || SERVICE_CONFIG.electrician;
     const isRevisit = job.payment_status === 'warranty_revisit';
-    document.getElementById('modalInitialOrderText').textContent = isRevisit ? `${cfg.title} (30-Day Warranty Re-visit - ₹0 Base)` : `${cfg.title} (Base Scope)`;
+    document.getElementById('modalInitialOrderText').textContent = isRevisit ? `${cfg.title} (30-Day Warranty Re-visit - ₹0 Base)` : `${cfg.title} (Customer Selection + Inspection Fee)`;
     document.getElementById('modalStopPinInput').value = "";
     document.getElementById('modalCustomPartsRows').innerHTML = "";
 
+    // Show exactly what the customer selected during booking.
+    let customerSelectedItems = getStoredElectricalItems(job);
+    const customerSelectedTotal = customerSelectedItems.reduce((sum, item) =>
+      sum + ((Number(item.qty) || 0) * (Number(item.unitPrice) || 0)), 0);
+
+    const customerSelectionPanel = document.getElementById('modalCustomerSelectedServices');
+    if (customerSelectionPanel) {
+      customerSelectionPanel.innerHTML = job.service_type === 'electrician'
+        ? (customerSelectedItems.length
+          ? `<div style="font-size:11px; font-weight:800; color:#475569; margin-bottom:5px;">Customer selected at booking:</div>` +
+            customerSelectedItems.map(item =>
+              `<div style="display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px dashed #e2e8f0;">
+                <span>${item.name} × ${item.qty}</span>
+                <b>₹${((Number(item.qty)||0)*(Number(item.unitPrice)||0)).toFixed(2)}</b>
+              </div>`).join('') +
+            `<div style="text-align:right;margin-top:6px;font-weight:900;">Customer Services Total: ₹${customerSelectedTotal.toFixed(2)}</div>`
+          : '<div style="font-size:11px;color:#64748b;font-weight:700;">No electrical service was selected by the customer.</div>')
+        : '<div style="font-size:11px;color:#64748b;font-weight:700;">Customer-selected service details are not applicable to this category.</div>';
+    }
+
     document.getElementById('modalServicesHeading').textContent = `${cfg.title} Tasks Done On-Site:`;
     document.getElementById('modalAddonsChecklist').innerHTML = job.service_type === 'electrician'
-      ? `<select id="modalAdditionalServiceSelect" onchange="recalculateModalFinalTotal()" style="width:100%;padding:9px;border:1.5px solid #cbd5e1;border-radius:8px;font-weight:700;">
-           <option value="">-- No Additional Service --</option>
-           ${ELECTRICAL_SERVICES.map(s => `<option value="${s.id}">${s.name} — ₹${s.price.toFixed(2)}${s.unit === 'fixed' ? '' : ` / ${s.unit}`}</option>`).join('')}
-         </select>
-         <p id="modalAdditionalServiceSummary" style="font-size:11px;color:#475569;margin-top:6px;font-weight:700;"></p>`
+      ? `<div id="technicianAdditionalServicesList">
+          ${ELECTRICAL_SERVICES.map(s => `
+            <div style="padding:8px 0;border-bottom:1px dashed #cbd5e1;">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+                <label style="display:flex;align-items:center;gap:8px;flex:1;font-size:11.5px;font-weight:800;color:var(--title-blue);cursor:pointer;">
+                  <input type="checkbox" class="tech-onsite-service-cb" data-service-id="${s.id}" onchange="updateTechnicianOnsiteServices()">
+                  <span>${s.name}</span>
+                </label>
+                <div style="display:flex;align-items:center;gap:5px;">
+                  <button type="button" class="btn secondary tech-onsite-minus" data-service-id="${s.id}" style="width:auto;padding:2px 8px;font-size:13px;" onclick="changeTechnicianOnsiteQty('${s.id}',-1)">−</button>
+                  <b id="tech-onsite-qty-${s.id}" style="min-width:18px;text-align:center;font-size:11px;">0</b>
+                  <button type="button" class="btn secondary tech-onsite-plus" data-service-id="${s.id}" style="width:auto;padding:2px 8px;font-size:13px;" onclick="changeTechnicianOnsiteQty('${s.id}',1)">+</button>
+                </div>
+              </div>
+              <div style="font-size:10.5px;color:#64748b;margin-left:28px;margin-top:2px;font-weight:600;">
+                ₹${s.price.toFixed(2)} ${s.unit === 'fixed' ? '(fixed)' : `per ${s.unit}`} • GST included
+              </div>
+            </div>`).join('')}
+        </div>
+        <p id="modalAdditionalServiceSummary" style="font-size:11px;color:#475569;margin-top:7px;font-weight:800;"></p>`
       : '<p style="font-size:11px;color:#64748b;">No predefined services for this trade</p>';
 
     const catalog = SPARE_PARTS_CATALOG[job.service_type] || [];
@@ -1877,12 +1923,74 @@
     return { hours: extra, charge: extra * OVERTIME_RATE_PER_HOUR };
   }
 
+  let technicianOnsiteServices = {};
+
+  function resetTechnicianOnsiteServices() {
+    technicianOnsiteServices = {};
+    ELECTRICAL_SERVICES.forEach(s => technicianOnsiteServices[s.id] = 0);
+  }
+
+  function updateTechnicianOnsiteServices() {
+    document.querySelectorAll('.tech-onsite-service-cb').forEach(cb => {
+      const id = cb.getAttribute('data-service-id');
+      if (cb.checked && (technicianOnsiteServices[id] || 0) < 1) technicianOnsiteServices[id] = 1;
+      if (!cb.checked) technicianOnsiteServices[id] = 0;
+    });
+
+    ELECTRICAL_SERVICES.forEach(s => {
+      const qtyEl = document.getElementById(`tech-onsite-qty-${s.id}`);
+      if (qtyEl) qtyEl.textContent = technicianOnsiteServices[s.id] || 0;
+    });
+
+    const selected = ELECTRICAL_SERVICES.filter(s => (technicianOnsiteServices[s.id] || 0) > 0);
+    const total = selected.reduce((sum,s) => sum + (technicianOnsiteServices[s.id] * s.price), 0);
+    const summary = document.getElementById('modalAdditionalServiceSummary');
+    if (summary) {
+      summary.textContent = selected.length
+        ? `Additional On-Site Services: ${selected.map(s => `${s.name} × ${technicianOnsiteServices[s.id]}`).join(', ')} | Total: ₹${total.toFixed(2)} (GST included)`
+        : '';
+    }
+    recalculateModalFinalTotal();
+  }
+
+  function changeTechnicianOnsiteQty(serviceId, delta) {
+    const current = technicianOnsiteServices[serviceId] || 0;
+    const next = Math.max(0, current + delta);
+    technicianOnsiteServices[serviceId] = next;
+
+    const cb = document.querySelector(`.tech-onsite-service-cb[data-service-id="${serviceId}"]`);
+    if (cb) cb.checked = next > 0;
+
+    const qtyEl = document.getElementById(`tech-onsite-qty-${serviceId}`);
+    if (qtyEl) qtyEl.textContent = next;
+
+    updateTechnicianOnsiteServices();
+  }
+
+  function getTechnicianOnsiteServices() {
+    return ELECTRICAL_SERVICES
+      .filter(s => (technicianOnsiteServices[s.id] || 0) > 0)
+      .map(s => ({
+        id: s.id,
+        name: s.name,
+        unit: s.unit,
+        qty: technicianOnsiteServices[s.id],
+        unitPrice: s.price,
+        total: technicianOnsiteServices[s.id] * s.price
+      }));
+  }
+
+  function getTechnicianOnsiteTotal() {
+    return getTechnicianOnsiteServices().reduce((sum, s) => sum + s.total, 0);
+  }
+
   function recalculateModalFinalTotal() {
     if (!activeModalJob) return;
     const cfg = SERVICE_CONFIG[activeModalJob.service_type] || SERVICE_CONFIG.electrician;
     const isRevisit = activeModalJob.payment_status === 'warranty_revisit';
 
-    const customerItems = getStoredElectricalItems(activeModalJob);
+    let customerItems = [];
+    try { customerItems = JSON.parse(activeModalJob.selected_services_json || '[]'); } catch(e) {}
 
     const inspectionFee = isRevisit ? 0 :
       (activeModalJob.service_type === 'electrician'
@@ -1890,82 +1998,132 @@
         : (Number(activeModalJob.base_fee) || Number(cfg.total) || 0));
 
     const customerServicesTotal = activeModalJob.service_type === 'electrician'
-      ? customerItems.reduce((s,x) => s + ((Number(x.qty)||0)*(Number(x.unitPrice)||0)),0)
+      ? (Number(activeModalJob.selected_services_total) ||
+         customerItems.reduce((sum,x) =>
+           sum + ((Number(x.qty)||0) * (Number(x.unitPrice)||0)), 0))
       : 0;
 
-    const select = document.getElementById('modalAdditionalServiceSelect');
-    const additional = ELECTRICAL_SERVICES.find(s => s.id === select?.value);
-    const additionalTotal = additional ? additional.price : 0;
+    const technicianServicesTotal = getTechnicianOnsiteTotal();
     const parts = getPartsBreakdown();
-    const netDue = Math.max(0, inspectionFee + customerServicesTotal + additionalTotal + parts.total - (isRevisit ? 0 : 21));
+    const advanceDeduction = isRevisit ? 0 : 21;
 
-    const baseEl=document.getElementById('modalBaseDisp'), extraEl=document.getElementById('modalExtraWorkDisp'),
-          matEl=document.getElementById('modalMaterialsDisp'), finalEl=document.getElementById('modalFinalNetDue');
-    if (baseEl) baseEl.textContent=`₹${inspectionFee.toFixed(2)}`;
-    if (extraEl) extraEl.textContent=`+₹${additionalTotal.toFixed(2)}`;
-    if (matEl) matEl.textContent=`+₹${parts.total.toFixed(2)}`;
-    const overtimeRow=document.getElementById('modalOvertimeRow'); if(overtimeRow) overtimeRow.style.display='none';
-    if (finalEl) finalEl.textContent=`₹${netDue.toFixed(2)}`;
-    const summary=document.getElementById('modalAdditionalServiceSummary');
-    if(summary) summary.textContent=additional ? `Selected: ${additional.name} — ₹${additional.price.toFixed(2)} (GST included)` : '';
+    const grossTotal = inspectionFee + customerServicesTotal +
+      technicianServicesTotal + parts.total;
+    const finalAmount = Math.max(0, grossTotal - advanceDeduction);
+
+    const baseEl = document.getElementById('modalBaseDisp');
+    const extraEl = document.getElementById('modalExtraWorkDisp');
+    const materialEl = document.getElementById('modalMaterialsDisp');
+    const finalEl = document.getElementById('modalFinalNetDue');
+
+    if (baseEl) baseEl.textContent = `₹${inspectionFee.toFixed(2)}`;
+    if (extraEl) extraEl.textContent = `+₹${(customerServicesTotal + technicianServicesTotal).toFixed(2)}`;
+    if (materialEl) materialEl.textContent = `+₹${parts.total.toFixed(2)}`;
+
+    const overtimeRow = document.getElementById('modalOvertimeRow');
+    if (overtimeRow) overtimeRow.style.display = 'none';
+
+    if (finalEl) finalEl.textContent = `₹${finalAmount.toFixed(2)}`;
+
+    const summary = document.getElementById('modalAdditionalServiceSummary');
+    if (summary) {
+      const selected = getTechnicianOnsiteServices();
+      summary.textContent = selected.length
+        ? `Technician additions: ${selected.map(s => `${s.name} × ${s.qty}`).join(', ')} | ₹${technicianServicesTotal.toFixed(2)}`
+        : '';
+    }
   }
-
-
   function openTechnicianCollectionQr() {
     if (!activeModalJob) return;
     const enteredPin = document.getElementById('modalStopPinInput').value.trim();
-    if (!enteredPin || enteredPin !== activeModalJob.stop_pin) { alert("Invalid Stop PIN! Please ask customer for correct 4-digit Stop PIN."); return; }
+    if (!enteredPin || enteredPin !== activeModalJob.stop_pin) {
+      alert("Invalid Stop PIN! Please ask customer for correct 4-digit Stop PIN.");
+      return;
+    }
 
     const parts = getPartsBreakdown();
     const cfg = SERVICE_CONFIG[activeModalJob.service_type] || SERVICE_CONFIG.electrician;
     const isRevisit = activeModalJob.payment_status === 'warranty_revisit';
 
-    const customerItems = getStoredElectricalItems(activeModalJob);
+    let customerItems = [];
+    try { customerItems = JSON.parse(activeModalJob.selected_services_json || '[]'); } catch(e) {}
 
     const inspectionFee = isRevisit ? 0 :
       (activeModalJob.service_type === 'electrician'
         ? (Number(activeModalJob.inspection_fee) || ELECTRICAL_MIN_INSPECTION_FEE)
         : (Number(activeModalJob.base_fee) || Number(cfg.total) || 0));
 
+    // Customer-side additions selected during booking.
     const customerServicesTotal = activeModalJob.service_type === 'electrician'
-      ? customerItems.reduce((s,x) => s + ((Number(x.qty)||0)*(Number(x.unitPrice)||0)),0)
+      ? (Number(activeModalJob.selected_services_total) ||
+         customerItems.reduce((sum, item) =>
+           sum + ((Number(item.qty) || 0) * (Number(item.unitPrice) || 0)), 0))
       : 0;
 
-    const select = document.getElementById('modalAdditionalServiceSelect');
-    const additional = ELECTRICAL_SERVICES.find(s => s.id === select?.value);
-    const additionalTotal = additional ? additional.price : 0;
+    // Technician-side additions selected after inspection.
+    const technicianOnsiteItems = getTechnicianOnsiteServices();
+    const technicianServicesTotal = getTechnicianOnsiteTotal();
+
     const advanceDeduction = isRevisit ? 0 : 21;
-    const grossTotal = inspectionFee + customerServicesTotal + additionalTotal + parts.total;
-    const netDue = Math.max(0, grossTotal - advanceDeduction);
+    const grossTotal =
+      inspectionFee +
+      customerServicesTotal +
+      technicianServicesTotal +
+      parts.total;
 
-    const customerSummary = customerItems.map(x => `${x.name} x${x.qty} (₹${(Number(x.qty)*Number(x.unitPrice)).toFixed(2)})`).join(', ') || 'None';
-    const additionalSummary = additional ? `${additional.name} x1 (₹${additional.price.toFixed(2)})` : 'None';
-    const partsSummary = parts.lineItems.map(p => `${p.name} x${p.qty}`).join(', ') || 'None';
+    const finalAmountToPay = Math.max(0, grossTotal - advanceDeduction);
 
-    const fullDesc = `${cfg.title} | Inspection ₹${inspectionFee.toFixed(2)} | Customer Services: ${customerSummary} | Additional On-Site Service: ${additionalSummary} | Spares: ${partsSummary}`;
+    const customerSummary = customerItems
+      .map(x => `${x.name} x${x.qty} (₹${(Number(x.qty) * Number(x.unitPrice)).toFixed(2)})`)
+      .join(', ') || 'None';
+
+    const technicianSummary = technicianOnsiteItems.length
+      ? technicianOnsiteItems.map(x => `${x.name} x${x.qty} (₹${x.total.toFixed(2)})`).join(', ')
+      : 'None';
+
+    const partsSummary = parts.lineItems
+      .map(p => `${p.name} x${p.qty}`)
+      .join(', ') || 'None';
+
+    const fullDesc =
+      `${cfg.title} | Inspection ₹${inspectionFee.toFixed(2)}` +
+      ` | Customer Services: ${customerSummary}` +
+      ` | Additional On-Site Services: ${technicianSummary}` +
+      ` | Spares: ${partsSummary}` +
+      ` | Gross ₹${grossTotal.toFixed(2)}` +
+      ` | ₹21 Advance Deducted: ₹${advanceDeduction.toFixed(2)}` +
+      ` | Final Payable ₹${finalAmountToPay.toFixed(2)}`;
 
     pendingTechCalculatedPayload = {
-      job_status:'paid_completed',
-      payment_status:'settled_full',
-      extra_services:fullDesc,
-      additional_on_site_service:additional ? additional.name : '',
-      additional_on_site_service_price:additionalTotal,
-      extra_on_site_cost:additionalTotal,
-      extra_material_cost:parts.total,
-      spare_parts_json:JSON.stringify(parts.lineItems),
-      overtime_hours:0,
-      overtime_charge:0,
-      calculated_total:netDue,
-      end_time:new Date().toISOString()
+      job_status: 'paid_completed',
+      payment_status: 'settled_full',
+      extra_services: fullDesc,
+      extra_on_site_cost: technicianServicesTotal,
+      extra_material_cost: parts.total,
+      spare_parts_json: JSON.stringify(parts.lineItems),
+      overtime_hours: 0,
+      overtime_charge: 0,
+      calculated_total: finalAmountToPay,
+      end_time: new Date().toISOString()
     };
 
-    const upi = generateDynamicUpi(netDue, `Final Settlement ${activeModalJob.invoice_no}`);
-    document.getElementById('techOnsiteQrImg').src=upi.qrUrl;
-    document.getElementById('techOnsiteQrAmount').textContent=`₹${netDue.toFixed(2)}`;
-    document.getElementById('techPaymentQrModal').style.display='flex';
+    // Store a complete breakdown locally for the final bill UI/PDF.
+    pendingTechCalculatedPayload.customer_services_total = customerServicesTotal;
+    pendingTechCalculatedPayload.technician_services_total = technicianServicesTotal;
+    pendingTechCalculatedPayload.customer_services_json = JSON.stringify(customerItems);
+    pendingTechCalculatedPayload.technician_services_json = JSON.stringify(technicianOnsiteItems);
+    pendingTechCalculatedPayload.inspection_fee = inspectionFee;
+    pendingTechCalculatedPayload.advance_deduction = advanceDeduction;
+
+    const upi = generateDynamicUpi(
+      finalAmountToPay,
+      `Final Settlement ${activeModalJob.invoice_no}`
+    );
+
+    document.getElementById('techOnsiteQrImg').src = upi.qrUrl;
+    document.getElementById('techOnsiteQrAmount').textContent = `₹${finalAmountToPay.toFixed(2)}`;
+    document.getElementById('techPaymentQrModal').style.display = 'flex';
   }
-
-
   function closeTechPaymentQrModal() { document.getElementById('techPaymentQrModal').style.display = 'none'; }
 
   async function confirmTechnicianSettlementDone() {
@@ -1974,29 +2132,51 @@
     const orderId = activeModalJob.id;
     const invoiceNo = activeModalJob.invoice_no;
 
-    // Final technician payment changes the shared booking to COMPLETED & PAID.
+    // Use only the booking columns already used by the original application.
+    // Do not send newly invented columns here; one unknown column would make
+    // Supabase reject the entire update.
     const finalPayload = {
-      ...pendingTechCalculatedPayload,
       job_status: 'paid_completed',
-      payment_status: 'settled_full'
+      payment_status: 'settled_full',
+      extra_services: pendingTechCalculatedPayload.extra_services || '',
+      extra_on_site_cost: Number(pendingTechCalculatedPayload.extra_on_site_cost) || 0,
+      extra_material_cost: Number(pendingTechCalculatedPayload.extra_material_cost) || 0,
+      spare_parts_json: pendingTechCalculatedPayload.spare_parts_json || '[]',
+      overtime_hours: 0,
+      overtime_charge: 0,
+      calculated_total: Number(pendingTechCalculatedPayload.calculated_total) || 0,
+      end_time: pendingTechCalculatedPayload.end_time || new Date().toISOString()
     };
 
-    let dbUpdated = false;
-    let dbError = null;
-
+    let dbResult = null;
     try {
-      const result = await sbClient
-        .from('bookings')
-        .update(finalPayload)
-        .or(`id.eq.${orderId},invoice_no.eq.${invoiceNo}`);
+      // Prefer the real database id when available. This avoids passing an
+      // invoice number into a UUID id filter.
+      const looksLikeUuid = typeof orderId === 'string' &&
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(orderId);
 
-      dbError = result.error || null;
-      dbUpdated = !dbError;
+      if (looksLikeUuid) {
+        dbResult = await sbClient
+          .from('bookings')
+          .update(finalPayload)
+          .eq('id', orderId);
+      } else {
+        dbResult = await sbClient
+          .from('bookings')
+          .update(finalPayload)
+          .eq('invoice_no', invoiceNo || orderId);
+      }
     } catch (e) {
-      dbError = e;
+      dbResult = { error: e };
     }
 
-    // Always synchronize the local copy as well.
+    if (dbResult?.error) {
+      console.error('Final payment synchronization failed:', dbResult.error);
+      alert("Final payment was not synchronized. The order could not be updated in the shared database. Please try again.");
+      return;
+    }
+
+    // Synchronize the local copy only after the shared update succeeds.
     let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
     localPool = localPool.map(j =>
       (j.id === orderId || j.invoice_no === invoiceNo)
@@ -2005,13 +2185,6 @@
     );
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
 
-    if (!dbUpdated) {
-      console.error('Final settlement update failed:', dbError);
-      alert("The final payment was not synchronized to the shared order. Please try again.");
-      return;
-    }
-
-    // Immediately refresh the technician/customer status displays.
     if (typeof renderPoolJobs === 'function') await renderPoolJobs();
     if (typeof loadCustomerOrders === 'function') await loadCustomerOrders();
 
