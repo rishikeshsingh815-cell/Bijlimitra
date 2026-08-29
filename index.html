@@ -16,10 +16,13 @@
     --soft-red-card: #ffffff;
     --soft-red-border: #fecdd3;
     --soft-red-hover: #ffe4e6;
+    
+    /* Blue Highlights for Titles */
     --title-blue: #1d4ed8;
     --title-dark-blue: #1e3a8a;
     --title-blue-badge: #eff6ff;
     --title-blue-border: #bfdbfe;
+
     --text-main: #0f172a;
     --text-muted: #475569;
     --success: #059669;
@@ -30,6 +33,7 @@
   body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--soft-red-bg); color: var(--text-main); min-height: 100vh; overscroll-behavior-y: contain; }
   .app { max-width: 480px; margin: 0 auto; min-height: 100vh; background: #fff; position: relative; padding-bottom: 84px; box-shadow: 0 10px 40px -10px rgba(225, 29, 72, 0.12); }
   
+  /* Pull to Refresh Indicator */
   #pullToRefreshIndicator {
     position: fixed;
     top: 50px;
@@ -56,19 +60,16 @@
     opacity: 1;
   }
 
-  .topbar { background: var(--primary-red-grad); color: #fff; padding: 12px 14px; position: sticky; top: 0; z-index: 500; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 18px rgba(225, 29, 72, 0.35); gap: 6px; }
-  .brand-header-box { display: flex; align-items: center; gap: 8px; min-width: 0; flex-shrink: 1; }
-  .tech-mascot-avatar { width: 38px; height: 38px; background: #fff; border-radius: 50%; padding: 2px; border: 2px solid #ffe4e6; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  /* Topbar Styling */
+  .topbar { background: var(--primary-red-grad); color: #fff; padding: 13px 18px; position: sticky; top: 0; z-index: 500; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 18px rgba(225, 29, 72, 0.35); }
+  .brand-header-box { display: flex; align-items: center; gap: 12px; }
+  .tech-mascot-avatar { width: 44px; height: 44px; background: #fff; border-radius: 50%; padding: 2px; border: 2.5px solid #ffe4e6; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
   .tech-mascot-avatar svg { width: 100%; height: 100%; }
-  .brand-text-box { min-width: 0; }
-  .brand-text-box h1 { font-size: 16.5px; font-weight: 900; letter-spacing: -0.2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .brand-text-box p { font-size: 10.5px; opacity: 0.92; font-weight: 600; }
+  .topbar h1 { font-size: 18px; font-weight: 900; letter-spacing: -0.2px; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+  .topbar p { font-size: 11.5px; opacity: 0.95; font-weight: 600; }
+  .user-badge { background: rgba(255,255,255,0.25); backdrop-filter: blur(8px); padding: 7px 14px; border-radius: 30px; font-size: 11.5px; font-weight: 800; cursor: pointer; white-space: nowrap; border: 1.5px solid rgba(255,255,255,0.45); }
   
-  .topbar-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-  .user-badge { background: rgba(255,255,255,0.22); backdrop-filter: blur(8px); padding: 6px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; cursor: pointer; white-space: nowrap; border: 1.5px solid rgba(255,255,255,0.4); max-width: 115px; overflow: hidden; text-overflow: ellipsis; display: inline-block; }
-  .logout-btn-pill { background: #ffffff; color: var(--primary-red); padding: 6px 10px; border-radius: 20px; font-size: 11px; font-weight: 900; cursor: pointer; white-space: nowrap; border: 1.5px solid #ffffff; box-shadow: 0 2px 6px rgba(0,0,0,0.15); transition: 0.2s; display: none; }
-  .logout-btn-pill:active { transform: scale(0.95); opacity: 0.9; }
-
+  /* Hero Trust Banner */
   .hero-trust-banner { background: linear-gradient(180deg, #ffe4e6 0%, #ffffff 100%); border-bottom: 1.5px solid var(--soft-red-border); padding: 18px 18px 14px; margin-bottom: 14px; }
   .trust-subtitle { font-size: 11.5px; font-weight: 900; color: var(--primary-red); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
   .hero-title { font-size: 21px; font-weight: 900; color: var(--title-dark-blue); line-height: 1.25; margin-bottom: 6px; letter-spacing: -0.3px; }
@@ -76,13 +77,16 @@
   .trust-pills { display: flex; gap: 8px; flex-wrap: wrap; }
   .trust-pill { background: #ffffff; color: var(--title-blue); border: 1.5px solid var(--title-blue-border); border-radius: 30px; padding: 5px 12px; font-size: 11.5px; font-weight: 800; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 2px 6px rgba(29,78,216,0.06); }
   
+  /* Titles in Blue */
   .section-title-blue { font-size: 16px; font-weight: 900; color: var(--title-blue); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; letter-spacing: -0.2px; }
   
+  /* Layout & Cards */
   .screen { display: none; padding: 16px; animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
   .screen.active { display: block; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
   .card { background: var(--soft-red-card); border: 1.5px solid var(--soft-red-border); border-radius: 14px; padding: 16px 18px; margin-bottom: 14px; box-shadow: 0 4px 15px -3px rgba(225,29,72,0.04); }
   
+  /* Category Selection Cards */
   .category-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 10px; }
   .category-card { border: 2px solid var(--soft-red-border); border-radius: 14px; padding: 16px 18px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: all 0.2s ease; background: #ffffff; gap: 12px; }
   .category-card:hover { border-color: var(--primary-red); background: var(--soft-red-hover); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(225,29,72,0.1); }
@@ -102,9 +106,11 @@
   .addon-item:last-child { border-bottom: none; }
   .addon-item label { display: flex; align-items: center; gap: 8px; cursor: pointer; flex: 1; font-weight: 600; }
   
+  /* Bold Terms Box */
   .terms-box { background: #fffbeb; border: 2px solid #fde68a; border-radius: 12px; padding: 14px; font-size: 12px; color: #78350f; margin-bottom: 14px; line-height: 1.55; }
   .terms-box b { color: #92400e; font-weight: 900; }
   
+  /* Buttons */
   .btn { width: 100%; padding: 14px; background: var(--primary-red-grad); color: #fff; border: none; border-radius: 12px; font-size: 14.5px; font-weight: 800; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 14px rgba(225, 29, 72, 0.35); text-align: center; }
   .btn:active { transform: scale(0.985); opacity: 0.92; }
   .btn.secondary { background: #fff; color: var(--primary-red); border: 2px solid var(--primary-red); box-shadow: none; font-weight: 800; }
@@ -112,123 +118,35 @@
   .btn.danger { background: linear-gradient(135deg, #ef4444, #b91c1c); color: #fff; }
   .btn.warning { background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; }
   
+  /* Inputs */
   .input-group { position: relative; margin-bottom: 12px; }
   input, select, textarea { width: 100%; padding: 13px 14px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none; background: #fff; color: #0f172a; transition: border-color 0.2s; font-weight: 600; }
   input:focus, select:focus, textarea:focus { border-color: var(--title-blue); box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.15); }
   .toggle-pw { position: absolute; right: 14px; top: 13px; font-size: 13px; color: var(--title-blue); cursor: pointer; font-weight: 800; user-select: none; }
   
+  /* Pricing rows */
   .price-row { display: flex; justify-content: space-between; font-size: 13.5px; padding: 6px 0; color: #475569; font-weight: 600; }
   .price-row.total { border-top: 2px dashed var(--soft-red-border); margin-top: 8px; padding-top: 10px; font-weight: 900; font-size: 16.5px; color: var(--primary-dark-red); }
   
+  /* QR Containers */
   .qr-box { background: #fff; border: 2.5px dashed var(--primary-red); border-radius: 16px; padding: 18px; text-align: center; margin-bottom: 16px; box-shadow: 0 4px 16px rgba(225,29,72,0.08); }
   .qr-img { width: 190px; height: 190px; margin: 10px auto; display: block; border-radius: 10px; border: 1.5px solid var(--soft-red-border); }
   
+  /* Modals */
   .modal-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; padding: 16px; }
   .modal-content { background: #fff; border-radius: 18px; max-width: 440px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 22px; box-shadow: 0 20px 40px rgba(0,0,0,0.25); animation: fadeIn 0.2s ease-in-out; border: 1.5px solid var(--soft-red-border); }
   
-  #invoiceRenderWrapper {
-    position: fixed;
-    left: -9999px;
-    top: 0;
-    width: 794px;
-    background: #ffffff;
-    z-index: -100;
-  }
-  .invoice-paper {
-    width: 794px;
-    padding: 35px 40px;
-    background: #ffffff;
-    color: #0f172a;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    box-sizing: border-box;
-  }
-  .inv-header {
-    text-align: center;
-    border-bottom: 2.5px solid #1d4ed8;
-    padding-bottom: 12px;
-    margin-bottom: 15px;
-  }
-  .inv-header h2 {
-    font-size: 22px;
-    font-weight: 900;
-    color: #1e3a8a;
-    margin-bottom: 4px;
-    letter-spacing: 0.5px;
-  }
-  .inv-header p {
-    font-size: 11.5px;
-    color: #475569;
-    line-height: 1.4;
-    margin: 1px 0;
-    font-weight: 600;
-  }
-  .inv-title {
-    text-align: center;
-    font-weight: 900;
-    font-size: 15px;
-    color: #1d4ed8;
-    letter-spacing: 1px;
-    margin: 14px 0 16px;
-    background: #eff6ff;
-    padding: 6px;
-    border-radius: 6px;
-    border: 1px solid #bfdbfe;
-  }
-  .inv-meta-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px 24px;
-    font-size: 12px;
-    margin-bottom: 18px;
-    background: #f8fafc;
-    padding: 12px 16px;
-    border-radius: 8px;
-    border: 1px solid #e2e8f0;
-  }
-  .inv-meta-grid div { font-size: 12px; color: #334155; }
-  .inv-meta-grid span { font-weight: 800; color: #0f172a; }
-  table.inv-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 11.5px;
-    margin-bottom: 16px;
-  }
-  table.inv-table th, table.inv-table td {
-    border: 1px solid #cbd5e1;
-    padding: 8px 10px;
-  }
-  table.inv-table th {
-    background: #f1f5f9;
-    color: #1e293b;
-    font-weight: 800;
-    text-align: left;
-  }
-  table.inv-table td.num { text-align: right; font-weight: 700; }
-  .inv-summary-box {
-    margin-left: auto;
-    width: 48%;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 10px 14px;
-  }
-  .inv-summary-box .price-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    padding: 4px 0;
-    color: #475569;
-    font-weight: 600;
-  }
-  .inv-summary-box .price-row.total {
-    border-top: 2px dashed #94a3b8;
-    margin-top: 6px;
-    padding-top: 8px;
-    font-size: 14.5px;
-    font-weight: 900;
-    color: #1e3a8a;
-  }
-
+  /* Invoice Paper */
+  .invoice-paper { background: #fff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 18px; font-size: 12px; color: #1e293b; }
+  .inv-header { text-align: center; border-bottom: 2.5px solid var(--title-blue); padding-bottom: 10px; margin-bottom: 12px; }
+  .inv-title { text-align: center; font-weight: 900; font-size: 14px; margin: 8px 0; color: var(--title-blue); }
+  .inv-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px 12px; font-size: 11px; margin-bottom: 10px; font-weight: 600; }
+  table.inv-table { width: 100%; border-collapse: collapse; font-size: 10.5px; margin-bottom: 10px; }
+  table.inv-table th, table.inv-table td { border: 1px solid #cbd5e1; padding: 5px 6px; text-align: left; }
+  table.inv-table th { background: var(--title-blue-badge); color: var(--title-blue); font-weight: 900; }
+  .inv-summary { margin-left: auto; width: 68%; font-size: 11.5px; }
+  
+  /* Mobile Navigation */
   .bottomnav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #ffffff; border-top: 1.5px solid var(--soft-red-border); display: flex; padding: 10px 0; z-index: 500; box-shadow: 0 -4px 20px rgba(225,29,72,0.06); }
   .nav-item { flex: 1; text-align: center; font-size: 11px; color: #64748b; cursor: pointer; transition: color 0.2s; font-weight: 700; }
   .nav-item.active { color: var(--title-blue); font-weight: 900; }
@@ -238,6 +156,7 @@
   #signupMap { height: 190px; width: 100%; border-radius: 12px; border: 2px solid var(--primary-red); margin-top: 6px; }
   #bookingMap { height: 200px; width: 100%; border-radius: 12px; border: 2px solid var(--primary-red); margin-top: 6px; }
   
+  /* Reviews */
   .star-rating { display: flex; gap: 8px; justify-content: center; margin: 12px 0; font-size: 28px; cursor: pointer; color: #cbd5e1; }
   .star-rating .star.selected { color: #f59e0b; }
   .review-item { border-bottom: 1px solid var(--soft-red-border); padding: 12px 0; font-size: 12px; }
@@ -316,16 +235,12 @@
             <path d="M74 62 L84 76 L80 80 L70 66 Z" fill="#94a3b8"/>
           </svg>
         </div>
-        <div class="brand-text-box">
+        <div>
           <h1>Bijli Mitra</h1>
           <p>Begusarai, Bihar</p>
         </div>
       </div>
-      
-      <div class="topbar-actions">
-        <div class="user-badge" id="topAuthBadge">Sign In</div>
-        <button type="button" class="logout-btn-pill" id="topLogoutBtn">Logout</button>
-      </div>
+      <div class="user-badge" id="topAuthBadge" onclick="handleTopBadgeClick()">Sign In</div>
     </div>
 
     <!-- 1. AUTH SCREEN -->
@@ -333,8 +248,8 @@
       <div class="desktop-inner">
         <div class="card" style="border-top: 4.5px solid var(--title-blue);">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <h3 class="section-title-blue" style="margin-bottom:0;" id="custAuthFormTitle">Customer Login</h3>
-            <button type="button" class="btn secondary" style="width:auto; padding:5px 10px; font-size:11px;" id="custAuthToggleBtn" onclick="toggleCustomerAuthMode()">Switch to Sign Up</button>
+            <h3 class="section-title-blue" style="margin-bottom:0;" id="custAuthFormTitle">Customer Registration</h3>
+            <button type="button" class="btn secondary" style="width:auto; padding:5px 10px; font-size:11px;" id="custAuthToggleBtn" onclick="toggleCustomerAuthMode()">Switch to Login</button>
           </div>
 
           <button type="button" class="btn" style="background:#fff; color:#334155; border:1.5px solid #cbd5e1; display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:12px; box-shadow:0 2px 6px rgba(0,0,0,0.04);" onclick="signInWithGoogle()">
@@ -347,7 +262,7 @@
             <input type="email" id="authEmail" placeholder="Email Address (e.g. user@gmail.com)">
           </div>
 
-          <div id="custSignupFields" style="display:none;">
+          <div id="custSignupFields">
             <div class="input-group"><input type="text" id="custRegName" placeholder="Full Name"></div>
             <div class="input-group"><input type="tel" id="authPhone" placeholder="10-Digit Mobile Number (Mandatory)" maxlength="10"></div>
             <div class="card" style="padding:12px; background:var(--soft-red-bg); border:1.5px solid var(--soft-red-border); margin-bottom:12px;">
@@ -367,12 +282,12 @@
             </div>
           </div>
 
-          <div class="input-group" id="loginPasswordGroup" style="display:block;">
+          <div class="input-group" id="loginPasswordGroup" style="display:none;">
             <input type="password" id="authLoginPassword" placeholder="Enter Password">
             <span class="toggle-pw" onclick="togglePasswordVisibility('authLoginPassword', this)">Show</span>
           </div>
 
-          <button class="btn" id="custAuthActionBtn" onclick="handleCustomerAuthAction()">Login &amp; Proceed</button>
+          <button class="btn" id="custAuthActionBtn" onclick="handleCustomerAuthAction()">Verify OTP &amp; Register</button>
           <p id="authMsg" style="font-size:12px; margin-top:10px; text-align:center; font-weight:700;"></p>
 
           <div style="border-top:1px solid #f1f5f9; margin-top:16px; padding-top:12px; display:flex; justify-content:space-between;">
@@ -381,6 +296,7 @@
           </div>
         </div>
 
+        <!-- TECHNICIAN LOGIN WITH 6-DIGIT PIN -->
         <div id="roleSecTech" class="card" style="display:none; border-top:4px solid var(--title-blue);">
           <h3 class="section-title-blue">🧑‍🔧 Technician Login</h3>
           <input type="text" id="techIdInput" placeholder="Technician ID (e.g. TECH-001)" style="margin-bottom:10px; text-transform:uppercase; font-weight:800;">
@@ -405,6 +321,8 @@
     <!-- 2. HOME SCREEN -->
     <div id="screen-home" class="screen active">
       <div class="desktop-inner">
+        
+        <!-- HERO TRUST BANNER -->
         <div class="hero-trust-banner">
           <div class="trust-subtitle">🛡️ ID-verified technicians • Insured service</div>
           <h2 class="hero-title">Book a verified technician at home</h2>
@@ -421,6 +339,8 @@
         
         <h2 class="section-title-blue" style="margin-top:14px;">⚡ Select Service Category</h2>
         <div class="category-grid">
+          
+          <!-- 1. ELECTRICIAN (Wire + Bulb Visuals) -->
           <div class="category-card" onclick="selectCategoryBooking('electrician')">
             <div class="category-card-left">
               <div class="cat-custom-icon-box cat-icon-electrician">💡</div>
@@ -430,8 +350,10 @@
                 <div style="font-size:10.5px; color:#d97706; font-weight:800; margin-top:2px;">🔌 Line &amp; Wire Fitting • 💡 Bulb &amp; Fan Repair</div>
               </div>
             </div>
+            <div class="category-price-badge"><b>₹299 Base</b><p style="font-size:11px; color:#64748b; font-weight:600;">(incl. 18% GST)</p></div>
           </div>
 
+          <!-- 2. AC REPAIR (AC + Flowing Air Visuals) -->
           <div class="category-card" onclick="selectCategoryBooking('ac')">
             <div class="category-card-left">
               <div class="cat-custom-icon-box cat-icon-ac">❄️</div>
@@ -441,8 +363,10 @@
                 <div style="font-size:10.5px; color:#0284c7; font-weight:800; margin-top:2px;">💨 Deep Jet Wash • 🌬️ Chilled Air Cooling</div>
               </div>
             </div>
+            <div class="category-price-badge"><b>₹399 Base</b><p style="font-size:11px; color:#64748b; font-weight:600;">(incl. 18% GST)</p></div>
           </div>
 
+          <!-- 3. PLUMBING (Pipe + Valve + Socket Visuals) -->
           <div class="category-card" onclick="selectCategoryBooking('plumber')">
             <div class="category-card-left">
               <div class="cat-custom-icon-box cat-icon-plumber">🔧</div>
@@ -452,9 +376,12 @@
                 <div style="font-size:10.5px; color:#16a34a; font-weight:800; margin-top:2px;">🚰 Pipe &amp; Valve Fittings • 🚿 Socket &amp; Tank Care</div>
               </div>
             </div>
+            <div class="category-price-badge"><b>₹299 Base</b><p style="font-size:11px; color:#64748b; font-weight:600;">(incl. 18% GST)</p></div>
           </div>
+
         </div>
 
+        <!-- REVIEWS FEED -->
         <div class="card" style="margin-top:16px;">
           <h3 class="section-title-blue">⭐ Verified Customer Reviews</h3>
           <div id="homeReviewsContainer"><p style="font-size:12px; color:#64748b; font-weight:600;">Loading verified customer reviews...</p></div>
@@ -462,7 +389,7 @@
 
         <div class="card" style="margin-top:12px; background:var(--soft-red-bg); border:1.5px solid var(--soft-red-border);">
           <h4 class="section-title-blue" style="font-size:13.5px; margin-bottom:4px;">🏢 Commercial &amp; Bulk Order Desk</h4>
-          <p style="font-size:11.5px; color:#475569; line-height:1.5; font-weight:600;">For corporate or bulk requirements covering HVAC/AC, Electrical, or Plumbing maintenance, contact our corporate desk at: <a href="mailto:kashvienterprises.bihar@gmail.com" style="color:var(--title-blue); font-weight:900;">kashvienterprises.bihar@gmail.com</a>[cite: 2]</p>
+          <p style="font-size:11.5px; color:#475569; line-height:1.5; font-weight:600;">For corporate or bulk requirements covering HVAC/AC, Electrical, or Plumbing maintenance, contact our corporate desk at: <a href="mailto:kashvienterprises.bihar@gmail.com" style="color:var(--title-blue); font-weight:900;">kashvienterprises.bihar@gmail.com</a></p>
         </div>
       </div>
     </div>
@@ -497,22 +424,15 @@
           <h3 class="section-title-blue" id="bookCatName" style="font-size:17px;">Service Booking</h3>
           <p id="bookBaseScopeDesc" style="font-size:12px; color:#475569; margin-top:4px; line-height:1.45; font-weight:600;">-</p>
         </div>
-
         <div class="card">
-          <h3 class="section-title-blue" style="font-size:15px;">🔧 Select Electrical Service(s)</h3>
-          <div id="electricalServiceList"></div>
-        </div>
-
-        <div class="card">
-          <div class="price-row"><span>Visiting / Minimum Inspection Fee (incl. GST)</span><span id="electricalInspectionFee">₹121.00</span></div>
-          <div class="price-row"><span>Selected Services (incl. GST)</span><span id="electricalAddonTotal">₹0.00</span></div>
-          <div class="price-row total"><span>Final Amount After ₹21 Token</span><span id="priceTotalDueVal">₹100.00</span></div>
+          <div class="price-row"><span>Base Service Pack (incl. GST)</span><span id="priceBaseVal">₹299.00</span></div>
+          <div class="price-row" style="font-weight:800; border-top:1px dashed #cbd5e1; margin-top:4px; padding-top:4px;"><span>Estimated Total Work Amount</span><span id="priceTotalIncGst">₹299.00</span></div>
+          <div class="price-row" style="color:var(--primary-red); font-weight:800;"><span>Advance Booking Token</span><span>- ₹21.00</span></div>
+          <div class="price-row total"><span>Due Amount After Token</span><span id="priceTotalDueVal">₹278.00</span></div>
           <p style="font-size:11.5px; color:#991b1b; font-weight:900; margin-top:8px; background:#fff1f2; padding:8px 10px; border-radius:8px; border:1px solid #fecdd3;">⚠️ <b>CANCELLATION POLICY:</b> The ₹21.00 advance booking token is strictly <b>NON-REFUNDABLE</b> once booked.</p>
         </div>
-
         <label style="font-size:12px; font-weight:800; color:var(--title-blue); margin-bottom:4px; display:block;">Service Address:</label>
         <input type="text" id="custAddressInput" placeholder="Enter complete service address">
-
         <div class="card" style="padding:12px; background:var(--soft-red-bg); border:1.5px solid var(--soft-red-border); margin-bottom:12px;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <span style="font-size:12px; font-weight:900; color:var(--title-blue);">📍 Map Location Picker</span>
@@ -521,22 +441,20 @@
           <p style="font-size:11px; color:#64748b; margin-top:4px; font-weight:600;">Tap anywhere on map to pin exact location:</p>
           <div id="bookingMapContainer" style="display:block; margin-top:8px;"><div id="bookingMap"></div></div>
         </div>
-
         <label style="font-size:12px; font-weight:800; color:var(--title-blue); margin-bottom:4px; display:block;">Customer Mobile Number:</label>
         <input type="tel" id="custPhoneInput" placeholder="10-digit mobile number" maxlength="10" readonly style="background:#f8fafc; font-weight:800;">
-
+        
+        <!-- BOLD TERMS & CONDITIONS -->
         <div class="terms-box">
           <label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer;">
             <input type="checkbox" id="bookingTermsCheckbox" style="width:20px; height:20px; margin-top:2px;">
             <span id="bookingTermsText">
               <b>TERMS &amp; CONDITIONS (LEGAL):</b><br>
               • <b>1. NON-REFUNDABLE TOKEN:</b> The <b>₹21.00 advance booking token</b> is strictly <b>NON-REFUNDABLE</b> if cancelled by the customer.<br>
-              • <b>2. MINIMUM INSPECTION FEE:</b> The <b>₹121.00 visiting / minimum inspection fee</b> applies to every electrical booking and includes GST.<br>
-              • <b>3. SELECTED SERVICES:</b> Selected electrical service charges are additional to ₹121.00 and include GST.<br>
-              • <b>4. 30-DAY WARRANTY &amp; FREE RE-VISIT:</b> A <b>30-Day limited warranty</b> covers only the specific repair workmanship performed.<br>
-              • <b>5. SPARE PARTS POLICY:</b> Replaced spare parts carry the <b>manufacturer warranty only</b>; fitted electrical/plumbing parts are <b>non-returnable</b>.<br>
-              • <b>6. LIABILITY:</b> Kashvi Enterprises (Bijli Mitra) is <b>not liable</b> for internal wiring decay, grid fluctuations, or unauthorized tampering.<br>
-              <b>I agree to the ₹121.00 minimum inspection fee, selected service charges and non-refundable ₹21 token and accept all terms above.</b>
+              • <b>2. 30-DAY WARRANTY &amp; FREE RE-VISIT:</b> A <b>30-Day limited warranty</b> covers only the specific repair workmanship performed.<br>
+              • <b>3. SPARE PARTS POLICY:</b> Replaced spare parts carry the <b>manufacturer warranty only</b>; fitted electrical/plumbing parts are <b>non-returnable</b>.<br>
+              • <b>4. LIABILITY:</b> Kashvi Enterprises (Bijli Mitra) is <b>not liable</b> for internal wiring decay, grid fluctuations, or unauthorized tampering.<br>
+              <b>I agree to pay the non-refundable ₹21 token and accept all terms above.</b>
             </span>
           </label>
         </div>
@@ -598,8 +516,8 @@
       </div>
     </div>
 
-    <!-- 8. FIXED A4 PRINT TEMPLATE FOR PDF GENERATION -->
-    <div id="invoiceRenderWrapper">
+    <!-- 8. INVOICE TEMPLATE FOR PDF GENERATION -->
+    <div id="invoiceRenderWrapper" style="display:none; padding:20px; background:#fff;">
       <div class="invoice-paper" id="invoicePdf">
         <div class="inv-header">
           <h2>KASHVI ENTERPRISES</h2>
@@ -608,60 +526,28 @@
           <p>Email: kashvienterprises.bihar@gmail.com</p>
           <p>GSTIN: 10CPRPK8525A1Z4 | Udyam: UDYAM-BR-06-0067891</p>
         </div>
-        
         <div class="inv-title" id="pdfDocTypeTitle">TAX INVOICE / SERVICE RECEIPT</div>
-        
         <div class="inv-meta-grid">
           <div>Customer Name: <span id="pdfCustName">-</span></div>
+          <div>Customer Phone: <span id="pdfCustPhone">-</span></div>
           <div>Invoice No: <span id="pdfInvNo">-</span></div>
-          <div>Customer Mobile: <span id="pdfCustPhone">-</span></div>
+          <div>Address: <span id="pdfCustAddr">-</span></div>
+          <div>Technician: <span id="pdfTech">-</span></div>
           <div>Date: <span id="pdfDate">-</span></div>
-          <div style="grid-column: span 2;">Service Address: <span id="pdfCustAddr">-</span></div>
-          <div>Assigned Technician: <span id="pdfTech">-</span></div>
-          <div>Payment Mode: <span>UPI / Online (Settled)</span></div>
         </div>
-        
         <table class="inv-table">
-          <thead>
-            <tr>
-              <th style="width: 35px; text-align: center;">Sr</th>
-              <th>Description of Work / Spare</th>
-              <th style="width: 75px; text-align: center;">SAC/HSN</th>
-              <th style="width: 90px; text-align: right;">Taxable (₹)</th>
-              <th style="width: 65px; text-align: center;">GST</th>
-              <th style="width: 95px; text-align: right;">Total (₹)</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Sr</th><th>Description</th><th>SAC/HSN</th><th>Taxable Rate</th><th>GST (18%)</th><th>Total</th></tr></thead>
           <tbody id="pdfItemsBody"></tbody>
         </table>
-        
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 10px;">
-          <div style="font-size: 10.5px; color: #64748b; max-width: 48%; line-height: 1.4;">
-            <b>Warranty &amp; Notes:</b><br>
-            • 30-Day Workmanship Warranty on repaired faults.<br>
-            • Spare parts covered under manufacturer warranty only.<br>
-            • This is a computer-generated official GST Invoice.
-          </div>
-          
-          <div class="inv-summary-box">
-            <div class="price-row"><span>Taxable Subtotal:</span><span id="pdfSubtotal">₹0.00</span></div>
-            <div class="price-row"><span>CGST (9%):</span><span id="pdfCgst">₹0.00</span></div>
-            <div class="price-row"><span>SGST (9%):</span><span id="pdfSgst">₹0.00</span></div>
-            <div class="price-row" id="pdfAdvanceTokenRow" style="color: #e11d48; font-weight: 700;"><span>Advance Token Deducted:</span><span>- ₹21.00</span></div>
-            <div class="price-row total"><span id="pdfGrandTotalLabel">Grand Total (Net Settled):</span><span id="pdfGrandTotal">₹0.00</span></div>
-          </div>
+        <div class="inv-summary">
+          <div class="price-row"><span>Taxable Subtotal</span><span id="pdfSubtotal">₹0.00</span></div>
+          <div class="price-row"><span>CGST (9%)</span><span id="pdfCgst">₹0.00</span></div>
+          <div class="price-row"><span>SGST (9%)</span><span id="pdfSgst">₹0.00</span></div>
+          <div class="price-row" id="pdfAdvanceTokenRow"><span>Advance Token</span><span>- ₹21.00</span></div>
+          <div class="price-row total"><span id="pdfGrandTotalLabel">Grand Total (Net Due)</span><span id="pdfGrandTotal">₹0.00</span></div>
         </div>
-
         <div id="pdfCancellationNote" style="display:none; margin-top:14px; padding:8px; border:1px dashed var(--primary-red); color:var(--primary-dark-red); font-size:10.5px; text-align:center; font-weight:800;">
           * Note: Booking was cancelled by customer. The ₹21.00 token is non-refundable towards administrative dispatch charges.
-        </div>
-
-        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e2e8f0; margin-top: 25px; padding-top: 12px;">
-          <div style="font-size: 10.5px; color: #64748b;">Bijli Mitra Begusarai Central Support Desk</div>
-          <div style="text-align: center; font-size: 11px; font-weight: 800; color: #1e3a8a;">
-            Authorized Signatory<br>
-            <span style="font-size: 9.5px; color: #64748b; font-weight: normal;">Kashvi Enterprises</span>
-          </div>
         </div>
       </div>
     </div>
@@ -734,7 +620,6 @@
     <div style="margin-bottom:12px;">
       <label style="font-weight:800; font-size:12.5px; color:var(--title-blue); display:block; margin-bottom:4px;" id="modalServicesHeading">Category Services Performed On-Site:</label>
       <p style="font-size:11px; color:#64748b; margin-bottom:6px; font-weight:600;">Check service and enter price quoted to customer:</p>
-      <div id="modalCustomerSelectedServices" style="margin-bottom:10px; padding:9px 10px; background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:8px;"></div>
       <div id="modalAddonsChecklist" style="max-height:160px; overflow-y:auto; border:1.5px solid #cbd5e1; border-radius:8px; padding:6px 10px;"></div>
     </div>
     <div style="margin-bottom:12px;">
@@ -848,7 +733,7 @@
   const savedCustomer = localStorage.getItem('bm_active_customer');
   if (savedCustomer) { try { currentUser = JSON.parse(savedCustomer); } catch(e){} }
 
-  let isCustomerSignupMode = false, isOtpDispatched = false, currentCategory = 'electrician', pendingAdvanceState = null, activeTechSession = null, isAdminLoggedIn = false, activeModalJob = null, bookingMap = null, bookingMapMarker = null, signupMap = null, signupMapMarker = null, selectedReviewScore = 5, pendingReviewJobId = null, pendingTechCalculatedPayload = null;
+  let isCustomerSignupMode = true, isOtpDispatched = false, currentCategory = 'electrician', pendingAdvanceState = null, activeTechSession = null, isAdminLoggedIn = false, activeModalJob = null, bookingMap = null, bookingMapMarker = null, signupMap = null, signupMapMarker = null, selectedReviewScore = 5, pendingReviewJobId = null, pendingTechCalculatedPayload = null;
 
   async function hashPassword(plain) {
     const enc = new TextEncoder().encode(plain);
@@ -856,6 +741,7 @@
     return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
   }
 
+  /* ==================== PULL TO REFRESH LOGIC ==================== */
   let touchStartY = 0;
   let touchCurrentY = 0;
   let isPulling = false;
@@ -884,6 +770,7 @@
       const indicator = document.getElementById('pullToRefreshIndicator');
       indicator.classList.add('visible');
       
+      // Perform Context Refresh
       if (activeTechSession) {
         await renderPoolJobs();
       } else if (currentUser) {
@@ -917,41 +804,25 @@
 
   function updateRoleBasedNavigation() {
     const badge = document.getElementById('topAuthBadge');
-    const logoutBtn = document.getElementById('topLogoutBtn');
     const mobNav = document.getElementById('mobileBottomNav');
     const deskCustomer = document.getElementById('deskCustomerNav');
     const deskTech = document.getElementById('deskTechNav');
     const deskAdmin = document.getElementById('deskAdminNav');
 
     if (isAdminLoggedIn) {
-      badge.textContent = `🔐 Admin`;
-      badge.onclick = () => navigateTo('admin');
-      logoutBtn.style.display = 'inline-block';
-      logoutBtn.onclick = adminLogout;
-      
+      badge.innerHTML = `🔐 Master Admin (<span onclick="adminLogout()" style="text-decoration:underline;">Logout</span>)`;
       deskCustomer.style.display = 'none'; deskTech.style.display = 'none'; deskAdmin.style.display = 'block';
       mobNav.innerHTML = `<div class="nav-item active" onclick="navigateTo('admin')"><span class="nav-icon">🔐</span>Admin</div><div class="nav-item" onclick="adminLogout()"><span class="nav-icon">🚪</span>Logout</div>`;
     } else if (activeTechSession) {
-      badge.textContent = `🧑‍🔧 ${activeTechSession.name}`;
-      badge.onclick = () => navigateTo('tech-pool');
-      logoutBtn.style.display = 'inline-block';
-      logoutBtn.onclick = techLogout;
-
+      badge.innerHTML = `🧑‍🔧 ${activeTechSession.name} (<span onclick="techLogout()" style="text-decoration:underline;">Logout</span>)`;
       deskCustomer.style.display = 'none'; deskTech.style.display = 'block'; deskAdmin.style.display = 'none';
       mobNav.innerHTML = `<div class="nav-item active" onclick="navigateTo('tech-pool')"><span class="nav-icon">🧑‍🔧</span>Job Pool</div><div class="nav-item" onclick="techLogout()"><span class="nav-icon">🚪</span>Logout</div>`;
     } else if (currentUser) {
-      badge.textContent = `👤 ${currentUser.name || currentUser.phone}`;
-      badge.onclick = () => goToCustomerProfile();
-      logoutBtn.style.display = 'inline-block';
-      logoutBtn.onclick = customerLogout;
-
+      badge.innerHTML = `👤 ${currentUser.name || currentUser.phone} (<span onclick="customerLogout()" style="text-decoration:underline;">Logout</span>)`;
       deskCustomer.style.display = 'block'; deskTech.style.display = 'none'; deskAdmin.style.display = 'none';
       mobNav.innerHTML = `<div class="nav-item active" id="mobNavHome" onclick="navigateTo('home')"><span class="nav-icon">🏠</span>Categories</div><div class="nav-item" id="mobNavProfile" onclick="goToCustomerProfile()"><span class="nav-icon">👤</span>Profile &amp; Orders</div>`;
     } else {
       badge.textContent = "Sign In";
-      badge.onclick = () => navigateTo('auth');
-      logoutBtn.style.display = 'none';
-
       deskCustomer.style.display = 'block'; deskTech.style.display = 'none'; deskAdmin.style.display = 'none';
       mobNav.innerHTML = `<div class="nav-item active" id="mobNavHome" onclick="navigateTo('home')"><span class="nav-icon">🏠</span>Categories</div><div class="nav-item" onclick="navigateTo('auth')"><span class="nav-icon">👤</span>Sign In</div>`;
     }
@@ -1001,12 +872,7 @@
     document.getElementById('authCreatePassword').value = "";
     document.getElementById('authLoginPassword').value = "";
     document.getElementById('authEmailOtp').value = "";
-    if (isCustomerSignupMode) {
-      setTimeout(() => {
-        initSignupMap();
-        if (signupMap) signupMap.invalidateSize();
-      }, 200);
-    }
+    if (isCustomerSignupMode && signupMap) setTimeout(() => signupMap.invalidateSize(), 200);
   }
 
   const southWest = L.latLng(25.20, 85.80), northEast = L.latLng(25.75, 86.45), begusaraiBounds = L.latLngBounds(southWest, northEast);
@@ -1070,6 +936,7 @@
     return { upiUri, qrUrl };
   }
 
+  // ==================== GOOGLE AUTH ====================
   let pendingGoogleUser = null, googleSignupMap = null, googleSignupMapMarker = null;
   async function signInWithGoogle() {
     const { error } = await sbClient.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + window.location.pathname } });
@@ -1129,6 +996,7 @@
     updateRoleBasedNavigation(); navigateTo('home', true);
   }
 
+  // ==================== EMAIL OTP & AUTH ====================
   async function sendEmailVerificationOtp() {
     const email = document.getElementById('authEmail').value.trim().toLowerCase();
     const name = document.getElementById('custRegName').value.trim();
@@ -1205,90 +1073,19 @@
     loadCustomerOrders();
   }
 
-  const ELECTRICAL_MIN_INSPECTION_FEE = 121;
-
-  const ELECTRICAL_SERVICES = [
-    { id:'switch_socket', name:'Switch / Socket Replacement', unit:'piece', price:49 },
-    { id:'fan_installation', name:'Ceiling / Wall / Exhaust Fan Installation', unit:'fan', price:199 },
-    { id:'light_fitting', name:'Light Fitting (LED / Tube light / Holder)', unit:'light', price:99 },
-    { id:'chandelier_installation', name:'Chandelier (Jhoomar) Installation', unit:'fixed', price:499 },
-    { id:'mcb_replacement', name:'MCB Replacement', unit:'unit', price:75 },
-    { id:'inverter_battery_setup', name:'Inverter & Battery Complete Setup', unit:'fixed', price:449 },
-    { id:'geyser_fitting', name:'Geyser Electrical Fitting', unit:'fixed', price:299 },
-    { id:'motor_starter_wiring', name:'Water Motor / Starter Wiring', unit:'fixed', price:349 },
-    { id:'new_point_wiring', name:'New Point Wiring (Light / Fan)', unit:'point', price:199 },
-    { id:'power_point_wiring', name:'Power Point Wiring (16A / AC / Geyser)', unit:'point', price:299 },
-    { id:'fault_finding', name:'Fault Finding / Short Circuit Checking', unit:'fixed', price:299 }
-  ];
-
-  let selectedElectricalServices = {};
-
-  function renderElectricalServices() {
-    const container = document.getElementById('electricalServiceList');
-    if (!container) return;
-    container.innerHTML = ELECTRICAL_SERVICES.map(s => {
-      const qty = selectedElectricalServices[s.id] || 0;
-      const control = s.unit === 'fixed'
-        ? `<button type="button" class="btn secondary" style="width:auto;padding:5px 10px;font-size:11px;" onclick="setElectricalServiceQty('${s.id}',${qty ? 0 : 1})">${qty ? '✓ Selected' : 'Add'}</button>`
-        : `<div style="display:flex;align-items:center;gap:7px;">
-             <button type="button" class="btn secondary" style="width:auto;padding:3px 9px;font-size:14px;" onclick="changeElectricalServiceQty('${s.id}',-1)">−</button>
-             <b style="min-width:18px;text-align:center;">${qty}</b>
-             <button type="button" class="btn secondary" style="width:auto;padding:3px 9px;font-size:14px;" onclick="changeElectricalServiceQty('${s.id}',1)">+</button>
-           </div>`;
-      return `<div style="padding:11px 0;border-bottom:1px dashed var(--soft-red-border);">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
-          <div style="flex:1;"><div style="font-size:12.5px;color:var(--title-blue);font-weight:900;">${s.name}</div>
-          <div style="font-size:11px;color:#64748b;margin-top:2px;font-weight:600;">₹${s.price.toFixed(2)} ${s.unit==='fixed'?'(fixed)':`per ${s.unit}`} • GST included</div></div>
-          <div style="flex-shrink:0;">${control}</div>
-        </div></div>`;
-    }).join('');
-    updateElectricalBookingTotal();
-  }
-
-  function setElectricalServiceQty(id, qty) {
-    selectedElectricalServices[id] = Math.max(0, qty);
-    renderElectricalServices();
-  }
-
-  function changeElectricalServiceQty(id, delta) {
-    selectedElectricalServices[id] = Math.max(0, (selectedElectricalServices[id] || 0) + delta);
-    renderElectricalServices();
-  }
-
-  function getElectricalAddonTotal() {
-    return ELECTRICAL_SERVICES.reduce((sum,s) => sum + ((selectedElectricalServices[s.id] || 0) * s.price), 0);
-  }
-
-  function getElectricalSelectedItems() {
-    return ELECTRICAL_SERVICES.filter(s => (selectedElectricalServices[s.id] || 0) > 0)
-      .map(s => ({ id:s.id, name:s.name, unit:s.unit, qty:selectedElectricalServices[s.id], unitPrice:s.price, total:selectedElectricalServices[s.id] * s.price }));
-  }
-
-  function updateElectricalBookingTotal() {
-    const addon = getElectricalAddonTotal();
-    const gross = ELECTRICAL_MIN_INSPECTION_FEE + addon;
-    const addonEl = document.getElementById('electricalAddonTotal');
-    const dueEl = document.getElementById('priceTotalDueVal');
-    if (addonEl) addonEl.textContent = `₹${addon.toFixed(2)}`;
-    if (dueEl) dueEl.textContent = `₹${Math.max(0,gross-21).toFixed(2)}`;
-  }
-
+  // ==================== BOOKING & ADVANCE PAYMENT ====================
   function selectCategoryBooking(catKey) {
     if (!currentUser) { alert("Please Sign In or Register to book services."); navigateTo('auth'); return; }
     currentCategory = catKey;
     const cfg = SERVICE_CONFIG[catKey];
-    if (!cfg) return;
     document.getElementById('bookCatName').textContent = cfg.title;
     document.getElementById('bookBaseScopeDesc').innerHTML = cfg.scope;
     document.getElementById('custPhoneInput').value = currentUser.phone;
     document.getElementById('custAddressInput').value = currentUser.address || "";
     document.getElementById('bookingTermsCheckbox').checked = false;
-
-    if (catKey === 'electrician') {
-      selectedElectricalServices = {};
-      renderElectricalServices();
-    }
-
+    document.getElementById('priceBaseVal').textContent = `₹${cfg.total.toFixed(2)}`;
+    document.getElementById('priceTotalIncGst').textContent = `₹${cfg.total.toFixed(2)}`;
+    document.getElementById('priceTotalDueVal').textContent = `₹${(cfg.total - 21).toFixed(2)}`;
     navigateTo('booking');
     initBookingMap();
     setTimeout(() => { if (bookingMap) bookingMap.invalidateSize(); }, 200);
@@ -1315,6 +1112,7 @@
     const address = document.getElementById('custAddressInput').value.trim();
     const phone = currentUser ? currentUser.phone : document.getElementById('custPhoneInput').value.trim();
     const termsAccepted = document.getElementById('bookingTermsCheckbox').checked;
+
     if (!address) { alert("Please enter or pin your service address."); return; }
     if (!termsAccepted) { alert("Mandatory: Please accept the Terms & Conditions (₹21 non-refundable token) to proceed."); return; }
 
@@ -1322,64 +1120,34 @@
     const startPin = Math.floor(1000 + Math.random() * 9000).toString();
     const stopPin = Math.floor(1000 + Math.random() * 9000).toString();
     const cfg = SERVICE_CONFIG[currentCategory];
-    const selectedItems = currentCategory === 'electrician' ? getElectricalSelectedItems() : [];
-    const inspectionFee = currentCategory === 'electrician' ? ELECTRICAL_MIN_INSPECTION_FEE : (Number(cfg.total) || 0);
-    const selectedServicesTotal = currentCategory === 'electrician' ? getElectricalAddonTotal() : 0;
-    const grossTotal = inspectionFee + selectedServicesTotal;
-
-    // IMPORTANT: keep the insert compatible with the original bookings schema.
-    // The selected electrical-service details are stored inside the existing
-    // extra_services field instead of requiring new database columns.
-    const servicePayload = currentCategory === 'electrician'
-      ? `__BM_ELECTRICAL_SERVICES__${JSON.stringify(selectedItems)}`
-      : 'None';
 
     const newBooking = {
       customer_name: currentUser.name || "Customer",
       customer_phone: phone,
       customer_address: address,
       service_type: currentCategory,
-      extra_services: servicePayload,
+      extra_services: 'Standard Base Scope',
       extra_parts_cost: 0,
       start_pin: startPin,
       stop_pin: stopPin,
       job_status: 'pending_acceptance',
       technician_name: null,
-      base_fee: inspectionFee,
+      base_fee: cfg.base,
       invoice_no: invoiceNo,
       payment_status: 'advance_received'
     };
 
     let insertedId = null;
-    let dbInsertError = null;
     try {
-      const { data, error } = await sbClient.from('bookings').insert([newBooking]).select().single();
-      if (error) throw error;
+      const { data } = await sbClient.from('bookings').insert([newBooking]).select().single();
       if (data) insertedId = data.id;
-    } catch(e) {
-      dbInsertError = e;
-    }
+    } catch(e){}
 
-    // Do not silently continue if the real order was not created.
-    if (dbInsertError || !insertedId) {
-      console.error('Booking creation failed:', dbInsertError);
-      alert('Booking could not be created. Your payment has NOT been started. Please try again.');
-      return;
-    }
-
-    // Keep a local copy as a fallback, but the Supabase booking above is the
-    // real order that technicians on other devices can receive.
     let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
-    localPool.unshift({ ...newBooking, id: insertedId });
+    localPool.unshift({ ...newBooking, id: insertedId || newBooking.invoice_no });
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
 
-    pendingAdvanceState = {
-      customerName: currentUser.name || "Customer", phone, address, category: currentCategory,
-      addonsList: selectedItems.map(x => `${x.name} x${x.qty}`).join(', ') || 'None',
-      addonsTotal: selectedServicesTotal, inspectionFee, bookingGrossTotal: grossTotal,
-      finalDueAfterToken: Math.max(0, grossTotal - 21), selectedServices: selectedItems,
-      startPin, stopPin, invoiceNo, bookingId: insertedId
-    };
+    pendingAdvanceState = { customerName: currentUser.name || "Customer", phone, address, category: currentCategory, addonsList: 'Standard Base Scope', addonsTotal: 0, startPin, stopPin, invoiceNo };
 
     const cashfreeSuccess = await openCashfreeCheckout('ADV-' + invoiceNo, 21.00, phone, currentUser.name, currentUser.email);
     if (!cashfreeSuccess) {
@@ -1402,6 +1170,7 @@
     goToCustomerProfile();
   }
 
+  // ==================== RE-VISIT (WARRANTY CLAIM) ====================
   async function claimFreeRevisit(parentInvoiceNo, serviceType) {
     if (!confirm("Claim Free Re-visit under 30-Day Warranty?\nOur technician will inspect the previous repair work at ₹0 Base Fee.")) return;
     
@@ -1434,14 +1203,7 @@
     loadCustomerOrders();
   }
 
-  function getStoredElectricalItems(job) {
-    if (!job || job.service_type !== 'electrician') return [];
-    const raw = String(job.extra_services || '');
-    const prefix = '__BM_ELECTRICAL_SERVICES__';
-    if (!raw.startsWith(prefix)) return [];
-    try { return JSON.parse(raw.slice(prefix.length)) || []; } catch(e) { return []; }
-  }
-
+  // ==================== CUSTOMER ORDERS & BILLING ====================
   async function loadCustomerOrders() {
     if (!currentUser) return;
     const container = document.getElementById('customerHistoryContainer');
@@ -1517,6 +1279,7 @@
     loadCustomerOrders();
   }
 
+  // ==================== CANCELLATION RECEIPT PDF ====================
   async function downloadCancellationReceiptPdf(orderId) {
     let data = null;
     try { const res = await sbClient.from('bookings').select('*').or(`id.eq.${orderId},invoice_no.eq.${orderId}`).single(); data = res.data; } catch(e){}
@@ -1536,12 +1299,12 @@
 
     document.getElementById('pdfItemsBody').innerHTML = `
       <tr>
-        <td style="text-align:center;">1</td>
+        <td>1</td>
         <td>Booking Cancellation &amp; Administrative Dispatch Fee (Non-Refundable)</td>
-        <td style="text-align:center;">998719</td>
-        <td class="num">₹${taxableFee.toFixed(2)}</td>
-        <td style="text-align:center;">18%</td>
-        <td class="num">₹21.00</td>
+        <td>998719</td>
+        <td>₹${taxableFee.toFixed(2)}</td>
+        <td>18%</td>
+        <td>₹21.00</td>
       </tr>
     `;
 
@@ -1549,90 +1312,82 @@
     document.getElementById('pdfCgst').textContent = `₹${(gstVal / 2).toFixed(2)}`;
     document.getElementById('pdfSgst').textContent = `₹${(gstVal / 2).toFixed(2)}`;
     document.getElementById('pdfAdvanceTokenRow').style.display = 'none';
-    document.getElementById('pdfGrandTotalLabel').textContent = "Total Fee Paid (Non-Refundable):";
+    document.getElementById('pdfGrandTotalLabel').textContent = "Total Fee Paid (Non-Refundable)";
     document.getElementById('pdfGrandTotal').textContent = `₹21.00`;
     document.getElementById('pdfCancellationNote').style.display = 'block';
 
-    const element = document.getElementById('invoicePdf');
-    const opt = {
-      margin: [10, 10, 10, 10],
-      filename: `${data.invoice_no}_Cancellation_Receipt.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, letterRendering: true, windowWidth: 794 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-
-    html2pdf().set(opt).from(element).save().then(() => {
+    const el = document.getElementById('invoicePdf');
+    document.getElementById('invoiceRenderWrapper').style.display = 'block';
+    html2pdf().from(el).set({ margin: 10, filename: `${data.invoice_no}_Cancellation_Receipt.pdf`, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } }).save().then(() => {
+      document.getElementById('invoiceRenderWrapper').style.display = 'none';
       document.getElementById('pdfAdvanceTokenRow').style.display = 'flex';
       document.getElementById('pdfCancellationNote').style.display = 'none';
       document.getElementById('pdfDocTypeTitle').textContent = "TAX INVOICE / SERVICE RECEIPT";
-      document.getElementById('pdfGrandTotalLabel').textContent = "Grand Total (Net Settled):";
+      document.getElementById('pdfGrandTotalLabel').textContent = "Grand Total (Net Due)";
     });
   }
 
+  // ==================== OFFICIAL TAX INVOICE PDF ====================
   async function downloadOrderPdf(orderId) {
-    let data=null;
-    try { const res=await sbClient.from('bookings').select('*').or(`id.eq.${orderId},invoice_no.eq.${orderId}`).single(); data=res.data; } catch(e){}
-    if(!data){ let pool=JSON.parse(localStorage.getItem('bm_local_pool')||'[]'); data=pool.find(j=>j.id===orderId||j.invoice_no===orderId); }
-    if(!data){ alert("Could not load invoice data."); return; }
+    let data = null;
+    try { const res = await sbClient.from('bookings').select('*').or(`id.eq.${orderId},invoice_no.eq.${orderId}`).single(); data = res.data; } catch(e){}
+    if (!data) { let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]'); data = localPool.find(j => j.id === orderId || j.invoice_no === orderId); }
+    if (!data) return;
 
-    document.getElementById('pdfDocTypeTitle').textContent="TAX INVOICE / SERVICE RECEIPT";
-    document.getElementById('pdfCustName').textContent=data.customer_name||currentUser?.name||"Customer";
-    document.getElementById('pdfCustPhone').textContent=data.customer_phone||"-";
-    document.getElementById('pdfInvNo').textContent=data.invoice_no||"BM-INV";
-    document.getElementById('pdfCustAddr').textContent=data.customer_address||"Begusarai, Bihar";
-    document.getElementById('pdfTech').textContent=data.technician_name||'Certified Field Technician';
-    document.getElementById('pdfDate').textContent=new Date(data.created_at||Date.now()).toLocaleDateString('en-IN');
+    document.getElementById('pdfDocTypeTitle').textContent = "TAX INVOICE / SERVICE RECEIPT";
+    document.getElementById('pdfCustName').textContent = data.customer_name || currentUser?.name || "Valued Customer";
+    document.getElementById('pdfCustPhone').textContent = data.customer_phone;
+    document.getElementById('pdfInvNo').textContent = data.invoice_no;
+    document.getElementById('pdfCustAddr').textContent = data.customer_address;
+    document.getElementById('pdfTech').textContent = data.technician_name || 'Certified Technician';
+    document.getElementById('pdfDate').textContent = new Date(data.created_at || Date.now()).toLocaleDateString('en-IN');
 
-    const cfg=SERVICE_CONFIG[data.service_type]||SERVICE_CONFIG.electrician;
-    const isRevisit=data.payment_status==='warranty_revisit';
-    const inspectionFee=isRevisit?0:(data.service_type==='electrician'?(Number(data.inspection_fee)||ELECTRICAL_MIN_INSPECTION_FEE):(Number(data.base_fee)||Number(cfg.total)||0));
+    const cfg = SERVICE_CONFIG[data.service_type] || SERVICE_CONFIG.electrician;
+    const base = parseFloat(data.base_fee) === 0 ? 0 : cfg.base;
+    const baseTotal = parseFloat(data.base_fee) === 0 ? 0 : cfg.total;
+    const extraServices = parseFloat(data.extra_on_site_cost) || 0;
+    const extraMaterials = parseFloat(data.extra_material_cost) || 0;
+    const overtimeCharge = parseFloat(data.overtime_charge) || 0;
 
-    const items = getStoredElectricalItems(data);
-    const selectedTotal=data.service_type==='electrician'?items.reduce((s,x)=>s+((Number(x.qty)||0)*(Number(x.unitPrice)||0)),0):0;
-    const additionalTotal=parseFloat(data.extra_on_site_cost)||0;
-    let additionalOnsiteItems = [];
-    try { additionalOnsiteItems = JSON.parse(data.additional_on_site_services_json || '[]'); } catch(e) {}
-    if (!additionalOnsiteItems.length && data.additional_on_site_service) {
-      additionalOnsiteItems = [{ name: data.additional_on_site_service, qty: 1, unitPrice: Number(data.additional_on_site_service_price) || 0, total: Number(data.additional_on_site_service_price) || 0 }];
-    }
+    const taxableExtraServices = extraServices > 0 ? (extraServices / 1.18) : 0;
+    const taxableMaterials = extraMaterials > 0 ? (extraMaterials / 1.18) : 0;
+    const taxableOvertime = overtimeCharge > 0 ? (overtimeCharge / 1.18) : 0;
+    
+    const subtotal = base + taxableExtraServices + taxableMaterials + taxableOvertime;
+    const totalGross = baseTotal + extraServices + extraMaterials + overtimeCharge;
+    const totalGst = totalGross - subtotal;
+    const isRevisit = data.payment_status === 'warranty_revisit';
+    const advanceDeducted = isRevisit ? 0 : 21.00;
+    const netGrand = totalGross - advanceDeducted;
 
-    const materials=parseFloat(data.extra_material_cost)||0;
-    const gross=inspectionFee+selectedTotal+additionalTotal+materials;
-    const advance=isRevisit?0:21;
-    const finalDue=Math.max(0,gross-advance);
+    let rowsHtml = `<tr><td>1</td><td>${cfg.title} ${isRevisit ? '(30-Day Warranty Re-visit - ₹0 Base)' : '(Base Service Pack)'}</td><td>${cfg.sac}</td><td>₹${base.toFixed(2)}</td><td>18%</td><td>₹${baseTotal.toFixed(2)}</td></tr>`;
+    let sr = 2;
+    if (extraServices > 0) rowsHtml += `<tr><td>${sr++}</td><td>On-Site Category Services</td><td>${cfg.sac}</td><td>₹${taxableExtraServices.toFixed(2)}</td><td>18%</td><td>₹${extraServices.toFixed(2)}</td></tr>`;
+    try {
+      const parts = JSON.parse(data.spare_parts_json || '[]');
+      parts.forEach(p => { 
+        const lineTotalWithGst = p.total * 1.18;
+        rowsHtml += `<tr><td>${sr++}</td><td>${p.name} (Qty: ${p.qty})</td><td>${p.code || 'HSN-GEN'}</td><td>₹${p.total.toFixed(2)}</td><td>18%</td><td>₹${lineTotalWithGst.toFixed(2)}</td></tr>`; 
+      });
+    } catch(e){}
+    if (overtimeCharge > 0) rowsHtml += `<tr><td>${sr++}</td><td>Overtime Charge (${data.overtime_hours || 0} hr @ ₹100/hr)</td><td>-</td><td>₹${taxableOvertime.toFixed(2)}</td><td>18%</td><td>₹${overtimeCharge.toFixed(2)}</td></tr>`;
 
-    const taxableGross=gross/1.18;
-    const gst=gross-taxableGross;
-    let rows='', sr=1;
+    document.getElementById('pdfItemsBody').innerHTML = rowsHtml;
+    document.getElementById('pdfSubtotal').textContent = `₹${subtotal.toFixed(2)}`;
+    document.getElementById('pdfCgst').textContent = `₹${(totalGst / 2).toFixed(2)}`;
+    document.getElementById('pdfSgst').textContent = `₹${(totalGst / 2).toFixed(2)}`;
+    document.getElementById('pdfAdvanceTokenRow').style.display = isRevisit ? 'none' : 'flex';
+    document.getElementById('pdfGrandTotalLabel').textContent = "Grand Total (Net Settled)";
+    document.getElementById('pdfGrandTotal').textContent = `₹${Math.max(0, netGrand).toFixed(2)}`;
 
-    if(inspectionFee>0) rows+=`<tr><td style="text-align:center;">${sr++}</td><td>Visiting / Minimum Inspection Fee</td><td style="text-align:center;">${cfg.sac||'998719'}</td><td class="num">₹${(inspectionFee/1.18).toFixed(2)}</td><td style="text-align:center;">18%</td><td class="num">₹${inspectionFee.toFixed(2)}</td></tr>`;
-
-    items.forEach(x=>{
-      const qty=Number(x.qty)||0, unit=Number(x.unitPrice)||0, total=qty*unit;
-      if(qty>0&&total>0) rows+=`<tr><td style="text-align:center;">${sr++}</td><td>${x.name} (Qty: ${qty})</td><td style="text-align:center;">${cfg.sac||'998719'}</td><td class="num">₹${(total/1.18).toFixed(2)}</td><td style="text-align:center;">18%</td><td class="num">₹${total.toFixed(2)}</td></tr>`;
+    const el = document.getElementById('invoicePdf');
+    document.getElementById('invoiceRenderWrapper').style.display = 'block';
+    html2pdf().from(el).set({ margin: 10, filename: `${data.invoice_no}_Tax_Invoice.pdf`, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } }).save().then(() => {
+      document.getElementById('invoiceRenderWrapper').style.display = 'none';
     });
-
-    additionalOnsiteItems.forEach(x => {
-      const qty = Number(x.qty) || 0, unit = Number(x.unitPrice) || 0, total = Number(x.total) || qty * unit;
-      if (qty > 0 && total > 0) rows += `<tr><td style="text-align:center;">${sr++}</td><td>Additional On-Site: ${x.name} (Qty: ${qty})</td><td style="text-align:center;">${cfg.sac||'998719'}</td><td class="num">₹${(total/1.18).toFixed(2)}</td><td style="text-align:center;">18%</td><td class="num">₹${total.toFixed(2)}</td></tr>`;
-    });
-
-    try{const parts=JSON.parse(data.spare_parts_json||'[]'); parts.forEach(p=>{const t=Number(p.total)||0; const grossPart=t*1.18; rows+=`<tr><td style="text-align:center;">${sr++}</td><td>${p.name} (Qty: ${p.qty})</td><td style="text-align:center;">${p.code||'HSN-8536'}</td><td class="num">₹${t.toFixed(2)}</td><td style="text-align:center;">18%</td><td class="num">₹${grossPart.toFixed(2)}</td></tr>`;});}catch(e){}
-
-    document.getElementById('pdfItemsBody').innerHTML=rows||'<tr><td colspan="6" style="text-align:center;">No billable services recorded.</td></tr>';
-    document.getElementById('pdfSubtotal').textContent=`₹${taxableGross.toFixed(2)}`;
-    document.getElementById('pdfCgst').textContent=`₹${(gst/2).toFixed(2)}`;
-    document.getElementById('pdfSgst').textContent=`₹${(gst/2).toFixed(2)}`;
-    document.getElementById('pdfAdvanceTokenRow').style.display=isRevisit?'none':'flex';
-    document.getElementById('pdfGrandTotalLabel').textContent=isRevisit?'Final Amount:':'Final Amount After ₹21 Token:';
-    document.getElementById('pdfGrandTotal').textContent=`₹${finalDue.toFixed(2)}`;
-
-    const element=document.getElementById('invoicePdf');
-    const opt={margin:[10,10,10,10],filename:`${data.invoice_no}_Tax_Invoice.pdf`,image:{type:'jpeg',quality:0.98},html2canvas:{scale:2,useCORS:true,letterRendering:true,windowWidth:794},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}};
-    html2pdf().set(opt).from(element).save();
   }
 
+  // ==================== TECH DASHBOARD & ON-SITE PAYMENT QR (6-DIGIT HASH) ====================
   async function loginTechnicianToPool() {
     const techId = document.getElementById('techIdInput').value.trim().toUpperCase();
     const cat = document.getElementById('techCategorySelect').value;
@@ -1648,6 +1403,7 @@
     const pinHash = await hashPassword(pin);
 
     try {
+      // Check PIN hash matching for security
       let { data } = await sbClient.from('technicians').select('*').eq('tech_code', techId).eq('category', cat).single();
       
       if (!data) { 
@@ -1659,13 +1415,14 @@
       if (data.pin_hash && data.pin_hash !== pinHash) {
         msg.textContent = "Incorrect 6-digit PIN."; 
         msg.style.color = "#c0392b"; 
-        return; 
+        return;
       }
       
+      // Backward compatibility fallback
       if (!data.pin_hash && data.phone !== pin) {
         msg.textContent = "Incorrect 6-digit PIN."; 
         msg.style.color = "#c0392b"; 
-        return; 
+        return;
       }
 
       if (data.is_available === false) { 
@@ -1675,10 +1432,9 @@
       }
 
       activeTechSession = { name: data.name, category: cat, id: data.id, techCode: data.tech_code, phone: data.contact_phone || '' };
-      msg.textContent = ""; 
-      updateRoleBasedNavigation(); 
-      navigateTo('tech-pool', true); 
-      renderPoolJobs();
+      document.getElementById('topAuthBadge').textContent = "🧑‍🔧 " + data.name + " (" + data.tech_code + ")";
+      document.getElementById('techPoolHeader').textContent = `${data.name} [${data.tech_code}] (${cat.toUpperCase()} Pool)`;
+      msg.textContent = ""; updateRoleBasedNavigation(); navigateTo('tech-pool', true); renderPoolJobs();
     } catch(e) { msg.textContent = "Login Error: " + e.message; msg.style.color = "#c0392b"; }
   }
 
@@ -1765,50 +1521,17 @@
 
   async function verifyStartPin(jobId, correctPin) {
     const entered = document.getElementById('startPinVerifyInput').value.trim();
-    if (entered !== correctPin) {
-      alert("Invalid Start PIN! Please check with customer.");
-      return;
-    }
-
-    const startTime = new Date().toISOString();
-    const updatePayload = { job_status: 'in_progress', start_time: startTime };
-
-    let dbUpdated = false;
-    let dbError = null;
-
-    try {
-      const result = await sbClient
-        .from('bookings')
-        .update(updatePayload)
-        .or(`id.eq.${jobId},invoice_no.eq.${jobId}`);
-
-      dbError = result.error || null;
-      dbUpdated = !dbError;
-    } catch (e) {
-      dbError = e;
-    }
-
-    // Keep the local copy synchronized for the technician view.
-    let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
-    localPool = localPool.map(j =>
-      (j.id === jobId || j.invoice_no === jobId)
-        ? { ...j, ...updatePayload }
-        : j
-    );
-    localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
-
-    if (!dbUpdated) {
-      console.error('Start PIN status update failed:', dbError);
-      alert("Start PIN is correct, but the shared order status could not be updated. Please try again.");
-      return;
-    }
-
-    // Refresh technician data immediately after the shared update.
-    if (typeof renderPoolJobs === 'function') await renderPoolJobs();
-
-    alert("Start PIN verified successfully! Job marked In-Progress.");
+    if (entered === correctPin) {
+      const startTime = new Date().toISOString();
+      try { await sbClient.from('bookings').update({ job_status: 'in_progress', start_time: startTime }).or(`id.eq.${jobId},invoice_no.eq.${jobId}`); } catch(e){}
+      let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
+      localPool = localPool.map(j => (j.id === jobId || j.invoice_no === jobId) ? { ...j, job_status: 'in_progress', start_time: startTime } : j);
+      localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
+      alert("Start PIN verified successfully! Job marked In-Progress."); renderPoolJobs();
+    } else { alert("Invalid Start PIN! Please check with customer."); }
   }
 
+  // ==================== WORK COMPLETION & DYNAMIC TECH QR ====================
   async function openTechCompletionModal(jobId) {
     let job = null;
     try { const { data } = await sbClient.from('bookings').select('*').or(`id.eq.${jobId},invoice_no.eq.${jobId}`).single(); job = data; } catch(e){}
@@ -1816,56 +1539,19 @@
     if (!job) return;
 
     activeModalJob = job;
-    resetTechnicianOnsiteServices();
     const cfg = SERVICE_CONFIG[job.service_type] || SERVICE_CONFIG.electrician;
     const isRevisit = job.payment_status === 'warranty_revisit';
-    document.getElementById('modalInitialOrderText').textContent = isRevisit ? `${cfg.title} (30-Day Warranty Re-visit - ₹0 Base)` : `${cfg.title} (Customer Selection + Inspection Fee)`;
+    document.getElementById('modalInitialOrderText').textContent = isRevisit ? `${cfg.title} (30-Day Warranty Re-visit - ₹0 Base)` : `${cfg.title} (Base Scope)`;
     document.getElementById('modalStopPinInput').value = "";
     document.getElementById('modalCustomPartsRows').innerHTML = "";
 
-    // Show exactly what the customer selected during booking.
-    let customerSelectedItems = getStoredElectricalItems(job);
-    const customerSelectedTotal = customerSelectedItems.reduce((sum, item) =>
-      sum + ((Number(item.qty) || 0) * (Number(item.unitPrice) || 0)), 0);
-
-    const customerSelectionPanel = document.getElementById('modalCustomerSelectedServices');
-    if (customerSelectionPanel) {
-      customerSelectionPanel.innerHTML = job.service_type === 'electrician'
-        ? (customerSelectedItems.length
-          ? `<div style="font-size:11px; font-weight:800; color:#475569; margin-bottom:5px;">Customer selected at booking:</div>` +
-            customerSelectedItems.map(item =>
-              `<div style="display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px dashed #e2e8f0;">
-                <span>${item.name} × ${item.qty}</span>
-                <b>₹${((Number(item.qty)||0)*(Number(item.unitPrice)||0)).toFixed(2)}</b>
-              </div>`).join('') +
-            `<div style="text-align:right;margin-top:6px;font-weight:900;">Customer Services Total: ₹${customerSelectedTotal.toFixed(2)}</div>`
-          : '<div style="font-size:11px;color:#64748b;font-weight:700;">No electrical service was selected by the customer.</div>')
-        : '<div style="font-size:11px;color:#64748b;font-weight:700;">Customer-selected service details are not applicable to this category.</div>';
-    }
-
+    const categoryServices = TRADE_SERVICES_CATALOG[job.service_type] || [];
     document.getElementById('modalServicesHeading').textContent = `${cfg.title} Tasks Done On-Site:`;
-    document.getElementById('modalAddonsChecklist').innerHTML = job.service_type === 'electrician'
-      ? `<div id="technicianAdditionalServicesList">
-          ${ELECTRICAL_SERVICES.map(s => `
-            <div style="padding:8px 0;border-bottom:1px dashed #cbd5e1;">
-              <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
-                <label style="display:flex;align-items:center;gap:8px;flex:1;font-size:11.5px;font-weight:800;color:var(--title-blue);cursor:pointer;">
-                  <input type="checkbox" class="tech-onsite-service-cb" data-service-id="${s.id}" onchange="updateTechnicianOnsiteServices()">
-                  <span>${s.name}</span>
-                </label>
-                <div style="display:flex;align-items:center;gap:5px;">
-                  <button type="button" class="btn secondary tech-onsite-minus" data-service-id="${s.id}" style="width:auto;padding:2px 8px;font-size:13px;" onclick="changeTechnicianOnsiteQty('${s.id}',-1)">−</button>
-                  <b id="tech-onsite-qty-${s.id}" style="min-width:18px;text-align:center;font-size:11px;">0</b>
-                  <button type="button" class="btn secondary tech-onsite-plus" data-service-id="${s.id}" style="width:auto;padding:2px 8px;font-size:13px;" onclick="changeTechnicianOnsiteQty('${s.id}',1)">+</button>
-                </div>
-              </div>
-              <div style="font-size:10.5px;color:#64748b;margin-left:28px;margin-top:2px;font-weight:600;">
-                ₹${s.price.toFixed(2)} ${s.unit === 'fixed' ? '(fixed)' : `per ${s.unit}`} • GST included
-              </div>
-            </div>`).join('')}
-        </div>
-        <p id="modalAdditionalServiceSummary" style="font-size:11px;color:#475569;margin-top:7px;font-weight:800;"></p>`
-      : '<p style="font-size:11px;color:#64748b;">No predefined services for this trade</p>';
+    document.getElementById('modalAddonsChecklist').innerHTML = categoryServices.map((sName, idx) => `
+      <div class="addon-item">
+        <label style="flex:1.5;"><input type="checkbox" class="modal-addon-cb" data-name="${sName}" onchange="toggleServicePriceInput(${idx}); recalculateModalFinalTotal();"><span>${sName}</span></label>
+        <div style="display:flex; align-items:center; gap:4px;"><span style="font-size:12px; font-weight:700; color:#64748b;">₹</span><input type="number" id="servicePrice_${idx}" class="modal-addon-price-input" placeholder="0.00" min="0" disabled style="width:75px; padding:6px; margin:0; text-align:right; font-weight:800;" oninput="recalculateModalFinalTotal()"></div>
+      </div>`).join('') || '<p style="font-size:11px; color:#64748b;">No predefined services for this trade</p>';
 
     const catalog = SPARE_PARTS_CATALOG[job.service_type] || [];
     document.getElementById('modalPartsCatalog').innerHTML = catalog.map(p => `
@@ -1923,278 +1609,82 @@
     return { hours: extra, charge: extra * OVERTIME_RATE_PER_HOUR };
   }
 
-  let technicianOnsiteServices = {};
-
-  function resetTechnicianOnsiteServices() {
-    technicianOnsiteServices = {};
-    ELECTRICAL_SERVICES.forEach(s => technicianOnsiteServices[s.id] = 0);
-  }
-
-  function updateTechnicianOnsiteServices() {
-    document.querySelectorAll('.tech-onsite-service-cb').forEach(cb => {
-      const id = cb.getAttribute('data-service-id');
-      if (cb.checked && (technicianOnsiteServices[id] || 0) < 1) technicianOnsiteServices[id] = 1;
-      if (!cb.checked) technicianOnsiteServices[id] = 0;
-    });
-
-    ELECTRICAL_SERVICES.forEach(s => {
-      const qtyEl = document.getElementById(`tech-onsite-qty-${s.id}`);
-      if (qtyEl) qtyEl.textContent = technicianOnsiteServices[s.id] || 0;
-    });
-
-    const selected = ELECTRICAL_SERVICES.filter(s => (technicianOnsiteServices[s.id] || 0) > 0);
-    const total = selected.reduce((sum,s) => sum + (technicianOnsiteServices[s.id] * s.price), 0);
-    const summary = document.getElementById('modalAdditionalServiceSummary');
-    if (summary) {
-      summary.textContent = selected.length
-        ? `Additional On-Site Services: ${selected.map(s => `${s.name} × ${technicianOnsiteServices[s.id]}`).join(', ')} | Total: ₹${total.toFixed(2)} (GST included)`
-        : '';
-    }
-    recalculateModalFinalTotal();
-  }
-
-  function changeTechnicianOnsiteQty(serviceId, delta) {
-    const current = technicianOnsiteServices[serviceId] || 0;
-    const next = Math.max(0, current + delta);
-    technicianOnsiteServices[serviceId] = next;
-
-    const cb = document.querySelector(`.tech-onsite-service-cb[data-service-id="${serviceId}"]`);
-    if (cb) cb.checked = next > 0;
-
-    const qtyEl = document.getElementById(`tech-onsite-qty-${serviceId}`);
-    if (qtyEl) qtyEl.textContent = next;
-
-    updateTechnicianOnsiteServices();
-  }
-
-  function getTechnicianOnsiteServices() {
-    return ELECTRICAL_SERVICES
-      .filter(s => (technicianOnsiteServices[s.id] || 0) > 0)
-      .map(s => ({
-        id: s.id,
-        name: s.name,
-        unit: s.unit,
-        qty: technicianOnsiteServices[s.id],
-        unitPrice: s.price,
-        total: technicianOnsiteServices[s.id] * s.price
-      }));
-  }
-
-  function getTechnicianOnsiteTotal() {
-    return getTechnicianOnsiteServices().reduce((sum, s) => sum + s.total, 0);
-  }
-
   function recalculateModalFinalTotal() {
     if (!activeModalJob) return;
     const cfg = SERVICE_CONFIG[activeModalJob.service_type] || SERVICE_CONFIG.electrician;
     const isRevisit = activeModalJob.payment_status === 'warranty_revisit';
+    const baseAmount = isRevisit ? 0 : cfg.total;
+    let extraOnSiteCost = 0;
+    document.querySelectorAll('.modal-addon-cb:checked').forEach(cb => {
+      const pInput = cb.closest('.addon-item').querySelector('.modal-addon-price-input');
+      extraOnSiteCost += parseFloat(pInput ? pInput.value : 0) || 0;
+    });
+    const parts = getPartsBreakdown(), overtime = calculateOvertime(activeModalJob);
+    const advanceDeduction = isRevisit ? 0 : 21.00;
+    const grandTotal = baseAmount + extraOnSiteCost + parts.total + overtime.charge;
+    const netDue = Math.max(0, grandTotal - advanceDeduction);
 
-    let customerItems = [];
-    try { customerItems = JSON.parse(activeModalJob.selected_services_json || '[]'); } catch(e) {}
-
-    const inspectionFee = isRevisit ? 0 :
-      (activeModalJob.service_type === 'electrician'
-        ? (Number(activeModalJob.inspection_fee) || ELECTRICAL_MIN_INSPECTION_FEE)
-        : (Number(activeModalJob.base_fee) || Number(cfg.total) || 0));
-
-    const customerServicesTotal = activeModalJob.service_type === 'electrician'
-      ? (Number(activeModalJob.selected_services_total) ||
-         customerItems.reduce((sum,x) =>
-           sum + ((Number(x.qty)||0) * (Number(x.unitPrice)||0)), 0))
-      : 0;
-
-    const technicianServicesTotal = getTechnicianOnsiteTotal();
-    const parts = getPartsBreakdown();
-    const advanceDeduction = isRevisit ? 0 : 21;
-
-    const grossTotal = inspectionFee + customerServicesTotal +
-      technicianServicesTotal + parts.total;
-    const finalAmount = Math.max(0, grossTotal - advanceDeduction);
-
-    const baseEl = document.getElementById('modalBaseDisp');
-    const extraEl = document.getElementById('modalExtraWorkDisp');
-    const materialEl = document.getElementById('modalMaterialsDisp');
-    const finalEl = document.getElementById('modalFinalNetDue');
-
-    if (baseEl) baseEl.textContent = `₹${inspectionFee.toFixed(2)}`;
-    if (extraEl) extraEl.textContent = `+₹${(customerServicesTotal + technicianServicesTotal).toFixed(2)}`;
-    if (materialEl) materialEl.textContent = `+₹${parts.total.toFixed(2)}`;
-
-    const overtimeRow = document.getElementById('modalOvertimeRow');
-    if (overtimeRow) overtimeRow.style.display = 'none';
-
-    if (finalEl) finalEl.textContent = `₹${finalAmount.toFixed(2)}`;
-
-    const summary = document.getElementById('modalAdditionalServiceSummary');
-    if (summary) {
-      const selected = getTechnicianOnsiteServices();
-      summary.textContent = selected.length
-        ? `Technician additions: ${selected.map(s => `${s.name} × ${s.qty}`).join(', ')} | ₹${technicianServicesTotal.toFixed(2)}`
-        : '';
-    }
+    document.getElementById('modalBaseDisp').textContent = `₹${baseAmount.toFixed(2)}`;
+    document.getElementById('modalExtraWorkDisp').textContent = `+₹${extraOnSiteCost.toFixed(2)}`;
+    document.getElementById('modalMaterialsDisp').textContent = `+₹${parts.total.toFixed(2)}`;
+    if (overtime.charge > 0) {
+      document.getElementById('modalOvertimeRow').style.display = 'flex';
+      document.getElementById('modalOvertimeLabel').textContent = `Overtime (${overtime.hours} hr @ ₹100/hr):`;
+      document.getElementById('modalOvertimeDisp').textContent = `+₹${overtime.charge.toFixed(2)}`;
+    } else { document.getElementById('modalOvertimeRow').style.display = 'none'; }
+    document.getElementById('modalFinalNetDue').textContent = `₹${netDue.toFixed(2)}`;
   }
+
   function openTechnicianCollectionQr() {
     if (!activeModalJob) return;
     const enteredPin = document.getElementById('modalStopPinInput').value.trim();
-    if (!enteredPin || enteredPin !== activeModalJob.stop_pin) {
-      alert("Invalid Stop PIN! Please ask customer for correct 4-digit Stop PIN.");
-      return;
-    }
+    if (!enteredPin || enteredPin !== activeModalJob.stop_pin) { alert("Invalid Stop PIN! Please ask customer for correct 4-digit Stop PIN."); return; }
 
     const parts = getPartsBreakdown();
     const cfg = SERVICE_CONFIG[activeModalJob.service_type] || SERVICE_CONFIG.electrician;
     const isRevisit = activeModalJob.payment_status === 'warranty_revisit';
+    const baseAmount = isRevisit ? 0 : cfg.total;
+    let extraNames = [], extraOnSiteCost = 0;
+    document.querySelectorAll('.modal-addon-cb:checked').forEach(cb => {
+      const val = parseFloat(cb.closest('.addon-item').querySelector('.modal-addon-price-input')?.value || 0) || 0;
+      extraOnSiteCost += val; extraNames.push(`${cb.getAttribute('data-name')} (₹${val.toFixed(2)})`);
+    });
 
-    let customerItems = [];
-    try { customerItems = JSON.parse(activeModalJob.selected_services_json || '[]'); } catch(e) {}
-
-    const inspectionFee = isRevisit ? 0 :
-      (activeModalJob.service_type === 'electrician'
-        ? (Number(activeModalJob.inspection_fee) || ELECTRICAL_MIN_INSPECTION_FEE)
-        : (Number(activeModalJob.base_fee) || Number(cfg.total) || 0));
-
-    // Customer-side additions selected during booking.
-    const customerServicesTotal = activeModalJob.service_type === 'electrician'
-      ? (Number(activeModalJob.selected_services_total) ||
-         customerItems.reduce((sum, item) =>
-           sum + ((Number(item.qty) || 0) * (Number(item.unitPrice) || 0)), 0))
-      : 0;
-
-    // Technician-side additions selected after inspection.
-    const technicianOnsiteItems = getTechnicianOnsiteServices();
-    const technicianServicesTotal = getTechnicianOnsiteTotal();
-
-    const advanceDeduction = isRevisit ? 0 : 21;
-    const grossTotal =
-      inspectionFee +
-      customerServicesTotal +
-      technicianServicesTotal +
-      parts.total;
-
-    const finalAmountToPay = Math.max(0, grossTotal - advanceDeduction);
-
-    const customerSummary = customerItems
-      .map(x => `${x.name} x${x.qty} (₹${(Number(x.qty) * Number(x.unitPrice)).toFixed(2)})`)
-      .join(', ') || 'None';
-
-    const technicianSummary = technicianOnsiteItems.length
-      ? technicianOnsiteItems.map(x => `${x.name} x${x.qty} (₹${x.total.toFixed(2)})`).join(', ')
-      : 'None';
-
-    const partsSummary = parts.lineItems
-      .map(p => `${p.name} x${p.qty}`)
-      .join(', ') || 'None';
-
-    const fullDesc =
-      `${cfg.title} | Inspection ₹${inspectionFee.toFixed(2)}` +
-      ` | Customer Services: ${customerSummary}` +
-      ` | Additional On-Site Services: ${technicianSummary}` +
-      ` | Spares: ${partsSummary}` +
-      ` | Gross ₹${grossTotal.toFixed(2)}` +
-      ` | ₹21 Advance Deducted: ₹${advanceDeduction.toFixed(2)}` +
-      ` | Final Payable ₹${finalAmountToPay.toFixed(2)}`;
+    const overtime = calculateOvertime(activeModalJob);
+    const advanceDeduction = isRevisit ? 0 : 21.00;
+    const grandTotal = baseAmount + extraOnSiteCost + parts.total + overtime.charge;
+    const netDue = Math.max(0, grandTotal - advanceDeduction);
+    const partsSummary = parts.lineItems.map(p => `${p.name} x${p.qty}`).join(', ') || 'None';
+    const fullDesc = `${cfg.title} | Services: ${extraNames.join(', ') || 'None'} | Spares: ${partsSummary}`;
 
     pendingTechCalculatedPayload = {
-      job_status: 'paid_completed',
-      payment_status: 'settled_full',
-      extra_services: fullDesc,
-      extra_on_site_cost: technicianServicesTotal,
-      extra_material_cost: parts.total,
-      spare_parts_json: JSON.stringify(parts.lineItems),
-      overtime_hours: 0,
-      overtime_charge: 0,
-      calculated_total: finalAmountToPay,
-      end_time: new Date().toISOString()
+      job_status: 'paid_completed', payment_status: 'settled_full', extra_services: fullDesc, extra_on_site_cost: extraOnSiteCost,
+      extra_material_cost: parts.total, spare_parts_json: JSON.stringify(parts.lineItems),
+      overtime_hours: overtime.hours, overtime_charge: overtime.charge, calculated_total: netDue, end_time: new Date().toISOString()
     };
 
-    // Store a complete breakdown locally for the final bill UI/PDF.
-    pendingTechCalculatedPayload.customer_services_total = customerServicesTotal;
-    pendingTechCalculatedPayload.technician_services_total = technicianServicesTotal;
-    pendingTechCalculatedPayload.customer_services_json = JSON.stringify(customerItems);
-    pendingTechCalculatedPayload.technician_services_json = JSON.stringify(technicianOnsiteItems);
-    pendingTechCalculatedPayload.inspection_fee = inspectionFee;
-    pendingTechCalculatedPayload.advance_deduction = advanceDeduction;
-
-    const upi = generateDynamicUpi(
-      finalAmountToPay,
-      `Final Settlement ${activeModalJob.invoice_no}`
-    );
-
+    const upi = generateDynamicUpi(netDue, `Final Settlement ${activeModalJob.invoice_no}`);
     document.getElementById('techOnsiteQrImg').src = upi.qrUrl;
-    document.getElementById('techOnsiteQrAmount').textContent = `₹${finalAmountToPay.toFixed(2)}`;
+    document.getElementById('techOnsiteQrAmount').textContent = `₹${netDue.toFixed(2)}`;
     document.getElementById('techPaymentQrModal').style.display = 'flex';
   }
+
   function closeTechPaymentQrModal() { document.getElementById('techPaymentQrModal').style.display = 'none'; }
 
   async function confirmTechnicianSettlementDone() {
     if (!activeModalJob || !pendingTechCalculatedPayload) return;
-
-    const orderId = activeModalJob.id;
-    const invoiceNo = activeModalJob.invoice_no;
-
-    // Use only the booking columns already used by the original application.
-    // Do not send newly invented columns here; one unknown column would make
-    // Supabase reject the entire update.
-    const finalPayload = {
-      job_status: 'paid_completed',
-      payment_status: 'settled_full',
-      extra_services: pendingTechCalculatedPayload.extra_services || '',
-      extra_on_site_cost: Number(pendingTechCalculatedPayload.extra_on_site_cost) || 0,
-      extra_material_cost: Number(pendingTechCalculatedPayload.extra_material_cost) || 0,
-      spare_parts_json: pendingTechCalculatedPayload.spare_parts_json || '[]',
-      overtime_hours: 0,
-      overtime_charge: 0,
-      calculated_total: Number(pendingTechCalculatedPayload.calculated_total) || 0,
-      end_time: pendingTechCalculatedPayload.end_time || new Date().toISOString()
-    };
-
-    let dbResult = null;
-    try {
-      // Prefer the real database id when available. This avoids passing an
-      // invoice number into a UUID id filter.
-      const looksLikeUuid = typeof orderId === 'string' &&
-        /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(orderId);
-
-      if (looksLikeUuid) {
-        dbResult = await sbClient
-          .from('bookings')
-          .update(finalPayload)
-          .eq('id', orderId);
-      } else {
-        dbResult = await sbClient
-          .from('bookings')
-          .update(finalPayload)
-          .eq('invoice_no', invoiceNo || orderId);
-      }
-    } catch (e) {
-      dbResult = { error: e };
-    }
-
-    if (dbResult?.error) {
-      console.error('Final payment synchronization failed:', dbResult.error);
-      alert("Final payment was not synchronized. The order could not be updated in the shared database. Please try again.");
-      return;
-    }
-
-    // Synchronize the local copy only after the shared update succeeds.
+    try { await sbClient.from('bookings').update(pendingTechCalculatedPayload).or(`id.eq.${activeModalJob.id},invoice_no.eq.${activeModalJob.invoice_no}`); } catch(e){}
     let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
-    localPool = localPool.map(j =>
-      (j.id === orderId || j.invoice_no === invoiceNo)
-        ? { ...j, ...finalPayload }
-        : j
-    );
+    localPool = localPool.map(j => (j.id === activeModalJob.id || j.invoice_no === activeModalJob.invoice_no) ? { ...j, ...pendingTechCalculatedPayload } : j);
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
-
-    if (typeof renderPoolJobs === 'function') await renderPoolJobs();
-    if (typeof loadCustomerOrders === 'function') await loadCustomerOrders();
-
-    pendingTechCalculatedPayload = null;
+    
     closeTechPaymentQrModal();
     closeTechCompletionModal();
-    alert("Payment Confirmed! Job status is now COMPLETED & PAID and the final invoice is issued.");
+    alert("Payment Confirmed! Final Tax Invoice PDF synchronized across all accounts.");
     navigateTo('bill-submitted');
   }
 
+  // ==================== REVIEWS & RATINGS SYSTEM ====================
   function setReviewRating(score) {
     selectedReviewScore = score;
     const stars = document.querySelectorAll('#reviewStarRating .star');
@@ -2263,6 +1753,7 @@
     `).join('');
   }
 
+  // ==================== ADMIN SURVEILLANCE ====================
   const ADMIN_ALLOWED_EMAILS = ['kashvienterprises.bihar@gmail.com', 'rishikeshsingh815@gmail.com'];
   function adminGlobalLogin() {
     const email = document.getElementById('adminEmailInput').value.trim().toLowerCase();
@@ -2330,7 +1821,7 @@
 
     const { error } = await sbClient.from('technicians').insert([{ 
       name, 
-      phone: pin,
+      phone: pin, // backwards compatibility
       pin_hash: pinHash,
       category, 
       is_available: true, 
