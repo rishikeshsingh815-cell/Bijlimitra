@@ -507,18 +507,40 @@
     <div id="screen-booking" class="screen">
       <div class="desktop-inner">
         <button class="btn secondary" style="width:auto; padding:6px 14px; font-size:12px; margin-bottom:12px;" onclick="window.history.back()">← Back</button>
+
         <div class="card" style="border-left:5px solid var(--title-blue);">
-          <h3 class="section-title-blue" id="bookCatName" style="font-size:17px;">Service Booking</h3>
-          <p id="bookBaseScopeDesc" style="font-size:12px; color:#475569; margin-top:4px; line-height:1.45; font-weight:600;">-</p>
+          <h3 class="section-title-blue" id="bookCatName" style="font-size:17px;">Electrical Services</h3>
+          <p style="font-size:12px; color:#475569; margin-top:4px; line-height:1.45; font-weight:600;">
+            Select the electrical service(s) you need. All displayed service prices include GST.
+          </p>
         </div>
+
         <div class="card">
-          <div class="price-row" style="font-weight:800; border-top:1px dashed #cbd5e1; margin-top:4px; padding-top:4px;"><span>Estimated Total Work Amount</span><span id="priceTotalIncGst">₹299.00</span></div>
-          <div class="price-row" style="color:var(--primary-red); font-weight:800;"><span>Advance Booking Token</span><span>- ₹21.00</span></div>
-          <div class="price-row total"><span>Due Amount After Token</span><span id="priceTotalDueVal">₹278.00</span></div>
-          <p style="font-size:11.5px; color:#991b1b; font-weight:900; margin-top:8px; background:#fff1f2; padding:8px 10px; border-radius:8px; border:1px solid #fecdd3;">⚠️ <b>CANCELLATION POLICY:</b> The ₹21.00 advance booking token is strictly <b>NON-REFUNDABLE</b> once booked.</p>
+          <h3 class="section-title-blue" style="font-size:15px;">🔧 Select Electrical Service(s)</h3>
+          <div id="electricalServiceList"></div>
         </div>
+
+        <div class="card">
+          <div class="price-row">
+            <span>Visiting / Minimum Inspection Fee (incl. GST)</span>
+            <span id="electricalInspectionFee">₹121.00</span>
+          </div>
+          <div class="price-row">
+            <span>Selected Services (incl. GST)</span>
+            <span id="electricalAddonTotal">₹0.00</span>
+          </div>
+          <div class="price-row total">
+            <span>Final Amount After ₹21 Token (incl. GST)</span>
+            <span id="priceTotalIncGst">₹121.00</span>
+          </div>
+          <p style="font-size:11px; color:#64748b; margin-top:6px; font-weight:600;">
+            The ₹121.00 minimum inspection fee applies to every electrical booking. Selected services are added to this amount.
+          </p>
+        </div>
+
         <label style="font-size:12px; font-weight:800; color:var(--title-blue); margin-bottom:4px; display:block;">Service Address:</label>
         <input type="text" id="custAddressInput" placeholder="Enter complete service address">
+
         <div class="card" style="padding:12px; background:var(--soft-red-bg); border:1.5px solid var(--soft-red-border); margin-bottom:12px;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <span style="font-size:12px; font-weight:900; color:var(--title-blue);">📍 Map Location Picker</span>
@@ -527,22 +549,25 @@
           <p style="font-size:11px; color:#64748b; margin-top:4px; font-weight:600;">Tap anywhere on map to pin exact location:</p>
           <div id="bookingMapContainer" style="display:block; margin-top:8px;"><div id="bookingMap"></div></div>
         </div>
+
         <label style="font-size:12px; font-weight:800; color:var(--title-blue); margin-bottom:4px; display:block;">Customer Mobile Number:</label>
         <input type="tel" id="custPhoneInput" placeholder="10-digit mobile number" maxlength="10" readonly style="background:#f8fafc; font-weight:800;">
-        
+
         <div class="terms-box">
           <label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer;">
             <input type="checkbox" id="bookingTermsCheckbox" style="width:20px; height:20px; margin-top:2px;">
             <span id="bookingTermsText">
               <b>TERMS &amp; CONDITIONS (LEGAL):</b><br>
-              • <b>1. NON-REFUNDABLE TOKEN:</b> The <b>₹21.00 advance booking token</b> is strictly <b>NON-REFUNDABLE</b> if cancelled by the customer.<br>
-              • <b>2. 30-DAY WARRANTY &amp; FREE RE-VISIT:</b> A <b>30-Day limited warranty</b> covers only the specific repair workmanship performed.<br>
-              • <b>3. SPARE PARTS POLICY:</b> Replaced spare parts carry the <b>manufacturer warranty only</b>; fitted electrical/plumbing parts are <b>non-returnable</b>.<br>
-              • <b>4. LIABILITY:</b> Kashvi Enterprises (Bijli Mitra) is <b>not liable</b> for internal wiring decay, grid fluctuations, or unauthorized tampering.<br>
-              <b>I agree to pay the non-refundable ₹21 token and accept all terms above.</b>
+              • <b>1. VISITING / INSPECTION FEE:</b> The <b>₹121.00 minimum inspection fee</b> is payable for every electrical service visit and includes GST.<br>
+              • <b>2. SELECTED SERVICES:</b> Service charges selected above are additional to the ₹121.00 minimum inspection fee and include GST.<br>
+              • <b>3. 30-DAY WARRANTY &amp; FREE RE-VISIT:</b> A <b>30-Day limited warranty</b> covers only the specific repair workmanship performed.<br>
+              • <b>4. SPARE PARTS POLICY:</b> Replaced spare parts carry the <b>manufacturer warranty only</b>; fitted electrical parts are <b>non-returnable</b>.<br>
+              • <b>5. LIABILITY:</b> Kashvi Enterprises (Bijli Mitra) is <b>not liable</b> for internal wiring decay, grid fluctuations, or unauthorized tampering.<br>
+              <b>I agree to the ₹121.00 minimum inspection fee and all selected service charges and accept all terms above.</b>
             </span>
           </label>
         </div>
+
         <button class="btn" onclick="openDirectAdvancePayment()">Proceed to Pay Advance Token (₹21.00)</button>
       </div>
     </div>
@@ -651,7 +676,7 @@
             <div class="price-row"><span>CGST (9%):</span><span id="pdfCgst">₹0.00</span></div>
             <div class="price-row"><span>SGST (9%):</span><span id="pdfSgst">₹0.00</span></div>
             <div class="price-row" id="pdfAdvanceTokenRow" style="color: #e11d48; font-weight: 700;"><span>Advance Token Deducted:</span><span>- ₹21.00</span></div>
-            <div class="price-row total"><span id="pdfGrandTotalLabel">Grand Total (Net Settled):</span><span id="pdfGrandTotal">₹0.00</span></div>
+            <div class="price-row total"><span id="pdfGrandTotalLabel">Final Amount After ₹21 Token:</span><span id="pdfGrandTotal">₹0.00</span></div>
           </div>
         </div>
 
@@ -754,7 +779,7 @@
       <div class="price-row"><span>Materials / Spares:</span><span id="modalMaterialsDisp">₹0.00</span></div>
       <div class="price-row" id="modalOvertimeRow" style="display:none; color:var(--warning);"><span id="modalOvertimeLabel">Overtime:</span><span id="modalOvertimeDisp">₹0.00</span></div>
       <div class="price-row" style="color:var(--primary-red); font-weight:800;"><span>Advance Token Deducted:</span><span>- ₹21.00</span></div>
-      <div class="price-row total"><span>Grand Total (Net Due):</span><span id="modalFinalNetDue" style="color:var(--primary-dark-red);">₹0.00</span></div>
+      <div class="price-row total"><span>Final Amount After ₹21 Token:</span><span id="modalFinalNetDue" style="color:var(--primary-dark-red);">₹0.00</span></div>
     </div>
     <button class="btn" onclick="openTechnicianCollectionQr()">📱 Generate Customer Payment QR (On-Site)</button>
   </div>
@@ -1206,6 +1231,98 @@
     loadCustomerOrders();
   }
 
+  const ELECTRICAL_MIN_INSPECTION_FEE = 121;
+
+  const ELECTRICAL_SERVICES = [
+    { id: 'switch_socket', name: 'Switch / Socket Replacement', unit: 'piece', price: 49 },
+    { id: 'fan_installation', name: 'Ceiling / Wall / Exhaust Fan Installation', unit: 'fan', price: 199 },
+    { id: 'light_fitting', name: 'Light Fitting (LED / Tube light / Holder)', unit: 'light', price: 99 },
+    { id: 'chandelier_installation', name: 'Chandelier (Jhoomar) Installation', unit: 'fixed', price: 499 },
+    { id: 'mcb_replacement', name: 'MCB Replacement', unit: 'unit', price: 75 },
+    { id: 'inverter_battery_setup', name: 'Inverter & Battery Complete Setup', unit: 'fixed', price: 449 },
+    { id: 'geyser_fitting', name: 'Geyser Electrical Fitting', unit: 'fixed', price: 299 },
+    { id: 'motor_starter_wiring', name: 'Water Motor / Starter Wiring', unit: 'fixed', price: 349 },
+    { id: 'new_point_wiring', name: 'New Point Wiring (Light / Fan)', unit: 'point', price: 199 },
+    { id: 'power_point_wiring', name: 'Power Point Wiring (16A / AC / Geyser)', unit: 'point', price: 299 },
+    { id: 'fault_finding', name: 'Fault Finding / Short Circuit Checking', unit: 'fixed', price: 299 }
+  ];
+
+  let selectedElectricalServices = {};
+
+  function renderElectricalServices() {
+    const container = document.getElementById('electricalServiceList');
+    if (!container) return;
+
+    container.innerHTML = ELECTRICAL_SERVICES.map(service => {
+      const qty = selectedElectricalServices[service.id] || 0;
+      const qtyControls = service.unit === 'fixed'
+        ? `<button type="button" class="btn secondary" style="width:auto; padding:5px 10px; font-size:11px;" onclick="setElectricalServiceQty('${service.id}', ${qty ? 0 : 1})">${qty ? '✓ Selected' : 'Add'}</button>`
+        : `<div style="display:flex; align-items:center; gap:7px;">
+             <button type="button" class="btn secondary" style="width:auto; padding:3px 9px; font-size:14px;" onclick="changeElectricalServiceQty('${service.id}', -1)">−</button>
+             <b style="min-width:18px; text-align:center;">${qty}</b>
+             <button type="button" class="btn secondary" style="width:auto; padding:3px 9px; font-size:14px;" onclick="changeElectricalServiceQty('${service.id}', 1)">+</button>
+           </div>`;
+
+      return `
+        <div style="padding:11px 0; border-bottom:1px dashed var(--soft-red-border);">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+            <div style="flex:1;">
+              <div style="font-size:12.5px; color:var(--title-blue); font-weight:900;">${service.name}</div>
+              <div style="font-size:11px; color:#64748b; margin-top:2px; font-weight:600;">
+                ₹${service.price.toFixed(2)} ${service.unit === 'fixed' ? '(fixed)' : `per ${service.unit}`} • GST included
+              </div>
+            </div>
+            <div style="flex-shrink:0;">${qtyControls}</div>
+          </div>
+        </div>`;
+    }).join('');
+
+    updateElectricalBookingTotal();
+  }
+
+  function setElectricalServiceQty(serviceId, qty) {
+    selectedElectricalServices[serviceId] = Math.max(0, qty);
+    renderElectricalServices();
+  }
+
+  function changeElectricalServiceQty(serviceId, delta) {
+    const current = selectedElectricalServices[serviceId] || 0;
+    selectedElectricalServices[serviceId] = Math.max(0, current + delta);
+    renderElectricalServices();
+  }
+
+  function getElectricalAddonTotal() {
+    return ELECTRICAL_SERVICES.reduce((sum, service) => {
+      const qty = selectedElectricalServices[service.id] || 0;
+      return sum + (qty * service.price);
+    }, 0);
+  }
+
+  function getElectricalSelectedItems() {
+    return ELECTRICAL_SERVICES
+      .filter(service => (selectedElectricalServices[service.id] || 0) > 0)
+      .map(service => ({
+        id: service.id,
+        name: service.name,
+        unit: service.unit,
+        qty: selectedElectricalServices[service.id],
+        unitPrice: service.price,
+        total: selectedElectricalServices[service.id] * service.price
+      }));
+  }
+
+  function updateElectricalBookingTotal() {
+    const addonTotal = getElectricalAddonTotal();
+    const total = ELECTRICAL_MIN_INSPECTION_FEE + addonTotal;
+    const addonEl = document.getElementById('electricalAddonTotal');
+    const totalEl = document.getElementById('priceTotalIncGst');
+    const dueEl = document.getElementById('priceTotalDueVal');
+
+    if (addonEl) addonEl.textContent = `₹${addonTotal.toFixed(2)}`;
+    if (totalEl) totalEl.textContent = `₹${total.toFixed(2)}`;
+    if (dueEl) dueEl.textContent = `₹${Math.max(0, total - 21).toFixed(2)}`;
+  }
+
   function selectCategoryBooking(catKey) {
     if (!currentUser) { alert("Please Sign In or Register to book services."); navigateTo('auth'); return; }
     currentCategory = catKey;
@@ -1213,16 +1330,14 @@
     if (!cfg) { alert("Service category not found."); return; }
 
     document.getElementById('bookCatName').textContent = cfg.title;
-    document.getElementById('bookBaseScopeDesc').innerHTML = cfg.scope;
     document.getElementById('custPhoneInput').value = currentUser.phone || "";
     document.getElementById('custAddressInput').value = currentUser.address || "";
     document.getElementById('bookingTermsCheckbox').checked = false;
 
-    const total = Number(cfg.total) || 0;
-    const totalEl = document.getElementById('priceTotalIncGst');
-    const dueEl = document.getElementById('priceTotalDueVal');
-    if (totalEl) totalEl.textContent = `₹${total.toFixed(2)}`;
-    if (dueEl) dueEl.textContent = `₹${Math.max(0, total - 21).toFixed(2)}`;
+    if (catKey === 'electrician') {
+      selectedElectricalServices = {};
+      renderElectricalServices();
+    }
 
     navigateTo('booking');
     initBookingMap();
@@ -1259,20 +1374,40 @@
     const stopPin = Math.floor(1000 + Math.random() * 9000).toString();
     const cfg = SERVICE_CONFIG[currentCategory];
 
+    const selectedElectricalItems = currentCategory === 'electrician'
+      ? getElectricalSelectedItems()
+      : [];
+
+    const inspectionFee = currentCategory === 'electrician'
+      ? ELECTRICAL_MIN_INSPECTION_FEE
+      : (Number(cfg.total) || 0);
+
+    const selectedServicesTotal = currentCategory === 'electrician'
+      ? getElectricalAddonTotal()
+      : 0;
+
+    const bookingGrossTotal = inspectionFee + selectedServicesTotal;
+
     const newBooking = {
       customer_name: currentUser.name || "Customer",
       customer_phone: phone,
       customer_address: address,
       service_type: currentCategory,
-      extra_services: 'Standard Base Scope',
+      extra_services: currentCategory === 'electrician'
+        ? selectedElectricalItems.map(x => `${x.name} x${x.qty} @ ₹${x.unitPrice.toFixed(2)}`).join(', ') || 'None'
+        : 'None',
+      selected_services_json: JSON.stringify(selectedElectricalItems),
+      inspection_fee: inspectionFee,
+      selected_services_total: selectedServicesTotal,
       extra_parts_cost: 0,
       start_pin: startPin,
       stop_pin: stopPin,
       job_status: 'pending_acceptance',
       technician_name: null,
-      base_fee: cfg.base,
+      base_fee: 0,
       invoice_no: invoiceNo,
-      payment_status: 'advance_received'
+      payment_status: 'advance_received',
+      calculated_total: Math.max(0, bookingGrossTotal - 21)
     };
 
     let insertedId = null;
@@ -1285,7 +1420,23 @@
     localPool.unshift({ ...newBooking, id: insertedId || newBooking.invoice_no });
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
 
-    pendingAdvanceState = { customerName: currentUser.name || "Customer", phone, address, category: currentCategory, addonsList: 'Standard Base Scope', addonsTotal: 0, startPin, stopPin, invoiceNo };
+    pendingAdvanceState = {
+      customerName: currentUser.name || "Customer",
+      phone,
+      address,
+      category: currentCategory,
+      addonsList: currentCategory === 'electrician'
+        ? selectedElectricalItems.map(x => `${x.name} x${x.qty}`).join(', ') || 'None'
+        : 'None',
+      addonsTotal: selectedServicesTotal,
+      inspectionFee,
+      bookingGrossTotal,
+      finalDueAfterToken: Math.max(0, bookingGrossTotal - 21),
+      selectedServices: selectedElectricalItems,
+      startPin,
+      stopPin,
+      invoiceNo
+    };
 
     const cashfreeSuccess = await openCashfreeCheckout('ADV-' + invoiceNo, 21.00, phone, currentUser.name, currentUser.email);
     if (!cashfreeSuccess) {
@@ -1493,62 +1644,103 @@
 
     const cfg = SERVICE_CONFIG[data.service_type] || SERVICE_CONFIG.electrician;
     const isRevisit = data.payment_status === 'warranty_revisit';
-    const baseTaxable = isRevisit ? 0 : cfg.base;
-    const baseTotal = isRevisit ? 0 : cfg.total;
-    const extraServices = parseFloat(data.extra_on_site_cost) || 0;
+
+    // Electrical customer booking:
+    // ₹121 inspection fee + selected electrical services.
+    // Every displayed customer service price is GST-inclusive.
+    const inspectionFee = isRevisit ? 0 :
+      (data.service_type === 'electrician'
+        ? (Number(data.inspection_fee) || ELECTRICAL_MIN_INSPECTION_FEE)
+        : (Number(data.base_fee) || Number(cfg.total) || 0));
+
+    let selectedItems = [];
+    try {
+      selectedItems = JSON.parse(data.selected_services_json || '[]');
+    } catch(e) { selectedItems = []; }
+
+    const selectedServicesTotal = data.service_type === 'electrician'
+      ? (Number(data.selected_services_total) || selectedItems.reduce((s, x) => s + ((Number(x.qty) || 0) * (Number(x.unitPrice) || 0)), 0))
+      : 0;
+
     const extraMaterials = parseFloat(data.extra_material_cost) || 0;
     const overtimeCharge = parseFloat(data.overtime_charge) || 0;
 
-    const taxableExtraServices = extraServices > 0 ? (extraServices / 1.18) : 0;
-    const taxableMaterials = extraMaterials > 0 ? (extraMaterials / 1.18) : 0;
-    const taxableOvertime = overtimeCharge > 0 ? (overtimeCharge / 1.18) : 0;
-    
-    const subtotal = baseTaxable + taxableExtraServices + taxableMaterials + taxableOvertime;
-    const totalGross = baseTotal + extraServices + extraMaterials + overtimeCharge;
-    const totalGst = totalGross - subtotal;
+    // Materials/overtime are technician-added amounts. Existing system treats
+    // these as GST-inclusive at 18%.
+    const taxableInspection = inspectionFee > 0 ? inspectionFee / 1.18 : 0;
+    const taxableSelected = selectedServicesTotal > 0 ? selectedServicesTotal / 1.18 : 0;
+    const taxableMaterials = extraMaterials > 0 ? extraMaterials / 1.18 : 0;
+    const taxableOvertime = overtimeCharge > 0 ? overtimeCharge / 1.18 : 0;
+
+    const grossServiceTotal = inspectionFee + selectedServicesTotal + extraMaterials + overtimeCharge;
     const advanceDeducted = isRevisit ? 0 : 21.00;
-    const netGrand = Math.max(0, totalGross - advanceDeducted);
+    const finalAmountDue = Math.max(0, grossServiceTotal - advanceDeducted);
 
-    let rowsHtml = `<tr>
-      <td style="text-align:center;">1</td>
-      <td><b>${cfg.title}</b> ${isRevisit ? '(30-Day Free Warranty Re-visit)' : '(Base Scope Included)'}</td>
-      <td style="text-align:center;">${cfg.sac}</td>
-      <td class="num">₹${baseTaxable.toFixed(2)}</td>
-      <td style="text-align:center;">18%</td>
-      <td class="num">₹${baseTotal.toFixed(2)}</td>
-    </tr>`;
+    const taxableSubtotal = taxableInspection + taxableSelected + taxableMaterials + taxableOvertime;
+    const totalGst = grossServiceTotal - taxableSubtotal;
 
-    let sr = 2;
-    if (extraServices > 0) {
+    let rowsHtml = '';
+    let sr = 1;
+
+    if (inspectionFee > 0) {
       rowsHtml += `<tr>
         <td style="text-align:center;">${sr++}</td>
-        <td>On-Site Extended Category Services</td>
-        <td style="text-align:center;">${cfg.sac}</td>
-        <td class="num">₹${taxableExtraServices.toFixed(2)}</td>
+        <td>Visiting / Minimum Inspection Fee</td>
+        <td style="text-align:center;">${cfg.sac || '998719'}</td>
+        <td class="num">₹${taxableInspection.toFixed(2)}</td>
         <td style="text-align:center;">18%</td>
-        <td class="num">₹${extraServices.toFixed(2)}</td>
+        <td class="num">₹${inspectionFee.toFixed(2)}</td>
+      </tr>`;
+    }
+
+    selectedItems.forEach(item => {
+      const qty = Number(item.qty) || 0;
+      const unitPrice = Number(item.unitPrice) || 0;
+      const lineTotal = qty * unitPrice;
+      if (qty <= 0 || lineTotal <= 0) return;
+
+      const taxableLine = lineTotal / 1.18;
+      rowsHtml += `<tr>
+        <td style="text-align:center;">${sr++}</td>
+        <td>${item.name} (Qty: ${qty})</td>
+        <td style="text-align:center;">${cfg.sac || '998719'}</td>
+        <td class="num">₹${taxableLine.toFixed(2)}</td>
+        <td style="text-align:center;">18%</td>
+        <td class="num">₹${lineTotal.toFixed(2)}</td>
+      </tr>`;
+    });
+
+    // Fallback for older electrical bookings that have only a total saved.
+    if (data.service_type === 'electrician' && selectedItems.length === 0 && selectedServicesTotal > 0) {
+      rowsHtml += `<tr>
+        <td style="text-align:center;">${sr++}</td>
+        <td>Selected Electrical Services</td>
+        <td style="text-align:center;">${cfg.sac || '998719'}</td>
+        <td class="num">₹${taxableSelected.toFixed(2)}</td>
+        <td style="text-align:center;">18%</td>
+        <td class="num">₹${selectedServicesTotal.toFixed(2)}</td>
       </tr>`;
     }
 
     try {
       const parts = JSON.parse(data.spare_parts_json || '[]');
-      parts.forEach(p => { 
-        const lineTotalWithGst = p.total * 1.18;
+      parts.forEach(p => {
+        const lineTotalWithGst = Number(p.total) * 1.18;
         rowsHtml += `<tr>
           <td style="text-align:center;">${sr++}</td>
           <td>${p.name} (Qty: ${p.qty})</td>
           <td style="text-align:center;">${p.code || 'HSN-8536'}</td>
-          <td class="num">₹${p.total.toFixed(2)}</td>
+          <td class="num">₹${Number(p.total).toFixed(2)}</td>
           <td style="text-align:center;">18%</td>
           <td class="num">₹${lineTotalWithGst.toFixed(2)}</td>
-        </tr>`; 
+        </tr>`;
       });
     } catch(e){}
 
     if (overtimeCharge > 0) {
       rowsHtml += `<tr>
         <td style="text-align:center;">${sr++}</td>
-        <td>Overtime Service Charge (${data.overtime_hours || 0} hr @ ₹100/hr)</td>
+        <td>Overtime Service Charge (${data.overtime_hours || 0} hr)</td>
         <td style="text-align:center;">998719</td>
         <td class="num">₹${taxableOvertime.toFixed(2)}</td>
         <td style="text-align:center;">18%</td>
@@ -1556,13 +1748,17 @@
       </tr>`;
     }
 
-    document.getElementById('pdfItemsBody').innerHTML = rowsHtml;
-    document.getElementById('pdfSubtotal').textContent = `₹${subtotal.toFixed(2)}`;
+    document.getElementById('pdfItemsBody').innerHTML = rowsHtml || `
+      <tr><td colspan="6" style="text-align:center;">No billable services recorded.</td></tr>`;
+
+    document.getElementById('pdfSubtotal').textContent = `₹${taxableSubtotal.toFixed(2)}`;
     document.getElementById('pdfCgst').textContent = `₹${(totalGst / 2).toFixed(2)}`;
     document.getElementById('pdfSgst').textContent = `₹${(totalGst / 2).toFixed(2)}`;
     document.getElementById('pdfAdvanceTokenRow').style.display = isRevisit ? 'none' : 'flex';
-    document.getElementById('pdfGrandTotalLabel').textContent = "Grand Total (Net Settled):";
-    document.getElementById('pdfGrandTotal').textContent = `₹${netGrand.toFixed(2)}`;
+    document.getElementById('pdfGrandTotalLabel').textContent = isRevisit
+      ? "Final Amount:"
+      : "Final Amount After ₹21 Token:";
+    document.getElementById('pdfGrandTotal').textContent = `₹${finalAmountDue.toFixed(2)}`;
 
     const element = document.getElementById('invoicePdf');
     const opt = {
@@ -1824,29 +2020,65 @@
   function openTechnicianCollectionQr() {
     if (!activeModalJob) return;
     const enteredPin = document.getElementById('modalStopPinInput').value.trim();
-    if (!enteredPin || enteredPin !== activeModalJob.stop_pin) { alert("Invalid Stop PIN! Please ask customer for correct 4-digit Stop PIN."); return; }
+    if (!enteredPin || enteredPin !== activeModalJob.stop_pin) {
+      alert("Invalid Stop PIN! Please ask customer for correct 4-digit Stop PIN.");
+      return;
+    }
 
     const parts = getPartsBreakdown();
     const cfg = SERVICE_CONFIG[activeModalJob.service_type] || SERVICE_CONFIG.electrician;
     const isRevisit = activeModalJob.payment_status === 'warranty_revisit';
-    const baseAmount = isRevisit ? 0 : cfg.total;
-    let extraNames = [], extraOnSiteCost = 0;
+
+    let customerSelectedItems = [];
+    try {
+      customerSelectedItems = JSON.parse(activeModalJob.selected_services_json || '[]');
+    } catch(e) {}
+
+    const inspectionFee = isRevisit ? 0 :
+      (activeModalJob.service_type === 'electrician'
+        ? (Number(activeModalJob.inspection_fee) || ELECTRICAL_MIN_INSPECTION_FEE)
+        : (Number(activeModalJob.base_fee) || Number(cfg.total) || 0));
+
+    const customerServicesTotal = activeModalJob.service_type === 'electrician'
+      ? (Number(activeModalJob.selected_services_total) ||
+         customerSelectedItems.reduce((s, x) => s + ((Number(x.qty) || 0) * (Number(x.unitPrice) || 0)), 0))
+      : 0;
+
+    let extraNames = [];
+    let extraOnSiteCost = 0;
     document.querySelectorAll('.modal-addon-cb:checked').forEach(cb => {
       const val = parseFloat(cb.closest('.addon-item').querySelector('.modal-addon-price-input')?.value || 0) || 0;
-      extraOnSiteCost += val; extraNames.push(`${cb.getAttribute('data-name')} (₹${val.toFixed(2)})`);
+      extraOnSiteCost += val;
+      extraNames.push(`${cb.getAttribute('data-name')} (₹${val.toFixed(2)})`);
     });
 
     const overtime = calculateOvertime(activeModalJob);
     const advanceDeduction = isRevisit ? 0 : 21.00;
-    const grandTotal = baseAmount + extraOnSiteCost + parts.total + overtime.charge;
-    const netDue = Math.max(0, grandTotal - advanceDeduction);
+
+    const grossTotal = inspectionFee + customerServicesTotal + extraOnSiteCost + parts.total + overtime.charge;
+    const netDue = Math.max(0, grossTotal - advanceDeduction);
+
+    const customerServicesSummary = customerSelectedItems
+      .map(x => `${x.name} x${x.qty} (₹${(Number(x.qty) * Number(x.unitPrice)).toFixed(2)})`)
+      .join(', ') || 'None';
+
     const partsSummary = parts.lineItems.map(p => `${p.name} x${p.qty}`).join(', ') || 'None';
-    const fullDesc = `${cfg.title} | Services: ${extraNames.join(', ') || 'None'} | Spares: ${partsSummary}`;
+
+    const fullDesc =
+      `${cfg.title} | Inspection ₹${inspectionFee.toFixed(2)} | Customer Services: ${customerServicesSummary}` +
+      ` | Additional On-Site Services: ${extraNames.join(', ') || 'None'} | Spares: ${partsSummary}`;
 
     pendingTechCalculatedPayload = {
-      job_status: 'paid_completed', payment_status: 'settled_full', extra_services: fullDesc, extra_on_site_cost: extraOnSiteCost,
-      extra_material_cost: parts.total, spare_parts_json: JSON.stringify(parts.lineItems),
-      overtime_hours: overtime.hours, overtime_charge: overtime.charge, calculated_total: netDue, end_time: new Date().toISOString()
+      job_status: 'paid_completed',
+      payment_status: 'settled_full',
+      extra_services: fullDesc,
+      extra_on_site_cost: extraOnSiteCost,
+      extra_material_cost: parts.total,
+      spare_parts_json: JSON.stringify(parts.lineItems),
+      overtime_hours: overtime.hours,
+      overtime_charge: overtime.charge,
+      calculated_total: netDue,
+      end_time: new Date().toISOString()
     };
 
     const upi = generateDynamicUpi(netDue, `Final Settlement ${activeModalJob.invoice_no}`);
