@@ -255,6 +255,17 @@
     .desktop-inner { max-width: 520px; margin: 0 auto; }
   }
 </style>
+
+<style id="phone-format-preservation">
+  .desktop-shell { display: block !important; max-width: 480px !important; margin: 0 auto !important; min-height: 100vh !important; }
+  .desktop-sidebar { display: none !important; }
+  .desktop-main { display: block !important; width: 100% !important; padding: 0 !important; background: #fff !important; }
+  .app { max-width: 480px !important; width: 100% !important; margin: 0 auto !important; padding-bottom: 84px !important; }
+  .bottomnav { display: flex !important; }
+  .screen { padding: 16px !important; }
+  .desktop-inner { max-width: none !important; margin: 0 !important; }
+</style>
+
 </head>
 <body>
 
@@ -430,7 +441,7 @@
                 <div style="font-size:10.5px; color:#d97706; font-weight:800; margin-top:2px;">🔌 Line &amp; Wire Fitting • 💡 Bulb &amp; Fan Repair</div>
               </div>
             </div>
-            <div class="category-price-badge"><b>₹299 Base</b><p style="font-size:11px; color:#64748b; font-weight:600;">(incl. 18% GST)</p></div>
+            
           </div>
 
           <div class="category-card" onclick="selectCategoryBooking('ac')">
@@ -442,7 +453,7 @@
                 <div style="font-size:10.5px; color:#0284c7; font-weight:800; margin-top:2px;">💨 Deep Jet Wash • 🌬️ Chilled Air Cooling</div>
               </div>
             </div>
-            <div class="category-price-badge"><b>₹399 Base</b><p style="font-size:11px; color:#64748b; font-weight:600;">(incl. 18% GST)</p></div>
+            
           </div>
 
           <div class="category-card" onclick="selectCategoryBooking('plumber')">
@@ -454,7 +465,7 @@
                 <div style="font-size:10.5px; color:#16a34a; font-weight:800; margin-top:2px;">🚰 Pipe &amp; Valve Fittings • 🚿 Socket &amp; Tank Care</div>
               </div>
             </div>
-            <div class="category-price-badge"><b>₹299 Base</b><p style="font-size:11px; color:#64748b; font-weight:600;">(incl. 18% GST)</p></div>
+            
           </div>
         </div>
 
@@ -501,7 +512,6 @@
           <p id="bookBaseScopeDesc" style="font-size:12px; color:#475569; margin-top:4px; line-height:1.45; font-weight:600;">-</p>
         </div>
         <div class="card">
-          <div class="price-row"><span>Base Service Pack (incl. GST)</span><span id="priceBaseVal">₹299.00</span></div>
           <div class="price-row" style="font-weight:800; border-top:1px dashed #cbd5e1; margin-top:4px; padding-top:4px;"><span>Estimated Total Work Amount</span><span id="priceTotalIncGst">₹299.00</span></div>
           <div class="price-row" style="color:var(--primary-red); font-weight:800;"><span>Advance Booking Token</span><span>- ₹21.00</span></div>
           <div class="price-row total"><span>Due Amount After Token</span><span id="priceTotalDueVal">₹278.00</span></div>
@@ -740,7 +750,6 @@
       <input type="text" id="modalStopPinInput" placeholder="Stop PIN" maxlength="4" style="text-align:center; font-size:16px; font-weight:900;">
     </div>
     <div class="card" style="background:var(--soft-red-bg); border:1.5px solid var(--soft-red-border); padding:12px; margin-bottom:12px;">
-      <div class="price-row"><span>Base Service Pack:</span><span id="modalBaseDisp">₹0.00</span></div>
       <div class="price-row"><span>On-Site Extra Services:</span><span id="modalExtraWorkDisp">₹0.00</span></div>
       <div class="price-row"><span>Materials / Spares:</span><span id="modalMaterialsDisp">₹0.00</span></div>
       <div class="price-row" id="modalOvertimeRow" style="display:none; color:var(--warning);"><span id="modalOvertimeLabel">Overtime:</span><span id="modalOvertimeDisp">₹0.00</span></div>
