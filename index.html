@@ -1215,7 +1215,6 @@
     document.getElementById('custPhoneInput').value = currentUser.phone;
     document.getElementById('custAddressInput').value = currentUser.address || "";
     document.getElementById('bookingTermsCheckbox').checked = false;
-    document.getElementById('priceBaseVal').textContent = `₹${cfg.total.toFixed(2)}`;
     document.getElementById('priceTotalIncGst').textContent = `₹${cfg.total.toFixed(2)}`;
     document.getElementById('priceTotalDueVal').textContent = `₹${(cfg.total - 21).toFixed(2)}`;
     navigateTo('booking');
