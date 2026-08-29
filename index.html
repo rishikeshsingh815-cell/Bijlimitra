@@ -1210,13 +1210,20 @@
     if (!currentUser) { alert("Please Sign In or Register to book services."); navigateTo('auth'); return; }
     currentCategory = catKey;
     const cfg = SERVICE_CONFIG[catKey];
+    if (!cfg) { alert("Service category not found."); return; }
+
     document.getElementById('bookCatName').textContent = cfg.title;
     document.getElementById('bookBaseScopeDesc').innerHTML = cfg.scope;
-    document.getElementById('custPhoneInput').value = currentUser.phone;
+    document.getElementById('custPhoneInput').value = currentUser.phone || "";
     document.getElementById('custAddressInput').value = currentUser.address || "";
     document.getElementById('bookingTermsCheckbox').checked = false;
-    document.getElementById('priceTotalIncGst').textContent = `₹${cfg.total.toFixed(2)}`;
-    document.getElementById('priceTotalDueVal').textContent = `₹${(cfg.total - 21).toFixed(2)}`;
+
+    const total = Number(cfg.total) || 0;
+    const totalEl = document.getElementById('priceTotalIncGst');
+    const dueEl = document.getElementById('priceTotalDueVal');
+    if (totalEl) totalEl.textContent = `₹${total.toFixed(2)}`;
+    if (dueEl) dueEl.textContent = `₹${Math.max(0, total - 21).toFixed(2)}`;
+
     navigateTo('booking');
     initBookingMap();
     setTimeout(() => { if (bookingMap) bookingMap.invalidateSize(); }, 200);
