@@ -255,6 +255,17 @@
     .desktop-inner { max-width: 520px; margin: 0 auto; }
   }
 </style>
+
+<style id="phone-format-preservation">
+  .desktop-shell { display: block !important; max-width: 480px !important; margin: 0 auto !important; min-height: 100vh !important; }
+  .desktop-sidebar { display: none !important; }
+  .desktop-main { display: block !important; width: 100% !important; padding: 0 !important; background: #fff !important; }
+  .app { max-width: 480px !important; width: 100% !important; margin: 0 auto !important; padding-bottom: 84px !important; }
+  .bottomnav { display: flex !important; }
+  .screen { padding: 16px !important; }
+  .desktop-inner { max-width: none !important; margin: 0 !important; }
+</style>
+
 </head>
 <body>
 
@@ -430,6 +441,7 @@
                 <div style="font-size:10.5px; color:#d97706; font-weight:800; margin-top:2px;">🔌 Line &amp; Wire Fitting • 💡 Bulb &amp; Fan Repair</div>
               </div>
             </div>
+            
           </div>
 
           <div class="category-card" onclick="selectCategoryBooking('ac')">
@@ -441,6 +453,7 @@
                 <div style="font-size:10.5px; color:#0284c7; font-weight:800; margin-top:2px;">💨 Deep Jet Wash • 🌬️ Chilled Air Cooling</div>
               </div>
             </div>
+            
           </div>
 
           <div class="category-card" onclick="selectCategoryBooking('plumber')">
@@ -452,6 +465,7 @@
                 <div style="font-size:10.5px; color:#16a34a; font-weight:800; margin-top:2px;">🚰 Pipe &amp; Valve Fittings • 🚿 Socket &amp; Tank Care</div>
               </div>
             </div>
+            
           </div>
         </div>
 
@@ -497,22 +511,14 @@
           <h3 class="section-title-blue" id="bookCatName" style="font-size:17px;">Service Booking</h3>
           <p id="bookBaseScopeDesc" style="font-size:12px; color:#475569; margin-top:4px; line-height:1.45; font-weight:600;">-</p>
         </div>
-
         <div class="card">
-          <h3 class="section-title-blue" style="font-size:15px;">🔧 Select Electrical Service(s)</h3>
-          <div id="electricalServiceList"></div>
-        </div>
-
-        <div class="card">
-          <div class="price-row"><span>Visiting / Minimum Inspection Fee (incl. GST)</span><span id="electricalInspectionFee">₹121.00</span></div>
-          <div class="price-row"><span>Selected Services (incl. GST)</span><span id="electricalAddonTotal">₹0.00</span></div>
-          <div class="price-row total"><span>Final Amount After ₹21 Token</span><span id="priceTotalDueVal">₹100.00</span></div>
+          <div class="price-row" style="font-weight:800; border-top:1px dashed #cbd5e1; margin-top:4px; padding-top:4px;"><span>Estimated Total Work Amount</span><span id="priceTotalIncGst">₹299.00</span></div>
+          <div class="price-row" style="color:var(--primary-red); font-weight:800;"><span>Advance Booking Token</span><span>- ₹21.00</span></div>
+          <div class="price-row total"><span>Due Amount After Token</span><span id="priceTotalDueVal">₹278.00</span></div>
           <p style="font-size:11.5px; color:#991b1b; font-weight:900; margin-top:8px; background:#fff1f2; padding:8px 10px; border-radius:8px; border:1px solid #fecdd3;">⚠️ <b>CANCELLATION POLICY:</b> The ₹21.00 advance booking token is strictly <b>NON-REFUNDABLE</b> once booked.</p>
         </div>
-
         <label style="font-size:12px; font-weight:800; color:var(--title-blue); margin-bottom:4px; display:block;">Service Address:</label>
         <input type="text" id="custAddressInput" placeholder="Enter complete service address">
-
         <div class="card" style="padding:12px; background:var(--soft-red-bg); border:1.5px solid var(--soft-red-border); margin-bottom:12px;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <span style="font-size:12px; font-weight:900; color:var(--title-blue);">📍 Map Location Picker</span>
@@ -521,22 +527,19 @@
           <p style="font-size:11px; color:#64748b; margin-top:4px; font-weight:600;">Tap anywhere on map to pin exact location:</p>
           <div id="bookingMapContainer" style="display:block; margin-top:8px;"><div id="bookingMap"></div></div>
         </div>
-
         <label style="font-size:12px; font-weight:800; color:var(--title-blue); margin-bottom:4px; display:block;">Customer Mobile Number:</label>
         <input type="tel" id="custPhoneInput" placeholder="10-digit mobile number" maxlength="10" readonly style="background:#f8fafc; font-weight:800;">
-
+        
         <div class="terms-box">
           <label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer;">
             <input type="checkbox" id="bookingTermsCheckbox" style="width:20px; height:20px; margin-top:2px;">
             <span id="bookingTermsText">
               <b>TERMS &amp; CONDITIONS (LEGAL):</b><br>
               • <b>1. NON-REFUNDABLE TOKEN:</b> The <b>₹21.00 advance booking token</b> is strictly <b>NON-REFUNDABLE</b> if cancelled by the customer.<br>
-              • <b>2. MINIMUM INSPECTION FEE:</b> The <b>₹121.00 visiting / minimum inspection fee</b> applies to every electrical booking and includes GST.<br>
-              • <b>3. SELECTED SERVICES:</b> Selected electrical service charges are additional to ₹121.00 and include GST.<br>
-              • <b>4. 30-DAY WARRANTY &amp; FREE RE-VISIT:</b> A <b>30-Day limited warranty</b> covers only the specific repair workmanship performed.<br>
-              • <b>5. SPARE PARTS POLICY:</b> Replaced spare parts carry the <b>manufacturer warranty only</b>; fitted electrical/plumbing parts are <b>non-returnable</b>.<br>
-              • <b>6. LIABILITY:</b> Kashvi Enterprises (Bijli Mitra) is <b>not liable</b> for internal wiring decay, grid fluctuations, or unauthorized tampering.<br>
-              <b>I agree to the ₹121.00 minimum inspection fee, selected service charges and non-refundable ₹21 token and accept all terms above.</b>
+              • <b>2. 30-DAY WARRANTY &amp; FREE RE-VISIT:</b> A <b>30-Day limited warranty</b> covers only the specific repair workmanship performed.<br>
+              • <b>3. SPARE PARTS POLICY:</b> Replaced spare parts carry the <b>manufacturer warranty only</b>; fitted electrical/plumbing parts are <b>non-returnable</b>.<br>
+              • <b>4. LIABILITY:</b> Kashvi Enterprises (Bijli Mitra) is <b>not liable</b> for internal wiring decay, grid fluctuations, or unauthorized tampering.<br>
+              <b>I agree to pay the non-refundable ₹21 token and accept all terms above.</b>
             </span>
           </label>
         </div>
@@ -747,7 +750,6 @@
       <input type="text" id="modalStopPinInput" placeholder="Stop PIN" maxlength="4" style="text-align:center; font-size:16px; font-weight:900;">
     </div>
     <div class="card" style="background:var(--soft-red-bg); border:1.5px solid var(--soft-red-border); padding:12px; margin-bottom:12px;">
-      <div class="price-row"><span>Base Service Pack:</span><span id="modalBaseDisp">₹0.00</span></div>
       <div class="price-row"><span>On-Site Extra Services:</span><span id="modalExtraWorkDisp">₹0.00</span></div>
       <div class="price-row"><span>Materials / Spares:</span><span id="modalMaterialsDisp">₹0.00</span></div>
       <div class="price-row" id="modalOvertimeRow" style="display:none; color:var(--warning);"><span id="modalOvertimeLabel">Overtime:</span><span id="modalOvertimeDisp">₹0.00</span></div>
@@ -1204,89 +1206,23 @@
     loadCustomerOrders();
   }
 
-  const ELECTRICAL_MIN_INSPECTION_FEE = 121;
-
-  const ELECTRICAL_SERVICES = [
-    { id:'switch_socket', name:'Switch / Socket Replacement', unit:'piece', price:49 },
-    { id:'fan_installation', name:'Ceiling / Wall / Exhaust Fan Installation', unit:'fan', price:199 },
-    { id:'light_fitting', name:'Light Fitting (LED / Tube light / Holder)', unit:'light', price:99 },
-    { id:'chandelier_installation', name:'Chandelier (Jhoomar) Installation', unit:'fixed', price:499 },
-    { id:'mcb_replacement', name:'MCB Replacement', unit:'unit', price:75 },
-    { id:'inverter_battery_setup', name:'Inverter & Battery Complete Setup', unit:'fixed', price:449 },
-    { id:'geyser_fitting', name:'Geyser Electrical Fitting', unit:'fixed', price:299 },
-    { id:'motor_starter_wiring', name:'Water Motor / Starter Wiring', unit:'fixed', price:349 },
-    { id:'new_point_wiring', name:'New Point Wiring (Light / Fan)', unit:'point', price:199 },
-    { id:'power_point_wiring', name:'Power Point Wiring (16A / AC / Geyser)', unit:'point', price:299 },
-    { id:'fault_finding', name:'Fault Finding / Short Circuit Checking', unit:'fixed', price:299 }
-  ];
-
-  let selectedElectricalServices = {};
-
-  function renderElectricalServices() {
-    const container = document.getElementById('electricalServiceList');
-    if (!container) return;
-    container.innerHTML = ELECTRICAL_SERVICES.map(s => {
-      const qty = selectedElectricalServices[s.id] || 0;
-      const control = s.unit === 'fixed'
-        ? `<button type="button" class="btn secondary" style="width:auto;padding:5px 10px;font-size:11px;" onclick="setElectricalServiceQty('${s.id}',${qty ? 0 : 1})">${qty ? '✓ Selected' : 'Add'}</button>`
-        : `<div style="display:flex;align-items:center;gap:7px;">
-             <button type="button" class="btn secondary" style="width:auto;padding:3px 9px;font-size:14px;" onclick="changeElectricalServiceQty('${s.id}',-1)">−</button>
-             <b style="min-width:18px;text-align:center;">${qty}</b>
-             <button type="button" class="btn secondary" style="width:auto;padding:3px 9px;font-size:14px;" onclick="changeElectricalServiceQty('${s.id}',1)">+</button>
-           </div>`;
-      return `<div style="padding:11px 0;border-bottom:1px dashed var(--soft-red-border);">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
-          <div style="flex:1;"><div style="font-size:12.5px;color:var(--title-blue);font-weight:900;">${s.name}</div>
-          <div style="font-size:11px;color:#64748b;margin-top:2px;font-weight:600;">₹${s.price.toFixed(2)} ${s.unit==='fixed'?'(fixed)':`per ${s.unit}`} • GST included</div></div>
-          <div style="flex-shrink:0;">${control}</div>
-        </div></div>`;
-    }).join('');
-    updateElectricalBookingTotal();
-  }
-
-  function setElectricalServiceQty(id, qty) {
-    selectedElectricalServices[id] = Math.max(0, qty);
-    renderElectricalServices();
-  }
-
-  function changeElectricalServiceQty(id, delta) {
-    selectedElectricalServices[id] = Math.max(0, (selectedElectricalServices[id] || 0) + delta);
-    renderElectricalServices();
-  }
-
-  function getElectricalAddonTotal() {
-    return ELECTRICAL_SERVICES.reduce((sum,s) => sum + ((selectedElectricalServices[s.id] || 0) * s.price), 0);
-  }
-
-  function getElectricalSelectedItems() {
-    return ELECTRICAL_SERVICES.filter(s => (selectedElectricalServices[s.id] || 0) > 0)
-      .map(s => ({ id:s.id, name:s.name, unit:s.unit, qty:selectedElectricalServices[s.id], unitPrice:s.price, total:selectedElectricalServices[s.id] * s.price }));
-  }
-
-  function updateElectricalBookingTotal() {
-    const addon = getElectricalAddonTotal();
-    const gross = ELECTRICAL_MIN_INSPECTION_FEE + addon;
-    const addonEl = document.getElementById('electricalAddonTotal');
-    const dueEl = document.getElementById('priceTotalDueVal');
-    if (addonEl) addonEl.textContent = `₹${addon.toFixed(2)}`;
-    if (dueEl) dueEl.textContent = `₹${Math.max(0,gross-21).toFixed(2)}`;
-  }
-
   function selectCategoryBooking(catKey) {
     if (!currentUser) { alert("Please Sign In or Register to book services."); navigateTo('auth'); return; }
     currentCategory = catKey;
     const cfg = SERVICE_CONFIG[catKey];
-    if (!cfg) return;
+    if (!cfg) { alert("Service category not found."); return; }
+
     document.getElementById('bookCatName').textContent = cfg.title;
     document.getElementById('bookBaseScopeDesc').innerHTML = cfg.scope;
-    document.getElementById('custPhoneInput').value = currentUser.phone;
+    document.getElementById('custPhoneInput').value = currentUser.phone || "";
     document.getElementById('custAddressInput').value = currentUser.address || "";
     document.getElementById('bookingTermsCheckbox').checked = false;
 
-    if (catKey === 'electrician') {
-      selectedElectricalServices = {};
-      renderElectricalServices();
-    }
+    const total = Number(cfg.total) || 0;
+    const totalEl = document.getElementById('priceTotalIncGst');
+    const dueEl = document.getElementById('priceTotalDueVal');
+    if (totalEl) totalEl.textContent = `₹${total.toFixed(2)}`;
+    if (dueEl) dueEl.textContent = `₹${Math.max(0, total - 21).toFixed(2)}`;
 
     navigateTo('booking');
     initBookingMap();
@@ -1314,6 +1250,7 @@
     const address = document.getElementById('custAddressInput').value.trim();
     const phone = currentUser ? currentUser.phone : document.getElementById('custPhoneInput').value.trim();
     const termsAccepted = document.getElementById('bookingTermsCheckbox').checked;
+
     if (!address) { alert("Please enter or pin your service address."); return; }
     if (!termsAccepted) { alert("Mandatory: Please accept the Terms & Conditions (₹21 non-refundable token) to proceed."); return; }
 
@@ -1321,64 +1258,34 @@
     const startPin = Math.floor(1000 + Math.random() * 9000).toString();
     const stopPin = Math.floor(1000 + Math.random() * 9000).toString();
     const cfg = SERVICE_CONFIG[currentCategory];
-    const selectedItems = currentCategory === 'electrician' ? getElectricalSelectedItems() : [];
-    const inspectionFee = currentCategory === 'electrician' ? ELECTRICAL_MIN_INSPECTION_FEE : (Number(cfg.total) || 0);
-    const selectedServicesTotal = currentCategory === 'electrician' ? getElectricalAddonTotal() : 0;
-    const grossTotal = inspectionFee + selectedServicesTotal;
-
-    // IMPORTANT: keep the insert compatible with the original bookings schema.
-    // The selected electrical-service details are stored inside the existing
-    // extra_services field instead of requiring new database columns.
-    const servicePayload = currentCategory === 'electrician'
-      ? `__BM_ELECTRICAL_SERVICES__${JSON.stringify(selectedItems)}`
-      : 'None';
 
     const newBooking = {
       customer_name: currentUser.name || "Customer",
       customer_phone: phone,
       customer_address: address,
       service_type: currentCategory,
-      extra_services: servicePayload,
+      extra_services: 'Standard Base Scope',
       extra_parts_cost: 0,
       start_pin: startPin,
       stop_pin: stopPin,
       job_status: 'pending_acceptance',
       technician_name: null,
-      base_fee: inspectionFee,
+      base_fee: cfg.base,
       invoice_no: invoiceNo,
       payment_status: 'advance_received'
     };
 
     let insertedId = null;
-    let dbInsertError = null;
     try {
-      const { data, error } = await sbClient.from('bookings').insert([newBooking]).select().single();
-      if (error) throw error;
+      const { data } = await sbClient.from('bookings').insert([newBooking]).select().single();
       if (data) insertedId = data.id;
-    } catch(e) {
-      dbInsertError = e;
-    }
+    } catch(e){}
 
-    // Do not silently continue if the real order was not created.
-    if (dbInsertError || !insertedId) {
-      console.error('Booking creation failed:', dbInsertError);
-      alert('Booking could not be created. Your payment has NOT been started. Please try again.');
-      return;
-    }
-
-    // Keep a local copy as a fallback, but the Supabase booking above is the
-    // real order that technicians on other devices can receive.
     let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
-    localPool.unshift({ ...newBooking, id: insertedId });
+    localPool.unshift({ ...newBooking, id: insertedId || newBooking.invoice_no });
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
 
-    pendingAdvanceState = {
-      customerName: currentUser.name || "Customer", phone, address, category: currentCategory,
-      addonsList: selectedItems.map(x => `${x.name} x${x.qty}`).join(', ') || 'None',
-      addonsTotal: selectedServicesTotal, inspectionFee, bookingGrossTotal: grossTotal,
-      finalDueAfterToken: Math.max(0, grossTotal - 21), selectedServices: selectedItems,
-      startPin, stopPin, invoiceNo, bookingId: insertedId
-    };
+    pendingAdvanceState = { customerName: currentUser.name || "Customer", phone, address, category: currentCategory, addonsList: 'Standard Base Scope', addonsTotal: 0, startPin, stopPin, invoiceNo };
 
     const cashfreeSuccess = await openCashfreeCheckout('ADV-' + invoiceNo, 21.00, phone, currentUser.name, currentUser.email);
     if (!cashfreeSuccess) {
@@ -1431,14 +1338,6 @@
 
     alert(`Re-visit Booked Free of Charge! Order ID: ${invoiceNo}\nBroadcasting to nearest technicians.`);
     loadCustomerOrders();
-  }
-
-  function getStoredElectricalItems(job) {
-    if (!job || job.service_type !== 'electrician') return [];
-    const raw = String(job.extra_services || '');
-    const prefix = '__BM_ELECTRICAL_SERVICES__';
-    if (!raw.startsWith(prefix)) return [];
-    try { return JSON.parse(raw.slice(prefix.length)) || []; } catch(e) { return []; }
   }
 
   async function loadCustomerOrders() {
@@ -1570,56 +1469,110 @@
   }
 
   async function downloadOrderPdf(orderId) {
-    let data=null;
-    try { const res=await sbClient.from('bookings').select('*').or(`id.eq.${orderId},invoice_no.eq.${orderId}`).single(); data=res.data; } catch(e){}
-    if(!data){ let pool=JSON.parse(localStorage.getItem('bm_local_pool')||'[]'); data=pool.find(j=>j.id===orderId||j.invoice_no===orderId); }
-    if(!data){ alert("Could not load invoice data."); return; }
+    let data = null;
+    try {
+      const res = await sbClient.from('bookings').select('*').or(`id.eq.${orderId},invoice_no.eq.${orderId}`).single();
+      data = res.data;
+    } catch(e){}
+    if (!data) {
+      let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
+      data = localPool.find(j => j.id === orderId || j.invoice_no === orderId);
+    }
+    if (!data) {
+      alert("Could not load invoice data.");
+      return;
+    }
 
-    document.getElementById('pdfDocTypeTitle').textContent="TAX INVOICE / SERVICE RECEIPT";
-    document.getElementById('pdfCustName').textContent=data.customer_name||currentUser?.name||"Customer";
-    document.getElementById('pdfCustPhone').textContent=data.customer_phone||"-";
-    document.getElementById('pdfInvNo').textContent=data.invoice_no||"BM-INV";
-    document.getElementById('pdfCustAddr').textContent=data.customer_address||"Begusarai, Bihar";
-    document.getElementById('pdfTech').textContent=data.technician_name||'Certified Field Technician';
-    document.getElementById('pdfDate').textContent=new Date(data.created_at||Date.now()).toLocaleDateString('en-IN');
+    document.getElementById('pdfDocTypeTitle').textContent = "TAX INVOICE / SERVICE RECEIPT";
+    document.getElementById('pdfCustName').textContent = data.customer_name || currentUser?.name || "Customer";
+    document.getElementById('pdfCustPhone').textContent = data.customer_phone || "-";
+    document.getElementById('pdfInvNo').textContent = data.invoice_no || "BM-INV";
+    document.getElementById('pdfCustAddr').textContent = data.customer_address || "Begusarai, Bihar";
+    document.getElementById('pdfTech').textContent = data.technician_name || 'Certified Field Technician';
+    document.getElementById('pdfDate').textContent = new Date(data.created_at || Date.now()).toLocaleDateString('en-IN');
 
-    const cfg=SERVICE_CONFIG[data.service_type]||SERVICE_CONFIG.electrician;
-    const isRevisit=data.payment_status==='warranty_revisit';
-    const inspectionFee=isRevisit?0:(data.service_type==='electrician'?(Number(data.inspection_fee)||ELECTRICAL_MIN_INSPECTION_FEE):(Number(data.base_fee)||Number(cfg.total)||0));
+    const cfg = SERVICE_CONFIG[data.service_type] || SERVICE_CONFIG.electrician;
+    const isRevisit = data.payment_status === 'warranty_revisit';
+    const baseTaxable = isRevisit ? 0 : cfg.base;
+    const baseTotal = isRevisit ? 0 : cfg.total;
+    const extraServices = parseFloat(data.extra_on_site_cost) || 0;
+    const extraMaterials = parseFloat(data.extra_material_cost) || 0;
+    const overtimeCharge = parseFloat(data.overtime_charge) || 0;
 
-    const items = getStoredElectricalItems(data);
-    const selectedTotal=data.service_type==='electrician'?items.reduce((s,x)=>s+((Number(x.qty)||0)*(Number(x.unitPrice)||0)),0):0;
-    const additionalTotal=parseFloat(data.extra_on_site_cost)||0;
-    const materials=parseFloat(data.extra_material_cost)||0;
-    const gross=inspectionFee+selectedTotal+additionalTotal+materials;
-    const advance=isRevisit?0:21;
-    const finalDue=Math.max(0,gross-advance);
+    const taxableExtraServices = extraServices > 0 ? (extraServices / 1.18) : 0;
+    const taxableMaterials = extraMaterials > 0 ? (extraMaterials / 1.18) : 0;
+    const taxableOvertime = overtimeCharge > 0 ? (overtimeCharge / 1.18) : 0;
+    
+    const subtotal = baseTaxable + taxableExtraServices + taxableMaterials + taxableOvertime;
+    const totalGross = baseTotal + extraServices + extraMaterials + overtimeCharge;
+    const totalGst = totalGross - subtotal;
+    const advanceDeducted = isRevisit ? 0 : 21.00;
+    const netGrand = Math.max(0, totalGross - advanceDeducted);
 
-    const taxableGross=gross/1.18;
-    const gst=gross-taxableGross;
-    let rows='', sr=1;
+    let rowsHtml = `<tr>
+      <td style="text-align:center;">1</td>
+      <td><b>${cfg.title}</b> ${isRevisit ? '(30-Day Free Warranty Re-visit)' : '(Base Scope Included)'}</td>
+      <td style="text-align:center;">${cfg.sac}</td>
+      <td class="num">₹${baseTaxable.toFixed(2)}</td>
+      <td style="text-align:center;">18%</td>
+      <td class="num">₹${baseTotal.toFixed(2)}</td>
+    </tr>`;
 
-    if(inspectionFee>0) rows+=`<tr><td style="text-align:center;">${sr++}</td><td>Visiting / Minimum Inspection Fee</td><td style="text-align:center;">${cfg.sac||'998719'}</td><td class="num">₹${(inspectionFee/1.18).toFixed(2)}</td><td style="text-align:center;">18%</td><td class="num">₹${inspectionFee.toFixed(2)}</td></tr>`;
+    let sr = 2;
+    if (extraServices > 0) {
+      rowsHtml += `<tr>
+        <td style="text-align:center;">${sr++}</td>
+        <td>On-Site Extended Category Services</td>
+        <td style="text-align:center;">${cfg.sac}</td>
+        <td class="num">₹${taxableExtraServices.toFixed(2)}</td>
+        <td style="text-align:center;">18%</td>
+        <td class="num">₹${extraServices.toFixed(2)}</td>
+      </tr>`;
+    }
 
-    items.forEach(x=>{
-      const qty=Number(x.qty)||0, unit=Number(x.unitPrice)||0, total=qty*unit;
-      if(qty>0&&total>0) rows+=`<tr><td style="text-align:center;">${sr++}</td><td>${x.name} (Qty: ${qty})</td><td style="text-align:center;">${cfg.sac||'998719'}</td><td class="num">₹${(total/1.18).toFixed(2)}</td><td style="text-align:center;">18%</td><td class="num">₹${total.toFixed(2)}</td></tr>`;
-    });
+    try {
+      const parts = JSON.parse(data.spare_parts_json || '[]');
+      parts.forEach(p => { 
+        const lineTotalWithGst = p.total * 1.18;
+        rowsHtml += `<tr>
+          <td style="text-align:center;">${sr++}</td>
+          <td>${p.name} (Qty: ${p.qty})</td>
+          <td style="text-align:center;">${p.code || 'HSN-8536'}</td>
+          <td class="num">₹${p.total.toFixed(2)}</td>
+          <td style="text-align:center;">18%</td>
+          <td class="num">₹${lineTotalWithGst.toFixed(2)}</td>
+        </tr>`; 
+      });
+    } catch(e){}
 
-    if(additionalTotal>0) rows+=`<tr><td style="text-align:center;">${sr++}</td><td>Additional On-Site Service</td><td style="text-align:center;">${cfg.sac||'998719'}</td><td class="num">₹${(additionalTotal/1.18).toFixed(2)}</td><td style="text-align:center;">18%</td><td class="num">₹${additionalTotal.toFixed(2)}</td></tr>`;
+    if (overtimeCharge > 0) {
+      rowsHtml += `<tr>
+        <td style="text-align:center;">${sr++}</td>
+        <td>Overtime Service Charge (${data.overtime_hours || 0} hr @ ₹100/hr)</td>
+        <td style="text-align:center;">998719</td>
+        <td class="num">₹${taxableOvertime.toFixed(2)}</td>
+        <td style="text-align:center;">18%</td>
+        <td class="num">₹${overtimeCharge.toFixed(2)}</td>
+      </tr>`;
+    }
 
-    try{const parts=JSON.parse(data.spare_parts_json||'[]'); parts.forEach(p=>{const t=Number(p.total)||0; const grossPart=t*1.18; rows+=`<tr><td style="text-align:center;">${sr++}</td><td>${p.name} (Qty: ${p.qty})</td><td style="text-align:center;">${p.code||'HSN-8536'}</td><td class="num">₹${t.toFixed(2)}</td><td style="text-align:center;">18%</td><td class="num">₹${grossPart.toFixed(2)}</td></tr>`;});}catch(e){}
+    document.getElementById('pdfItemsBody').innerHTML = rowsHtml;
+    document.getElementById('pdfSubtotal').textContent = `₹${subtotal.toFixed(2)}`;
+    document.getElementById('pdfCgst').textContent = `₹${(totalGst / 2).toFixed(2)}`;
+    document.getElementById('pdfSgst').textContent = `₹${(totalGst / 2).toFixed(2)}`;
+    document.getElementById('pdfAdvanceTokenRow').style.display = isRevisit ? 'none' : 'flex';
+    document.getElementById('pdfGrandTotalLabel').textContent = "Grand Total (Net Settled):";
+    document.getElementById('pdfGrandTotal').textContent = `₹${netGrand.toFixed(2)}`;
 
-    document.getElementById('pdfItemsBody').innerHTML=rows||'<tr><td colspan="6" style="text-align:center;">No billable services recorded.</td></tr>';
-    document.getElementById('pdfSubtotal').textContent=`₹${taxableGross.toFixed(2)}`;
-    document.getElementById('pdfCgst').textContent=`₹${(gst/2).toFixed(2)}`;
-    document.getElementById('pdfSgst').textContent=`₹${(gst/2).toFixed(2)}`;
-    document.getElementById('pdfAdvanceTokenRow').style.display=isRevisit?'none':'flex';
-    document.getElementById('pdfGrandTotalLabel').textContent=isRevisit?'Final Amount:':'Final Amount After ₹21 Token:';
-    document.getElementById('pdfGrandTotal').textContent=`₹${finalDue.toFixed(2)}`;
+    const element = document.getElementById('invoicePdf');
+    const opt = {
+      margin: [10, 10, 10, 10],
+      filename: `${data.invoice_no}_Tax_Invoice.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true, letterRendering: true, windowWidth: 794 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
 
-    const element=document.getElementById('invoicePdf');
-    const opt={margin:[10,10,10,10],filename:`${data.invoice_no}_Tax_Invoice.pdf`,image:{type:'jpeg',quality:0.98},html2canvas:{scale:2,useCORS:true,letterRendering:true,windowWidth:794},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}};
     html2pdf().set(opt).from(element).save();
   }
 
@@ -1778,14 +1731,13 @@
     document.getElementById('modalStopPinInput').value = "";
     document.getElementById('modalCustomPartsRows').innerHTML = "";
 
+    const categoryServices = TRADE_SERVICES_CATALOG[job.service_type] || [];
     document.getElementById('modalServicesHeading').textContent = `${cfg.title} Tasks Done On-Site:`;
-    document.getElementById('modalAddonsChecklist').innerHTML = job.service_type === 'electrician'
-      ? `<select id="modalAdditionalServiceSelect" onchange="recalculateModalFinalTotal()" style="width:100%;padding:9px;border:1.5px solid #cbd5e1;border-radius:8px;font-weight:700;">
-           <option value="">-- No Additional Service --</option>
-           ${ELECTRICAL_SERVICES.map(s => `<option value="${s.id}">${s.name} — ₹${s.price.toFixed(2)}${s.unit === 'fixed' ? '' : ` / ${s.unit}`}</option>`).join('')}
-         </select>
-         <p id="modalAdditionalServiceSummary" style="font-size:11px;color:#475569;margin-top:6px;font-weight:700;"></p>`
-      : '<p style="font-size:11px;color:#64748b;">No predefined services for this trade</p>';
+    document.getElementById('modalAddonsChecklist').innerHTML = categoryServices.map((sName, idx) => `
+      <div class="addon-item">
+        <label style="flex:1.5;"><input type="checkbox" class="modal-addon-cb" data-name="${sName}" onchange="toggleServicePriceInput(${idx}); recalculateModalFinalTotal();"><span>${sName}</span></label>
+        <div style="display:flex; align-items:center; gap:4px;"><span style="font-size:12px; font-weight:700; color:#64748b;">₹</span><input type="number" id="servicePrice_${idx}" class="modal-addon-price-input" placeholder="0.00" min="0" disabled style="width:75px; padding:6px; margin:0; text-align:right; font-weight:800;" oninput="recalculateModalFinalTotal()"></div>
+      </div>`).join('') || '<p style="font-size:11px; color:#64748b;">No predefined services for this trade</p>';
 
     const catalog = SPARE_PARTS_CATALOG[job.service_type] || [];
     document.getElementById('modalPartsCatalog').innerHTML = catalog.map(p => `
@@ -1847,35 +1799,27 @@
     if (!activeModalJob) return;
     const cfg = SERVICE_CONFIG[activeModalJob.service_type] || SERVICE_CONFIG.electrician;
     const isRevisit = activeModalJob.payment_status === 'warranty_revisit';
+    const baseAmount = isRevisit ? 0 : cfg.total;
+    let extraOnSiteCost = 0;
+    document.querySelectorAll('.modal-addon-cb:checked').forEach(cb => {
+      const pInput = cb.closest('.addon-item').querySelector('.modal-addon-price-input');
+      extraOnSiteCost += parseFloat(pInput ? pInput.value : 0) || 0;
+    });
+    const parts = getPartsBreakdown(), overtime = calculateOvertime(activeModalJob);
+    const advanceDeduction = isRevisit ? 0 : 21.00;
+    const grandTotal = baseAmount + extraOnSiteCost + parts.total + overtime.charge;
+    const netDue = Math.max(0, grandTotal - advanceDeduction);
 
-    const customerItems = getStoredElectricalItems(activeModalJob);
-
-    const inspectionFee = isRevisit ? 0 :
-      (activeModalJob.service_type === 'electrician'
-        ? (Number(activeModalJob.inspection_fee) || ELECTRICAL_MIN_INSPECTION_FEE)
-        : (Number(activeModalJob.base_fee) || Number(cfg.total) || 0));
-
-    const customerServicesTotal = activeModalJob.service_type === 'electrician'
-      ? customerItems.reduce((s,x) => s + ((Number(x.qty)||0)*(Number(x.unitPrice)||0)),0)
-      : 0;
-
-    const select = document.getElementById('modalAdditionalServiceSelect');
-    const additional = ELECTRICAL_SERVICES.find(s => s.id === select?.value);
-    const additionalTotal = additional ? additional.price : 0;
-    const parts = getPartsBreakdown();
-    const netDue = Math.max(0, inspectionFee + customerServicesTotal + additionalTotal + parts.total - (isRevisit ? 0 : 21));
-
-    const baseEl=document.getElementById('modalBaseDisp'), extraEl=document.getElementById('modalExtraWorkDisp'),
-          matEl=document.getElementById('modalMaterialsDisp'), finalEl=document.getElementById('modalFinalNetDue');
-    if (baseEl) baseEl.textContent=`₹${inspectionFee.toFixed(2)}`;
-    if (extraEl) extraEl.textContent=`+₹${additionalTotal.toFixed(2)}`;
-    if (matEl) matEl.textContent=`+₹${parts.total.toFixed(2)}`;
-    const overtimeRow=document.getElementById('modalOvertimeRow'); if(overtimeRow) overtimeRow.style.display='none';
-    if (finalEl) finalEl.textContent=`₹${netDue.toFixed(2)}`;
-    const summary=document.getElementById('modalAdditionalServiceSummary');
-    if(summary) summary.textContent=additional ? `Selected: ${additional.name} — ₹${additional.price.toFixed(2)} (GST included)` : '';
+    document.getElementById('modalBaseDisp').textContent = `₹${baseAmount.toFixed(2)}`;
+    document.getElementById('modalExtraWorkDisp').textContent = `+₹${extraOnSiteCost.toFixed(2)}`;
+    document.getElementById('modalMaterialsDisp').textContent = `+₹${parts.total.toFixed(2)}`;
+    if (overtime.charge > 0) {
+      document.getElementById('modalOvertimeRow').style.display = 'flex';
+      document.getElementById('modalOvertimeLabel').textContent = `Overtime (${overtime.hours} hr @ ₹100/hr):`;
+      document.getElementById('modalOvertimeDisp').textContent = `+₹${overtime.charge.toFixed(2)}`;
+    } else { document.getElementById('modalOvertimeRow').style.display = 'none'; }
+    document.getElementById('modalFinalNetDue').textContent = `₹${netDue.toFixed(2)}`;
   }
-
 
   function openTechnicianCollectionQr() {
     if (!activeModalJob) return;
@@ -1885,52 +1829,31 @@
     const parts = getPartsBreakdown();
     const cfg = SERVICE_CONFIG[activeModalJob.service_type] || SERVICE_CONFIG.electrician;
     const isRevisit = activeModalJob.payment_status === 'warranty_revisit';
+    const baseAmount = isRevisit ? 0 : cfg.total;
+    let extraNames = [], extraOnSiteCost = 0;
+    document.querySelectorAll('.modal-addon-cb:checked').forEach(cb => {
+      const val = parseFloat(cb.closest('.addon-item').querySelector('.modal-addon-price-input')?.value || 0) || 0;
+      extraOnSiteCost += val; extraNames.push(`${cb.getAttribute('data-name')} (₹${val.toFixed(2)})`);
+    });
 
-    const customerItems = getStoredElectricalItems(activeModalJob);
-
-    const inspectionFee = isRevisit ? 0 :
-      (activeModalJob.service_type === 'electrician'
-        ? (Number(activeModalJob.inspection_fee) || ELECTRICAL_MIN_INSPECTION_FEE)
-        : (Number(activeModalJob.base_fee) || Number(cfg.total) || 0));
-
-    const customerServicesTotal = activeModalJob.service_type === 'electrician'
-      ? customerItems.reduce((s,x) => s + ((Number(x.qty)||0)*(Number(x.unitPrice)||0)),0)
-      : 0;
-
-    const select = document.getElementById('modalAdditionalServiceSelect');
-    const additional = ELECTRICAL_SERVICES.find(s => s.id === select?.value);
-    const additionalTotal = additional ? additional.price : 0;
-    const advanceDeduction = isRevisit ? 0 : 21;
-    const grossTotal = inspectionFee + customerServicesTotal + additionalTotal + parts.total;
-    const netDue = Math.max(0, grossTotal - advanceDeduction);
-
-    const customerSummary = customerItems.map(x => `${x.name} x${x.qty} (₹${(Number(x.qty)*Number(x.unitPrice)).toFixed(2)})`).join(', ') || 'None';
-    const additionalSummary = additional ? `${additional.name} x1 (₹${additional.price.toFixed(2)})` : 'None';
+    const overtime = calculateOvertime(activeModalJob);
+    const advanceDeduction = isRevisit ? 0 : 21.00;
+    const grandTotal = baseAmount + extraOnSiteCost + parts.total + overtime.charge;
+    const netDue = Math.max(0, grandTotal - advanceDeduction);
     const partsSummary = parts.lineItems.map(p => `${p.name} x${p.qty}`).join(', ') || 'None';
-
-    const fullDesc = `${cfg.title} | Inspection ₹${inspectionFee.toFixed(2)} | Customer Services: ${customerSummary} | Additional On-Site Service: ${additionalSummary} | Spares: ${partsSummary}`;
+    const fullDesc = `${cfg.title} | Services: ${extraNames.join(', ') || 'None'} | Spares: ${partsSummary}`;
 
     pendingTechCalculatedPayload = {
-      job_status:'paid_completed',
-      payment_status:'settled_full',
-      extra_services:fullDesc,
-      additional_on_site_service:additional ? additional.name : '',
-      additional_on_site_service_price:additionalTotal,
-      extra_on_site_cost:additionalTotal,
-      extra_material_cost:parts.total,
-      spare_parts_json:JSON.stringify(parts.lineItems),
-      overtime_hours:0,
-      overtime_charge:0,
-      calculated_total:netDue,
-      end_time:new Date().toISOString()
+      job_status: 'paid_completed', payment_status: 'settled_full', extra_services: fullDesc, extra_on_site_cost: extraOnSiteCost,
+      extra_material_cost: parts.total, spare_parts_json: JSON.stringify(parts.lineItems),
+      overtime_hours: overtime.hours, overtime_charge: overtime.charge, calculated_total: netDue, end_time: new Date().toISOString()
     };
 
     const upi = generateDynamicUpi(netDue, `Final Settlement ${activeModalJob.invoice_no}`);
-    document.getElementById('techOnsiteQrImg').src=upi.qrUrl;
-    document.getElementById('techOnsiteQrAmount').textContent=`₹${netDue.toFixed(2)}`;
-    document.getElementById('techPaymentQrModal').style.display='flex';
+    document.getElementById('techOnsiteQrImg').src = upi.qrUrl;
+    document.getElementById('techOnsiteQrAmount').textContent = `₹${netDue.toFixed(2)}`;
+    document.getElementById('techPaymentQrModal').style.display = 'flex';
   }
-
 
   function closeTechPaymentQrModal() { document.getElementById('techPaymentQrModal').style.display = 'none'; }
 
