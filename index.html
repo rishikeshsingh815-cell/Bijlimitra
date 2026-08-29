@@ -1755,14 +1755,49 @@
 
   async function verifyStartPin(jobId, correctPin) {
     const entered = document.getElementById('startPinVerifyInput').value.trim();
-    if (entered === correctPin) {
-      const startTime = new Date().toISOString();
-      try { await sbClient.from('bookings').update({ job_status: 'in_progress', start_time: startTime }).or(`id.eq.${jobId},invoice_no.eq.${jobId}`); } catch(e){}
-      let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
-      localPool = localPool.map(j => (j.id === jobId || j.invoice_no === jobId) ? { ...j, job_status: 'in_progress', start_time: startTime } : j);
-      localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
-      alert("Start PIN verified successfully! Job marked In-Progress."); renderPoolJobs();
-    } else { alert("Invalid Start PIN! Please check with customer."); }
+    if (entered !== correctPin) {
+      alert("Invalid Start PIN! Please check with customer.");
+      return;
+    }
+
+    const startTime = new Date().toISOString();
+    const updatePayload = { job_status: 'in_progress', start_time: startTime };
+
+    let dbUpdated = false;
+    let dbError = null;
+
+    try {
+      const result = await sbClient
+        .from('bookings')
+        .update(updatePayload)
+        .or(`id.eq.${jobId},invoice_no.eq.${jobId}`);
+
+      dbError = result.error || null;
+      dbUpdated = !dbError;
+    } catch (e) {
+      dbError = e;
+    }
+
+    // Keep the local copy synchronized for the technician view.
+    let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
+    localPool = localPool.map(j =>
+      (j.id === jobId || j.invoice_no === jobId)
+        ? { ...j, ...updatePayload }
+        : j
+    );
+    localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
+
+    if (!dbUpdated) {
+      console.error('Start PIN status update failed:', dbError);
+      alert("Start PIN is correct, but the shared order status could not be updated. Please try again.");
+      return;
+    }
+
+    // Refresh technician data immediately after the shared update.
+    if (typeof renderPoolJobs === 'function') await renderPoolJobs();
+
+    alert("Start PIN verified successfully! Job marked In-Progress.");
+  } else { alert("Invalid Start PIN! Please check with customer."); }
   }
 
   async function openTechCompletionModal(jobId) {
@@ -1936,14 +1971,55 @@
 
   async function confirmTechnicianSettlementDone() {
     if (!activeModalJob || !pendingTechCalculatedPayload) return;
-    try { await sbClient.from('bookings').update(pendingTechCalculatedPayload).or(`id.eq.${activeModalJob.id},invoice_no.eq.${activeModalJob.invoice_no}`); } catch(e){}
+
+    const orderId = activeModalJob.id;
+    const invoiceNo = activeModalJob.invoice_no;
+
+    // Final technician payment changes the shared booking to COMPLETED & PAID.
+    const finalPayload = {
+      ...pendingTechCalculatedPayload,
+      job_status: 'paid_completed',
+      payment_status: 'settled_full'
+    };
+
+    let dbUpdated = false;
+    let dbError = null;
+
+    try {
+      const result = await sbClient
+        .from('bookings')
+        .update(finalPayload)
+        .or(`id.eq.${orderId},invoice_no.eq.${invoiceNo}`);
+
+      dbError = result.error || null;
+      dbUpdated = !dbError;
+    } catch (e) {
+      dbError = e;
+    }
+
+    // Always synchronize the local copy as well.
     let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
-    localPool = localPool.map(j => (j.id === activeModalJob.id || j.invoice_no === activeModalJob.invoice_no) ? { ...j, ...pendingTechCalculatedPayload } : j);
+    localPool = localPool.map(j =>
+      (j.id === orderId || j.invoice_no === invoiceNo)
+        ? { ...j, ...finalPayload }
+        : j
+    );
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
-    
+
+    if (!dbUpdated) {
+      console.error('Final settlement update failed:', dbError);
+      alert("The final payment was not synchronized to the shared order. Please try again.");
+      return;
+    }
+
+    // Immediately refresh the technician/customer status displays.
+    if (typeof renderPoolJobs === 'function') await renderPoolJobs();
+    if (typeof loadCustomerOrders === 'function') await loadCustomerOrders();
+
+    pendingTechCalculatedPayload = null;
     closeTechPaymentQrModal();
     closeTechCompletionModal();
-    alert("Payment Confirmed! Final Tax Invoice PDF synchronized across all accounts.");
+    alert("Payment Confirmed! Job status is now COMPLETED & PAID and the final invoice is issued.");
     navigateTo('bill-submitted');
   }
 
