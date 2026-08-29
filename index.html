@@ -758,523 +758,7 @@
       <p style="color:#475569; margin-top:2px; font-weight:600;" id="modalInitialOrderText">Base Scope Package</p>
       <p style="color:var(--primary-red); font-weight:800; margin-top:4px;">Advance Token Paid: ₹21.00 (Adjusted)</p>
       <p style="color:var(--title-blue); font-weight:800; margin-top:4px;" id="modalElapsedTimeText">Job duration: --</p>
-    </div>
-    <div style="margin-bottom:12px;">
-      <label style="font-weight:800; font-size:12.5px; color:var(--title-blue); display:block; margin-bottom:4px;" id="modalServicesHeading">Category Services Performed On-Site:</label>
-      <p style="font-size:11px; color:#64748b; margin-bottom:6px; font-weight:600;">Check service and enter price quoted to customer:</p>
-      <div id="modalAddonsChecklist" style="max-height:160px; overflow-y:auto; border:1.5px solid #cbd5e1; border-radius:8px; padding:6px 10px;"></div>
-    </div>
-    <div style="margin-bottom:12px;">
-      <label style="font-weight:800; font-size:12.5px; color:var(--title-blue); display:block; margin-bottom:6px;">Spare Parts Used (GST-Coded):</label>
-      <div id="modalPartsCatalog" style="border:1.5px solid #cbd5e1; border-radius:8px; padding:6px 10px;"></div>
-      <div id="modalCustomPartsRows" style="margin-top:8px;"></div>
-      <button type="button" class="btn secondary" style="margin-top:8px; padding:8px; font-size:12px;" onclick="addCustomPartRow()">+ Add Custom Part</button>
-    </div>
-    <div class="input-group">
-      <label style="font-weight:800; font-size:12.5px; color:var(--title-blue); display:block; margin-bottom:4px;">Enter Customer 4-Digit Stop PIN:</label>
-      <input type="text" id="modalStopPinInput" placeholder="Stop PIN" maxlength="4" style="text-align:center; font-size:16px; font-weight:900;">
-    </div>
-    <div class="card" style="background:var(--soft-red-bg); border:1.5px solid var(--soft-red-border); padding:12px; margin-bottom:12px;">
-      <div class="price-row"><span>On-Site Extra Services:</span><span id="modalExtraWorkDisp">₹0.00</span></div>
-      <div class="price-row"><span>Materials / Spares:</span><span id="modalMaterialsDisp">₹0.00</span></div>
-      <div class="price-row" id="modalOvertimeRow" style="display:none; color:var(--warning);"><span id="modalOvertimeLabel">Overtime:</span><span id="modalOvertimeDisp">₹0.00</span></div>
-      <div class="price-row" style="color:var(--primary-red); font-weight:800;"><span>Advance Token Deducted:</span><span>- ₹21.00</span></div>
-      <div class="price-row total"><span>Final Amount After ₹21 Token:</span><span id="modalFinalNetDue" style="color:var(--primary-dark-red);">₹0.00</span></div>
-    </div>
-    <button class="btn" onclick="openTechnicianCollectionQr()">📱 Generate Customer Payment QR (On-Site)</button>
-  </div>
-</div>
-
-<!-- 11. TECHNICIAN ON-SITE PAYMENT QR MODAL -->
-<div id="techPaymentQrModal" class="modal-backdrop">
-  <div class="modal-content" style="text-align:center;">
-    <h3 class="section-title-blue" style="justify-content:center; font-size:17px; margin-bottom:4px;">Customer Final Settlement</h3>
-    <p style="font-size:12px; color:#64748b; font-weight:600;">Show this QR code to the customer on-site to scan &amp; pay:</p>
-    <div class="qr-box" style="margin:14px 0;">
-      <div style="font-size:12px; font-weight:900; color:var(--title-blue); letter-spacing:0.5px;">KASHVI ENTERPRISES</div>
-      <img id="techOnsiteQrImg" class="qr-img" alt="Payment QR" />
-      <div style="font-size:24px; font-weight:900; color:var(--primary-dark-red);" id="techOnsiteQrAmount">₹0.00</div>
-      <p style="font-size:11px; color:#64748b; margin-top:2px; font-weight:700;">UPI (GPay / PhonePe / Paytm)</p>
-    </div>
-    <button class="btn" style="background:linear-gradient(135deg, #059669, #047857);" onclick="confirmTechnicianSettlementDone()">✔ Confirm Payment Received &amp; Issue Invoice</button>
-    <button class="btn secondary" style="margin-top:8px;" onclick="closeTechPaymentQrModal()">Cancel / Modify Bill</button>
-  </div>
-</div>
-
-<!-- 12. CUSTOMER REVIEW MODAL -->
-<div id="customerReviewModal" class="modal-backdrop">
-  <div class="modal-content">
-    <h3 class="section-title-blue" style="justify-content:center; font-size:17px; margin-bottom:6px;">Rate Your Experience</h3>
-    <p style="font-size:12px; color:#64748b; text-align:center; margin-bottom:10px; font-weight:600;">How was the service provided by Bijli Mitra?</p>
-    <div class="star-rating" id="reviewStarRating">
-      <span class="star" onclick="setReviewRating(1)">★</span>
-      <span class="star" onclick="setReviewRating(2)">★</span>
-      <span class="star" onclick="setReviewRating(3)">★</span>
-      <span class="star" onclick="setReviewRating(4)">★</span>
-      <span class="star selected" onclick="setReviewRating(5)">★</span>
-    </div>
-    <textarea id="customerReviewComment" placeholder="Write your honest review or feedback here..." rows="3" style="margin-bottom:12px;"></textarea>
-    <button class="btn" onclick="submitCustomerReview()">Submit Review to Website</button>
-  </div>
-</div>
-
-<!-- 13. GOOGLE USER MODAL -->
-<div id="googlePhoneModal" class="modal-backdrop">
-  <div class="modal-content" style="max-width:380px;">
-    <h3 class="section-title-blue" style="font-size:16px; margin-bottom:6px;">Complete Your Profile</h3>
-    <p style="font-size:12px; color:#64748b; margin-bottom:14px; font-weight:600;">Your mobile number and exact street address are mandatory so our field technicians can reach you.</p>
-    <label style="font-size:12px; font-weight:800; color:var(--title-blue); margin-bottom:4px; display:block;">10-Digit Mobile Number (Mandatory):</label>
-    <input type="tel" id="googlePhoneInput" placeholder="Enter 10-digit mobile number" maxlength="10" style="margin-bottom:8px; font-weight:800;">
-    <div class="card" style="padding:10px; background:var(--soft-red-bg); border:1.5px solid var(--soft-red-border); margin-bottom:8px;">
-      <span style="font-size:12px; font-weight:900; color:var(--title-blue);">📍 Select Exact Address from Map:</span>
-      <div id="googleSignupMap" style="height:170px; border-radius:10px; border:2px solid var(--primary-red); margin-top:6px;"></div>
-    </div>
-    <label style="font-size:12px; font-weight:800; color:var(--title-blue); margin-bottom:4px; display:block;">Selected Address / Landmark:</label>
-    <input type="text" id="googleAddressInput" placeholder="Selected address" style="margin-bottom:8px;">
-    <p id="googlePhoneError" style="color:#c0392b; font-size:11px; margin-bottom:8px; font-weight:700;"></p>
-    <button class="btn" onclick="submitGooglePhone()">Save &amp; Continue</button>
-  </div>
-</div>
-
-<div class="bottomnav" id="mobileBottomNav"></div>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
-
-<script>
-  const SUPABASE_URL = 'https://uwsmpnezreofqufnsdxz.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3c21wbmV6cmVvZnF1Zm5zZHh6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxMzI1MDUsImV4cCI6MjEwMjcwODUwNX0.iOUgvymY8zCbsWo7iM_nNTOiJEAXXKw1Blsd_ArsKcQ';
-  const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-  const KASHVI_UPI_VPA = '8677900810@ybl';
-  const KASHVI_PAYEE_NAME = 'Kashvi Enterprises';
-  const OVERTIME_RATE_PER_HOUR = 100;
-  const FREE_HOURS_BEFORE_OVERTIME = 3;
-
-  const SERVICE_CONFIG = {
-    electrician: { title: 'Electrical Services', base: 253.39, gst: 45.61, total: 299.00, sac: '998719', scope: '✅ <b>Base Scope:</b> Technician Visit + 1 Fan/Board Repair OR 2 Switch Replacements' },
-    plumber: { title: 'Plumbing Works', base: 253.39, gst: 45.61, total: 299.00, sac: '998722', scope: '✅ <b>Base Scope:</b> Plumber Visit + 1 Tap/Valve Leakage Repair OR Drain Unclogging' },
-    ac: { title: 'AC Repair & Service', base: 338.14, gst: 60.86, total: 399.00, sac: '998715', scope: '✅ <b>Base Scope:</b> High-Pressure Jet Pump Service for 1 Split/Window AC' }
-  };
-
-  const TRADE_SERVICES_CATALOG = {
-    electrician: ['Ceiling / Exhaust Fan Installation','Switch / Socket Replacement','Fan Regulator Replacement','LED Light / Batten Fitting','Switchboard Repair / Fitting','New Point Wiring Line','Power Point Wiring (16A/25A)','MCB / Isolator Replacement','Short Circuit / Fault Diagnosis','Other Electrical Service'],
-    plumber: ['Tap / Valve Replacement','Jet Spray Installation','Waste Pipe Replacement','Flush Tank Kit Repair','New Flush Tank Installation','New Water Point Creation','Main Sewer Blockage Clearing','Water Tank Cleaning','Water Motor Pump Installation','Other Plumbing Work'],
-    ac: ['Additional AC Jet Service','Water Leakage Repair','Capacitor Replacement','Full Refrigerant Gas Charging','New Copper Piping / Drain Point','AC Un-installation (Dismantling)','Complete New AC Installation','PCB Repair / Electrical Checkup','Other AC Service']
-  };
-
-  const SPARE_PARTS_CATALOG = {
-    electrician: [{ name: 'MCB (Single Pole)', code: 'HSN 8536', rate: 99.00 },{ name: 'Switch / Socket', code: 'HSN 8536', rate: 30.00 },{ name: 'Wire (per meter)', code: 'HSN 8544', rate: 15.00 },{ name: 'Fan Capacitor', code: 'HSN 8532', rate: 60.00 }],
-    ac: [{ name: 'Refrigerant Gas R32', code: 'HSN 2903', rate: 1699.00 },{ name: 'Run Capacitor', code: 'HSN 8532', rate: 150.00 },{ name: 'Drain Pipe (per meter)', code: 'HSN 3917', rate: 40.00 }],
-    plumber: [{ name: 'PVC Pipe (per meter)', code: 'HSN 3917', rate: 60.00 },{ name: 'Bib Tap', code: 'HSN 8481', rate: 120.00 },{ name: 'Angle Valve', code: 'HSN 8481', rate: 90.00 }]
-  };
-
-  let currentUser = null;
-  const savedCustomer = localStorage.getItem('bm_active_customer');
-  if (savedCustomer) { try { currentUser = JSON.parse(savedCustomer); } catch(e){} }
-
-  let isCustomerSignupMode = false, isOtpDispatched = false, currentCategory = 'electrician', pendingAdvanceState = null, activeTechSession = null, isAdminLoggedIn = false, activeModalJob = null, bookingMap = null, bookingMapMarker = null, signupMap = null, signupMapMarker = null, selectedReviewScore = 5, pendingReviewJobId = null, pendingTechCalculatedPayload = null;
-
-  async function hashPassword(plain) {
-    const enc = new TextEncoder().encode(plain);
-    const buf = await crypto.subtle.digest('SHA-256', enc);
-    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-  }
-
-  let touchStartY = 0;
-  let touchCurrentY = 0;
-  let isPulling = false;
-
-  window.addEventListener('touchstart', (e) => {
-    if (window.scrollY === 0) {
-      touchStartY = e.touches[0].clientY;
-      isPulling = true;
-    }
-  }, { passive: true });
-
-  window.addEventListener('touchmove', (e) => {
-    if (!isPulling) return;
-    touchCurrentY = e.touches[0].clientY;
-    const distance = touchCurrentY - touchStartY;
-    if (distance > 70 && window.scrollY === 0) {
-      const indicator = document.getElementById('pullToRefreshIndicator');
-      indicator.classList.add('visible');
-    }
-  }, { passive: true });
-
-  window.addEventListener('touchend', async () => {
-    if (!isPulling) return;
-    const distance = touchCurrentY - touchStartY;
-    if (distance > 70 && window.scrollY === 0) {
-      const indicator = document.getElementById('pullToRefreshIndicator');
-      indicator.classList.add('visible');
-      
-      if (activeTechSession) {
-        await renderPoolJobs();
-      } else if (currentUser) {
-        await loadCustomerOrders();
-      } else {
-        await loadHomeReviews();
-      }
-      
-      setTimeout(() => {
-        indicator.classList.remove('visible');
-      }, 700);
-    }
-    isPulling = false;
-    touchStartY = 0;
-    touchCurrentY = 0;
-  }, { passive: true });
-
-  const CUSTOMER_SESSION_TIMEOUT_MS = 15 * 60 * 1000;
-  let customerInactivityTimer = null;
-  function resetCustomerInactivityTimer() {
-    if (customerInactivityTimer) clearTimeout(customerInactivityTimer);
-    if (currentUser) customerInactivityTimer = setTimeout(handleCustomerSessionExpiry, CUSTOMER_SESSION_TIMEOUT_MS);
-  }
-  function handleCustomerSessionExpiry() {
-    if (!currentUser) return;
-    currentUser = null; localStorage.removeItem('bm_active_customer');
-    if (customerInactivityTimer) clearTimeout(customerInactivityTimer);
-    updateRoleBasedNavigation(); alert("Session expired. Please sign in again."); window.location.reload();
-  }
-  ['click', 'mousemove', 'keypress', 'touchstart', 'scroll'].forEach(evt => window.addEventListener(evt, resetCustomerInactivityTimer, { passive: true }));
-
-  function updateRoleBasedNavigation() {
-    const badge = document.getElementById('topAuthBadge');
-    const logoutBtn = document.getElementById('topLogoutBtn');
-    const mobNav = document.getElementById('mobileBottomNav');
-    const deskCustomer = document.getElementById('deskCustomerNav');
-    const deskTech = document.getElementById('deskTechNav');
-    const deskAdmin = document.getElementById('deskAdminNav');
-
-    if (isAdminLoggedIn) {
-      badge.textContent = `🔐 Admin`;
-      badge.onclick = () => navigateTo('admin');
-      logoutBtn.style.display = 'inline-block';
-      logoutBtn.onclick = adminLogout;
-      
-      deskCustomer.style.display = 'none'; deskTech.style.display = 'none'; deskAdmin.style.display = 'block';
-      mobNav.innerHTML = `<div class="nav-item active" onclick="navigateTo('admin')"><span class="nav-icon">🔐</span>Admin</div><div class="nav-item" onclick="adminLogout()"><span class="nav-icon">🚪</span>Logout</div>`;
-    } else if (activeTechSession) {
-      badge.textContent = `🧑‍🔧 ${activeTechSession.name}`;
-      badge.onclick = () => navigateTo('tech-pool');
-      logoutBtn.style.display = 'inline-block';
-      logoutBtn.onclick = techLogout;
-
-      deskCustomer.style.display = 'none'; deskTech.style.display = 'block'; deskAdmin.style.display = 'none';
-      mobNav.innerHTML = `<div class="nav-item active" onclick="navigateTo('tech-pool')"><span class="nav-icon">🧑‍🔧</span>Job Pool</div><div class="nav-item" onclick="techLogout()"><span class="nav-icon">🚪</span>Logout</div>`;
-    } else if (currentUser) {
-      badge.textContent = `👤 ${currentUser.name || currentUser.phone}`;
-      badge.onclick = () => goToCustomerProfile();
-      logoutBtn.style.display = 'inline-block';
-      logoutBtn.onclick = customerLogout;
-
-      deskCustomer.style.display = 'block'; deskTech.style.display = 'none'; deskAdmin.style.display = 'none';
-      mobNav.innerHTML = `<div class="nav-item active" id="mobNavHome" onclick="navigateTo('home')"><span class="nav-icon">🏠</span>Categories</div><div class="nav-item" id="mobNavProfile" onclick="goToCustomerProfile()"><span class="nav-icon">👤</span>Profile &amp; Orders</div>`;
-    } else {
-      badge.textContent = "Sign In";
-      badge.onclick = () => navigateTo('auth');
-      logoutBtn.style.display = 'none';
-
-      deskCustomer.style.display = 'block'; deskTech.style.display = 'none'; deskAdmin.style.display = 'none';
-      mobNav.innerHTML = `<div class="nav-item active" id="mobNavHome" onclick="navigateTo('home')"><span class="nav-icon">🏠</span>Categories</div><div class="nav-item" onclick="navigateTo('auth')"><span class="nav-icon">👤</span>Sign In</div>`;
-    }
-  }
-
-  async function customerLogout() { currentUser = null; localStorage.removeItem('bm_active_customer'); if (customerInactivityTimer) clearTimeout(customerInactivityTimer); try { await sbClient.auth.signOut(); } catch(e){} window.location.reload(); }
-  function techLogout() { activeTechSession = null; window.location.reload(); }
-  function adminLogout() { isAdminLoggedIn = false; window.location.reload(); }
-  function handleTopBadgeClick() { if (currentUser) goToCustomerProfile(); else if (activeTechSession) navigateTo('tech-pool'); else if (isAdminLoggedIn) navigateTo('admin'); else navigateTo('auth'); }
-
-  function showScreenOnly(screenId) {
-    if (screenId === 'admin' && !isAdminLoggedIn) { alert("Access Denied: Admin login required."); navigateTo('auth'); return; }
-    if (screenId === 'tech-pool' && !activeTechSession) { alert("Access Denied: Technician login required."); navigateTo('auth'); return; }
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    const target = document.getElementById('screen-' + screenId);
-    if(target) target.classList.add('active');
-    if (screenId === 'home' && homeMap) setTimeout(() => homeMap.invalidateSize(), 200);
-    else if (screenId === 'auth' && signupMap) setTimeout(() => signupMap.invalidateSize(), 200);
-    else if (screenId === 'booking' && bookingMap) setTimeout(() => bookingMap.invalidateSize(), 200);
-    window.scrollTo(0, 0);
-  }
-
-  function navigateTo(screenId, replaceHistory = false) {
-    showScreenOnly(screenId);
-    try { if (replaceHistory) history.replaceState({ screen: screenId }, '', '#' + screenId); else history.pushState({ screen: screenId }, '', '#' + screenId); } catch(e) {}
-  }
-
-  window.addEventListener('popstate', (e) => {
-    let targetScreen = (e.state && e.state.screen) ? e.state.screen : 'home';
-    if (targetScreen === 'auth' && (currentUser || activeTechSession || isAdminLoggedIn)) targetScreen = 'home';
-    showScreenOnly(targetScreen);
-  });
-
-  function openTechLoginModal() { document.getElementById('roleSecTech').style.display = 'block'; }
-  function openAdminLoginModal() { document.getElementById('roleSecAdmin').style.display = 'block'; }
-
-  function toggleCustomerAuthMode() {
-    isCustomerSignupMode = !isCustomerSignupMode;
-    isOtpDispatched = false;
-    document.getElementById('custAuthFormTitle').textContent = isCustomerSignupMode ? "Customer Registration" : "Customer Login";
-    document.getElementById('custAuthToggleBtn').textContent = isCustomerSignupMode ? "Switch to Login" : "Switch to Sign Up";
-    document.getElementById('custAuthActionBtn').textContent = isCustomerSignupMode ? "Verify OTP & Register" : "Login & Proceed";
-    document.getElementById('custSignupFields').style.display = isCustomerSignupMode ? "block" : "none";
-    document.getElementById('otpPasswordCreationGroup').style.display = "none";
-    document.getElementById('loginPasswordGroup').style.display = isCustomerSignupMode ? "none" : "block";
-    document.getElementById('authMsg').textContent = "";
-    document.getElementById('authCreatePassword').value = "";
-    document.getElementById('authLoginPassword').value = "";
-    document.getElementById('authEmailOtp').value = "";
-    if (isCustomerSignupMode) {
-      setTimeout(() => {
-        initSignupMap();
-        if (signupMap) signupMap.invalidateSize();
-      }, 200);
-    }
-  }
-
-  const southWest = L.latLng(25.20, 85.80), northEast = L.latLng(25.75, 86.45), begusaraiBounds = L.latLngBounds(southWest, northEast);
-  const homeMap = L.map('homeMap', { center: [25.4182, 86.1272], zoom: 13, minZoom: 11, maxBounds: begusaraiBounds, maxBoundsViscosity: 1.0 });
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { bounds: begusaraiBounds }).addTo(homeMap);
-  L.marker([25.4182, 86.1272]).addTo(homeMap).bindPopup("<b>Begusarai Central Dispatch Hub</b>").openPopup();
-
-  function initSignupMap() {
-    if (signupMap) return;
-    signupMap = L.map('signupMap', { center: [25.4182, 86.1272], zoom: 13, minZoom: 11, maxBounds: begusaraiBounds, maxBoundsViscosity: 1.0 });
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { bounds: begusaraiBounds }).addTo(signupMap);
-    signupMapMarker = L.marker([25.4182, 86.1272]).addTo(signupMap);
-    signupMap.on('click', function(e) {
-      signupMapMarker.setLatLng(e.latlng);
-      reverseGeocodeAndFill(e.latlng.lat, e.latlng.lng, 'custRegAddress', signupMapMarker);
-    });
-  }
-
-  function initBookingMap() {
-    if (bookingMap) return;
-    bookingMap = L.map('bookingMap', { center: [25.4182, 86.1272], zoom: 13, minZoom: 11, maxBounds: begusaraiBounds, maxBoundsViscosity: 1.0 });
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { bounds: begusaraiBounds }).addTo(bookingMap);
-    bookingMapMarker = L.marker([25.4182, 86.1272]).addTo(bookingMap);
-    bookingMap.on('click', function(e) {
-      bookingMapMarker.setLatLng(e.latlng);
-      reverseGeocodeAndFill(e.latlng.lat, e.latlng.lng, 'custAddressInput', bookingMapMarker);
-    });
-  }
-
-  async function reverseGeocodeAndFill(lat, lng, inputId, marker) {
-    const input = document.getElementById(inputId);
-    const fallbackAddress = `Location [${lat.toFixed(4)}, ${lng.toFixed(4)}], Begusarai, Bihar`;
-    input.value = "Finding address...";
-    try {
-      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`, { headers: { 'Accept-Language': 'en' } });
-      const data = await res.json();
-      const address = data && data.display_name ? data.display_name : fallbackAddress;
-      input.value = address;
-      marker.bindPopup(`<b>Selected:</b><br>${address}`).openPopup();
-    } catch (e) {
-      input.value = fallbackAddress;
-      marker.bindPopup(`<b>Selected:</b><br>${fallbackAddress}`).openPopup();
-    }
-  }
-
-  function toggleBookingMap() {
-    const container = document.getElementById('bookingMapContainer');
-    container.style.display = container.style.display === 'none' ? 'block' : 'none';
-    if (container.style.display === 'block' && bookingMap) setTimeout(() => bookingMap.invalidateSize(), 150);
-  }
-
-  function togglePasswordVisibility(inputId, el) {
-    const input = document.getElementById(inputId);
-    input.type = input.type === 'password' ? 'text' : 'password';
-    el.textContent = input.type === 'password' ? 'Show' : 'Hide';
-  }
-
-  function generateDynamicUpi(amount, note) {
-    const upiUri = `upi://pay?pa=${KASHVI_UPI_VPA}&pn=${encodeURIComponent(KASHVI_PAYEE_NAME)}&am=${amount.toFixed(2)}&cu=INR&tn=${encodeURIComponent(note)}`;
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(upiUri)}`;
-    return { upiUri, qrUrl };
-  }
-
-  let pendingGoogleUser = null, googleSignupMap = null, googleSignupMapMarker = null;
-  async function signInWithGoogle() {
-    const { error } = await sbClient.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + window.location.pathname } });
-    if (error) alert("Google login error: " + error.message);
-  }
-
-  let googleAuthProcessed = false;
-  sbClient.auth.onAuthStateChange(async (event, session) => {
-    if (event !== 'SIGNED_IN' || !session?.user || googleAuthProcessed) return;
-    googleAuthProcessed = true;
-    if (window.location.hash.includes('access_token')) history.replaceState(null, '', window.location.pathname + window.location.search);
-
-    const email = session.user.email;
-    const name = session.user.user_metadata?.full_name || session.user.user_metadata?.name || 'Customer';
-    let existing = null;
-    try { const { data } = await sbClient.from('customers').select('*').eq('email', email).single(); existing = data; } catch(e){}
-
-    if (existing && existing.phone && existing.address) {
-      if (existing.is_blocked) { alert("Your account has been blocked by Admin."); return; }
-      currentUser = { name: existing.name || name, phone: existing.phone, address: existing.address, email };
-      localStorage.setItem('bm_active_customer', JSON.stringify(currentUser));
-      updateRoleBasedNavigation(); navigateTo('home', true);
-    } else {
-      pendingGoogleUser = { email, name };
-      document.getElementById('googlePhoneModal').style.display = 'flex';
-      if (existing) { document.getElementById('googlePhoneInput').value = existing.phone || ''; document.getElementById('googleAddressInput').value = existing.address || ''; }
-      setTimeout(initGoogleSignupMap, 150);
-    }
-  });
-
-  function initGoogleSignupMap() {
-    if (googleSignupMap) { googleSignupMap.invalidateSize(); return; }
-    googleSignupMap = L.map('googleSignupMap', { center: [25.4182, 86.1272], zoom: 13, minZoom: 11, maxBounds: begusaraiBounds, maxBoundsViscosity: 1.0 });
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { bounds: begusaraiBounds }).addTo(googleSignupMap);
-    googleSignupMapMarker = L.marker([25.4182, 86.1272]).addTo(googleSignupMap);
-    googleSignupMap.on('click', function(e) {
-      googleSignupMapMarker.setLatLng(e.latlng);
-      reverseGeocodeAndFill(e.latlng.lat, e.latlng.lng, 'googleAddressInput', googleSignupMapMarker);
-    });
-  }
-
-  async function submitGooglePhone() {
-    const phone = document.getElementById('googlePhoneInput').value.trim();
-    const address = document.getElementById('googleAddressInput').value.trim();
-    const errEl = document.getElementById('googlePhoneError');
-    if (!/^[6-9]\d{9}$/.test(phone)) { errEl.textContent = "Please enter a valid 10-digit Indian mobile number."; return; }
-    if (!address) { errEl.textContent = "Please select or type your exact address."; return; }
-    errEl.textContent = "";
-    if (!pendingGoogleUser) return;
-
-    const { error } = await sbClient.from('customers').upsert({ email: pendingGoogleUser.email, name: pendingGoogleUser.name, phone, address }, { onConflict: 'email' });
-    if (error) { errEl.textContent = "Could not save details: " + error.message; return; }
-
-    currentUser = { name: pendingGoogleUser.name, phone, address, email: pendingGoogleUser.email };
-    localStorage.setItem('bm_active_customer', JSON.stringify(currentUser));
-    document.getElementById('googlePhoneModal').style.display = 'none';
-    updateRoleBasedNavigation(); navigateTo('home', true);
-  }
-
-  async function sendEmailVerificationOtp() {
-    const email = document.getElementById('authEmail').value.trim().toLowerCase();
-    const name = document.getElementById('custRegName').value.trim();
-    const phone = document.getElementById('authPhone').value.trim();
-    const address = document.getElementById('custRegAddress').value.trim();
-    const msg = document.getElementById('authMsg');
-
-    if (!email || !email.includes('@')) { msg.textContent = "Please enter a valid email address."; msg.style.color = "#c0392b"; return; }
-    if (!name) { msg.textContent = "Please enter your Full Name."; msg.style.color = "#c0392b"; return; }
-    if (!/^[6-9]\d{9}$/.test(phone)) { msg.textContent = "Mandatory: Enter a valid 10-digit Indian mobile number."; msg.style.color = "#c0392b"; return; }
-    if (!address) { msg.textContent = "Mandatory: Select or type your exact street address."; msg.style.color = "#c0392b"; return; }
-
-    msg.textContent = "Sending 6-digit verification code to email..."; msg.style.color = "var(--title-blue)";
-    try {
-      const { error } = await sbClient.auth.signInWithOtp({ email: email, options: { shouldCreateUser: true } });
-      if (error) { msg.textContent = "Failed to send OTP: " + error.message; msg.style.color = "#c0392b"; return; }
-      isOtpDispatched = true;
-      document.getElementById('otpPasswordCreationGroup').style.display = 'block';
-      document.getElementById('sendEmailOtpBtn').textContent = "🔄 Resend Email OTP";
-      msg.textContent = "OTP Sent! Enter the 6-digit code and create your password."; msg.style.color = "var(--title-blue)";
-    } catch(err) { msg.textContent = "Error sending OTP: " + err.message; msg.style.color = "#c0392b"; }
-  }
-
-  async function handleCustomerAuthAction() {
-    const email = document.getElementById('authEmail').value.trim().toLowerCase();
-    const msg = document.getElementById('authMsg');
-    if (!email || !email.includes('@')) { msg.textContent = "Please enter a valid email address."; msg.style.color = "#c0392b"; return; }
-
-    if (isCustomerSignupMode) {
-      const name = document.getElementById('custRegName').value.trim();
-      const phone = document.getElementById('authPhone').value.trim();
-      const address = document.getElementById('custRegAddress').value.trim();
-      const otpToken = document.getElementById('authEmailOtp').value.trim();
-      const newPassword = document.getElementById('authCreatePassword').value.trim();
-
-      if (!isOtpDispatched || otpToken.length !== 6) { msg.textContent = "Please send OTP and enter the 6-digit code received on email."; msg.style.color = "#c0392b"; return; }
-      if (newPassword.length < 6) { msg.textContent = "Created Password must be at least 6 characters."; msg.style.color = "#c0392b"; return; }
-
-      msg.textContent = "Verifying OTP and creating your account..."; msg.style.color = "var(--title-blue)";
-      const { error: verifyErr } = await sbClient.auth.verifyOtp({ email: email, token: otpToken, type: 'email' });
-      if (verifyErr) { msg.textContent = "Invalid or expired Email OTP: " + verifyErr.message; msg.style.color = "#c0392b"; return; }
-
-      const hashedPassword = await hashPassword(newPassword);
-      const { error: insertErr } = await sbClient.from('customers').upsert([{ email, name, phone, address, password_hash: hashedPassword }], { onConflict: 'email' });
-      if (insertErr) { msg.textContent = "Registration database error: " + insertErr.message; msg.style.color = "#c0392b"; return; }
-
-      alert("Account Created Successfully! Please login using your email and password.");
-      toggleCustomerAuthMode();
-      document.getElementById('authEmail').value = email;
-      msg.textContent = "Account verified! Enter your password to log in."; msg.style.color = "var(--title-blue)";
-    } else {
-      const loginPassword = document.getElementById('authLoginPassword').value.trim();
-      if (loginPassword.length < 6) { msg.textContent = "Password must be at least 6 characters."; msg.style.color = "#c0392b"; return; }
-
-      const hashedPassword = await hashPassword(loginPassword);
-      let { data: account } = await sbClient.from('customers').select('*').eq('email', email).single();
-      if (!account) { msg.textContent = "Account not found with this email. Please Sign Up."; msg.style.color = "#c0392b"; return; }
-      if (account.is_blocked) { msg.textContent = "This account has been blocked by Admin."; msg.style.color = "#c0392b"; return; }
-      if (account.password_hash !== hashedPassword) { msg.textContent = "Incorrect password. Please re-enter."; msg.style.color = "#c0392b"; return; }
-
-      currentUser = { name: account.name || "Customer", address: account.address, phone: account.phone, email: account.email };
-      localStorage.setItem('bm_active_customer', JSON.stringify(currentUser));
-      window.location.hash = '#home'; window.location.reload();
-    }
-  }
-
-  function goToCustomerProfile() {
-    if (!currentUser) { alert("Please sign in or register to view your profile."); navigateTo('auth'); return; }
-    document.getElementById('profDispName').textContent = currentUser.name || "Customer";
-    document.getElementById('profDispEmail').textContent = currentUser.email || "--";
-    document.getElementById('profDispPhone').textContent = currentUser.phone || "--";
-    document.getElementById('profDispAddress').textContent = currentUser.address || "Begusarai, Bihar";
-    navigateTo('profile');
-    loadCustomerOrders();
-  }
-
-  const ELECTRICAL_MIN_INSPECTION_FEE = 121;
-
-  const ELECTRICAL_SERVICES = [
-    { id: 'switch_socket', name: 'Switch / Socket Replacement', unit: 'piece', price: 49 },
-    { id: 'fan_installation', name: 'Ceiling / Wall / Exhaust Fan Installation', unit: 'fan', price: 199 },
-    { id: 'light_fitting', name: 'Light Fitting (LED / Tube light / Holder)', unit: 'light', price: 99 },
-    { id: 'chandelier_installation', name: 'Chandelier (Jhoomar) Installation', unit: 'fixed', price: 499 },
-    { id: 'mcb_replacement', name: 'MCB Replacement', unit: 'unit', price: 75 },
-    { id: 'inverter_battery_setup', name: 'Inverter & Battery Complete Setup', unit: 'fixed', price: 449 },
-    { id: 'geyser_fitting', name: 'Geyser Electrical Fitting', unit: 'fixed', price: 299 },
-    { id: 'motor_starter_wiring', name: 'Water Motor / Starter Wiring', unit: 'fixed', price: 349 },
-    { id: 'new_point_wiring', name: 'New Point Wiring (Light / Fan)', unit: 'point', price: 199 },
-    { id: 'power_point_wiring', name: 'Power Point Wiring (16A / AC / Geyser)', unit: 'point', price: 299 },
-    { id: 'fault_finding', name: 'Fault Finding / Short Circuit Checking', unit: 'fixed', price: 299 }
-  ];
-
-  let selectedElectricalServices = {};
-
-  function renderElectricalServices() {
-    const container = document.getElementById('electricalServiceList');
-    if (!container) return;
-
-    container.innerHTML = ELECTRICAL_SERVICES.map(service => {
-      const qty = selectedElectricalServices[service.id] || 0;
-      const qtyControls = service.unit === 'fixed'
-        ? `<button type="button" class="btn secondary" style="width:auto; padding:5px 10px; font-size:11px;" onclick="setElectricalServiceQty('${service.id}', ${qty ? 0 : 1})">${qty ? '✓ Selected' : 'Add'}</button>`
-        : `<div style="display:flex; align-items:center; gap:7px;">
-             <button type="button" class="btn secondary" style="width:auto; padding:3px 9px; font-size:14px;" onclick="changeElectricalServiceQty('${service.id}', -1)">−</button>
-             <b style="min-width:18px; text-align:center;">${qty}</b>
-             <button type="button" class="btn secondary" style="width:auto; padding:3px 9px; font-size:14px;" onclick="changeElectricalServiceQty('${service.id}', 1)">+</button>
-           </div>`;
-
-      return `
-        <div style="padding:11px 0; border-bottom:1px dashed var(--soft-red-border);">
-          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
-            <div style="flex:1;">
-              <div style="font-size:12.5px; color:var(--title-blue); font-weight:900;">${service.name}</div>
-              <div style="font-size:11px; color:#64748b; margin-top:2px; font-weight:600;">
-                ₹${service.price.toFixed(2)} ${service.unit === 'fixed' ? '(fixed)' : `per ${service.unit}`} • GST included
-              </div>
-            </div>
-            <div style="flex-shrink:0;">${qtyControls}</div>
-          </div>
-        </div>`;
+    </div>`;
     }).join('');
 
     updateElectricalBookingTotal();
@@ -1663,20 +1147,19 @@
       : 0;
 
     const extraMaterials = parseFloat(data.extra_material_cost) || 0;
-    const overtimeCharge = parseFloat(data.overtime_charge) || 0;
+    const overtimeCharge = 0;
 
     // Materials/overtime are technician-added amounts. Existing system treats
     // these as GST-inclusive at 18%.
     const taxableInspection = inspectionFee > 0 ? inspectionFee / 1.18 : 0;
     const taxableSelected = selectedServicesTotal > 0 ? selectedServicesTotal / 1.18 : 0;
     const taxableMaterials = extraMaterials > 0 ? extraMaterials / 1.18 : 0;
-    const taxableOvertime = overtimeCharge > 0 ? overtimeCharge / 1.18 : 0;
 
-    const grossServiceTotal = inspectionFee + selectedServicesTotal + extraMaterials + overtimeCharge;
+    const grossServiceTotal = inspectionFee + selectedServicesTotal + extraMaterials;
     const advanceDeducted = isRevisit ? 0 : 21.00;
     const finalAmountDue = Math.max(0, grossServiceTotal - advanceDeducted);
 
-    const taxableSubtotal = taxableInspection + taxableSelected + taxableMaterials + taxableOvertime;
+    const taxableSubtotal = taxableInspection + taxableSelected + taxableMaterials;
     const totalGst = grossServiceTotal - taxableSubtotal;
 
     let rowsHtml = '';
@@ -1736,17 +1219,6 @@
         </tr>`;
       });
     } catch(e){}
-
-    if (overtimeCharge > 0) {
-      rowsHtml += `<tr>
-        <td style="text-align:center;">${sr++}</td>
-        <td>Overtime Service Charge (${data.overtime_hours || 0} hr)</td>
-        <td style="text-align:center;">998719</td>
-        <td class="num">₹${taxableOvertime.toFixed(2)}</td>
-        <td style="text-align:center;">18%</td>
-        <td class="num">₹${overtimeCharge.toFixed(2)}</td>
-      </tr>`;
-    }
 
     document.getElementById('pdfItemsBody').innerHTML = rowsHtml || `
       <tr><td colspan="6" style="text-align:center;">No billable services recorded.</td></tr>`;
@@ -1927,13 +1399,15 @@
     document.getElementById('modalStopPinInput').value = "";
     document.getElementById('modalCustomPartsRows').innerHTML = "";
 
-    const categoryServices = TRADE_SERVICES_CATALOG[job.service_type] || [];
     document.getElementById('modalServicesHeading').textContent = `${cfg.title} Tasks Done On-Site:`;
-    document.getElementById('modalAddonsChecklist').innerHTML = categoryServices.map((sName, idx) => `
-      <div class="addon-item">
-        <label style="flex:1.5;"><input type="checkbox" class="modal-addon-cb" data-name="${sName}" onchange="toggleServicePriceInput(${idx}); recalculateModalFinalTotal();"><span>${sName}</span></label>
-        <div style="display:flex; align-items:center; gap:4px;"><span style="font-size:12px; font-weight:700; color:#64748b;">₹</span><input type="number" id="servicePrice_${idx}" class="modal-addon-price-input" placeholder="0.00" min="0" disabled style="width:75px; padding:6px; margin:0; text-align:right; font-weight:800;" oninput="recalculateModalFinalTotal()"></div>
-      </div>`).join('') || '<p style="font-size:11px; color:#64748b;">No predefined services for this trade</p>';
+    document.getElementById('modalAddonsChecklist').innerHTML = `
+      <select id="modalAdditionalServiceSelect" onchange="recalculateModalFinalTotal()" style="width:100%; padding:9px; border:1.5px solid #cbd5e1; border-radius:8px; font-weight:700;">
+        <option value="">-- No Additional Service --</option>
+        ${job.service_type === 'electrician'
+          ? ELECTRICAL_SERVICES.map(s => `<option value="${s.id}">${s.name} — ₹${s.price.toFixed(2)}${s.unit === 'fixed' ? '' : ` / ${s.unit}`}</option>`).join('')
+          : ''}
+      </select>
+      <p id="modalAdditionalServiceSummary" style="font-size:11px; color:#475569; margin-top:6px; font-weight:700;"></p>`;
 
     const catalog = SPARE_PARTS_CATALOG[job.service_type] || [];
     document.getElementById('modalPartsCatalog').innerHTML = catalog.map(p => `
@@ -1995,27 +1469,52 @@
     if (!activeModalJob) return;
     const cfg = SERVICE_CONFIG[activeModalJob.service_type] || SERVICE_CONFIG.electrician;
     const isRevisit = activeModalJob.payment_status === 'warranty_revisit';
-    const baseAmount = isRevisit ? 0 : cfg.total;
-    let extraOnSiteCost = 0;
-    document.querySelectorAll('.modal-addon-cb:checked').forEach(cb => {
-      const pInput = cb.closest('.addon-item').querySelector('.modal-addon-price-input');
-      extraOnSiteCost += parseFloat(pInput ? pInput.value : 0) || 0;
-    });
-    const parts = getPartsBreakdown(), overtime = calculateOvertime(activeModalJob);
+
+    let customerSelectedItems = [];
+    try {
+      customerSelectedItems = JSON.parse(activeModalJob.selected_services_json || '[]');
+    } catch(e) {}
+
+    const inspectionFee = isRevisit ? 0 :
+      (activeModalJob.service_type === 'electrician'
+        ? (Number(activeModalJob.inspection_fee) || ELECTRICAL_MIN_INSPECTION_FEE)
+        : (Number(activeModalJob.base_fee) || Number(cfg.total) || 0));
+
+    const customerServicesTotal = activeModalJob.service_type === 'electrician'
+      ? (Number(activeModalJob.selected_services_total) ||
+         customerSelectedItems.reduce((s, x) => s + ((Number(x.qty) || 0) * (Number(x.unitPrice) || 0)), 0))
+      : 0;
+
+    const select = document.getElementById('modalAdditionalServiceSelect');
+    const additionalService = ELECTRICAL_SERVICES.find(s => s.id === select?.value);
+    const extraOnSiteCost = additionalService ? additionalService.price : 0;
+
+    const summary = document.getElementById('modalAdditionalServiceSummary');
+    if (summary) {
+      summary.textContent = additionalService
+        ? `Additional: ${additionalService.name} — ₹${additionalService.price.toFixed(2)} (GST included)`
+        : '';
+    }
+
+    const parts = getPartsBreakdown();
     const advanceDeduction = isRevisit ? 0 : 21.00;
-    const grandTotal = baseAmount + extraOnSiteCost + parts.total + overtime.charge;
+    const grandTotal = inspectionFee + customerServicesTotal + extraOnSiteCost + parts.total;
     const netDue = Math.max(0, grandTotal - advanceDeduction);
 
-    document.getElementById('modalBaseDisp').textContent = `₹${baseAmount.toFixed(2)}`;
-    document.getElementById('modalExtraWorkDisp').textContent = `+₹${extraOnSiteCost.toFixed(2)}`;
-    document.getElementById('modalMaterialsDisp').textContent = `+₹${parts.total.toFixed(2)}`;
-    if (overtime.charge > 0) {
-      document.getElementById('modalOvertimeRow').style.display = 'flex';
-      document.getElementById('modalOvertimeLabel').textContent = `Overtime (${overtime.hours} hr @ ₹100/hr):`;
-      document.getElementById('modalOvertimeDisp').textContent = `+₹${overtime.charge.toFixed(2)}`;
-    } else { document.getElementById('modalOvertimeRow').style.display = 'none'; }
-    document.getElementById('modalFinalNetDue').textContent = `₹${netDue.toFixed(2)}`;
+    const baseEl = document.getElementById('modalBaseDisp');
+    const extraEl = document.getElementById('modalExtraWorkDisp');
+    const materialEl = document.getElementById('modalMaterialsDisp');
+    const finalEl = document.getElementById('modalFinalNetDue');
+
+    if (baseEl) baseEl.textContent = `₹${inspectionFee.toFixed(2)}`;
+    if (extraEl) extraEl.textContent = `+₹${extraOnSiteCost.toFixed(2)}`;
+    if (materialEl) materialEl.textContent = `+₹${parts.total.toFixed(2)}`;
+
+    const overtimeRow = document.getElementById('modalOvertimeRow');
+    if (overtimeRow) overtimeRow.style.display = 'none';
+    if (finalEl) finalEl.textContent = `₹${netDue.toFixed(2)}`;
   }
+
 
   function openTechnicianCollectionQr() {
     if (!activeModalJob) return;
@@ -2044,39 +1543,39 @@
          customerSelectedItems.reduce((s, x) => s + ((Number(x.qty) || 0) * (Number(x.unitPrice) || 0)), 0))
       : 0;
 
-    let extraNames = [];
-    let extraOnSiteCost = 0;
-    document.querySelectorAll('.modal-addon-cb:checked').forEach(cb => {
-      const val = parseFloat(cb.closest('.addon-item').querySelector('.modal-addon-price-input')?.value || 0) || 0;
-      extraOnSiteCost += val;
-      extraNames.push(`${cb.getAttribute('data-name')} (₹${val.toFixed(2)})`);
-    });
+    const additionalSelect = document.getElementById('modalAdditionalServiceSelect');
+    const additionalService = ELECTRICAL_SERVICES.find(s => s.id === additionalSelect?.value);
+    const extraOnSiteCost = additionalService ? additionalService.price : 0;
 
-    const overtime = calculateOvertime(activeModalJob);
     const advanceDeduction = isRevisit ? 0 : 21.00;
-
-    const grossTotal = inspectionFee + customerServicesTotal + extraOnSiteCost + parts.total + overtime.charge;
+    const grossTotal = inspectionFee + customerServicesTotal + extraOnSiteCost + parts.total;
     const netDue = Math.max(0, grossTotal - advanceDeduction);
 
     const customerServicesSummary = customerSelectedItems
       .map(x => `${x.name} x${x.qty} (₹${(Number(x.qty) * Number(x.unitPrice)).toFixed(2)})`)
       .join(', ') || 'None';
 
+    const additionalServiceSummary = additionalService
+      ? `${additionalService.name} x1 (₹${additionalService.price.toFixed(2)})`
+      : 'None';
+
     const partsSummary = parts.lineItems.map(p => `${p.name} x${p.qty}`).join(', ') || 'None';
 
     const fullDesc =
       `${cfg.title} | Inspection ₹${inspectionFee.toFixed(2)} | Customer Services: ${customerServicesSummary}` +
-      ` | Additional On-Site Services: ${extraNames.join(', ') || 'None'} | Spares: ${partsSummary}`;
+      ` | Additional On-Site Service: ${additionalServiceSummary} | Spares: ${partsSummary}`;
 
     pendingTechCalculatedPayload = {
       job_status: 'paid_completed',
       payment_status: 'settled_full',
       extra_services: fullDesc,
+      additional_on_site_service: additionalService ? additionalService.name : '',
+      additional_on_site_service_price: extraOnSiteCost,
       extra_on_site_cost: extraOnSiteCost,
       extra_material_cost: parts.total,
       spare_parts_json: JSON.stringify(parts.lineItems),
-      overtime_hours: overtime.hours,
-      overtime_charge: overtime.charge,
+      overtime_hours: 0,
+      overtime_charge: 0,
       calculated_total: netDue,
       end_time: new Date().toISOString()
     };
@@ -2086,6 +1585,7 @@
     document.getElementById('techOnsiteQrAmount').textContent = `₹${netDue.toFixed(2)}`;
     document.getElementById('techPaymentQrModal').style.display = 'flex';
   }
+
 
   function closeTechPaymentQrModal() { document.getElementById('techPaymentQrModal').style.display = 'none'; }
 
