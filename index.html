@@ -350,7 +350,7 @@
                 <div style="font-size:10.5px; color:#d97706; font-weight:800; margin-top:2px;">🔌 Line &amp; Wire Fitting • 💡 Bulb &amp; Fan Repair</div>
               </div>
             </div>
-            <div class="category-price-badge"><b>₹299 Base</b><p style="font-size:11px; color:#64748b; font-weight:600;">(incl. 18% GST)</p></div>
+            <div class="category-price-badge"><b>₹121 Base</b><p style="font-size:11px; color:#64748b; font-weight:600;">(Inspection Fee)</p></div>
           </div>
 
           <!-- 2. AC REPAIR (AC + Flowing Air Visuals) -->
@@ -381,7 +381,7 @@
 
         </div>
 
-        <!-- 1. GENERAL BOOKING, CANCELLATION & BILLING POLICY (HOMEPAGE) -->
+        <!-- 1. GENERAL BOOKING, CANCELLATION & BILLING POLICY (MAIN INTERFACE) -->
         <div class="terms-box" style="margin-top:16px;">
           <h4 style="color:#92400e; font-size:13.5px; margin-bottom:8px; font-weight:900;">📋 1. Booking, Cancellation &amp; Billing Policy</h4>
           • <b>Advance Booking Fee:</b> A non-refundable advance fee of <b>₹21.00</b> is charged at the time of booking.<br>
@@ -435,11 +435,19 @@
           <h3 class="section-title-blue" id="bookCatName" style="font-size:17px;">Service Booking</h3>
           <p id="bookBaseScopeDesc" style="font-size:12px; color:#475569; margin-top:4px; line-height:1.45; font-weight:600;">-</p>
         </div>
+
+        <!-- MANDATORY SERVICE CHECKLIST -->
+        <div class="card" style="border-left:5px solid var(--primary-red);">
+          <label style="font-size:13px; font-weight:900; color:var(--title-blue); margin-bottom:6px; display:block;">Select Required Works (Mandatory Checklist):</label>
+          <p style="font-size:11px; color:#64748b; margin-bottom:8px; font-weight:600;">Please select at least one service item to proceed:</p>
+          <div id="bookingServicesChecklist" style="max-height:220px; overflow-y:auto; border:1.5px solid #cbd5e1; border-radius:8px; padding:6px 10px;"></div>
+        </div>
+
         <div class="card">
-          <div class="price-row"><span>Base Service Pack (incl. GST)</span><span id="priceBaseVal">₹299.00</span></div>
-          <div class="price-row" style="font-weight:800; border-top:1px dashed #cbd5e1; margin-top:4px; padding-top:4px;"><span>Estimated Total Work Amount</span><span id="priceTotalIncGst">₹299.00</span></div>
+          <div class="price-row"><span>Estimated Service Amount</span><span id="priceBaseVal">₹121.00</span></div>
+          <div class="price-row" style="font-weight:800; border-top:1px dashed #cbd5e1; margin-top:4px; padding-top:4px;"><span>Estimated Total Amount</span><span id="priceTotalIncGst">₹121.00</span></div>
           <div class="price-row" style="color:var(--primary-red); font-weight:800;"><span>Advance Booking Token</span><span>- ₹21.00</span></div>
-          <div class="price-row total"><span>Due Amount After Token</span><span id="priceTotalDueVal">₹278.00</span></div>
+          <div class="price-row total"><span>Due Amount After Token</span><span id="priceTotalDueVal">₹100.00</span></div>
           <p style="font-size:11.5px; color:#991b1b; font-weight:900; margin-top:8px; background:#fff1f2; padding:8px 10px; border-radius:8px; border:1px solid #fecdd3;">⚠️ <b>CANCELLATION POLICY:</b> The ₹21.00 advance booking token is strictly <b>NON-REFUNDABLE</b> once booked.</p>
         </div>
         <label style="font-size:12px; font-weight:800; color:var(--title-blue); margin-bottom:4px; display:block;">Service Address:</label>
@@ -460,7 +468,7 @@
           <label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer;">
             <input type="checkbox" id="bookingTermsCheckbox" style="width:20px; height:20px; margin-top:2px;">
             <span id="bookingTermsText">
-              <!-- Dynamically populated based on chosen trade -->
+              <!-- Dynamically populated based on trade selected -->
             </span>
           </label>
         </div>
@@ -718,15 +726,49 @@
   const FREE_HOURS_BEFORE_OVERTIME = 3;
 
   const SERVICE_CONFIG = {
-    electrician: { title: 'Electrical Services', base: 253.39, gst: 45.61, total: 299.00, sac: '998719', scope: '✅ <b>Base Scope:</b> Technician Visit + 1 Fan/Board Repair OR 2 Switch Replacements' },
-    plumber: { title: 'Plumbing Works', base: 253.39, gst: 45.61, total: 299.00, sac: '998722', scope: '✅ <b>Base Scope:</b> Plumber Visit + 1 Tap/Valve Leakage Repair OR Drain Unclogging' },
-    ac: { title: 'AC Repair & Service', base: 338.14, gst: 60.86, total: 399.00, sac: '998715', scope: '✅ <b>Base Scope:</b> High-Pressure Jet Pump Service for 1 Split/Window AC' }
+    electrician: { title: 'Electrical Services', base: 102.54, gst: 18.46, total: 121.00, sac: '998719', scope: '✅ <b>Scope:</b> Visiting &amp; Minimum Inspection / Diagnostic Check' },
+    plumber: { title: 'Plumbing Works', base: 253.39, gst: 45.61, total: 299.00, sac: '998722', scope: '✅ <b>Scope:</b> Plumber Visit + 1 Tap/Valve Leakage Repair OR Drain Unclogging' },
+    ac: { title: 'AC Repair & Service', base: 338.14, gst: 60.86, total: 399.00, sac: '998715', scope: '✅ <b>Scope:</b> High-Pressure Jet Pump Service for 1 Split/Window AC' }
+  };
+
+  const SERVICE_RATE_LISTS = {
+    electrician: [
+      { name: 'Visiting / Minimum Inspection Fee', price: 121, unit: 'visit' },
+      { name: 'Switch / Socket Replacement', price: 49, unit: 'per piece' },
+      { name: 'Ceiling / Wall / Exhaust Fan Installation', price: 199, unit: 'per fan' },
+      { name: 'Light Fitting (LED / Tube light / Holder)', price: 99, unit: 'per light' },
+      { name: 'Chandelier (Jhoomar) Installation', price: 499, unit: 'unit' },
+      { name: 'MCB Replacement', price: 75, unit: 'per unit' },
+      { name: 'Inverter & Battery Complete Setup', price: 449, unit: 'setup' },
+      { name: 'Geyser Electrical Fitting', price: 299, unit: 'fitting' },
+      { name: 'Water Motor / Starter Wiring', price: 349, unit: 'job' },
+      { name: 'New Point Wiring (Light / Fan)', price: 199, unit: 'per point' },
+      { name: 'Power Point Wiring (16A / AC / Geyser)', price: 299, unit: 'per point' },
+      { name: 'Fault Finding / Short Circuit Checking', price: 299, unit: 'inspection' },
+      { name: 'Pure Ghar Ka Wiring', price: 18, unit: 'per sq. ft' },
+      { name: 'Others (Custom Electrical Work)', price: 0, unit: 'quoted on-site' }
+    ],
+    plumber: [
+      { name: 'Tap / Valve Replacement', price: 99, unit: 'per tap' },
+      { name: 'Jet Spray Installation', price: 149, unit: 'per piece' },
+      { name: 'Waste Pipe Replacement', price: 99, unit: 'per pipe' },
+      { name: 'Flush Tank Kit Repair', price: 199, unit: 'per tank' },
+      { name: 'Water Motor Pump Installation', price: 399, unit: 'per pump' },
+      { name: 'Others (Custom Plumbing Work)', price: 0, unit: 'quoted on-site' }
+    ],
+    ac: [
+      { name: 'AC High-Pressure Jet Service', price: 399, unit: 'per AC' },
+      { name: 'Full Refrigerant Gas Charging', price: 1699, unit: 'per unit' },
+      { name: 'AC Un-installation', price: 499, unit: 'per AC' },
+      { name: 'Complete New AC Installation', price: 1199, unit: 'per AC' },
+      { name: 'Others (Custom AC Work)', price: 0, unit: 'quoted on-site' }
+    ]
   };
 
   const TRADE_SERVICES_CATALOG = {
-    electrician: ['Ceiling / Exhaust Fan Installation','Switch / Socket Replacement','Fan Regulator Replacement','LED Light / Batten Fitting','Switchboard Repair / Fitting','New Point Wiring Line','Power Point Wiring (16A/25A)','MCB / Isolator Replacement','Short Circuit / Fault Diagnosis','Other Electrical Service'],
-    plumber: ['Tap / Valve Replacement','Jet Spray Installation','Waste Pipe Replacement','Flush Tank Kit Repair','New Flush Tank Installation','New Water Point Creation','Main Sewer Blockage Clearing','Water Tank Cleaning','Water Motor Pump Installation','Other Plumbing Work'],
-    ac: ['Additional AC Jet Service','Water Leakage Repair','Capacitor Replacement','Full Refrigerant Gas Charging','New Copper Piping / Drain Point','AC Un-installation (Dismantling)','Complete New AC Installation','PCB Repair / Electrical Checkup','Other AC Service']
+    electrician: ['Visiting / Minimum Inspection Fee','Switch / Socket Replacement','Ceiling / Wall / Exhaust Fan Installation','Light Fitting (LED / Tube light / Holder)','Chandelier (Jhoomar) Installation','MCB Replacement','Inverter & Battery Complete Setup','Geyser Electrical Fitting','Water Motor / Starter Wiring','New Point Wiring (Light / Fan)','Power Point Wiring (16A / AC / Geyser)','Fault Finding / Short Circuit Checking','Pure Ghar Ka Wiring (₹18/sq.ft)','Others (Custom Electrical Work)'],
+    plumber: ['Tap / Valve Replacement','Jet Spray Installation','Waste Pipe Replacement','Flush Tank Kit Repair','Water Motor Pump Installation','Others (Custom Plumbing Work)'],
+    ac: ['AC High-Pressure Jet Service','Full Refrigerant Gas Charging','AC Un-installation','Complete New AC Installation','Others (Custom AC Work)']
   };
 
   const SPARE_PARTS_CATALOG = {
@@ -735,7 +777,6 @@
     plumber: [{ name: 'PVC Pipe (per meter)', code: 'HSN 3917', rate: 60.00 },{ name: 'Bib Tap', code: 'HSN 8481', rate: 120.00 },{ name: 'Angle Valve', code: 'HSN 8481', rate: 90.00 }]
   };
 
-  // Trade-Wise Specific Terms Configuration (Points 2, 3 & 4)
   const CATEGORY_TERMS_CONFIG = {
     electrician: `
       <b>TERMS &amp; CONDITIONS (2. Electrical Services):</b><br>
@@ -764,7 +805,6 @@
     `
   };
 
-  // Browser-level persistent customer session
   let currentUser = null;
   const savedCustomer = localStorage.getItem('bm_active_customer');
   if (savedCustomer) { 
@@ -1115,6 +1155,22 @@
   }
 
   // ==================== BOOKING & ADVANCE PAYMENT ====================
+  function recalculateCustomerBookingTotal() {
+    const list = SERVICE_RATE_LISTS[currentCategory] || [];
+    let sum = 0;
+    const checkedBoxes = document.querySelectorAll('.cust-book-service-cb:checked');
+    checkedBoxes.forEach(cb => {
+      const p = parseFloat(cb.getAttribute('data-price')) || 0;
+      sum += p;
+    });
+
+    const finalAmount = sum > 0 ? sum : (SERVICE_CONFIG[currentCategory]?.total || 121);
+    const due = Math.max(0, finalAmount - 21);
+    document.getElementById('priceBaseVal').textContent = `₹${finalAmount.toFixed(2)}`;
+    document.getElementById('priceTotalIncGst').textContent = `₹${finalAmount.toFixed(2)}`;
+    document.getElementById('priceTotalDueVal').textContent = `₹${due.toFixed(2)}`;
+  }
+
   function selectCategoryBooking(catKey) {
     if (!currentUser) { alert("Please Log In or Register to book services."); navigateTo('auth'); return; }
     currentCategory = catKey;
@@ -1124,10 +1180,21 @@
     document.getElementById('custPhoneInput').value = currentUser.phone;
     document.getElementById('custAddressInput').value = currentUser.address || "";
     document.getElementById('bookingTermsCheckbox').checked = false;
-    document.getElementById('priceBaseVal').textContent = `₹${cfg.total.toFixed(2)}`;
-    document.getElementById('priceTotalIncGst').textContent = `₹${cfg.total.toFixed(2)}`;
-    document.getElementById('priceTotalDueVal').textContent = `₹${(cfg.total - 21).toFixed(2)}`;
-    
+
+    // Render Checklist with Prices & Others
+    const services = SERVICE_RATE_LISTS[catKey] || [];
+    const checklistContainer = document.getElementById('bookingServicesChecklist');
+    checklistContainer.innerHTML = services.map((s, idx) => `
+      <div class="addon-item">
+        <label>
+          <input type="checkbox" class="cust-book-service-cb" data-name="${s.name}" data-price="${s.price}" onchange="recalculateCustomerBookingTotal()">
+          <span>${s.name} ${s.price > 0 ? '<b style="color:var(--primary-red);">(₹' + s.price + ' ' + s.unit + ')</b>' : '<b style="color:var(--title-blue);">(Quoted on-site)</b>'}</span>
+        </label>
+      </div>
+    `).join('');
+
+    recalculateCustomerBookingTotal();
+
     // Auto populate category specific terms
     document.getElementById('bookingTermsText').innerHTML = CATEGORY_TERMS_CONFIG[catKey] || CATEGORY_TERMS_CONFIG.electrician;
     
@@ -1158,9 +1225,17 @@
     const phone = currentUser ? currentUser.phone : document.getElementById('custPhoneInput').value.trim();
     const termsAccepted = document.getElementById('bookingTermsCheckbox').checked;
 
+    // Check if at least one service checkbox is selected
+    const selectedServiceNodes = document.querySelectorAll('.cust-book-service-cb:checked');
+    if (selectedServiceNodes.length === 0) {
+      alert("Please select at least one required service/work from the checklist before proceeding!");
+      return;
+    }
+
     if (!address) { alert("Please enter or pin your service address."); return; }
     if (!termsAccepted) { alert("Mandatory: Please accept the Terms & Conditions to proceed."); return; }
 
+    const selectedServiceNames = Array.from(selectedServiceNodes).map(cb => cb.getAttribute('data-name')).join(', ');
     const invoiceNo = 'BM-' + Date.now().toString().slice(-6);
     const startPin = Math.floor(1000 + Math.random() * 9000).toString();
     const stopPin = Math.floor(1000 + Math.random() * 9000).toString();
@@ -1171,7 +1246,7 @@
       customer_phone: phone,
       customer_address: address,
       service_type: currentCategory,
-      extra_services: 'Standard Base Scope',
+      extra_services: selectedServiceNames,
       extra_parts_cost: 0,
       start_pin: startPin,
       stop_pin: stopPin,
@@ -1192,7 +1267,7 @@
     localPool.unshift({ ...newBooking, id: insertedId || newBooking.invoice_no });
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
 
-    pendingAdvanceState = { customerName: currentUser.name || "Customer", phone, address, category: currentCategory, addonsList: 'Standard Base Scope', addonsTotal: 0, startPin, stopPin, invoiceNo };
+    pendingAdvanceState = { customerName: currentUser.name || "Customer", phone, address, category: currentCategory, addonsList: selectedServiceNames, addonsTotal: 0, startPin, stopPin, invoiceNo };
 
     const cashfreeSuccess = await openCashfreeCheckout('ADV-' + invoiceNo, 21.00, phone, currentUser.name, currentUser.email);
     if (!cashfreeSuccess) {
