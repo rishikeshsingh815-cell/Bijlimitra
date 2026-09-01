@@ -544,7 +544,7 @@
       </div>
     </div>
 
-    <!-- 9. ADMIN DASHBOARD SCREEN (Includes Technician Password Reset Option) -->
+    <!-- 9. ADMIN DASHBOARD SCREEN -->
     <div id="screen-admin" class="screen">
       <div class="desktop-inner">
         <div id="adminGlobalDashboard">
@@ -577,7 +577,6 @@
             <button class="btn secondary" onclick="registerTechnician()">Save Technician &amp; Hash 6-Digit PIN</button>
           </div>
 
-          <!-- NEW: ADMIN PASSWORD RESET FOR TECHNICIAN -->
           <div class="card" style="border-top:4px solid var(--warning);">
             <h3 class="section-title-blue" style="color:var(--warning);">🔑 Reset Technician Password / PIN</h3>
             <p style="font-size:11.5px; color:#475569; margin-bottom:8px; font-weight:600;">Update login access PIN for any registered technician code:</p>
@@ -1175,7 +1174,6 @@
     } catch(e) { msg.textContent = "Login Error: " + e.message; msg.style.color = "#c0392b"; }
   }
 
-  // NEW ADMIN FUNCTION: RESET TECHNICIAN PASSWORD / PIN
   async function adminResetTechPassword() {
     const techCode = document.getElementById('resetTechCode').value.trim().toUpperCase();
     const newPin = document.getElementById('resetTechNewPin').value.trim();
