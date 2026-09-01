@@ -440,7 +440,9 @@
         <div class="card" style="border-left:5px solid var(--primary-red);">
           <label style="font-size:13px; font-weight:900; color:var(--title-blue); margin-bottom:6px; display:block;">Select Required Works (Mandatory Checklist):</label>
           <p style="font-size:11px; color:#64748b; margin-bottom:8px; font-weight:600;">Please select at least one service item to proceed:</p>
-          <div id="bookingServicesChecklist" style="max-height:220px; overflow-y:auto; border:1.5px solid #cbd5e1; border-radius:8px; padding:6px 10px;"></div>
+          <div id="bookingServicesChecklist" style="max-height:220px; overflow-y:auto; border:1.5px solid #cbd5e1; border-radius:8px; padding:6px 10px; background:#fff;">
+            <!-- Dynamically populated via JS renderChecklist() -->
+          </div>
         </div>
 
         <div class="card">
@@ -745,10 +747,11 @@
       { name: 'New Point Wiring (Light / Fan)', price: 199, unit: 'per point' },
       { name: 'Power Point Wiring (16A / AC / Geyser)', price: 299, unit: 'per point' },
       { name: 'Fault Finding / Short Circuit Checking', price: 299, unit: 'inspection' },
-      { name: 'Pure Ghar Ka Wiring', price: 18, unit: 'per sq. ft' },
+      { name: 'Pure Ghar Ka Wiring (per sq. ft)', price: 18, unit: 'sq. ft' },
       { name: 'Others (Custom Electrical Work)', price: 0, unit: 'quoted on-site' }
     ],
     plumber: [
+      { name: 'Visiting / Minimum Inspection Fee', price: 121, unit: 'visit' },
       { name: 'Tap / Valve Replacement', price: 99, unit: 'per tap' },
       { name: 'Jet Spray Installation', price: 149, unit: 'per piece' },
       { name: 'Waste Pipe Replacement', price: 99, unit: 'per pipe' },
@@ -757,6 +760,7 @@
       { name: 'Others (Custom Plumbing Work)', price: 0, unit: 'quoted on-site' }
     ],
     ac: [
+      { name: 'Visiting / Minimum Inspection Fee', price: 121, unit: 'visit' },
       { name: 'AC High-Pressure Jet Service', price: 399, unit: 'per AC' },
       { name: 'Full Refrigerant Gas Charging', price: 1699, unit: 'per unit' },
       { name: 'AC Un-installation', price: 499, unit: 'per AC' },
@@ -767,8 +771,8 @@
 
   const TRADE_SERVICES_CATALOG = {
     electrician: ['Visiting / Minimum Inspection Fee','Switch / Socket Replacement','Ceiling / Wall / Exhaust Fan Installation','Light Fitting (LED / Tube light / Holder)','Chandelier (Jhoomar) Installation','MCB Replacement','Inverter & Battery Complete Setup','Geyser Electrical Fitting','Water Motor / Starter Wiring','New Point Wiring (Light / Fan)','Power Point Wiring (16A / AC / Geyser)','Fault Finding / Short Circuit Checking','Pure Ghar Ka Wiring (₹18/sq.ft)','Others (Custom Electrical Work)'],
-    plumber: ['Tap / Valve Replacement','Jet Spray Installation','Waste Pipe Replacement','Flush Tank Kit Repair','Water Motor Pump Installation','Others (Custom Plumbing Work)'],
-    ac: ['AC High-Pressure Jet Service','Full Refrigerant Gas Charging','AC Un-installation','Complete New AC Installation','Others (Custom AC Work)']
+    plumber: ['Visiting / Minimum Inspection Fee','Tap / Valve Replacement','Jet Spray Installation','Waste Pipe Replacement','Flush Tank Kit Repair','Water Motor Pump Installation','Others (Custom Plumbing Work)'],
+    ac: ['Visiting / Minimum Inspection Fee','AC High-Pressure Jet Service','Full Refrigerant Gas Charging','AC Un-installation','Complete New AC Installation','Others (Custom AC Work)']
   };
 
   const SPARE_PARTS_CATALOG = {
@@ -1155,20 +1159,69 @@
   }
 
   // ==================== BOOKING & ADVANCE PAYMENT ====================
+  function renderChecklist(catKey) {
+    const services = SERVICE_RATE_LISTS[catKey] || [];
+    const container = document.getElementById('bookingServicesChecklist');
+    container.innerHTML = services.map((s, idx) => {
+      const isMandatory = s.name.includes('Visiting');
+      return `
+        <div class="addon-item" style="flex-wrap: wrap; gap:8px;">
+          <label style="flex:1; display:flex; align-items:center; gap:8px;">
+            <input type="checkbox"
+                   class="cust-book-service-cb"
+                   id="cb_${catKey}_${idx}"
+                   data-price="${s.price}"
+                   data-name="${s.name}"
+                   ${isMandatory ? 'checked disabled' : ''}
+                   onchange="toggleQtyUI('${catKey}_${idx}', ${isMandatory}); recalculateCustomerBookingTotal()">
+            <span style="font-size:12.5px;">${s.name} ${s.price > 0 ? '<b style="color:var(--primary-red);">(₹' + s.price + ' ' + s.unit + ')</b>' : '<b style="color:var(--title-blue);">(Quoted on-site)</b>'}</span>
+          </label>
+          ${!isMandatory && s.price > 0 ? `
+            <div id="qty_ui_${catKey}_${idx}" style="display:none; align-items:center; gap:8px;">
+              <button type="button" style="width:24px; height:24px; border:1px solid #cbd5e1; background:#f1f5f9; border-radius:4px; font-weight:bold; cursor:pointer;" onclick="changeQty('${catKey}_${idx}', -1)">-</button>
+              <span id="qty_val_${catKey}_${idx}" style="font-weight:900; font-size:13px; width:16px; text-align:center;">1</span>
+              <button type="button" style="width:24px; height:24px; border:1px solid #cbd5e1; background:#f1f5f9; border-radius:4px; font-weight:bold; cursor:pointer;" onclick="changeQty('${catKey}_${idx}', 1)">+</button>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }).join('');
+    recalculateCustomerBookingTotal();
+  }
+
+  window.toggleQtyUI = function(id, isMandatory) {
+    const ui = document.getElementById('qty_ui_' + id);
+    const cb = document.getElementById('cb_' + id);
+    if(ui) {
+      ui.style.display = cb.checked ? 'flex' : 'none';
+      if(!cb.checked) document.getElementById('qty_val_' + id).innerText = '1';
+    }
+  };
+
+  window.changeQty = function(id, delta) {
+    const span = document.getElementById('qty_val_' + id);
+    let val = parseInt(span.innerText) || 1;
+    val += delta;
+    if (val < 1) val = 1;
+    span.innerText = val;
+    recalculateCustomerBookingTotal();
+  };
+
   function recalculateCustomerBookingTotal() {
-    const list = SERVICE_RATE_LISTS[currentCategory] || [];
-    let sum = 0;
     const checkedBoxes = document.querySelectorAll('.cust-book-service-cb:checked');
+    let sum = 0;
     checkedBoxes.forEach(cb => {
       const p = parseFloat(cb.getAttribute('data-price')) || 0;
-      sum += p;
+      const id = cb.id.replace('cb_', '');
+      const qtySpan = document.getElementById('qty_val_' + id);
+      const qty = qtySpan ? (parseInt(qtySpan.innerText) || 1) : 1;
+      sum += (p * qty);
     });
 
-    const finalAmount = sum > 0 ? sum : (SERVICE_CONFIG[currentCategory]?.total || 121);
-    const due = Math.max(0, finalAmount - 21);
-    document.getElementById('priceBaseVal').textContent = `₹${finalAmount.toFixed(2)}`;
-    document.getElementById('priceTotalIncGst').textContent = `₹${finalAmount.toFixed(2)}`;
-    document.getElementById('priceTotalDueVal').textContent = `₹${due.toFixed(2)}`;
+    const due = Math.max(0, sum - 21);
+    document.getElementById('priceBaseVal').textContent = '₹' + sum.toFixed(2);
+    document.getElementById('priceTotalIncGst').textContent = '₹' + sum.toFixed(2);
+    document.getElementById('priceTotalDueVal').textContent = '₹' + due.toFixed(2);
   }
 
   function selectCategoryBooking(catKey) {
@@ -1181,19 +1234,8 @@
     document.getElementById('custAddressInput').value = currentUser.address || "";
     document.getElementById('bookingTermsCheckbox').checked = false;
 
-    // Render Checklist with Prices & Others
-    const services = SERVICE_RATE_LISTS[catKey] || [];
-    const checklistContainer = document.getElementById('bookingServicesChecklist');
-    checklistContainer.innerHTML = services.map((s, idx) => `
-      <div class="addon-item">
-        <label>
-          <input type="checkbox" class="cust-book-service-cb" data-name="${s.name}" data-price="${s.price}" onchange="recalculateCustomerBookingTotal()">
-          <span>${s.name} ${s.price > 0 ? '<b style="color:var(--primary-red);">(₹' + s.price + ' ' + s.unit + ')</b>' : '<b style="color:var(--title-blue);">(Quoted on-site)</b>'}</span>
-        </label>
-      </div>
-    `).join('');
-
-    recalculateCustomerBookingTotal();
+    // Render Dynamic Checklist
+    renderChecklist(catKey);
 
     // Auto populate category specific terms
     document.getElementById('bookingTermsText').innerHTML = CATEGORY_TERMS_CONFIG[catKey] || CATEGORY_TERMS_CONFIG.electrician;
@@ -1225,34 +1267,56 @@
     const phone = currentUser ? currentUser.phone : document.getElementById('custPhoneInput').value.trim();
     const termsAccepted = document.getElementById('bookingTermsCheckbox').checked;
 
-    // Check if at least one service checkbox is selected
     const selectedServiceNodes = document.querySelectorAll('.cust-book-service-cb:checked');
-    if (selectedServiceNodes.length === 0) {
-      alert("Please select at least one required service/work from the checklist before proceeding!");
+    
+    // Check if anything besides "Visiting Fee" is selected
+    let hasActualWork = false;
+    selectedServiceNodes.forEach(cb => {
+      const name = cb.getAttribute('data-name');
+      if (!name.includes('Visiting')) {
+        hasActualWork = true;
+      }
+    });
+
+    if (!hasActualWork) {
+      alert("Please select at least one actual service/work (or 'Others') from the checklist to proceed!");
       return;
     }
 
     if (!address) { alert("Please enter or pin your service address."); return; }
     if (!termsAccepted) { alert("Mandatory: Please accept the Terms & Conditions to proceed."); return; }
 
-    const selectedServiceNames = Array.from(selectedServiceNodes).map(cb => cb.getAttribute('data-name')).join(', ');
+    let selectedServiceNames = [];
+    let totalEstimated = 0;
+    
+    selectedServiceNodes.forEach(cb => {
+      const name = cb.getAttribute('data-name');
+      const p = parseFloat(cb.getAttribute('data-price')) || 0;
+      const id = cb.id.replace('cb_', '');
+      const qtySpan = document.getElementById('qty_val_' + id);
+      const qty = qtySpan ? (parseInt(qtySpan.innerText) || 1) : 1;
+      
+      selectedServiceNames.push(qty > 1 ? `${name} (x${qty})` : name);
+      totalEstimated += (p * qty);
+    });
+
+    const combinedServiceString = selectedServiceNames.join(', ');
     const invoiceNo = 'BM-' + Date.now().toString().slice(-6);
     const startPin = Math.floor(1000 + Math.random() * 9000).toString();
     const stopPin = Math.floor(1000 + Math.random() * 9000).toString();
-    const cfg = SERVICE_CONFIG[currentCategory];
 
     const newBooking = {
       customer_name: currentUser.name || "Customer",
       customer_phone: phone,
       customer_address: address,
       service_type: currentCategory,
-      extra_services: selectedServiceNames,
+      extra_services: combinedServiceString,
       extra_parts_cost: 0,
       start_pin: startPin,
       stop_pin: stopPin,
       job_status: 'pending_acceptance',
       technician_name: null,
-      base_fee: cfg.base,
+      base_fee: totalEstimated,
       invoice_no: invoiceNo,
       payment_status: 'advance_received'
     };
@@ -1267,7 +1331,7 @@
     localPool.unshift({ ...newBooking, id: insertedId || newBooking.invoice_no });
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
 
-    pendingAdvanceState = { customerName: currentUser.name || "Customer", phone, address, category: currentCategory, addonsList: selectedServiceNames, addonsTotal: 0, startPin, stopPin, invoiceNo };
+    pendingAdvanceState = { customerName: currentUser.name || "Customer", phone, address, category: currentCategory, addonsList: combinedServiceString, addonsTotal: 0, startPin, stopPin, invoiceNo };
 
     const cashfreeSuccess = await openCashfreeCheckout('ADV-' + invoiceNo, 21.00, phone, currentUser.name, currentUser.email);
     if (!cashfreeSuccess) {
