@@ -363,7 +363,7 @@
                 <div style="font-size:10.5px; color:#0284c7; font-weight:800; margin-top:2px;">💨 Deep Jet Wash • 🌬️ Chilled Air Cooling</div>
               </div>
             </div>
-            <div class="category-price-badge"><b>₹399 Base</b><p style="font-size:11px; color:#64748b; font-weight:600;">(incl. 18% GST)</p></div>
+            <div class="category-price-badge"><b>₹199 Base</b><p style="font-size:11px; color:#64748b; font-weight:600;">(Inspection Fee)</p></div>
           </div>
 
           <!-- 3. PLUMBING (Pipe + Valve + Socket Visuals) -->
@@ -376,7 +376,7 @@
                 <div style="font-size:10.5px; color:#16a34a; font-weight:800; margin-top:2px;">🚰 Pipe &amp; Valve Fittings • 🚿 Socket &amp; Tank Care</div>
               </div>
             </div>
-            <div class="category-price-badge"><b>₹299 Base</b><p style="font-size:11px; color:#64748b; font-weight:600;">(incl. 18% GST)</p></div>
+            <div class="category-price-badge"><b>₹121 Base</b><p style="font-size:11px; color:#64748b; font-weight:600;">(Inspection Fee)</p></div>
           </div>
 
         </div>
@@ -729,8 +729,8 @@
 
   const SERVICE_CONFIG = {
     electrician: { title: 'Electrical Services', base: 102.54, gst: 18.46, total: 121.00, sac: '998719', scope: '✅ <b>Scope:</b> Visiting &amp; Minimum Inspection / Diagnostic Check' },
-    plumber: { title: 'Plumbing Works', base: 253.39, gst: 45.61, total: 299.00, sac: '998722', scope: '✅ <b>Scope:</b> Plumber Visit + 1 Tap/Valve Leakage Repair OR Drain Unclogging' },
-    ac: { title: 'AC Repair & Service', base: 338.14, gst: 60.86, total: 399.00, sac: '998715', scope: '✅ <b>Scope:</b> High-Pressure Jet Pump Service for 1 Split/Window AC' }
+    plumber: { title: 'Plumbing Works', base: 102.54, gst: 18.46, total: 121.00, sac: '998722', scope: '✅ <b>Scope:</b> Visiting &amp; Minimum Inspection / Diagnostic Check' },
+    ac: { title: 'AC Repair & Service', base: 168.64, gst: 30.36, total: 199.00, sac: '998715', scope: '✅ <b>Scope:</b> Visiting / Inspection Charge (If no repair is done)' }
   };
 
   const SERVICE_RATE_LISTS = {
@@ -751,33 +751,54 @@
       { name: 'Others (Custom Electrical Work)', price: 0, unit: 'quoted on-site' }
     ],
     plumber: [
-      { name: 'Visiting / Minimum Inspection Fee', price: 121, unit: 'visit' },
-      { name: 'Tap / Valve Replacement', price: 99, unit: 'per tap' },
-      { name: 'Jet Spray Installation', price: 149, unit: 'per piece' },
-      { name: 'Waste Pipe Replacement', price: 99, unit: 'per pipe' },
-      { name: 'Flush Tank Kit Repair', price: 199, unit: 'per tank' },
-      { name: 'Water Motor Pump Installation', price: 399, unit: 'per pump' },
+      { name: 'Visiting / Inspection Fee', price: 121, unit: 'visit' },
+      { name: 'Nal (Tap / Faucet) Replacement', price: 99, unit: 'per piece' },
+      { name: 'Angle Valve / Jet Spray Fitting', price: 99, unit: 'per piece' },
+      { name: 'Wall Mixer / Shower Fitting', price: 351, unit: 'fitting' },
+      { name: 'Washbasin Fitting (with connection)', price: 351, unit: 'fitting' },
+      { name: 'Kitchen Sink Installation', price: 501, unit: 'installation' },
+      { name: 'Western Commode (Toilet Seat) Fitting', price: 1000, unit: 'fitting' },
+      { name: 'Flush Cistern (Tanki) Repair / Replace', price: 251, unit: 'job' },
+      { name: 'Water Tank (500L – 1000L) Installation', price: 800, unit: 'tank' },
+      { name: 'Water Motor / Pump Piping Connection', price: 451, unit: 'connection' },
+      { name: 'Drainage Blockage (Choke) Removal', price: 351, unit: 'job' },
+      { name: 'Pipe Leakage Repair (Cutting & Joint fitting)', price: 351, unit: 'repair' },
+      { name: 'New Bathroom Concealed Piping (Labour)', price: 3500, unit: 'per bathroom' },
       { name: 'Others (Custom Plumbing Work)', price: 0, unit: 'quoted on-site' }
     ],
     ac: [
-      { name: 'Visiting / Minimum Inspection Fee', price: 121, unit: 'visit' },
-      { name: 'AC High-Pressure Jet Service', price: 399, unit: 'per AC' },
-      { name: 'Full Refrigerant Gas Charging', price: 1699, unit: 'per unit' },
-      { name: 'AC Un-installation', price: 499, unit: 'per AC' },
-      { name: 'Complete New AC Installation', price: 1199, unit: 'per AC' },
-      { name: 'Others (Custom AC Work)', price: 0, unit: 'quoted on-site' }
+      { name: 'Visiting / Inspection Charge (If no repair is done)', price: 199, unit: 'visit' },
+      { name: 'Window AC Normal Service', price: 300, unit: 'per AC' },
+      { name: 'Window AC Jet Wash Service', price: 350, unit: 'per AC' },
+      { name: 'Split AC Jet Wash Service', price: 450, unit: 'per AC' },
+      { name: 'Water Leakage / Drain Choke Fix', price: 300, unit: 'job' },
+      { name: 'Capacitor Replacement (Labour + Capacitor)', price: 450, unit: 'unit' },
+      { name: 'Sensor Replacement (Labour + Sensor)', price: 450, unit: 'unit' },
+      { name: 'Swing Motor Replacement (Labour + Motor)', price: 550, unit: 'unit' },
+      { name: 'Minor Leakage Repair', price: 400, unit: 'job' },
+      { name: 'Major Leakage Repair (Brazing + Vacuuming)', price: 1000, unit: 'job' },
+      { name: 'Full Gas Refilling (R32/R410A/R22 with Vacuum)', price: 2200, unit: 'per unit' },
+      { name: 'Non-Inverter PCB Repair', price: 1200, unit: 'repair' },
+      { name: 'Inverter AC PCB Repair', price: 2500, unit: 'repair' },
+      { name: 'Blower / Condenser Motor Labour', price: 500, unit: 'labour' },
+      { name: 'Compressor Replacement Labour', price: 1200, unit: 'labour' },
+      { name: 'Split AC Installation (Standard Labour)', price: 1000, unit: 'per AC' },
+      { name: 'Split AC Uninstallation', price: 500, unit: 'per AC' },
+      { name: 'Window AC Installation', price: 400, unit: 'per AC' },
+      { name: 'Window AC Uninstallation', price: 250, unit: 'per AC' },
+      { name: 'Others (Custom AC Service)', price: 0, unit: 'quoted on-site' }
     ]
   };
 
   const TRADE_SERVICES_CATALOG = {
-    electrician: ['Visiting / Minimum Inspection Fee','Switch / Socket Replacement','Ceiling / Wall / Exhaust Fan Installation','Light Fitting (LED / Tube light / Holder)','Chandelier (Jhoomar) Installation','MCB Replacement','Inverter & Battery Complete Setup','Geyser Electrical Fitting','Water Motor / Starter Wiring','New Point Wiring (Light / Fan)','Power Point Wiring (16A / AC / Geyser)','Fault Finding / Short Circuit Checking','Pure Ghar Ka Wiring (₹18/sq.ft)','Others (Custom Electrical Work)'],
-    plumber: ['Visiting / Minimum Inspection Fee','Tap / Valve Replacement','Jet Spray Installation','Waste Pipe Replacement','Flush Tank Kit Repair','Water Motor Pump Installation','Others (Custom Plumbing Work)'],
-    ac: ['Visiting / Minimum Inspection Fee','AC High-Pressure Jet Service','Full Refrigerant Gas Charging','AC Un-installation','Complete New AC Installation','Others (Custom AC Work)']
+    electrician: ['Visiting / Minimum Inspection Fee','Switch / Socket Replacement','Ceiling / Wall / Exhaust Fan Installation','Light Fitting (LED / Tube light / Holder)','Chandelier (Jhoomar) Installation','MCB Replacement','Inverter & Battery Complete Setup','Geyser Electrical Fitting','Water Motor / Starter Wiring','New Point Wiring (Light / Fan)','Power Point Wiring (16A / AC / Geyser)','Fault Finding / Short Circuit Checking','Pure Ghar Ka Wiring (per sq. ft)','Others (Custom Electrical Work)'],
+    plumber: ['Visiting / Inspection Fee','Nal (Tap / Faucet) Replacement','Angle Valve / Jet Spray Fitting','Wall Mixer / Shower Fitting','Washbasin Fitting (with connection)','Kitchen Sink Installation','Western Commode (Toilet Seat) Fitting','Flush Cistern (Tanki) Repair / Replace','Water Tank (500L – 1000L) Installation','Water Motor / Pump Piping Connection','Drainage Blockage (Choke) Removal','Pipe Leakage Repair (Cutting & Joint fitting)','New Bathroom Concealed Piping (Labour)','Others (Custom Plumbing Work)'],
+    ac: ['Visiting / Inspection Charge (If no repair is done)','Window AC Normal Service','Window AC Jet Wash Service','Split AC Jet Wash Service','Water Leakage / Drain Choke Fix','Capacitor Replacement (Labour + Capacitor)','Sensor Replacement (Labour + Sensor)','Swing Motor Replacement (Labour + Motor)','Minor Leakage Repair','Major Leakage Repair (Brazing + Vacuuming)','Full Gas Refilling (R32/R410A/R22 with Vacuum)','Non-Inverter PCB Repair','Inverter AC PCB Repair','Blower / Condenser Motor Labour','Compressor Replacement Labour','Split AC Installation (Standard Labour)','Split AC Uninstallation','Window AC Installation','Window AC Uninstallation','Others (Custom AC Service)']
   };
 
   const SPARE_PARTS_CATALOG = {
     electrician: [{ name: 'MCB (Single Pole)', code: 'HSN 8536', rate: 99.00 },{ name: 'Switch / Socket', code: 'HSN 8536', rate: 30.00 },{ name: 'Wire (per meter)', code: 'HSN 8544', rate: 15.00 },{ name: 'Fan Capacitor', code: 'HSN 8532', rate: 60.00 }],
-    ac: [{ name: 'Refrigerant Gas R32', code: 'HSN 2903', rate: 1699.00 },{ name: 'Run Capacitor', code: 'HSN 8532', rate: 150.00 },{ name: 'Drain Pipe (per meter)', code: 'HSN 3917', rate: 40.00 }],
+    ac: [{ name: 'Outdoor Heavy Bracket (Stand)', code: 'HSN 7326', rate: 700.00 },{ name: 'Copper Pipe (with Insulation & Wire per meter)', code: 'HSN 7411', rate: 750.00 },{ name: 'Drain Pipe (per meter)', code: 'HSN 3917', rate: 40.00 }],
     plumber: [{ name: 'PVC Pipe (per meter)', code: 'HSN 3917', rate: 60.00 },{ name: 'Bib Tap', code: 'HSN 8481', rate: 120.00 },{ name: 'Angle Valve', code: 'HSN 8481', rate: 90.00 }]
   };
 
@@ -802,7 +823,7 @@
     ac: `
       <b>TERMS &amp; CONDITIONS (4. Air Conditioning Services):</b><br>
       • <b>Performance Testing:</b> Current draw (amperage) and grill cooling temperature will be verified before invoice clearance.<br>
-      • <b>Consumables:</b> Copper piping, insulation tape, stands, capacitors, and refrigerant gas will be billed separately at actual rates.<br>
+      • <b>Consumables &amp; Spares:</b> Copper piping (₹750/m), Drain pipe (₹40/m), Heavy Outdoor Stand (₹700) and extra gas charging will be billed separately at actual rates.<br>
       • <b>Service Warranty:</b> A <b>30-day warranty</b> is provided on complete gas refilling and servicing leaks (excludes electrical surges or external physical damages).<br>
       • <b>Advance Deduction:</b> The ₹21.00 advance token is deducted from the total bill amount.<br>
       <b>I agree to pay the non-refundable ₹21 token and accept all terms above.</b>
@@ -1163,7 +1184,7 @@
     const services = SERVICE_RATE_LISTS[catKey] || [];
     const container = document.getElementById('bookingServicesChecklist');
     container.innerHTML = services.map((s, idx) => {
-      const isMandatory = s.name.includes('Visiting');
+      const isMandatory = s.name.includes('Visiting') || s.name.includes('Inspection');
       return `
         <div class="addon-item" style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px dashed #cbd5e1;">
           <div style="flex:1; padding-right:10px;">
