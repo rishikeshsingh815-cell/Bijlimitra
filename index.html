@@ -313,7 +313,6 @@
     <div id="screen-home" class="screen active">
       <div class="desktop-inner">
         
-        <!-- HERO TRUST BANNER -->
         <div class="hero-trust-banner">
           <div class="trust-subtitle" id="heroSubtitle">🛡️ ID-verified technicians • Insured service</div>
           <h2 class="hero-title" id="heroTitle">Book a verified technician at home</h2>
@@ -328,10 +327,9 @@
         <h2 class="section-title-blue" id="secMapTitle">🗺️ Begusarai Street Dispatch Map</h2>
         <div id="homeMap"></div>
         
-        <h2 class="section-title-blue" id="secCatTitle" style="margin-top:14px;">⚡ Select Service Category</h2>
+        <h2 class="section-title-blue" style="margin-top:14px;" id="secCatTitle">⚡ Select Service Category</h2>
         <div class="category-grid">
           
-          <!-- 1. ELECTRICIAN -->
           <div class="category-card" onclick="selectCategoryBooking('electrician')">
             <div class="category-card-left">
               <div class="cat-custom-icon-box cat-icon-electrician">💡</div>
@@ -344,7 +342,6 @@
             <div class="category-price-badge"><b>₹121 Base</b><p style="font-size:11px; color:#64748b; font-weight:600;" id="badgeInspectionText1">(Inspection Fee)</p></div>
           </div>
 
-          <!-- 2. AC REPAIR -->
           <div class="category-card" onclick="selectCategoryBooking('ac')">
             <div class="category-card-left">
               <div class="cat-custom-icon-box cat-icon-ac">❄️</div>
@@ -357,7 +354,6 @@
             <div class="category-price-badge"><b>₹199 Base</b><p style="font-size:11px; color:#64748b; font-weight:600;" id="badgeInspectionText2">(Inspection Fee)</p></div>
           </div>
 
-          <!-- 3. PLUMBING -->
           <div class="category-card" onclick="selectCategoryBooking('plumber')">
             <div class="category-card-left">
               <div class="cat-custom-icon-box cat-icon-plumber">🔧</div>
@@ -372,7 +368,6 @@
 
         </div>
 
-        <!-- POLICY BOX -->
         <div class="terms-box" style="margin-top:16px;" id="homePolicyBox">
           <h4 style="color:#92400e; font-size:13.5px; margin-bottom:8px; font-weight:900;">📋 1. Booking, Cancellation &amp; Billing Policy</h4>
           • <b>Advance Booking Fee:</b> A non-refundable advance fee of <b>₹21.00</b> is charged at the time of booking.<br>
@@ -549,7 +544,7 @@
       </div>
     </div>
 
-    <!-- 9. ADMIN DASHBOARD SCREEN -->
+    <!-- 9. ADMIN DASHBOARD SCREEN (Includes Technician Password Reset Option) -->
     <div id="screen-admin" class="screen">
       <div class="desktop-inner">
         <div id="adminGlobalDashboard">
@@ -566,8 +561,9 @@
             </div>
           </div>
           <div id="adminGlobalFeed" style="margin-bottom:16px;"></div>
+          
           <div class="card">
-            <h3 class="section-title-blue" style="font-size:15px;">👷 Register Technician (6-Digit Encrypted PIN)</h3>
+            <h3 class="section-title-blue" style="font-size:15px;">👷 Register Technician (6-Digit PIN)</h3>
             <input type="text" id="newTechName" placeholder="Full Name" style="margin-bottom:8px;">
             <input type="tel" id="newTechPhone" placeholder="Contact Phone Number" maxlength="10" style="margin-bottom:8px;">
             <select id="newTechCat" style="margin-bottom:8px; font-weight:700;">
@@ -580,6 +576,16 @@
             <input type="password" id="newTechPin" placeholder="Enter 6-Digit Access PIN" maxlength="6" style="margin-bottom:10px; text-align:center; letter-spacing:4px; font-weight:800;">
             <button class="btn secondary" onclick="registerTechnician()">Save Technician &amp; Hash 6-Digit PIN</button>
           </div>
+
+          <!-- NEW: ADMIN PASSWORD RESET FOR TECHNICIAN -->
+          <div class="card" style="border-top:4px solid var(--warning);">
+            <h3 class="section-title-blue" style="color:var(--warning);">🔑 Reset Technician Password / PIN</h3>
+            <p style="font-size:11.5px; color:#475569; margin-bottom:8px; font-weight:600;">Update login access PIN for any registered technician code:</p>
+            <input type="text" id="resetTechCode" placeholder="Technician ID (e.g. TECH-001)" style="margin-bottom:8px; text-transform:uppercase; font-weight:800;">
+            <input type="password" id="resetTechNewPin" placeholder="Enter New 6-Digit PIN" maxlength="6" style="margin-bottom:10px; text-align:center; letter-spacing:4px; font-weight:800;">
+            <button class="btn warning" onclick="adminResetTechPassword()">Update Technician PIN</button>
+          </div>
+
           <div class="card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
               <h3 class="section-title-blue" style="font-size:14.5px; margin-bottom:0;">🧑‍🔧 Technician Fleet</h3>
@@ -956,284 +962,6 @@
     `
   };
 
-  let currentUser = null;
-  const savedCustomer = localStorage.getItem('bm_active_customer');
-  if (savedCustomer) { 
-    try { currentUser = JSON.parse(savedCustomer); } catch(e){} 
-  }
-
-  let currentCategory = 'electrician', pendingAdvanceState = null, activeTechSession = null, isAdminLoggedIn = false, activeModalJob = null, bookingMap = null, bookingMapMarker = null, signupMap = null, signupMapMarker = null, selectedReviewScore = 5, pendingTechCalculatedPayload = null;
-
-  async function hashPassword(plain) {
-    const enc = new TextEncoder().encode(plain);
-    const buf = await crypto.subtle.digest('SHA-256', enc);
-    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-  }
-
-  function updateRoleBasedNavigation() {
-    const badge = document.getElementById('topAuthBadge');
-    const mobNav = document.getElementById('mobileBottomNav');
-    const deskCustomer = document.getElementById('deskCustomerNav');
-    const deskTech = document.getElementById('deskTechNav');
-    const deskAdmin = document.getElementById('deskAdminNav');
-
-    if (isAdminLoggedIn) {
-      badge.innerHTML = `🔐 Master Admin (<span onclick="adminLogout()" style="text-decoration:underline;">Logout</span>)`;
-      deskCustomer.style.display = 'none'; deskTech.style.display = 'none'; deskAdmin.style.display = 'block';
-      mobNav.innerHTML = `<div class="nav-item active" onclick="navigateTo('admin')"><span class="nav-icon">🔐</span>Admin</div><div class="nav-item" onclick="adminLogout()"><span class="nav-icon">🚪</span>Logout</div>`;
-    } else if (activeTechSession) {
-      badge.innerHTML = `🧑‍🔧 ${activeTechSession.name} (<span onclick="techLogout()" style="text-decoration:underline;">Logout</span>)`;
-      deskCustomer.style.display = 'none'; deskTech.style.display = 'block'; deskAdmin.style.display = 'none';
-      mobNav.innerHTML = `<div class="nav-item active" onclick="navigateTo('tech-pool')"><span class="nav-icon">🧑‍🔧</span>Job Pool</div><div class="nav-item" onclick="techLogout()"><span class="nav-icon">🚪</span>Logout</div>`;
-    } else if (currentUser) {
-      badge.innerHTML = `👤 ${currentUser.name || currentUser.phone} (<span onclick="customerLogout()" style="text-decoration:underline;">Logout</span>)`;
-      deskCustomer.style.display = 'block'; deskTech.style.display = 'none'; deskAdmin.style.display = 'none';
-      mobNav.innerHTML = `<div class="nav-item active" id="mobNavHome" onclick="navigateTo('home')"><span class="nav-icon">🏠</span>Categories</div><div class="nav-item" id="mobNavProfile" onclick="goToCustomerProfile()"><span class="nav-icon">👤</span>Profile &amp; Orders</div>`;
-    } else {
-      badge.textContent = "Login";
-      deskCustomer.style.display = 'block'; deskTech.style.display = 'none'; deskAdmin.style.display = 'none';
-      mobNav.innerHTML = `<div class="nav-item active" id="mobNavHome" onclick="navigateTo('home')"><span class="nav-icon">🏠</span>Categories</div><div class="nav-item" onclick="navigateTo('auth')"><span class="nav-icon">👤</span>Login</div>`;
-    }
-  }
-
-  async function customerLogout() { 
-    currentUser = null; 
-    localStorage.removeItem('bm_active_customer'); 
-    try { await sbClient.auth.signOut(); } catch(e){} 
-    window.location.reload(); 
-  }
-  
-  function techLogout() { activeTechSession = null; window.location.reload(); }
-  function adminLogout() { isAdminLoggedIn = false; window.location.reload(); }
-  function handleTopBadgeClick() { if (currentUser) goToCustomerProfile(); else if (activeTechSession) navigateTo('tech-pool'); else if (isAdminLoggedIn) navigateTo('admin'); else navigateTo('auth'); }
-
-  function showScreenOnly(screenId) {
-    if (screenId === 'admin' && !isAdminLoggedIn) { alert("Access Denied: Admin login required."); navigateTo('auth'); return; }
-    if (screenId === 'tech-pool' && !activeTechSession) { alert("Access Denied: Technician login required."); navigateTo('auth'); return; }
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    const target = document.getElementById('screen-' + screenId);
-    if(target) target.classList.add('active');
-    if (screenId === 'home' && homeMap) setTimeout(() => homeMap.invalidateSize(), 200);
-    else if (screenId === 'auth' && signupMap) setTimeout(() => signupMap.invalidateSize(), 200);
-    else if (screenId === 'booking' && bookingMap) setTimeout(() => bookingMap.invalidateSize(), 200);
-    window.scrollTo(0, 0);
-  }
-
-  function navigateTo(screenId, replaceHistory = false) {
-    showScreenOnly(screenId);
-    try { if (replaceHistory) history.replaceState({ screen: screenId }, '', '#' + screenId); else history.pushState({ screen: screenId }, '', '#' + screenId); } catch(e) {}
-  }
-
-  window.addEventListener('popstate', (e) => {
-    let targetScreen = (e.state && e.state.screen) ? e.state.screen : 'home';
-    if (targetScreen === 'auth' && (currentUser || activeTechSession || isAdminLoggedIn)) targetScreen = 'home';
-    showScreenOnly(targetScreen);
-  });
-
-  function openTechLoginModal() { document.getElementById('roleSecTech').style.display = 'block'; }
-  function openAdminLoginModal() { document.getElementById('roleSecAdmin').style.display = 'block'; }
-
-  function toggleCustomerAuthMode() {
-    isCustomerSignupMode = !isCustomerSignupMode;
-    document.getElementById('custAuthFormTitle').textContent = isCustomerSignupMode ? "Customer Registration" : "Customer Login";
-    document.getElementById('custAuthToggleBtn').textContent = isCustomerSignupMode ? "Already have account? Login" : "New user? Sign Up";
-    document.getElementById('custAuthActionBtn').textContent = isCustomerSignupMode ? "Verify OTP & Register" : "Login & Proceed";
-    document.getElementById('custSignupFields').style.display = isCustomerSignupMode ? "block" : "none";
-    document.getElementById('otpPasswordCreationGroup').style.display = "none";
-    document.getElementById('loginPasswordGroup').style.display = isCustomerSignupMode ? "none" : "block";
-    document.getElementById('authMsg').textContent = "";
-    if (isCustomerSignupMode) {
-      setTimeout(() => {
-        initSignupMap();
-        if (signupMap) signupMap.invalidateSize();
-      }, 200);
-    }
-  }
-
-  const southWest = L.latLng(25.20, 85.80), northEast = L.latLng(25.75, 86.45), begusaraiBounds = L.latLngBounds(southWest, northEast);
-  const homeMap = L.map('homeMap', { center: [25.4182, 86.1272], zoom: 13, minZoom: 11, maxBounds: begusaraiBounds, maxBoundsViscosity: 1.0 });
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { bounds: begusaraiBounds }).addTo(homeMap);
-  L.marker([25.4182, 86.1272]).addTo(homeMap).bindPopup("<b>Begusarai Central Dispatch Hub</b>").openPopup();
-
-  function initSignupMap() {
-    if (signupMap) return;
-    signupMap = L.map('signupMap', { center: [25.4182, 86.1272], zoom: 13, minZoom: 11, maxBounds: begusaraiBounds, maxBoundsViscosity: 1.0 });
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { bounds: begusaraiBounds }).addTo(signupMap);
-    signupMapMarker = L.marker([25.4182, 86.1272]).addTo(signupMap);
-    signupMap.on('click', function(e) {
-      signupMapMarker.setLatLng(e.latlng);
-      reverseGeocodeAndFill(e.latlng.lat, e.latlng.lng, 'custRegAddress', signupMapMarker);
-    });
-  }
-
-  function initBookingMap() {
-    if (bookingMap) {
-      setTimeout(() => bookingMap.invalidateSize(), 150);
-      return;
-    }
-    bookingMap = L.map('bookingMap', { center: [25.4182, 86.1272], zoom: 13, minZoom: 11, maxBounds: begusaraiBounds, maxBoundsViscosity: 1.0 });
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { bounds: begusaraiBounds }).addTo(bookingMap);
-    bookingMapMarker = L.marker([25.4182, 86.1272]).addTo(bookingMap);
-    bookingMap.on('click', function(e) {
-      bookingMapMarker.setLatLng(e.latlng);
-      reverseGeocodeAndFill(e.latlng.lat, e.latlng.lng, 'custAddressInput', bookingMapMarker);
-    });
-  }
-
-  async function reverseGeocodeAndFill(lat, lng, inputId, marker) {
-    const input = document.getElementById(inputId);
-    const fallbackAddress = `Location [${lat.toFixed(4)}, ${lng.toFixed(4)}], Begusarai, Bihar`;
-    input.value = "Finding address...";
-    try {
-      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`, { headers: { 'Accept-Language': 'en' } });
-      const data = await res.json();
-      const address = data && data.display_name ? data.display_name : fallbackAddress;
-      input.value = address;
-      marker.bindPopup(`<b>Selected:</b><br>${address}`).openPopup();
-    } catch (e) {
-      input.value = fallbackAddress;
-      marker.bindPopup(`<b>Selected:</b><br>${fallbackAddress}`).openPopup();
-    }
-  }
-
-  function toggleBookingMap() {
-    const container = document.getElementById('bookingMapContainer');
-    container.style.display = container.style.display === 'none' ? 'block' : 'none';
-    if (container.style.display === 'block') {
-      setTimeout(() => { initBookingMap(); }, 150);
-    }
-  }
-
-  function togglePasswordVisibility(inputId, el) {
-    const input = document.getElementById(inputId);
-    input.type = input.type === 'password' ? 'text' : 'password';
-    el.textContent = input.type === 'password' ? 'Show' : 'Hide';
-  }
-
-  function generateDynamicUpi(amount, note) {
-    const upiUri = `upi://pay?pa=${KASHVI_UPI_VPA}&pn=${encodeURIComponent(KASHVI_PAYEE_NAME)}&am=${amount.toFixed(2)}&cu=INR&tn=${encodeURIComponent(note)}`;
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(upiUri)}`;
-    return { upiUri, qrUrl };
-  }
-
-  async function signInWithGoogle() {
-    const { error } = await sbClient.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + window.location.pathname } });
-    if (error) alert("Google login error: " + error.message);
-  }
-
-  let googleAuthProcessed = false;
-  sbClient.auth.onAuthStateChange(async (event, session) => {
-    if (event !== 'SIGNED_IN' || !session?.user || googleAuthProcessed) return;
-    googleAuthProcessed = true;
-    if (window.location.hash.includes('access_token')) history.replaceState(null, '', window.location.pathname + window.location.search);
-
-    const email = session.user.email;
-    const name = session.user.user_metadata?.full_name || session.user.user_metadata?.name || 'Customer';
-    let existing = null;
-    try { const { data } = await sbClient.from('customers').select('*').eq('email', email).single(); existing = data; } catch(e){}
-
-    if (existing && existing.phone && existing.address) {
-      if (existing.is_blocked) { alert("Your account has been blocked by Admin."); return; }
-      currentUser = { name: existing.name || name, phone: existing.phone, address: existing.address, email };
-      localStorage.setItem('bm_active_customer', JSON.stringify(currentUser));
-      updateRoleBasedNavigation(); navigateTo('home', true);
-    } else {
-      pendingGoogleUser = { email, name };
-      document.getElementById('googlePhoneModal').style.display = 'flex';
-      if (existing) { document.getElementById('googlePhoneInput').value = existing.phone || ''; document.getElementById('googleAddressInput').value = existing.address || ''; }
-    }
-  });
-
-  async function submitGooglePhone() {
-    const phone = document.getElementById('googlePhoneInput').value.trim();
-    const address = document.getElementById('googleAddressInput').value.trim();
-    const errEl = document.getElementById('googlePhoneError');
-    if (!/^[6-9]\d{9}$/.test(phone)) { errEl.textContent = "Please enter a valid 10-digit Indian mobile number."; return; }
-    if (!address) { errEl.textContent = "Please select or type your exact address."; return; }
-    errEl.textContent = "";
-
-    const { error } = await sbClient.from('customers').upsert({ email: pendingGoogleUser.email, name: pendingGoogleUser.name, phone, address }, { onConflict: 'email' });
-    if (error) { errEl.textContent = "Could not save details: " + error.message; return; }
-
-    currentUser = { name: pendingGoogleUser.name, phone, address, email: pendingGoogleUser.email };
-    localStorage.setItem('bm_active_customer', JSON.stringify(currentUser));
-    document.getElementById('googlePhoneModal').style.display = 'none';
-    updateRoleBasedNavigation(); navigateTo('home', true);
-  }
-
-  async function sendEmailVerificationOtp() {
-    const email = document.getElementById('authEmail').value.trim().toLowerCase();
-    const name = document.getElementById('custRegName').value.trim();
-    const phone = document.getElementById('authPhone').value.trim();
-    const address = document.getElementById('custRegAddress').value.trim();
-    const msg = document.getElementById('authMsg');
-
-    if (!email || !email.includes('@')) { msg.textContent = "Please enter a valid email address."; msg.style.color = "#c0392b"; return; }
-    if (!name) { msg.textContent = "Please enter your Full Name."; msg.style.color = "#c0392b"; return; }
-    if (!/^[6-9]\d{9}$/.test(phone)) { msg.textContent = "Mandatory: Enter a valid 10-digit Indian mobile number."; msg.style.color = "#c0392b"; return; }
-    if (!address) { msg.textContent = "Mandatory: Select or type your exact street address."; msg.style.color = "#c0392b"; return; }
-
-    msg.textContent = "Sending 6-digit verification code to email..."; msg.style.color = "var(--title-blue)";
-    try {
-      const { error } = await sbClient.auth.signInWithOtp({ email: email, options: { shouldCreateUser: true } });
-      if (error) { msg.textContent = "Failed to send OTP: " + error.message; msg.style.color = "#c0392b"; return; }
-      document.getElementById('otpPasswordCreationGroup').style.display = 'block';
-      document.getElementById('sendEmailOtpBtn').textContent = "🔄 Resend Email OTP";
-      msg.textContent = "OTP Sent! Enter the 6-digit code and create your password."; msg.style.color = "var(--title-blue)";
-    } catch(err) { msg.textContent = "Error sending OTP: " + err.message; msg.style.color = "#c0392b"; }
-  }
-
-  async function handleCustomerAuthAction() {
-    const email = document.getElementById('authEmail').value.trim().toLowerCase();
-    const msg = document.getElementById('authMsg');
-    if (!email || !email.includes('@')) { msg.textContent = "Please enter a valid email address."; msg.style.color = "#c0392b"; return; }
-
-    if (isCustomerSignupMode) {
-      const name = document.getElementById('custRegName').value.trim();
-      const phone = document.getElementById('authPhone').value.trim();
-      const address = document.getElementById('custRegAddress').value.trim();
-      const otpToken = document.getElementById('authEmailOtp').value.trim();
-      const newPassword = document.getElementById('authCreatePassword').value.trim();
-
-      if (otpToken.length !== 6) { msg.textContent = "Please enter the 6-digit code received on email."; msg.style.color = "#c0392b"; return; }
-      if (newPassword.length < 6) { msg.textContent = "Created Password must be at least 6 characters."; msg.style.color = "#c0392b"; return; }
-
-      const { error: verifyErr } = await sbClient.auth.verifyOtp({ email: email, token: otpToken, type: 'email' });
-      if (verifyErr) { msg.textContent = "Invalid or expired Email OTP: " + verifyErr.message; msg.style.color = "#c0392b"; return; }
-
-      const hashedPassword = await hashPassword(newPassword);
-      await sbClient.from('customers').upsert([{ email, name, phone, address, password_hash: hashedPassword }], { onConflict: 'email' });
-
-      alert("Account Created Successfully! Please login using your email and password.");
-      toggleCustomerAuthMode();
-      document.getElementById('authEmail').value = email;
-    } else {
-      const loginPassword = document.getElementById('authLoginPassword').value.trim();
-      if (loginPassword.length < 6) { msg.textContent = "Password must be at least 6 characters."; msg.style.color = "#c0392b"; return; }
-
-      const hashedPassword = await hashPassword(loginPassword);
-      let { data: account } = await sbClient.from('customers').select('*').eq('email', email).single();
-      
-      if (!account) { msg.textContent = "Account not found with this email. Please switch to Sign Up."; msg.style.color = "#c0392b"; return; }
-      if (account.is_blocked) { msg.textContent = "This account has been blocked by Admin."; msg.style.color = "#c0392b"; return; }
-      if (account.password_hash !== hashedPassword) { msg.textContent = "Incorrect password. Please re-enter."; msg.style.color = "#c0392b"; return; }
-
-      currentUser = { name: account.name || "Customer", address: account.address, phone: account.phone, email: account.email };
-      localStorage.setItem('bm_active_customer', JSON.stringify(currentUser));
-      window.location.hash = '#home'; window.location.reload();
-    }
-  }
-
-  function goToCustomerProfile() {
-    if (!currentUser) { alert("Please log in or register to view your profile."); navigateTo('auth'); return; }
-    document.getElementById('profDispName').textContent = currentUser.name || "Customer";
-    document.getElementById('profDispEmail').textContent = currentUser.email || "--";
-    document.getElementById('profDispPhone').textContent = currentUser.phone || "--";
-    document.getElementById('profDispAddress').textContent = currentUser.address || "Begusarai, Bihar";
-    navigateTo('profile');
-    loadCustomerOrders();
-  }
-
   function renderChecklist(catKey) {
     const services = SERVICE_RATE_LISTS[catKey] || [];
     const container = document.getElementById('bookingServicesChecklist');
@@ -1406,167 +1134,6 @@
     goToCustomerProfile();
   }
 
-  async function claimFreeRevisit(parentInvoiceNo, serviceType) {
-    if (!confirm("Claim Free Re-visit under 07-Day Workmanship Warranty?\nOur technician will inspect the previous repair work at ₹0 Base Fee.")) return;
-    
-    const invoiceNo = 'REV-' + Date.now().toString().slice(-6);
-    const startPin = Math.floor(1000 + Math.random() * 9000).toString();
-    const stopPin = Math.floor(1000 + Math.random() * 9000).toString();
-
-    const revisitBooking = {
-      customer_name: currentUser.name || "Customer",
-      customer_phone: currentUser.phone,
-      customer_address: currentUser.address,
-      service_type: serviceType,
-      extra_services: `07-Day Free Revisit (Warranty Claim for ${parentInvoiceNo})`,
-      extra_parts_cost: 0,
-      start_pin: startPin,
-      stop_pin: stopPin,
-      job_status: 'pending_acceptance',
-      technician_name: null,
-      base_fee: 0,
-      invoice_no: invoiceNo,
-      payment_status: 'warranty_revisit'
-    };
-
-    try { await sbClient.from('bookings').insert([revisitBooking]); } catch(e){}
-    let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
-    localPool.unshift(revisitBooking);
-    localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
-
-    alert(`Re-visit Booked Free of Charge! Order ID: ${invoiceNo}\nBroadcasting to nearest technicians.`);
-    loadCustomerOrders();
-  }
-
-  async function loadCustomerOrders() {
-    if (!currentUser) return;
-    const container = document.getElementById('customerHistoryContainer');
-    container.innerHTML = '<p style="color:#64748b; font-size:13px; text-align:center; padding:20px 0; font-weight:600;">Loading your booking history...</p>';
-
-    let orders = [];
-    try {
-      const { data } = await sbClient.from('bookings').select('*').eq('customer_phone', currentUser.phone).order('created_at', { ascending: false });
-      if (data && data.length > 0) orders = data;
-    } catch(e){}
-
-    if (orders.length === 0) {
-      let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
-      orders = localPool.filter(j => j.customer_phone === currentUser.phone);
-    }
-
-    if (orders.length === 0) {
-      container.innerHTML = '<div style="text-align:center; color:#64748b; padding:24px 0; font-size:13px; font-weight:600;">You have no active or past bookings.</div>';
-      return;
-    }
-
-    container.innerHTML = orders.map(b => {
-      const isPaid = b.job_status === 'paid_completed', isBillReady = b.job_status === 'work_completed', isPending = b.job_status === 'pending_acceptance', isCancelled = b.job_status === 'cancelled';
-      const catConfig = SERVICE_CONFIG[b.service_type] || SERVICE_CONFIG.electrician;
-
-      let statusBadge = `<span style="color:var(--warning); font-weight:900;">[ ⏳ PENDING POOL ACCEPT ]</span>`;
-      if (b.job_status === 'claimed') statusBadge = `<span style="color:var(--title-blue); font-weight:900;">[ 🧑‍🔧 ACCEPTED BY TECH ]</span>`;
-      else if (b.job_status === 'in_progress') statusBadge = `<span style="color:#7c3aed; font-weight:900;">[ ⚡ WORK IN PROGRESS ]</span>`;
-      else if (isBillReady) statusBadge = `<span style="color:var(--warning); font-weight:900;">[ 🧾 BILL READY - PAYMENT PENDING ]</span>`;
-      else if (isPaid) statusBadge = `<span style="color:var(--success); font-weight:900;">[ ✔ COMPLETED &amp; PAID ]</span>`;
-      else if (isCancelled) statusBadge = `<span style="color:#991b1b; font-weight:900;">[ ❌ CANCELLED (₹21 Non-Refundable) ]</span>`;
-
-      return `
-        <div class="card" style="border-left:5px solid ${isPaid ? 'var(--success)' : (isCancelled ? '#991b1b' : (isBillReady ? '#b8720a' : 'var(--title-blue)'))};">
-          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
-            <b style="font-weight:900; color:var(--title-blue);">${b.invoice_no || 'BM-ORDER'}</b>
-            ${statusBadge}
-          </div>
-          <p style="font-size:12px; color:#1e293b; font-weight:800;">🛠️ Service: ${catConfig.title}</p>
-          <p style="font-size:11.5px; color:#64748b; font-weight:600;">📋 Work Details: ${b.extra_services || 'Base Package'}</p>
-          <p style="font-size:12px; color:#64748b; font-weight:600;">🧑‍🔧 Assigned Tech: <b>${b.technician_name || 'Broadcasting in Pool (Waiting Tech...)'}</b>${b.technician_phone ? ' (📞 ' + b.technician_phone + ')' : ''}</p>
-          <p style="font-size:12px; color:#64748b; font-weight:600;">📍 Work Address: ${b.customer_address}</p>
-          
-          ${!isCancelled ? `
-          <div style="background:var(--soft-red-bg); border:1.5px dashed var(--soft-red-border); border-radius:8px; padding:8px; margin:8px 0; font-size:11.5px; font-weight:700;">
-            🔴 Your Start PIN: <b>${b.start_pin}</b> (Give upon arrival)<br>
-            🔴 Your Stop PIN: <b>${b.stop_pin}</b> (Give after work completes)
-          </div>` : ''}
-
-          ${isPending ? `<button class="btn danger" style="padding:8px; font-size:11.5px; margin-top:8px;" onclick="cancelCustomerBooking('${b.id || b.invoice_no}')">❌ Cancel Booking (₹21 Non-Refundable)</button>` : ''}
-          
-          ${isCancelled ? `<button class="btn secondary" style="padding:7px; font-size:11px; margin-top:8px;" onclick="downloadCancellationReceiptPdf('${b.id || b.invoice_no}')">📄 Download Cancellation Fee Receipt (₹21.00 Non-Refundable)</button>` : ''}
-
-          ${isPaid ? `
-            <div style="display:flex; flex-direction:column; gap:6px; margin-top:8px;">
-              <button class="btn secondary" style="padding:7px; font-size:11.5px;" onclick="downloadOrderPdf('${b.id || b.invoice_no}')">📥 Download Official Tax Invoice PDF</button>
-              <button class="btn warning" style="padding:7px; font-size:11.5px;" onclick="claimFreeRevisit('${b.invoice_no}', '${b.service_type}')">🛡️ Claim 07-Day Free Re-visit</button>
-              <button class="btn" style="padding:7px; font-size:11.5px; background:var(--title-blue);" onclick="openReviewModalForJob('${b.id || b.invoice_no}')">⭐ Leave a Review / Feedback</button>
-            </div>
-          ` : ''}
-        </div>
-      `;
-    }).join('');
-  }
-
-  async function cancelCustomerBooking(orderId) {
-    if (!confirm("Cancellation Policy Warning:\nAre you sure you want to cancel? As per terms, the ₹21.00 advance booking token is strictly NON-REFUNDABLE.")) return;
-    try { await sbClient.from('bookings').update({ job_status: 'cancelled', payment_status: 'cancelled_non_refundable' }).or(`id.eq.${orderId},invoice_no.eq.${orderId}`); } catch(e){}
-    let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
-    localPool = localPool.map(j => (j.id === orderId || j.invoice_no === orderId) ? { ...j, job_status: 'cancelled', payment_status: 'cancelled_non_refundable' } : j);
-    localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
-    alert("Your booking has been cancelled.");
-    loadCustomerOrders();
-  }
-
-  async function downloadOrderPdf(orderId) {
-    let data = null;
-    try { const res = await sbClient.from('bookings').select('*').or(`id.eq.${orderId},invoice_no.eq.${orderId}`).single(); data = res.data; } catch(e){}
-    if (!data) { let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]'); data = localPool.find(j => j.id === orderId || j.invoice_no === orderId); }
-    if (!data) return;
-
-    document.getElementById('pdfDocTypeTitle').textContent = "TAX INVOICE / SERVICE RECEIPT";
-    document.getElementById('pdfCustName').textContent = data.customer_name || currentUser?.name || "Valued Customer";
-    document.getElementById('pdfCustPhone').textContent = data.customer_phone;
-    document.getElementById('pdfInvNo').textContent = data.invoice_no;
-    document.getElementById('pdfCustAddr').textContent = data.customer_address;
-    document.getElementById('pdfTech').textContent = data.technician_name || 'Certified Technician';
-    document.getElementById('pdfDate').textContent = new Date(data.created_at || Date.now()).toLocaleDateString('en-IN');
-
-    const cfg = SERVICE_CONFIG[data.service_type] || SERVICE_CONFIG.electrician;
-    const sacCode = cfg.sac;
-    const baseTotal = parseFloat(data.base_fee) || 0;
-    const extraServicesTotal = parseFloat(data.extra_on_site_cost) || 0;
-    const overtimeCharge = parseFloat(data.overtime_charge) || 0;
-    const isRevisit = data.payment_status === 'warranty_revisit';
-
-    const baseGross = isRevisit ? 0 : baseTotal;
-    const taxableBase = baseGross > 0 ? (baseGross / 1.18) : 0;
-    const taxableExtra = extraServicesTotal > 0 ? (extraServicesTotal / 1.18) : 0;
-    const taxableOvertime = overtimeCharge > 0 ? (overtimeCharge / 1.18) : 0;
-    
-    const subtotal = taxableBase + taxableExtra + taxableOvertime;
-    const totalGross = baseGross + extraServicesTotal + overtimeCharge;
-    const totalGst = totalGross - subtotal;
-    const advanceDeducted = isRevisit ? 0 : 21.00;
-    const netGrand = totalGross - advanceDeducted;
-
-    let rowsHtml = '';
-    let sr = 1;
-    const bookedDetails = data.extra_services || `${cfg.title} (Base Inspection Pack)`;
-    rowsHtml += `<tr><td>${sr++}</td><td><b>${cfg.title}:</b> ${isRevisit ? '(Warranty Re-visit - ₹0 Base)' : bookedDetails}</td><td>${sacCode}</td><td>₹${taxableBase.toFixed(2)}</td><td>18%</td><td>₹${baseGross.toFixed(2)}</td></tr>`;
-    
-    if (extraServicesTotal > 0) {
-      rowsHtml += `<tr><td>${sr++}</td><td>On-Site Extra Services / Works</td><td>${sacCode}</td><td>₹${taxableExtra.toFixed(2)}</td><td>18%</td><td>₹${extraServicesTotal.toFixed(2)}</td></tr>`;
-    }
-
-    document.getElementById('pdfItemsBody').innerHTML = rowsHtml;
-    document.getElementById('pdfSubtotal').textContent = `₹${subtotal.toFixed(2)}`;
-    document.getElementById('pdfCgst').textContent = `₹${(totalGst / 2).toFixed(2)}`;
-    document.getElementById('pdfSgst').textContent = `₹${(totalGst / 2).toFixed(2)}`;
-    document.getElementById('pdfGrandTotal').textContent = `₹${Math.max(0, netGrand).toFixed(2)}`;
-
-    const el = document.getElementById('invoicePdf');
-    document.getElementById('invoiceRenderWrapper').style.display = 'block';
-    html2pdf().from(el).set({ margin: [10, 10, 10, 10], filename: `${data.invoice_no}_Tax_Invoice.pdf`, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } }).save().then(() => {
-      document.getElementById('invoiceRenderWrapper').style.display = 'none';
-    });
-  }
-
   async function loginTechnicianToPool() {
     const techId = document.getElementById('techIdInput').value.trim().toUpperCase();
     const cat = document.getElementById('techCategorySelect').value;
@@ -1606,6 +1173,28 @@
       updateRoleBasedNavigation(); 
       navigateTo('tech-pool', true); 
     } catch(e) { msg.textContent = "Login Error: " + e.message; msg.style.color = "#c0392b"; }
+  }
+
+  // NEW ADMIN FUNCTION: RESET TECHNICIAN PASSWORD / PIN
+  async function adminResetTechPassword() {
+    const techCode = document.getElementById('resetTechCode').value.trim().toUpperCase();
+    const newPin = document.getElementById('resetTechNewPin').value.trim();
+
+    if (!techCode || newPin.length !== 6) {
+      alert("Please enter a valid Technician ID (e.g. TECH-001) and a 6-digit new PIN.");
+      return;
+    }
+
+    const newPinHash = await hashPassword(newPin);
+    const { error } = await sbClient.from('technicians').update({ pin_hash: newPinHash, phone: newPin }).eq('tech_code', techCode);
+
+    if (error) {
+      alert("Failed to reset PIN: " + error.message);
+    } else {
+      alert(`PIN successfully reset for ${techCode}!\nNew PIN: ${newPin}`);
+      document.getElementById('resetTechCode').value = '';
+      document.getElementById('resetTechNewPin').value = '';
+    }
   }
 
   applyLanguage(currentLang);
