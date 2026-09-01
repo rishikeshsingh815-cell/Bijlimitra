@@ -17,7 +17,6 @@
     --soft-red-border: #fecdd3;
     --soft-red-hover: #ffe4e6;
     
-    /* Blue Highlights for Titles */
     --title-blue: #1d4ed8;
     --title-dark-blue: #1e3a8a;
     --title-blue-badge: #eff6ff;
@@ -33,7 +32,6 @@
   body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--soft-red-bg); color: var(--text-main); min-height: 100vh; overscroll-behavior-y: contain; }
   .app { max-width: 480px; margin: 0 auto; min-height: 100vh; background: #fff; position: relative; padding-bottom: 84px; box-shadow: 0 10px 40px -10px rgba(225, 29, 72, 0.12); }
   
-  /* Pull to Refresh Indicator */
   #pullToRefreshIndicator {
     position: fixed;
     top: 50px;
@@ -60,7 +58,6 @@
     opacity: 1;
   }
 
-  /* Topbar Styling */
   .topbar { background: var(--primary-red-grad); color: #fff; padding: 12px 14px; position: sticky; top: 0; z-index: 500; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 18px rgba(225, 29, 72, 0.35); }
   .brand-header-box { display: flex; align-items: center; gap: 10px; }
   .tech-mascot-avatar { width: 42px; height: 42px; background: #fff; border-radius: 50%; padding: 2px; border: 2px solid #ffe4e6; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
@@ -72,7 +69,6 @@
   .lang-btn:hover { background: rgba(255,255,255,0.3); }
   .user-badge { background: rgba(255,255,255,0.25); backdrop-filter: blur(8px); padding: 6px 12px; border-radius: 30px; font-size: 11px; font-weight: 800; cursor: pointer; white-space: nowrap; border: 1.5px solid rgba(255,255,255,0.45); }
   
-  /* Hero Trust Banner */
   .hero-trust-banner { background: linear-gradient(180deg, #ffe4e6 0%, #ffffff 100%); border-bottom: 1.5px solid var(--soft-red-border); padding: 18px 18px 14px; margin-bottom: 14px; }
   .trust-subtitle { font-size: 11.5px; font-weight: 900; color: var(--primary-red); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
   .hero-title { font-size: 20px; font-weight: 900; color: var(--title-dark-blue); line-height: 1.25; margin-bottom: 6px; letter-spacing: -0.3px; }
@@ -80,16 +76,13 @@
   .trust-pills { display: flex; gap: 8px; flex-wrap: wrap; }
   .trust-pill { background: #ffffff; color: var(--title-blue); border: 1.5px solid var(--title-blue-border); border-radius: 30px; padding: 5px 12px; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 2px 6px rgba(29,78,216,0.06); }
   
-  /* Titles in Blue */
   .section-title-blue { font-size: 16px; font-weight: 900; color: var(--title-blue); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; letter-spacing: -0.2px; }
   
-  /* Layout & Cards */
   .screen { display: none; padding: 16px; animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
   .screen.active { display: block; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
   .card { background: var(--soft-red-card); border: 1.5px solid var(--soft-red-border); border-radius: 14px; padding: 16px 18px; margin-bottom: 14px; box-shadow: 0 4px 15px -3px rgba(225,29,72,0.04); }
   
-  /* Category Selection Cards */
   .category-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 10px; }
   .category-card { border: 2px solid var(--soft-red-border); border-radius: 14px; padding: 16px 18px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: all 0.2s ease; background: #ffffff; gap: 12px; }
   .category-card:hover { border-color: var(--primary-red); background: var(--soft-red-hover); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(225,29,72,0.1); }
@@ -107,13 +100,10 @@
   
   .addon-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed var(--soft-red-border); font-size: 12.5px; }
   .addon-item:last-child { border-bottom: none; }
-  .addon-item label { display: flex; align-items: center; gap: 8px; cursor: pointer; flex: 1; font-weight: 600; }
   
-  /* Bold Terms Box */
   .terms-box { background: #fffbeb; border: 2px solid #fde68a; border-radius: 12px; padding: 14px; font-size: 12px; color: #78350f; margin-bottom: 14px; line-height: 1.55; }
   .terms-box b { color: #92400e; font-weight: 900; }
   
-  /* Buttons */
   .btn { width: 100%; padding: 14px; background: var(--primary-red-grad); color: #fff; border: none; border-radius: 12px; font-size: 14.5px; font-weight: 800; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 14px rgba(225, 29, 72, 0.35); text-align: center; }
   .btn:active { transform: scale(0.985); opacity: 0.92; }
   .btn.secondary { background: #fff; color: var(--primary-red); border: 2px solid var(--primary-red); box-shadow: none; font-weight: 800; }
@@ -121,25 +111,20 @@
   .btn.danger { background: linear-gradient(135deg, #ef4444, #b91c1c); color: #fff; }
   .btn.warning { background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; }
   
-  /* Inputs */
   .input-group { position: relative; margin-bottom: 12px; }
   input, select, textarea { width: 100%; padding: 13px 14px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none; background: #fff; color: #0f172a; transition: border-color 0.2s; font-weight: 600; }
   input:focus, select:focus, textarea:focus { border-color: var(--title-blue); box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.15); }
   .toggle-pw { position: absolute; right: 14px; top: 13px; font-size: 13px; color: var(--title-blue); cursor: pointer; font-weight: 800; user-select: none; }
   
-  /* Pricing rows */
   .price-row { display: flex; justify-content: space-between; font-size: 13.5px; padding: 6px 0; color: #475569; font-weight: 600; }
   .price-row.total { border-top: 2px dashed var(--soft-red-border); margin-top: 8px; padding-top: 10px; font-weight: 900; font-size: 16.5px; color: var(--primary-dark-red); }
   
-  /* QR Containers */
   .qr-box { background: #fff; border: 2.5px dashed var(--primary-red); border-radius: 16px; padding: 18px; text-align: center; margin-bottom: 16px; box-shadow: 0 4px 16px rgba(225,29,72,0.08); }
   .qr-img { width: 190px; height: 190px; margin: 10px auto; display: block; border-radius: 10px; border: 1.5px solid var(--soft-red-border); }
   
-  /* Modals */
   .modal-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; padding: 16px; }
   .modal-content { background: #fff; border-radius: 18px; max-width: 440px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 22px; box-shadow: 0 20px 40px rgba(0,0,0,0.25); animation: fadeIn 0.2s ease-in-out; border: 1.5px solid var(--soft-red-border); }
   
-  /* Invoice Paper (Mobile & Desktop Comfortable) */
   .invoice-paper { background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 24px; font-size: 13px; color: #1e293b; max-width: 680px; margin: 0 auto; line-height: 1.5; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
   .inv-header { text-align: center; border-bottom: 2.5px solid var(--title-blue); padding-bottom: 12px; margin-bottom: 16px; }
   .inv-header h2 { font-size: 20px; font-weight: 900; color: var(--title-blue); letter-spacing: 0.5px; }
@@ -151,7 +136,6 @@
   table.inv-table th { background: var(--title-blue-badge); color: var(--title-blue); font-weight: 900; font-size: 12px; }
   .inv-summary { margin-left: auto; width: 60%; min-width: 250px; font-size: 12.5px; margin-top: 8px; }
   
-  /* Mobile Navigation */
   .bottomnav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #ffffff; border-top: 1.5px solid var(--soft-red-border); display: flex; padding: 10px 0; z-index: 500; box-shadow: 0 -4px 20px rgba(225,29,72,0.06); }
   .nav-item { flex: 1; text-align: center; font-size: 11px; color: #64748b; cursor: pointer; transition: color 0.2s; font-weight: 700; }
   .nav-item.active { color: var(--title-blue); font-weight: 900; }
@@ -161,7 +145,6 @@
   #signupMap { height: 190px; width: 100%; border-radius: 12px; border: 2px solid var(--primary-red); margin-top: 6px; }
   #bookingMap { height: 200px; width: 100%; border-radius: 12px; border: 2px solid var(--primary-red); margin-top: 6px; }
   
-  /* Reviews */
   .star-rating { display: flex; gap: 8px; justify-content: center; margin: 12px 0; font-size: 28px; cursor: pointer; color: #cbd5e1; }
   .star-rating .star.selected { color: #f59e0b; }
   .review-item { border-bottom: 1px solid var(--soft-red-border); padding: 12px 0; font-size: 12px; }
@@ -389,7 +372,7 @@
 
         </div>
 
-        <!-- 1. GENERAL BOOKING, CANCELLATION & BILLING POLICY (MAIN INTERFACE) -->
+        <!-- POLICY BOX -->
         <div class="terms-box" style="margin-top:16px;" id="homePolicyBox">
           <h4 style="color:#92400e; font-size:13.5px; margin-bottom:8px; font-weight:900;">📋 1. Booking, Cancellation &amp; Billing Policy</h4>
           • <b>Advance Booking Fee:</b> A non-refundable advance fee of <b>₹21.00</b> is charged at the time of booking.<br>
@@ -400,7 +383,6 @@
           • <b>PIN Verification:</b> Hand over the 4-digit <b>Start PIN</b> upon arrival and 4-digit <b>Stop PIN</b> after testing to release the technician.
         </div>
 
-        <!-- REVIEWS FEED -->
         <div class="card" style="margin-top:14px;">
           <h3 class="section-title-blue" id="secReviewsTitle">⭐ Verified Customer Reviews</h3>
           <div id="homeReviewsContainer"><p style="font-size:12px; color:#64748b; font-weight:600;">Loading verified customer reviews...</p></div>
@@ -413,7 +395,7 @@
       </div>
     </div>
 
-    <!-- 3. CUSTOMER PROFILE SCREEN (Cleaned: No duplicate logout button in profile card) -->
+    <!-- 3. CUSTOMER PROFILE SCREEN -->
     <div id="screen-profile" class="screen">
       <div class="desktop-inner">
         <div class="card" style="border-left:5px solid var(--title-blue);">
@@ -441,13 +423,10 @@
           <p id="bookBaseScopeDesc" style="font-size:12px; color:#475569; margin-top:4px; line-height:1.45; font-weight:600;">-</p>
         </div>
 
-        <!-- DYNAMIC QUANTITY-BASED WORK SELECTION (NO CHECKBOXES) -->
         <div class="card" style="border-left:5px solid var(--primary-red);">
           <label style="font-size:13px; font-weight:900; color:var(--title-blue); margin-bottom:4px; display:block;" id="bookSelectWorksLabel">Select Required Works &amp; Quantity (– / +):</label>
           <p style="font-size:11px; color:#64748b; margin-bottom:10px; font-weight:600;" id="bookSelectWorksSub">Use + and - buttons to adjust count (Select at least one work):</p>
-          <div id="bookingServicesChecklist" style="max-height:260px; overflow-y:auto; border:1.5px solid #cbd5e1; border-radius:8px; padding:6px 10px; background:#fff;">
-            <!-- Dynamically populated via JS renderChecklist() -->
-          </div>
+          <div id="bookingServicesChecklist" style="max-height:260px; overflow-y:auto; border:1.5px solid #cbd5e1; border-radius:8px; padding:6px 10px; background:#fff;"></div>
         </div>
 
         <div class="card">
@@ -470,13 +449,10 @@
         <label style="font-size:12px; font-weight:800; color:var(--title-blue); margin-bottom:4px; display:block;" id="lblCustMobile">Customer Mobile Number:</label>
         <input type="tel" id="custPhoneInput" placeholder="10-digit mobile number" maxlength="10" readonly style="background:#f8fafc; font-weight:800;">
         
-        <!-- DYNAMIC SERVICE SPECIFIC TERMS & CONDITIONS -->
         <div class="terms-box">
           <label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer;">
             <input type="checkbox" id="bookingTermsCheckbox" style="width:20px; height:20px; margin-top:2px;">
-            <span id="bookingTermsText">
-              <!-- Dynamically populated based on trade selected -->
-            </span>
+            <span id="bookingTermsText"></span>
           </label>
         </div>
         <button class="btn" onclick="openDirectAdvancePayment()" id="btnProceedToken">Proceed to Pay Advance Token (₹21.00)</button>
@@ -537,7 +513,7 @@
       </div>
     </div>
 
-    <!-- 8. INVOICE TEMPLATE FOR PDF GENERATION (Mobile & Window Comfortable) -->
+    <!-- 8. INVOICE TEMPLATE FOR PDF GENERATION -->
     <div id="invoiceRenderWrapper" style="display:none; padding:20px; background:#f1f5f9;">
       <div class="invoice-paper" id="invoicePdf">
         <div class="inv-header">
@@ -625,7 +601,7 @@
   </div>
 </div>
 
-<!-- 10. TECHNICIAN WORK COMPLETION & BILLING MODAL (Without Saman List, Includes Pre-selected Customer Works) -->
+<!-- 10. TECHNICIAN WORK COMPLETION & BILLING MODAL -->
 <div id="techCompletionModal" class="modal-backdrop">
   <div class="modal-content">
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2.5px solid var(--title-blue); padding-bottom:10px; margin-bottom:12px;">
@@ -633,7 +609,6 @@
       <span style="font-size:22px; font-weight:900; cursor:pointer;" onclick="closeTechCompletionModal()">&times;</span>
     </div>
     
-    <!-- Customer Pre-Selected Work Summary -->
     <div style="background:var(--soft-red-bg); border:1.5px solid var(--soft-red-border); border-radius:10px; padding:12px; margin-bottom:12px; font-size:12px;">
       <b style="color:var(--title-blue); font-size:13px;">Customer Booked Works (Already Added):</b>
       <p style="color:#0f172a; margin-top:4px; font-weight:800;" id="modalInitialOrderText">Loading booked services...</p>
@@ -643,7 +618,6 @@
       </div>
     </div>
 
-    <!-- On-Site Additional Tasks (Without Material/Saman) - FIXED ALIGNMENT IN ONE LINE -->
     <div style="margin-bottom:12px;">
       <label style="font-weight:800; font-size:12.5px; color:var(--title-blue); display:block; margin-bottom:4px;" id="modalServicesHeading">Add Extra On-Site Works (If Performed):</label>
       <p style="font-size:11px; color:#64748b; margin-bottom:6px; font-weight:600;">Check any additional service done and quote price:</p>
@@ -725,7 +699,7 @@
 
 <script>
   const SUPABASE_URL = 'https://uwsmpnezreofqufnsdxz.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3c21wbmV6cmVvZnF1Zm5zZHh6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxMzI1MDUsImV4cCI6MjEwMjcwODUwNX0.iOUgvymY8zCbsWo7iM_nNTOiJEAXXKw1Blsd_ArsKcQ';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3c21wbmV6cmVvZnF1Zm5zZHh6In0.iOUgvymY8zCbsWo7iM_nNTOiJEAXXKw1Blsd_ArsKcQ';
   const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   const KASHVI_UPI_VPA = '8677900810@ybl';
@@ -733,7 +707,6 @@
   const OVERTIME_RATE_PER_HOUR = 100;
   const FREE_HOURS_BEFORE_OVERTIME = 3;
 
-  /* ==================== MULTI-LANGUAGE (EN / HI) ENGINE ==================== */
   let currentLang = localStorage.getItem('bm_lang') || 'en';
 
   const I18N = {
@@ -795,34 +768,33 @@
       pillLocal: '⚡ स्थानीय बेगूसराय टीम',
       secMapTitle: '🗺️ बेगूसराय डिस्पैच लोकेशन मैप',
       secCatTitle: '⚡ सर्विस कैटेगरी चुनें',
-      catElectricTitle: '⚡ इलेक्ट्रिकल सेवाएं (बिजली मिस्त्री)',
-      catElectricDesc: 'वायरिंग, स्विच, पंखा, एमसीबी, इन्वर्टर रिपेयर',
+      catElectricTitle: '⚡ इलेक्ट्रिकल सेवाएं',
+      catElectricDesc: 'वायरिंग, स्विच, पंखा, एमसीबी, इन्वर्टर',
       catElectricSub: '🔌 लाइन एवं वायर फिटिंग • 💡 बल्ब एवं पंखा मरम्मत',
       catAcTitle: '❄️ एसी रिपेयर एवं सर्विस',
       catAcDesc: 'जेट पंप वॉश, इंस्टॉलेशन, गैस रिफिलिंग',
-      catAcSub: '💨 डीप जेट वॉश • 🌬️ तेज एवं ठंडी कूलिंग',
-      catPlumberTitle: '🔧 प्लंबिंग कार्य (नल-पाइप मिस्त्री)',
+      catAcSub: '💨 डीप जेट वॉश • 🌬️ ठंडी कूलिंग',
+      catPlumberTitle: '🔧 प्लंबिंग कार्य',
       catPlumberDesc: 'पाइपलाइन, नल, लीकेज, वाटर टैंक सफाई',
-      catPlumberSub: '🚰 पाइप एवं वाल्व फिटिंग • 🚿 सॉकेट एवं टंकी देखभाल',
+      catPlumberSub: '🚰 पाइप एवं वाल्व फिटिंग • 🚿 टंकी देखभाल',
       badgeInspection: '(विज़िटिंग/जांच शुल्क)',
       homePolicyBox: `<h4 style="color:#92400e; font-size:13.5px; margin-bottom:8px; font-weight:900;">📋 1. बुकिंग, रद्दीकरण एवं बिलिंग नियम</h4>
         • <b>अग्रिम बुकिंग टोकन:</b> बुकिंग की पुष्टि के समय <b>₹21.00</b> का टोकन शुल्क लिया जाता है।<br>
         • <b>रद्दीकरण नियम:</b> ग्राहक द्वारा बुकिंग रद्द करने पर टोकन राशि <b>₹21.00 वापस (रिफंड) नहीं होगी</b>।<br>
-        • <b>बिल में समायोजन:</b> कार्य सफलतापूर्वक पूरा होने पर, यह ₹21.00 कुल बिल से <b>घटा दिया जाएगा</b> और ग्राहक को केवल शेष राशि देनी होगी।<br>
-        • <b>सामान का खर्च:</b> सभी दरें केवल <b>मिस्त्री (लेबर) चार्ज</b> हैं। कोई भी नया सामान (पाइप, तार, गैस, स्विच आदि) ग्राहक द्वारा दिया जाएगा या अलग से जोड़ा जाएगा।<br>
-        • <b>भुगतान का माध्यम:</b> कार्य पूरा होने व जांच के तुरंत बाद <b>कैश या यूपीआई (QR)</b> द्वारा भुगतान करना अनिवार्य है।<br>
-        • <b>पिन सत्यापन:</b> कारीगर के आने पर 4-अंकों का <b>Start PIN</b> और काम खत्म होने पर <b>Stop PIN</b> दें।`,
+        • <b>बिल में समायोजन:</b> कार्य सफलतापूर्वक पूरा होने पर, यह ₹21.00 कुल बिल से <b>घटा दिया जाएगा</b>।<br>
+        • <b>सामान का खर्च:</b> सभी दरें केवल <b>मिस्त्री (लेबर) चार्ज</b> हैं। कोई भी नया सामान अलग से देय होगा।<br>
+        • <b>भुगतान का माध्यम:</b> कार्य पूरा होने व जांच के तुरंत बाद <b>कैश या यूपीआई (QR)</b> द्वारा भुगतान करें।`,
       secReviewsTitle: '⭐ सत्यापित ग्राहकों की प्रतिक्रिया',
       secCorpTitle: '🏢 कमर्शियल एवं बल्क ऑर्डर डेस्क',
-      secCorpDesc: 'कॉर्पोरेट या बड़े पैमाने पर एसी, बिजली या प्लंबिंग मेंटेनेंस के लिए हमारे आधिकारिक ईमेल पर संपर्क करें: <a href="mailto:kashvienterprises.bihar@gmail.com" style="color:var(--title-blue); font-weight:900;">kashvienterprises.bihar@gmail.com</a>',
+      secCorpDesc: 'कॉर्पोरेट या बड़े पैमाने पर एसी, बिजली या प्लंबिंग मेंटेनेंस के लिए संपर्क करें: <a href="mailto:kashvienterprises.bihar@gmail.com" style="color:var(--title-blue); font-weight:900;">kashvienterprises.bihar@gmail.com</a>',
       bookBackBtn: '← वापस',
       bookSelectWorksLabel: 'आवश्यक कार्य एवं संख्या चुनें (– / +):',
-      bookSelectWorksSub: '+ और - बटन से मात्रा तय करें (कम से कम एक काम चुनना अनिवार्य है):',
+      bookSelectWorksSub: '+ और - बटन से मात्रा तय करें:',
       lblEstimatedAmt: 'अनुमानित सर्विस शुल्क',
       lblEstimatedTotal: 'अनुमानित कुल राशि',
       lblAdvanceToken: 'अग्रिम बुकिंग टोकन',
-      lblDueAmount: 'टोकन कटौती के बाद शेष देय राशि',
-      bookCancelWarning: '⚠️ <b>रद्दीकरण नियम:</b> बुकिंग के बाद ₹21.00 अग्रिम टोकन राशि किसी भी स्थिति में <b>वापस (NON-REFUNDABLE) नहीं होगी</b>।',
+      lblDueAmount: 'शेष देय राशि',
+      bookCancelWarning: '⚠️ <b>रद्दीकरण नियम:</b> बुकिंग के बाद ₹21.00 अग्रिम टोकन राशि <b>वापस नहीं होगी</b>।',
       lblServiceAddress: 'सर्विस का पूरा पता:',
       lblMapLocation: '📍 मैप से लोकेशन चुनें',
       btnToggleMap: 'मैप खोलें / बंद करें',
@@ -836,7 +808,7 @@
   function applyLanguage(lang) {
     currentLang = lang;
     localStorage.setItem('bm_lang', lang);
-    const t = I18N[lang];
+    const t = I18N[lang] || I18N.en;
     
     document.getElementById('langSwitchBtn').textContent = t.langBtn;
     document.getElementById('topbarCity').textContent = t.city;
@@ -887,7 +859,6 @@
     applyLanguage(nextLang);
   }
 
-  // Category SAC Code Mapping (Electrician: 9987, AC: 9987, Plumber: 9954/9987)
   const SERVICE_CONFIG = {
     electrician: { title: 'Electrical Services', base: 102.54, gst: 18.46, total: 121.00, sac: '9987', scope: '✅ <b>Scope:</b> Visiting &amp; Minimum Inspection / Diagnostic Check' },
     plumber: { title: 'Plumbing Works', base: 102.54, gst: 18.46, total: 121.00, sac: '9954/9987', scope: '✅ <b>Scope:</b> Visiting &amp; Minimum Inspection / Diagnostic Check' },
@@ -957,12 +928,6 @@
     ac: ['Visiting / Inspection Charge (If no repair is done)','Window AC Normal Service','Window AC Jet Wash Service','Split AC Jet Wash Service','Water Leakage / Drain Choke Fix','Capacitor Replacement (Labour + Capacitor)','Sensor Replacement (Labour + Sensor)','Swing Motor Replacement (Labour + Motor)','Minor Leakage Repair','Major Leakage Repair (Brazing + Vacuuming)','Full Gas Refilling (R32/R410A/R22 with Vacuum)','Non-Inverter PCB Repair','Inverter AC PCB Repair','Blower / Condenser Motor Labour','Compressor Replacement Labour','Split AC Installation (Standard Labour)','Split AC Uninstallation','Window AC Installation','Window AC Uninstallation','Others (Custom AC Service)']
   };
 
-  const SPARE_PARTS_CATALOG = {
-    electrician: [{ name: 'MCB (Single Pole)', code: 'HSN 8536', rate: 99.00 },{ name: 'Switch / Socket', code: 'HSN 8536', rate: 30.00 },{ name: 'Wire (per meter)', code: 'HSN 8544', rate: 15.00 },{ name: 'Fan Capacitor', code: 'HSN 8532', rate: 60.00 }],
-    ac: [{ name: 'Outdoor Heavy Bracket (Stand)', code: 'HSN 7326', rate: 700.00 },{ name: 'Copper Pipe (with Insulation & Wire per meter)', code: 'HSN 7411', rate: 750.00 },{ name: 'Drain Pipe (per meter)', code: 'HSN 3917', rate: 40.00 }],
-    plumber: [{ name: 'PVC Pipe (per meter)', code: 'HSN 3917', rate: 60.00 },{ name: 'Bib Tap', code: 'HSN 8481', rate: 120.00 },{ name: 'Angle Valve', code: 'HSN 8481', rate: 90.00 }]
-  };
-
   const CATEGORY_TERMS_CONFIG = {
     electrician: `
       <b>TERMS &amp; CONDITIONS (2. Electrical Services):</b><br>
@@ -994,64 +959,16 @@
   let currentUser = null;
   const savedCustomer = localStorage.getItem('bm_active_customer');
   if (savedCustomer) { 
-    try { 
-      currentUser = JSON.parse(savedCustomer); 
-    } catch(e){} 
+    try { currentUser = JSON.parse(savedCustomer); } catch(e){} 
   }
 
-  let isCustomerSignupMode = false, isOtpDispatched = false, currentCategory = 'electrician', pendingAdvanceState = null, activeTechSession = null, isAdminLoggedIn = false, activeModalJob = null, bookingMap = null, bookingMapMarker = null, signupMap = null, signupMapMarker = null, selectedReviewScore = 5, pendingReviewJobId = null, pendingTechCalculatedPayload = null;
+  let currentCategory = 'electrician', pendingAdvanceState = null, activeTechSession = null, isAdminLoggedIn = false, activeModalJob = null, bookingMap = null, bookingMapMarker = null, signupMap = null, signupMapMarker = null, selectedReviewScore = 5, pendingTechCalculatedPayload = null;
 
   async function hashPassword(plain) {
     const enc = new TextEncoder().encode(plain);
     const buf = await crypto.subtle.digest('SHA-256', enc);
     return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
   }
-
-  /* ==================== PULL TO REFRESH LOGIC ==================== */
-  let touchStartY = 0;
-  let touchCurrentY = 0;
-  let isPulling = false;
-
-  window.addEventListener('touchstart', (e) => {
-    if (window.scrollY === 0) {
-      touchStartY = e.touches[0].clientY;
-      isPulling = true;
-    }
-  }, { passive: true });
-
-  window.addEventListener('touchmove', (e) => {
-    if (!isPulling) return;
-    touchCurrentY = e.touches[0].clientY;
-    const distance = touchCurrentY - touchStartY;
-    if (distance > 70 && window.scrollY === 0) {
-      const indicator = document.getElementById('pullToRefreshIndicator');
-      indicator.classList.add('visible');
-    }
-  }, { passive: true });
-
-  window.addEventListener('touchend', async () => {
-    if (!isPulling) return;
-    const distance = touchCurrentY - touchStartY;
-    if (distance > 70 && window.scrollY === 0) {
-      const indicator = document.getElementById('pullToRefreshIndicator');
-      indicator.classList.add('visible');
-      
-      if (activeTechSession) {
-        await renderPoolJobs();
-      } else if (currentUser) {
-        await loadCustomerOrders();
-      } else {
-        await loadHomeReviews();
-      }
-      
-      setTimeout(() => {
-        indicator.classList.remove('visible');
-      }, 700);
-    }
-    isPulling = false;
-    touchStartY = 0;
-    touchCurrentY = 0;
-  }, { passive: true });
 
   function updateRoleBasedNavigation() {
     const badge = document.getElementById('topAuthBadge');
@@ -1118,7 +1035,6 @@
 
   function toggleCustomerAuthMode() {
     isCustomerSignupMode = !isCustomerSignupMode;
-    isOtpDispatched = false;
     document.getElementById('custAuthFormTitle').textContent = isCustomerSignupMode ? "Customer Registration" : "Customer Login";
     document.getElementById('custAuthToggleBtn').textContent = isCustomerSignupMode ? "Already have account? Login" : "New user? Sign Up";
     document.getElementById('custAuthActionBtn').textContent = isCustomerSignupMode ? "Verify OTP & Register" : "Login & Proceed";
@@ -1126,9 +1042,6 @@
     document.getElementById('otpPasswordCreationGroup').style.display = "none";
     document.getElementById('loginPasswordGroup').style.display = isCustomerSignupMode ? "none" : "block";
     document.getElementById('authMsg').textContent = "";
-    document.getElementById('authCreatePassword').value = "";
-    document.getElementById('authLoginPassword').value = "";
-    document.getElementById('authEmailOtp').value = "";
     if (isCustomerSignupMode) {
       setTimeout(() => {
         initSignupMap();
@@ -1154,7 +1067,10 @@
   }
 
   function initBookingMap() {
-    if (bookingMap) return;
+    if (bookingMap) {
+      setTimeout(() => bookingMap.invalidateSize(), 150);
+      return;
+    }
     bookingMap = L.map('bookingMap', { center: [25.4182, 86.1272], zoom: 13, minZoom: 11, maxBounds: begusaraiBounds, maxBoundsViscosity: 1.0 });
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { bounds: begusaraiBounds }).addTo(bookingMap);
     bookingMapMarker = L.marker([25.4182, 86.1272]).addTo(bookingMap);
@@ -1183,7 +1099,9 @@
   function toggleBookingMap() {
     const container = document.getElementById('bookingMapContainer');
     container.style.display = container.style.display === 'none' ? 'block' : 'none';
-    if (container.style.display === 'block' && bookingMap) setTimeout(() => bookingMap.invalidateSize(), 150);
+    if (container.style.display === 'block') {
+      setTimeout(() => { initBookingMap(); }, 150);
+    }
   }
 
   function togglePasswordVisibility(inputId, el) {
@@ -1198,8 +1116,6 @@
     return { upiUri, qrUrl };
   }
 
-  // ==================== GOOGLE AUTH ====================
-  let pendingGoogleUser = null, googleSignupMap = null, googleSignupMapMarker = null;
   async function signInWithGoogle() {
     const { error } = await sbClient.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + window.location.pathname } });
     if (error) alert("Google login error: " + error.message);
@@ -1225,20 +1141,8 @@
       pendingGoogleUser = { email, name };
       document.getElementById('googlePhoneModal').style.display = 'flex';
       if (existing) { document.getElementById('googlePhoneInput').value = existing.phone || ''; document.getElementById('googleAddressInput').value = existing.address || ''; }
-      setTimeout(initGoogleSignupMap, 150);
     }
   });
-
-  function initGoogleSignupMap() {
-    if (googleSignupMap) { googleSignupMap.invalidateSize(); return; }
-    googleSignupMap = L.map('googleSignupMap', { center: [25.4182, 86.1272], zoom: 13, minZoom: 11, maxBounds: begusaraiBounds, maxBoundsViscosity: 1.0 });
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { bounds: begusaraiBounds }).addTo(googleSignupMap);
-    googleSignupMapMarker = L.marker([25.4182, 86.1272]).addTo(googleSignupMap);
-    googleSignupMap.on('click', function(e) {
-      googleSignupMapMarker.setLatLng(e.latlng);
-      reverseGeocodeAndFill(e.latlng.lat, e.latlng.lng, 'googleAddressInput', googleSignupMapMarker);
-    });
-  }
 
   async function submitGooglePhone() {
     const phone = document.getElementById('googlePhoneInput').value.trim();
@@ -1247,7 +1151,6 @@
     if (!/^[6-9]\d{9}$/.test(phone)) { errEl.textContent = "Please enter a valid 10-digit Indian mobile number."; return; }
     if (!address) { errEl.textContent = "Please select or type your exact address."; return; }
     errEl.textContent = "";
-    if (!pendingGoogleUser) return;
 
     const { error } = await sbClient.from('customers').upsert({ email: pendingGoogleUser.email, name: pendingGoogleUser.name, phone, address }, { onConflict: 'email' });
     if (error) { errEl.textContent = "Could not save details: " + error.message; return; }
@@ -1258,7 +1161,6 @@
     updateRoleBasedNavigation(); navigateTo('home', true);
   }
 
-  // ==================== EMAIL OTP & AUTH ====================
   async function sendEmailVerificationOtp() {
     const email = document.getElementById('authEmail').value.trim().toLowerCase();
     const name = document.getElementById('custRegName').value.trim();
@@ -1275,7 +1177,6 @@
     try {
       const { error } = await sbClient.auth.signInWithOtp({ email: email, options: { shouldCreateUser: true } });
       if (error) { msg.textContent = "Failed to send OTP: " + error.message; msg.style.color = "#c0392b"; return; }
-      isOtpDispatched = true;
       document.getElementById('otpPasswordCreationGroup').style.display = 'block';
       document.getElementById('sendEmailOtpBtn').textContent = "🔄 Resend Email OTP";
       msg.textContent = "OTP Sent! Enter the 6-digit code and create your password."; msg.style.color = "var(--title-blue)";
@@ -1294,21 +1195,18 @@
       const otpToken = document.getElementById('authEmailOtp').value.trim();
       const newPassword = document.getElementById('authCreatePassword').value.trim();
 
-      if (!isOtpDispatched || otpToken.length !== 6) { msg.textContent = "Please send OTP and enter the 6-digit code received on email."; msg.style.color = "#c0392b"; return; }
+      if (otpToken.length !== 6) { msg.textContent = "Please enter the 6-digit code received on email."; msg.style.color = "#c0392b"; return; }
       if (newPassword.length < 6) { msg.textContent = "Created Password must be at least 6 characters."; msg.style.color = "#c0392b"; return; }
 
-      msg.textContent = "Verifying OTP and creating your account..."; msg.style.color = "var(--title-blue)";
       const { error: verifyErr } = await sbClient.auth.verifyOtp({ email: email, token: otpToken, type: 'email' });
       if (verifyErr) { msg.textContent = "Invalid or expired Email OTP: " + verifyErr.message; msg.style.color = "#c0392b"; return; }
 
       const hashedPassword = await hashPassword(newPassword);
-      const { error: insertErr } = await sbClient.from('customers').upsert([{ email, name, phone, address, password_hash: hashedPassword }], { onConflict: 'email' });
-      if (insertErr) { msg.textContent = "Registration database error: " + insertErr.message; msg.style.color = "#c0392b"; return; }
+      await sbClient.from('customers').upsert([{ email, name, phone, address, password_hash: hashedPassword }], { onConflict: 'email' });
 
       alert("Account Created Successfully! Please login using your email and password.");
       toggleCustomerAuthMode();
       document.getElementById('authEmail').value = email;
-      msg.textContent = "Account verified! Enter your password to log in."; msg.style.color = "var(--title-blue)";
     } else {
       const loginPassword = document.getElementById('authLoginPassword').value.trim();
       if (loginPassword.length < 6) { msg.textContent = "Password must be at least 6 characters."; msg.style.color = "#c0392b"; return; }
@@ -1316,11 +1214,7 @@
       const hashedPassword = await hashPassword(loginPassword);
       let { data: account } = await sbClient.from('customers').select('*').eq('email', email).single();
       
-      if (!account) { 
-        msg.textContent = "Account not found with this email. Please switch to Sign Up."; 
-        msg.style.color = "#c0392b"; 
-        return; 
-      }
+      if (!account) { msg.textContent = "Account not found with this email. Please switch to Sign Up."; msg.style.color = "#c0392b"; return; }
       if (account.is_blocked) { msg.textContent = "This account has been blocked by Admin."; msg.style.color = "#c0392b"; return; }
       if (account.password_hash !== hashedPassword) { msg.textContent = "Incorrect password. Please re-enter."; msg.style.color = "#c0392b"; return; }
 
@@ -1340,7 +1234,6 @@
     loadCustomerOrders();
   }
 
-  // ==================== BOOKING & ADVANCE PAYMENT ====================
   function renderChecklist(catKey) {
     const services = SERVICE_RATE_LISTS[catKey] || [];
     const container = document.getElementById('bookingServicesChecklist');
@@ -1404,15 +1297,11 @@
     document.getElementById('custAddressInput').value = currentUser.address || "";
     document.getElementById('bookingTermsCheckbox').checked = false;
 
-    // Render Dynamic – / + UI
     renderChecklist(catKey);
-
-    // Auto populate category specific terms
     document.getElementById('bookingTermsText').innerHTML = CATEGORY_TERMS_CONFIG[catKey] || CATEGORY_TERMS_CONFIG.electrician;
     
     navigateTo('booking');
-    initBookingMap();
-    setTimeout(() => { if (bookingMap) bookingMap.invalidateSize(); }, 200);
+    setTimeout(() => { initBookingMap(); }, 200);
   }
 
   const CASHFREE_EDGE_FUNCTION_URL = 'https://uwsmpnezreofqufnsdxz.supabase.co/functions/v1/create-cashfree-order';
@@ -1437,7 +1326,6 @@
     const phone = currentUser ? currentUser.phone : document.getElementById('custPhoneInput').value.trim();
     const termsAccepted = document.getElementById('bookingTermsCheckbox').checked;
 
-    // Collect all selected services with quantity > 0
     let selectedServiceNames = [];
     let totalEstimated = 0;
     let hasActualWork = false;
@@ -1518,7 +1406,6 @@
     goToCustomerProfile();
   }
 
-  // ==================== RE-VISIT (WARRANTY CLAIM) ====================
   async function claimFreeRevisit(parentInvoiceNo, serviceType) {
     if (!confirm("Claim Free Re-visit under 07-Day Workmanship Warranty?\nOur technician will inspect the previous repair work at ₹0 Base Fee.")) return;
     
@@ -1544,14 +1431,13 @@
 
     try { await sbClient.from('bookings').insert([revisitBooking]); } catch(e){}
     let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
-    localPool = localPool.map(j => (j.id === invoiceNo || j.invoice_no === invoiceNo) ? { ...j, ...revisitBooking } : j);
+    localPool.unshift(revisitBooking);
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
 
     alert(`Re-visit Booked Free of Charge! Order ID: ${invoiceNo}\nBroadcasting to nearest technicians.`);
     loadCustomerOrders();
   }
 
-  // ==================== CUSTOMER ORDERS & BILLING ====================
   async function loadCustomerOrders() {
     if (!currentUser) return;
     const container = document.getElementById('customerHistoryContainer');
@@ -1623,59 +1509,10 @@
     let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
     localPool = localPool.map(j => (j.id === orderId || j.invoice_no === orderId) ? { ...j, job_status: 'cancelled', payment_status: 'cancelled_non_refundable' } : j);
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
-    alert("Your booking has been cancelled. An official cancellation fee receipt (₹21.00 Non-Refundable) is ready for download.");
+    alert("Your booking has been cancelled.");
     loadCustomerOrders();
   }
 
-  // ==================== CANCELLATION RECEIPT PDF ====================
-  async function downloadCancellationReceiptPdf(orderId) {
-    let data = null;
-    try { const res = await sbClient.from('bookings').select('*').or(`id.eq.${orderId},invoice_no.eq.${orderId}`).single(); data = res.data; } catch(e){}
-    if (!data) { let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]'); data = localPool.find(j => j.id === orderId || j.invoice_no === orderId); }
-    if (!data) return;
-
-    document.getElementById('pdfDocTypeTitle').textContent = "CANCELLATION & ADMINISTRATIVE FEE RECEIPT";
-    document.getElementById('pdfCustName').textContent = data.customer_name || currentUser.name || "Customer";
-    document.getElementById('pdfCustPhone').textContent = data.customer_phone;
-    document.getElementById('pdfInvNo').textContent = data.invoice_no + '-CNL';
-    document.getElementById('pdfCustAddr').textContent = data.customer_address;
-    document.getElementById('pdfTech').textContent = 'Direct Dispatch Desk';
-    document.getElementById('pdfDate').textContent = new Date(data.created_at || Date.now()).toLocaleDateString('en-IN');
-
-    const taxableFee = 21.00 / 1.18;
-    const gstVal = 21.00 - taxableFee;
-
-    document.getElementById('pdfItemsBody').innerHTML = `
-      <tr>
-        <td>1</td>
-        <td>Booking Cancellation &amp; Administrative Dispatch Fee (Non-Refundable)</td>
-        <td>9987</td>
-        <td>₹${taxableFee.toFixed(2)}</td>
-        <td>18%</td>
-        <td>₹21.00</td>
-      </tr>
-    `;
-
-    document.getElementById('pdfSubtotal').textContent = `₹${taxableFee.toFixed(2)}`;
-    document.getElementById('pdfCgst').textContent = `₹${(gstVal / 2).toFixed(2)}`;
-    document.getElementById('pdfSgst').textContent = `₹${(gstVal / 2).toFixed(2)}`;
-    document.getElementById('pdfAdvanceTokenRow').style.display = 'none';
-    document.getElementById('pdfGrandTotalLabel').textContent = "Total Fee Paid (Non-Refundable)";
-    document.getElementById('pdfGrandTotal').textContent = `₹21.00`;
-    document.getElementById('pdfCancellationNote').style.display = 'block';
-
-    const el = document.getElementById('invoicePdf');
-    document.getElementById('invoiceRenderWrapper').style.display = 'block';
-    html2pdf().from(el).set({ margin: [10, 10, 10, 10], filename: `${data.invoice_no}_Cancellation_Receipt.pdf`, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } }).save().then(() => {
-      document.getElementById('invoiceRenderWrapper').style.display = 'none';
-      document.getElementById('pdfAdvanceTokenRow').style.display = 'flex';
-      document.getElementById('pdfCancellationNote').style.display = 'none';
-      document.getElementById('pdfDocTypeTitle').textContent = "TAX INVOICE / SERVICE RECEIPT";
-      document.getElementById('pdfGrandTotalLabel').textContent = "Grand Total (Net Due)";
-    });
-  }
-
-  // ==================== OFFICIAL TAX INVOICE PDF (SAC 9987 & 9954/9987) ====================
   async function downloadOrderPdf(orderId) {
     let data = null;
     try { const res = await sbClient.from('bookings').select('*').or(`id.eq.${orderId},invoice_no.eq.${orderId}`).single(); data = res.data; } catch(e){}
@@ -1691,7 +1528,7 @@
     document.getElementById('pdfDate').textContent = new Date(data.created_at || Date.now()).toLocaleDateString('en-IN');
 
     const cfg = SERVICE_CONFIG[data.service_type] || SERVICE_CONFIG.electrician;
-    const sacCode = cfg.sac; // 9987 for electric/ac and 9954/9987 for plumber
+    const sacCode = cfg.sac;
     const baseTotal = parseFloat(data.base_fee) || 0;
     const extraServicesTotal = parseFloat(data.extra_on_site_cost) || 0;
     const overtimeCharge = parseFloat(data.overtime_charge) || 0;
@@ -1710,25 +1547,17 @@
 
     let rowsHtml = '';
     let sr = 1;
-
-    // Display customer booked services with specific SAC Code
     const bookedDetails = data.extra_services || `${cfg.title} (Base Inspection Pack)`;
     rowsHtml += `<tr><td>${sr++}</td><td><b>${cfg.title}:</b> ${isRevisit ? '(Warranty Re-visit - ₹0 Base)' : bookedDetails}</td><td>${sacCode}</td><td>₹${taxableBase.toFixed(2)}</td><td>18%</td><td>₹${baseGross.toFixed(2)}</td></tr>`;
     
     if (extraServicesTotal > 0) {
       rowsHtml += `<tr><td>${sr++}</td><td>On-Site Extra Services / Works</td><td>${sacCode}</td><td>₹${taxableExtra.toFixed(2)}</td><td>18%</td><td>₹${extraServicesTotal.toFixed(2)}</td></tr>`;
     }
-    
-    if (overtimeCharge > 0) {
-      rowsHtml += `<tr><td>${sr++}</td><td>Overtime Charge (${data.overtime_hours || 0} hr @ ₹100/hr)</td><td>-</td><td>₹${taxableOvertime.toFixed(2)}</td><td>18%</td><td>₹${overtimeCharge.toFixed(2)}</td></tr>`;
-    }
 
     document.getElementById('pdfItemsBody').innerHTML = rowsHtml;
     document.getElementById('pdfSubtotal').textContent = `₹${subtotal.toFixed(2)}`;
     document.getElementById('pdfCgst').textContent = `₹${(totalGst / 2).toFixed(2)}`;
     document.getElementById('pdfSgst').textContent = `₹${(totalGst / 2).toFixed(2)}`;
-    document.getElementById('pdfAdvanceTokenRow').style.display = isRevisit ? 'none' : 'flex';
-    document.getElementById('pdfGrandTotalLabel').textContent = "Grand Total (Net Settled):";
     document.getElementById('pdfGrandTotal').textContent = `₹${Math.max(0, netGrand).toFixed(2)}`;
 
     const el = document.getElementById('invoicePdf');
@@ -1738,18 +1567,50 @@
     });
   }
 
-  // Init Language on load
+  async function loginTechnicianToPool() {
+    const techId = document.getElementById('techIdInput').value.trim().toUpperCase();
+    const cat = document.getElementById('techCategorySelect').value;
+    const pin = document.getElementById('techPinInput').value.trim();
+    const msg = document.getElementById('authMsg');
+    
+    if (!techId || pin.length !== 6) { 
+      msg.textContent = "Please enter valid Technician ID and 6-digit PIN."; 
+      msg.style.color = "#c0392b"; 
+      return; 
+    }
+
+    const pinHash = await hashPassword(pin);
+
+    try {
+      let { data } = await sbClient.from('technicians').select('*').eq('tech_code', techId).eq('category', cat).single();
+      
+      if (!data) { 
+        msg.textContent = "Invalid Technician ID / Category."; 
+        msg.style.color = "#c0392b"; 
+        return; 
+      }
+      
+      const isValidHashedPin = data.pin_hash && data.pin_hash === pinHash;
+      const isValidPlainPin = (!data.pin_hash || data.pin_hash === '') && (data.phone === pin || data.contact_phone === pin);
+
+      if (!isValidHashedPin && !isValidPlainPin) {
+        msg.textContent = "Incorrect 6-digit PIN."; 
+        msg.style.color = "#c0392b"; 
+        return; 
+      }
+
+      activeTechSession = { name: data.name, category: cat, id: data.id, techCode: data.tech_code, phone: data.contact_phone || '' };
+      document.getElementById('topAuthBadge').textContent = "🧑‍🔧 " + data.name + " (" + data.tech_code + ")";
+      document.getElementById('techPoolHeader').textContent = `${data.name} [${data.tech_code}] (${cat.toUpperCase()} Pool)`;
+      msg.textContent = ""; 
+      updateRoleBasedNavigation(); 
+      navigateTo('tech-pool', true); 
+    } catch(e) { msg.textContent = "Login Error: " + e.message; msg.style.color = "#c0392b"; }
+  }
+
   applyLanguage(currentLang);
   updateRoleBasedNavigation();
   initSignupMap();
-  loadHomeReviews();
-  setInterval(checkCooldownState, 1000);
-
-  window.addEventListener('load', () => {
-    if (window.location.search.includes('order_id') || window.location.hash === '#profile') {
-      setTimeout(() => { goToCustomerProfile(); }, 300);
-    }
-  });
 </script>
 
 </body>
