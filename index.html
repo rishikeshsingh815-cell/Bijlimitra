@@ -436,11 +436,11 @@
           <p id="bookBaseScopeDesc" style="font-size:12px; color:#475569; margin-top:4px; line-height:1.45; font-weight:600;">-</p>
         </div>
 
-        <!-- MANDATORY SERVICE CHECKLIST -->
+        <!-- DYNAMIC QUANTITY-BASED WORK SELECTION (NO CHECKBOXES) -->
         <div class="card" style="border-left:5px solid var(--primary-red);">
-          <label style="font-size:13px; font-weight:900; color:var(--title-blue); margin-bottom:6px; display:block;">Select Required Works (Mandatory Checklist):</label>
-          <p style="font-size:11px; color:#64748b; margin-bottom:8px; font-weight:600;">Please select at least one service item to proceed:</p>
-          <div id="bookingServicesChecklist" style="max-height:220px; overflow-y:auto; border:1.5px solid #cbd5e1; border-radius:8px; padding:6px 10px; background:#fff;">
+          <label style="font-size:13px; font-weight:900; color:var(--title-blue); margin-bottom:4px; display:block;">Select Required Works &amp; Quantity (– / +):</label>
+          <p style="font-size:11px; color:#64748b; margin-bottom:10px; font-weight:600;">Use + and - buttons to adjust count (Select at least one work):</p>
+          <div id="bookingServicesChecklist" style="max-height:260px; overflow-y:auto; border:1.5px solid #cbd5e1; border-radius:8px; padding:6px 10px; background:#fff;">
             <!-- Dynamically populated via JS renderChecklist() -->
           </div>
         </div>
@@ -1165,57 +1165,45 @@
     container.innerHTML = services.map((s, idx) => {
       const isMandatory = s.name.includes('Visiting');
       return `
-        <div class="addon-item" style="flex-wrap: wrap; gap:8px;">
-          <label style="flex:1; display:flex; align-items:center; gap:8px;">
-            <input type="checkbox"
-                   class="cust-book-service-cb"
-                   id="cb_${catKey}_${idx}"
-                   data-price="${s.price}"
-                   data-name="${s.name}"
-                   ${isMandatory ? 'checked disabled' : ''}
-                   onchange="toggleQtyUI('${catKey}_${idx}', ${isMandatory}); recalculateCustomerBookingTotal()">
-            <span style="font-size:12.5px;">${s.name} ${s.price > 0 ? '<b style="color:var(--primary-red);">(₹' + s.price + ' ' + s.unit + ')</b>' : '<b style="color:var(--title-blue);">(Quoted on-site)</b>'}</span>
-          </label>
-          ${!isMandatory && s.price > 0 ? `
-            <div id="qty_ui_${catKey}_${idx}" style="display:none; align-items:center; gap:8px;">
-              <button type="button" style="width:24px; height:24px; border:1px solid #cbd5e1; background:#f1f5f9; border-radius:4px; font-weight:bold; cursor:pointer;" onclick="changeQty('${catKey}_${idx}', -1)">-</button>
-              <span id="qty_val_${catKey}_${idx}" style="font-weight:900; font-size:13px; width:16px; text-align:center;">1</span>
-              <button type="button" style="width:24px; height:24px; border:1px solid #cbd5e1; background:#f1f5f9; border-radius:4px; font-weight:bold; cursor:pointer;" onclick="changeQty('${catKey}_${idx}', 1)">+</button>
+        <div class="addon-item" style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px dashed #cbd5e1;">
+          <div style="flex:1; padding-right:10px;">
+            <div style="font-size:13px; font-weight:700; color:#0f172a;">${s.name}</div>
+            <div style="font-size:11.5px; color:${s.price > 0 ? 'var(--primary-red)' : 'var(--title-blue)'}; font-weight:800;">
+              ${s.price > 0 ? '₹' + s.price + ' (' + s.unit + ')' : 'Price quoted on-site'}
             </div>
-          ` : ''}
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            ${!isMandatory ? `
+              <button type="button" style="width:28px; height:28px; border:1.5px solid #cbd5e1; background:#f8fafc; border-radius:6px; font-weight:900; font-size:15px; cursor:pointer; color:#0f172a;" onclick="changeQty('${catKey}_${idx}', -1)">–</button>
+              <span id="qty_val_${catKey}_${idx}" class="cust-service-qty" data-name="${s.name}" data-price="${s.price}" data-mandatory="false" style="font-weight:900; font-size:14px; width:22px; text-align:center;">0</span>
+              <button type="button" style="width:28px; height:28px; border:1.5px solid #cbd5e1; background:#f8fafc; border-radius:6px; font-weight:900; font-size:15px; cursor:pointer; color:#0f172a;" onclick="changeQty('${catKey}_${idx}', 1)">+</button>
+            ` : `
+              <span id="qty_val_${catKey}_${idx}" class="cust-service-qty" data-name="${s.name}" data-price="${s.price}" data-mandatory="true" style="font-size:11px; font-weight:900; color:var(--success); background:#ecfdf5; padding:4px 8px; border-radius:6px; border:1px solid #a7f3d0;">Fixed (1)</span>
+            `}
+          </div>
         </div>
       `;
     }).join('');
     recalculateCustomerBookingTotal();
   }
 
-  window.toggleQtyUI = function(id, isMandatory) {
-    const ui = document.getElementById('qty_ui_' + id);
-    const cb = document.getElementById('cb_' + id);
-    if(ui) {
-      ui.style.display = cb.checked ? 'flex' : 'none';
-      if(!cb.checked) document.getElementById('qty_val_' + id).innerText = '1';
-    }
-  };
-
   window.changeQty = function(id, delta) {
     const span = document.getElementById('qty_val_' + id);
-    let val = parseInt(span.innerText) || 1;
+    let val = parseInt(span.innerText) || 0;
     val += delta;
-    if (val < 1) val = 1;
+    if (val < 0) val = 0;
     span.innerText = val;
     recalculateCustomerBookingTotal();
   };
 
   function recalculateCustomerBookingTotal() {
-    const checkedBoxes = document.querySelectorAll('.cust-book-service-cb:checked');
     let sum = 0;
-    checkedBoxes.forEach(cb => {
-      const p = parseFloat(cb.getAttribute('data-price')) || 0;
-      const id = cb.id.replace('cb_', '');
-      const qtySpan = document.getElementById('qty_val_' + id);
-      const qty = qtySpan ? (parseInt(qtySpan.innerText) || 1) : 1;
-      sum += (p * qty);
+    const qtyElements = document.querySelectorAll('.cust-service-qty');
+    qtyElements.forEach(el => {
+      const price = parseFloat(el.getAttribute('data-price')) || 0;
+      const isMandatory = el.getAttribute('data-mandatory') === 'true';
+      const qty = isMandatory ? 1 : (parseInt(el.innerText) || 0);
+      sum += (price * qty);
     });
 
     const due = Math.max(0, sum - 21);
@@ -1234,7 +1222,7 @@
     document.getElementById('custAddressInput').value = currentUser.address || "";
     document.getElementById('bookingTermsCheckbox').checked = false;
 
-    // Render Dynamic Checklist
+    // Render Dynamic – / + UI
     renderChecklist(catKey);
 
     // Auto populate category specific terms
@@ -1267,38 +1255,32 @@
     const phone = currentUser ? currentUser.phone : document.getElementById('custPhoneInput').value.trim();
     const termsAccepted = document.getElementById('bookingTermsCheckbox').checked;
 
-    const selectedServiceNodes = document.querySelectorAll('.cust-book-service-cb:checked');
-    
-    // Check if anything besides "Visiting Fee" is selected
+    // Collect all selected services with quantity > 0
+    let selectedServiceNames = [];
+    let totalEstimated = 0;
     let hasActualWork = false;
-    selectedServiceNodes.forEach(cb => {
-      const name = cb.getAttribute('data-name');
-      if (!name.includes('Visiting')) {
-        hasActualWork = true;
+
+    const qtyElements = document.querySelectorAll('.cust-service-qty');
+    qtyElements.forEach(el => {
+      const name = el.getAttribute('data-name');
+      const price = parseFloat(el.getAttribute('data-price')) || 0;
+      const isMandatory = el.getAttribute('data-mandatory') === 'true';
+      const qty = isMandatory ? 1 : (parseInt(el.innerText) || 0);
+
+      if (qty > 0) {
+        if (!isMandatory) hasActualWork = true;
+        selectedServiceNames.push(qty > 1 ? `${name} (x${qty})` : name);
+        totalEstimated += (price * qty);
       }
     });
 
     if (!hasActualWork) {
-      alert("Please select at least one actual service/work (or 'Others') from the checklist to proceed!");
+      alert("Please select at least one required service/work (or 'Others') using the + button!");
       return;
     }
 
     if (!address) { alert("Please enter or pin your service address."); return; }
     if (!termsAccepted) { alert("Mandatory: Please accept the Terms & Conditions to proceed."); return; }
-
-    let selectedServiceNames = [];
-    let totalEstimated = 0;
-    
-    selectedServiceNodes.forEach(cb => {
-      const name = cb.getAttribute('data-name');
-      const p = parseFloat(cb.getAttribute('data-price')) || 0;
-      const id = cb.id.replace('cb_', '');
-      const qtySpan = document.getElementById('qty_val_' + id);
-      const qty = qtySpan ? (parseInt(qtySpan.innerText) || 1) : 1;
-      
-      selectedServiceNames.push(qty > 1 ? `${name} (x${qty})` : name);
-      totalEstimated += (p * qty);
-    });
 
     const combinedServiceString = selectedServiceNames.join(', ');
     const invoiceNo = 'BM-' + Date.now().toString().slice(-6);
