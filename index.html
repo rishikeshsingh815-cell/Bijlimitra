@@ -961,244 +961,45 @@
     `
   };
 
-  function renderChecklist(catKey) {
-    const services = SERVICE_RATE_LISTS[catKey] || [];
-    const container = document.getElementById('bookingServicesChecklist');
-    container.innerHTML = services.map((s, idx) => {
-      const isMandatory = s.name.includes('Visiting') || s.name.includes('Inspection');
-      return `
-        <div class="addon-item" style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px dashed #cbd5e1;">
-          <div style="flex:1; padding-right:10px;">
-            <div style="font-size:13px; font-weight:700; color:#0f172a;">${s.name}</div>
-            <div style="font-size:11.5px; color:${s.price > 0 ? 'var(--primary-red)' : 'var(--title-blue)'}; font-weight:800;">
-              ${s.price > 0 ? '₹' + s.price + ' (' + s.unit + ')' : 'Price quoted on-site'}
-            </div>
-          </div>
-          <div style="display:flex; align-items:center; gap:8px;">
-            ${!isMandatory ? `
-              <button type="button" style="width:28px; height:28px; border:1.5px solid #cbd5e1; background:#f8fafc; border-radius:6px; font-weight:900; font-size:15px; cursor:pointer; color:#0f172a;" onclick="changeQty('${catKey}_${idx}', -1)">–</button>
-              <span id="qty_val_${catKey}_${idx}" class="cust-service-qty" data-name="${s.name}" data-price="${s.price}" data-mandatory="false" style="font-weight:900; font-size:14px; width:22px; text-align:center;">0</span>
-              <button type="button" style="width:28px; height:28px; border:1.5px solid #cbd5e1; background:#f8fafc; border-radius:6px; font-weight:900; font-size:15px; cursor:pointer; color:#0f172a;" onclick="changeQty('${catKey}_${idx}', 1)">+</button>
-            ` : `
-              <span id="qty_val_${catKey}_${idx}" class="cust-service-qty" data-name="${s.name}" data-price="${s.price}" data-mandatory="true" style="font-size:11px; font-weight:900; color:var(--success); background:#ecfdf5; padding:4px 8px; border-radius:6px; border:1px solid #a7f3d0;">Fixed (1)</span>
-            `}
-          </div>
-        </div>
-      `;
-    }).join('');
-    recalculateCustomerBookingTotal();
-  }
+  const homeMap = L.map('homeMap', { center: [25.4182, 86.1272], zoom: 13, minZoom: 11, maxBounds: begusaraiBounds, maxBoundsViscosity: 1.0 });
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { bounds: begusaraiBounds }).addTo(homeMap);
+  L.marker([25.4182, 86.1272]).addTo(homeMap).bindPopup("<b>Begusarai Central Dispatch Hub</b>").openPopup();
 
-  window.changeQty = function(id, delta) {
-    const span = document.getElementById('qty_val_' + id);
-    let val = parseInt(span.innerText) || 0;
-    val += delta;
-    if (val < 0) val = 0;
-    span.innerText = val;
-    recalculateCustomerBookingTotal();
-  };
-
-  function recalculateCustomerBookingTotal() {
-    let sum = 0;
-    const qtyElements = document.querySelectorAll('.cust-service-qty');
-    qtyElements.forEach(el => {
-      const price = parseFloat(el.getAttribute('data-price')) || 0;
-      const isMandatory = el.getAttribute('data-mandatory') === 'true';
-      const qty = isMandatory ? 1 : (parseInt(el.innerText) || 0);
-      sum += (price * qty);
+  function initSignupMap() {
+    if (signupMap) return;
+    signupMap = L.map('signupMap', { center: [25.4182, 86.1272], zoom: 13, minZoom: 11, maxBounds: begusaraiBounds, maxBoundsViscosity: 1.0 });
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { bounds: begusaraiBounds }).addTo(signupMap);
+    signupMapMarker = L.marker([25.4182, 86.1272]).addTo(signupMap);
+    signupMap.on('click', function(e) {
+      signupMapMarker.setLatLng(e.latlng);
+      reverseGeocodeAndFill(e.latlng.lat, e.latlng.lng, 'custRegAddress', signupMapMarker);
     });
-
-    const due = Math.max(0, sum - 21);
-    document.getElementById('priceBaseVal').textContent = '₹' + sum.toFixed(2);
-    document.getElementById('priceTotalIncGst').textContent = '₹' + sum.toFixed(2);
-    document.getElementById('priceTotalDueVal').textContent = '₹' + due.toFixed(2);
   }
 
-  function selectCategoryBooking(catKey) {
-    if (!currentUser) { alert("Please Log In or Register to book services."); navigateTo('auth'); return; }
-    currentCategory = catKey;
-    const cfg = SERVICE_CONFIG[catKey];
-    document.getElementById('bookCatName').textContent = cfg.title;
-    document.getElementById('bookBaseScopeDesc').innerHTML = cfg.scope;
-    document.getElementById('custPhoneInput').value = currentUser.phone;
-    document.getElementById('custAddressInput').value = currentUser.address || "";
-    document.getElementById('bookingTermsCheckbox').checked = false;
-
-    renderChecklist(catKey);
-    document.getElementById('bookingTermsText').innerHTML = CATEGORY_TERMS_CONFIG[catKey] || CATEGORY_TERMS_CONFIG.electrician;
-    
-    navigateTo('booking');
-    setTimeout(() => { initBookingMap(); }, 200);
-  }
-
-  const CASHFREE_EDGE_FUNCTION_URL = 'https://uwsmpnezreofqufnsdxz.supabase.co/functions/v1/create-cashfree-order';
-  const cashfree = window.Cashfree ? Cashfree({ mode: "sandbox" }) : null;
-
-  async function openCashfreeCheckout(orderId, amount, phone, name, email) {
-    try {
-      const res = await fetch(CASHFREE_EDGE_FUNCTION_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderId, amount, customerPhone: phone, customerName: name, customerEmail: email })
-      });
-      const data = await res.json();
-      if (!res.ok || !data.payment_session_id) throw new Error(data.error || "Payment session error");
-      await cashfree.checkout({ paymentSessionId: data.payment_session_id, redirectTarget: "_self" });
-      return true;
-    } catch (e) { return false; }
-  }
-
-  async function openDirectAdvancePayment() {
-    const address = document.getElementById('custAddressInput').value.trim();
-    const phone = currentUser ? currentUser.phone : document.getElementById('custPhoneInput').value.trim();
-    const termsAccepted = document.getElementById('bookingTermsCheckbox').checked;
-
-    let selectedServiceNames = [];
-    let totalEstimated = 0;
-    let hasActualWork = false;
-
-    const qtyElements = document.querySelectorAll('.cust-service-qty');
-    qtyElements.forEach(el => {
-      const name = el.getAttribute('data-name');
-      const price = parseFloat(el.getAttribute('data-price')) || 0;
-      const isMandatory = el.getAttribute('data-mandatory') === 'true';
-      const qty = isMandatory ? 1 : (parseInt(el.innerText) || 0);
-
-      if (qty > 0) {
-        if (!isMandatory) hasActualWork = true;
-        selectedServiceNames.push(qty > 1 ? `${name} (x${qty})` : name);
-        totalEstimated += (price * qty);
-      }
-    });
-
-    if (!hasActualWork) {
-      alert("Please select at least one required service/work (or 'Others') using the + button!");
+  function initBookingMap() {
+    if (bookingMap) {
+      setTimeout(() => bookingMap.invalidateSize(), 150);
       return;
     }
-
-    if (!address) { alert("Please enter or pin your service address."); return; }
-    if (!termsAccepted) { alert("Mandatory: Please accept the Terms & Conditions to proceed."); return; }
-
-    const combinedServiceString = selectedServiceNames.join(', ');
-    const invoiceNo = 'BM-' + Date.now().toString().slice(-6);
-    const startPin = Math.floor(1000 + Math.random() * 9000).toString();
-    const stopPin = Math.floor(1000 + Math.random() * 9000).toString();
-
-    const newBooking = {
-      customer_name: currentUser.name || "Customer",
-      customer_phone: phone,
-      customer_address: address,
-      service_type: currentCategory,
-      extra_services: combinedServiceString,
-      extra_parts_cost: 0,
-      start_pin: startPin,
-      stop_pin: stopPin,
-      job_status: 'pending_acceptance',
-      technician_name: null,
-      base_fee: totalEstimated,
-      invoice_no: invoiceNo,
-      payment_status: 'advance_received'
-    };
-
-    let insertedId = null;
-    try {
-      const { data } = await sbClient.from('bookings').insert([newBooking]).select().single();
-      if (data) insertedId = data.id;
-    } catch(e){}
-
-    let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
-    localPool.unshift({ ...newBooking, id: insertedId || newBooking.invoice_no });
-    localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
-
-    pendingAdvanceState = { customerName: currentUser.name || "Customer", phone, address, category: currentCategory, addonsList: combinedServiceString, addonsTotal: 0, startPin, stopPin, invoiceNo };
-
-    const cashfreeSuccess = await openCashfreeCheckout('ADV-' + invoiceNo, 21.00, phone, currentUser.name, currentUser.email);
-    if (!cashfreeSuccess) {
-      const upi = generateDynamicUpi(21.00, `Advance Token for ${invoiceNo}`);
-      document.getElementById('advanceQrImg').src = upi.qrUrl;
-      document.getElementById('advanceUpiIntentBtn').href = upi.upiUri;
-      document.getElementById('advancePaidCheckbox').checked = false;
-      document.getElementById('advanceTxnError').textContent = "";
-      navigateTo('advance-pay');
-    }
+    bookingMap = L.map('bookingMap', { center: [25.4182, 86.1272], zoom: 13, minZoom: 11, maxBounds: begusaraiBounds, maxBoundsViscosity: 1.0 });
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { bounds: begusaraiBounds }).addTo(bookingMap);
+    bookingMapMarker = L.marker([25.4182, 86.1272]).addTo(bookingMap);
+    bookingMap.on('click', function(e) {
+      bookingMapMarker.setLatLng(e.latlng);
+      reverseGeocodeAndFill(e.latlng.lat, e.latlng.lng, 'custAddressInput', bookingMapMarker);
+    });
   }
 
-  async function broadcastJobToPool() {
-    if (!pendingAdvanceState) return;
-    const paidCheckbox = document.getElementById('advancePaidCheckbox');
-    const txnErrEl = document.getElementById('advanceTxnError');
-    if (!paidCheckbox.checked) { txnErrEl.textContent = "Please confirm you have completed the ₹21 payment."; return; }
-    txnErrEl.textContent = "";
-    alert(`Advance Payment Received! Booking ID: ${pendingAdvanceState.invoiceNo} is placed.`);
-    goToCustomerProfile();
-  }
-
-  async function loginTechnicianToPool() {
-    const techId = document.getElementById('techIdInput').value.trim().toUpperCase();
-    const cat = document.getElementById('techCategorySelect').value;
-    const pin = document.getElementById('techPinInput').value.trim();
-    const msg = document.getElementById('authMsg');
-    
-    if (!techId || pin.length !== 6) { 
-      msg.textContent = "Please enter valid Technician ID and 6-digit PIN."; 
-      msg.style.color = "#c0392b"; 
-      return; 
-    }
-
-    const pinHash = await hashPassword(pin);
-
-    try {
-      let { data } = await sbClient.from('technicians').select('*').eq('tech_code', techId).eq('category', cat).single();
-      
-      if (!data) { 
-        msg.textContent = "Invalid Technician ID / Category."; 
-        msg.style.color = "#c0392b"; 
-        return; 
-      }
-      
-      const isValidHashedPin = data.pin_hash && data.pin_hash === pinHash;
-      const isValidPlainPin = (!data.pin_hash || data.pin_hash === '') && (data.phone === pin || data.contact_phone === pin);
-
-      if (!isValidHashedPin && !isValidPlainPin) {
-        msg.textContent = "Incorrect 6-digit PIN."; 
-        msg.style.color = "#c0392b"; 
-        return; 
-      }
-
-      activeTechSession = { name: data.name, category: cat, id: data.id, techCode: data.tech_code, phone: data.contact_phone || '' };
-      document.getElementById('topAuthBadge').textContent = "🧑‍🔧 " + data.name + " (" + data.tech_code + ")";
-      document.getElementById('techPoolHeader').textContent = `${data.name} [${data.tech_code}] (${cat.toUpperCase()} Pool)`;
-      msg.textContent = ""; 
-      updateRoleBasedNavigation(); 
-      navigateTo('tech-pool', true); 
-    } catch(e) { msg.textContent = "Login Error: " + e.message; msg.style.color = "#c0392b"; }
-  }
-
-  async function adminResetTechPassword() {
-    const techCode = document.getElementById('resetTechCode').value.trim().toUpperCase();
-    const newPin = document.getElementById('resetTechNewPin').value.trim();
-
-    if (!techCode || newPin.length !== 6) {
-      alert("Please enter a valid Technician ID (e.g. TECH-001) and a 6-digit new PIN.");
-      return;
-    }
-
-    const newPinHash = await hashPassword(newPin);
-    const { error } = await sbClient.from('technicians').update({ pin_hash: newPinHash, phone: newPin }).eq('tech_code', techCode);
-
-    if (error) {
-      alert("Failed to reset PIN: " + error.message);
-    } else {
-      alert(`PIN successfully reset for ${techCode}!\nNew PIN: ${newPin}`);
-      document.getElementById('resetTechCode').value = '';
-      document.getElementById('resetTechNewPin').value = '';
+  function toggleBookingMap() {
+    const container = document.getElementById('bookingMapContainer');
+    container.style.display = container.style.display === 'none' ? 'block' : 'none';
+    if (container.style.display === 'block') {
+      setTimeout(() => { initBookingMap(); }, 150);
     }
   }
 
   applyLanguage(currentLang);
   updateRoleBasedNavigation();
-  initSignupMap();
 </script>
-
 </body>
 </html>
