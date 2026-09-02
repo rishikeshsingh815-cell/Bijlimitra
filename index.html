@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Bijli Mitra - Professional Home Services Begusarai</title>
+<title>Bijli Mitra - Professional Home Services Begusarai | v15 RLS Fix</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
@@ -852,28 +852,58 @@
 
   // ==================== SUPABASE AUTH IDENTITY HELPERS ====================
   async function getAuthenticatedUser() {
-    const { data, error } = await sbClient.auth.getUser();
-    if (error || !data?.user) return null;
-    return data.user;
+    try {
+      const { data: sessionData, error: sessionError } = await sbClient.auth.getSession();
+      if (sessionError || !sessionData?.session) return null;
+      const { data, error } = await sbClient.auth.getUser();
+      if (error || !data?.user) return null;
+      return data.user;
+    } catch (e) {
+      console.error('Authenticated user lookup failed:', e);
+      return null;
+    }
+  }
+
+  // The live public.customers table uses a database-generated numeric id and
+  // currently stores: auth_user_id, name, phone, address (plus status/timestamps).
+  // Never send a browser-generated UUID or an email column to this table.
+  async function saveOwnedCustomerProfile(authUserId, profile) {
+    if (!authUserId) return { error: new Error('Missing Supabase Auth user id') };
+
+    const payload = {
+      auth_user_id: authUserId,
+      name: String(profile.name || '').trim(),
+      phone: String(profile.phone || '').trim(),
+      address: String(profile.address || '').trim()
+    };
+
+    const { data: owned } = await sbClient.from('customers')
+      .select('id')
+      .eq('auth_user_id', authUserId)
+      .maybeSingle();
+
+    if (owned?.id != null) {
+      return await sbClient.from('customers')
+        .update({ name: payload.name, phone: payload.phone, address: payload.address })
+        .eq('id', owned.id)
+        .eq('auth_user_id', authUserId);
+    }
+
+    return await sbClient.from('customers').insert([payload]);
   }
 
   async function loadCustomerProfileFromAuth(user) {
     if (!user) return null;
-    let { data: account } = await sbClient.from('customers')
+
+    // SECURITY: customer ownership is ONLY the Supabase Auth UUID.
+    // Do not match/link old testing rows by email from the browser.
+    const { data: account, error } = await sbClient.from('customers')
       .select('*').eq('auth_user_id', user.id).maybeSingle();
 
-    // One-time legacy migration: if email matches, attach the Auth UUID.
-    if (!account && user.email) {
-      const { data: legacy } = await sbClient.from('customers')
-        .select('*').eq('email', user.email).maybeSingle();
-      if (legacy) {
-        const { data: linked, error } = await sbClient.from('customers')
-          .update({ auth_user_id: user.id })
-          .eq('id', legacy.id).select().single();
-        if (!error) account = linked;
-      }
+    if (error) {
+      console.error('Customer profile lookup failed:', error);
+      return null;
     }
-
     if (!account) return null;
     if (account.is_blocked) {
       await sbClient.auth.signOut();
@@ -1101,7 +1131,12 @@
 
   let googleAuthProcessed = false;
   sbClient.auth.onAuthStateChange(async (event, session) => {
+    // Handle only Google OAuth sign-ins here. Email OTP/password auth is
+    // handled by the registration/login functions below; processing those
+    // SIGNED_IN events here creates a race with the customer INSERT.
     if (event !== 'SIGNED_IN' || !session?.user || googleAuthProcessed) return;
+    const authProvider = session.user.app_metadata?.provider || '';
+    if (authProvider !== 'google') return;
     googleAuthProcessed = true;
     if (window.location.hash.includes('access_token')) history.replaceState(null, '', window.location.pathname + window.location.search);
 
@@ -1160,44 +1195,40 @@
     const errEl = document.getElementById('googlePhoneError');
     if (!/^[6-9]\d{9}$/.test(phone)) { errEl.textContent = "Please enter a valid 10-digit Indian mobile number."; return; }
     if (!address) { errEl.textContent = "Please select or type your exact address."; return; }
-    errEl.textContent = "Saving your secure customer profile...";
     if (!pendingGoogleUser) { errEl.textContent = 'Google session data is missing. Please sign in again.'; return; }
 
     const googleAuthUser = await getAuthenticatedUser();
     if (!googleAuthUser) { errEl.textContent = 'Google session expired. Please sign in again.'; return; }
-
-    // UPDATE only the row owned by this Auth UUID; otherwise INSERT a new row.
-    // Do not use upsert(onConflict=email): an old/unlinked test row can trigger
-    // an RLS UPDATE and produce "permission denied for table customers".
-    let saved = null;
-    if (pendingGoogleUser.existingId) {
-      const { data, error } = await sbClient.from('customers')
-        .update({ name: pendingGoogleUser.name, phone, address, email: pendingGoogleUser.email })
-        .eq('id', pendingGoogleUser.existingId)
-        .eq('auth_user_id', googleAuthUser.id)
-        .select('*').maybeSingle();
-      if (error) { errEl.textContent = "Could not save details: " + error.message; return; }
-      saved = data;
-    } else {
-      const { data, error } = await sbClient.from('customers')
-        .insert([{ email: pendingGoogleUser.email, name: pendingGoogleUser.name, phone, address, auth_user_id: googleAuthUser.id }])
-        .select('*').single();
-      if (error) {
-        // A duplicate email here normally means an old testing row is not linked.
-        errEl.textContent = error.code === '23505'
-          ? 'This email already has an old/unlinked customer record. Please link that record to your current Auth user in Supabase first, then retry.'
-          : "Could not save details: " + error.message;
-        return;
-      }
-      saved = data;
+    if (googleAuthUser.id !== pendingGoogleUser.auth_user_id) {
+      errEl.textContent = 'Security check failed. Please sign in again.';
+      return;
     }
 
-    if (!saved) { errEl.textContent = 'Customer profile was not saved. Please retry.'; return; }
-    currentUser = { auth_user_id: googleAuthUser.id, name: saved.name || pendingGoogleUser.name, phone: saved.phone || phone, address: saved.address || address, email: saved.email || pendingGoogleUser.email };
+    errEl.textContent = "Saving your secure customer profile...";
+
+    // Save only columns that exist in the live public.customers schema.
+    // The database generates the numeric customer id.
+    const saveResult = await saveOwnedCustomerProfile(googleAuthUser.id, {
+      name: pendingGoogleUser.name,
+      phone,
+      address
+    });
+    const saveError = saveResult.error;
+
+    if (saveError) {
+      console.error('Customer profile save failed:', saveError);
+      errEl.textContent = saveError.code === '23505'
+        ? 'This phone number or customer record already exists. Please use the existing account or a different number.'
+        : 'Could not save details: ' + saveError.message;
+      return;
+    }
+
+    currentUser = { auth_user_id: googleAuthUser.id, name: pendingGoogleUser.name, phone, address, email: pendingGoogleUser.email };
     localStorage.setItem('bm_active_customer', JSON.stringify(currentUser));
     pendingGoogleUser = null;
     document.getElementById('googlePhoneModal').style.display = 'none';
-    updateRoleBasedNavigation(); navigateTo('home', true);
+    updateRoleBasedNavigation();
+    navigateTo('home', true);
   }
 
   // ==================== EMAIL OTP & AUTH ====================
@@ -1246,28 +1277,13 @@
       const { error: pwErr } = await sbClient.auth.updateUser({ password: newPassword, data: { full_name: name } });
       if (pwErr) { msg.textContent = 'Could not set account password: ' + pwErr.message; msg.style.color = '#c0392b'; return; }
 
-      // Save profile against the verified Supabase Auth UUID.
-      // We deliberately do not upsert on email because that can attempt an RLS
-      // UPDATE on an old/unlinked testing row.
-      const { data: existingOwned } = await sbClient.from('customers')
-        .select('id').eq('auth_user_id', verifyData.user.id).maybeSingle();
-      let savedCustomer = null;
-      let profileErr = null;
-      if (existingOwned?.id) {
-        const res = await sbClient.from('customers')
-          .update({ email, name, phone, address }).eq('id', existingOwned.id).eq('auth_user_id', verifyData.user.id)
-          .select('*').single();
-        savedCustomer = res.data; profileErr = res.error;
-      } else {
-        const res = await sbClient.from('customers')
-          .insert([{ email, name, phone, address, auth_user_id: verifyData.user.id }])
-          .select('*').single();
-        savedCustomer = res.data; profileErr = res.error;
-      }
-      if (profileErr || !savedCustomer) {
-        msg.textContent = profileErr?.code === '23505'
-          ? 'Registration database error: this email already belongs to an old/unlinked customer record. Please link it in Supabase first.'
-          : 'Registration database error: ' + (profileErr?.message || 'Profile was not saved');
+      // Save only the live customers columns. The numeric customer id is
+      // generated by Postgres; email remains in Supabase Auth, not this table.
+      const { error: profileErr } = await saveOwnedCustomerProfile(verifyData.user.id, { name, phone, address });
+      if (profileErr) {
+        msg.textContent = profileErr.code === '23505'
+          ? 'Registration database error: this phone number is already used by another customer.'
+          : 'Registration database error: ' + profileErr.message;
         msg.style.color = '#c0392b'; return;
       }
 
@@ -1306,6 +1322,15 @@
     document.getElementById('profDispAddress').textContent = currentUser.address || "Begusarai, Bihar";
     navigateTo('profile');
     loadCustomerOrders();
+  }
+
+  // ==================== SUPABASE ERROR HELPER ====================
+  function formatSupabaseError(error) {
+    if (!error) return 'Unknown Supabase error';
+    const code = error.code ? ` [${error.code}]` : '';
+    const detail = error.details ? `\nDetail: ${error.details}` : '';
+    const hint = error.hint ? `\nHint: ${error.hint}` : '';
+    return `${error.message || 'Database request failed'}${code}${detail}${hint}`;
   }
 
   // ==================== BOOKING & ADVANCE PAYMENT ====================
@@ -1441,32 +1466,40 @@
     const startPin = Math.floor(1000 + Math.random() * 9000).toString();
     const stopPin = Math.floor(1000 + Math.random() * 9000).toString();
 
+    // bookings uses a UUID id and stores the service amount as taxable base
+    // + GST. Keep the INSERT limited to columns used by the live schema.
+    const taxableBase = totalEstimated > 0 ? (totalEstimated / 1.18) : 0;
+    const gstAmount = totalEstimated - taxableBase;
     const newBooking = {
+      id: crypto.randomUUID(),
       customer_auth_user_id: authUser.id,
       customer_name: currentUser.name || "Customer",
       customer_phone: phone,
       customer_address: address,
       service_type: currentCategory,
       extra_services: combinedServiceString,
-      extra_parts_cost: 0,
       start_pin: startPin,
       stop_pin: stopPin,
       job_status: 'pending_acceptance',
       technician_name: null,
-      base_fee: totalEstimated,
       invoice_no: invoiceNo,
-      payment_status: 'advance_received'
+      payment_status: 'advance_received',
+      base_rate: Number(taxableBase.toFixed(2)),
+      gst_amount: Number(gstAmount.toFixed(2)),
+      spare_parts_total: 0,
+      petrol_charge: 0,
+      overtime_hours: 0
     };
 
-    const { data: insertedBooking, error: bookingErr } = await sbClient.from('bookings')
-      .insert([newBooking]).select().single();
-    if (bookingErr || !insertedBooking) {
+    const { error: bookingErr } = await sbClient.from('bookings').insert([newBooking]);
+    if (bookingErr) {
       console.error('Booking insert failed:', bookingErr);
-      alert('Could not create booking in Supabase: ' + (bookingErr?.message || 'Unknown database error') + '\n\nNo local/fake booking was created.');
+      alert('Could not create booking in Supabase: ' + formatSupabaseError(bookingErr) + '\n\nNo local/fake booking was created.\n\nThe HTML now sends the authenticated Auth UUID. If permission is still denied, the remaining fix is the Supabase bookings INSERT RLS policy.');
       return;
     }
 
     // Local storage is only a UI cache after a confirmed Supabase insert.
+    const insertedBooking = newBooking;
     let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
     localPool.unshift(insertedBooking);
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
@@ -1505,27 +1538,31 @@
     const stopPin = Math.floor(1000 + Math.random() * 9000).toString();
 
     const revisitBooking = {
+      id: crypto.randomUUID(),
       customer_auth_user_id: authUser.id,
       customer_name: currentUser.name || "Customer",
       customer_phone: currentUser.phone,
       customer_address: currentUser.address,
       service_type: serviceType,
       extra_services: `07-Day Free Revisit (Warranty Claim for ${parentInvoiceNo})`,
-      extra_parts_cost: 0,
       start_pin: startPin,
       stop_pin: stopPin,
       job_status: 'pending_acceptance',
       technician_name: null,
-      base_fee: 0,
       invoice_no: invoiceNo,
-      payment_status: 'warranty_revisit'
+      payment_status: 'warranty_revisit',
+      base_rate: 0,
+      gst_amount: 0,
+      spare_parts_total: 0,
+      petrol_charge: 0,
+      overtime_hours: 0
     };
-
-    const { data: insertedRevisit, error: revisitErr } = await sbClient.from('bookings').insert([revisitBooking]).select().single();
-    if (revisitErr || !insertedRevisit) {
-      alert('Could not create warranty re-visit in Supabase: ' + (revisitErr?.message || 'Unknown database error'));
+    const { error: revisitErr } = await sbClient.from('bookings').insert([revisitBooking]);
+    if (revisitErr) {
+      alert('Could not create warranty re-visit in Supabase: ' + revisitErr.message);
       return;
     }
+    const insertedRevisit = revisitBooking;
     let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
     localPool.unshift(insertedRevisit);
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
@@ -1684,7 +1721,7 @@
 
     const cfg = SERVICE_CONFIG[data.service_type] || SERVICE_CONFIG.electrician;
     const sacCode = cfg.sac; // 9987 for electric/ac and 9954/9987 for plumber
-    const baseTotal = parseFloat(data.base_fee) || 0;
+    const baseTotal = (parseFloat(data.base_rate) || 0) + (parseFloat(data.gst_amount) || 0) || (parseFloat(data.base_fee) || 0);
     const extraServicesTotal = parseFloat(data.extra_on_site_cost) || 0;
     const overtimeCharge = parseFloat(data.overtime_charge) || 0;
     const isRevisit = data.payment_status === 'warranty_revisit';
@@ -1933,7 +1970,7 @@
   function recalculateModalFinalTotal() {
     if (!activeModalJob) return;
     const isRevisit = activeModalJob.payment_status === 'warranty_revisit';
-    const baseBookedAmount = isRevisit ? 0 : (parseFloat(activeModalJob.base_fee) || 0);
+    const baseBookedAmount = isRevisit ? 0 : ((parseFloat(activeModalJob.base_rate) || 0) + (parseFloat(activeModalJob.gst_amount) || 0) || (parseFloat(activeModalJob.base_fee) || 0));
     
     let extraOnSiteCost = 0;
     document.querySelectorAll('.modal-addon-cb:checked').forEach(cb => {
@@ -1963,7 +2000,7 @@
 
     const cfg = SERVICE_CONFIG[activeModalJob.service_type] || SERVICE_CONFIG.electrician;
     const isRevisit = activeModalJob.payment_status === 'warranty_revisit';
-    const baseBookedAmount = isRevisit ? 0 : (parseFloat(activeModalJob.base_fee) || 0);
+    const baseBookedAmount = isRevisit ? 0 : ((parseFloat(activeModalJob.base_rate) || 0) + (parseFloat(activeModalJob.gst_amount) || 0) || (parseFloat(activeModalJob.base_fee) || 0));
 
     let extraNames = [], extraOnSiteCost = 0;
     document.querySelectorAll('.modal-addon-cb:checked').forEach(cb => {
