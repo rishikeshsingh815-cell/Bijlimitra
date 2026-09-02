@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Bijli Mitra - Professional Home Services Begusarai | v15 RLS Fix</title>
+<title>Bijli Mitra - Professional Home Services Begusarai | v17 Technician Login Fix</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
@@ -1787,63 +1787,89 @@
   }
 
   // ==================== TECH DASHBOARD & ON-SITE PAYMENT QR (6-DIGIT HASH) ====================
+  async function ensureTechnicianAuthSession() {
+    const { data: sessionData, error: sessionError } = await sbClient.auth.getSession();
+    if (sessionError) throw sessionError;
+    if (sessionData?.session?.user) return sessionData.session;
+
+    // Technician login uses a database RPC for PIN verification.  When no
+    // normal Supabase user is signed in, create an anonymous Auth session so
+    // the existing authenticated booking RLS rules can be used for the job
+    // pool and job updates.  The technician PIN itself is never exposed via
+    // a public table SELECT.
+    const { data, error } = await sbClient.auth.signInAnonymously();
+    if (error || !data?.session) {
+      throw new Error('Technician login needs Supabase Anonymous Sign-In enabled in Authentication > Sign In Methods.');
+    }
+    return data.session;
+  }
+
   async function loginTechnicianToPool() {
     const techId = document.getElementById('techIdInput').value.trim().toUpperCase();
     const cat = document.getElementById('techCategorySelect').value;
     const pin = document.getElementById('techPinInput').value.trim();
     const msg = document.getElementById('authMsg');
-    
-    if (!techId || pin.length !== 6) { 
-      msg.textContent = "Please enter valid Technician ID and 6-digit PIN."; 
-      msg.style.color = "#c0392b"; 
-      return; 
+
+    if (!techId || !/^\d{6}$/.test(pin)) {
+      msg.textContent = 'Please enter valid Technician ID and 6-digit PIN.';
+      msg.style.color = '#c0392b';
+      return;
     }
 
-    const pinHash = await hashPassword(pin);
+    msg.textContent = 'Verifying technician securely...';
+    msg.style.color = 'var(--title-blue)';
 
     try {
-      const { data, error: techLookupErr } = await sbClient.from('technicians')
-        .select('*')
-        .eq('tech_code', techId)
-        .eq('category', cat)
-        .maybeSingle();
+      await ensureTechnicianAuthSession();
+      const pinHash = await hashPassword(pin);
 
-      if (techLookupErr) {
-        console.error('Technician lookup failed:', techLookupErr);
-        msg.textContent = 'Technician database access failed: ' + techLookupErr.message;
+      const { data, error } = await sbClient.rpc('verify_technician_login', {
+        p_tech_code: techId,
+        p_category: cat,
+        p_pin_hash: pinHash
+      });
+
+      if (error) {
+        console.error('Technician login RPC failed:', error);
+        msg.textContent = 'Technician login failed: ' + error.message;
         msg.style.color = '#c0392b';
         return;
       }
 
-      if (!data) {
-        msg.textContent = "Invalid Technician ID / Category.";
-        msg.style.color = "#c0392b";
+      const tech = Array.isArray(data) ? data[0] : data;
+      if (!tech) {
+        msg.textContent = 'Invalid Technician ID / Category / PIN.';
+        msg.style.color = '#c0392b';
         return;
       }
-      
-      if (data.pin_hash && data.pin_hash !== pinHash) {
-        msg.textContent = "Incorrect 6-digit PIN."; 
-        msg.style.color = "#c0392b"; 
-        return; 
-      }
-      
-      if (!data.pin_hash && data.phone !== pin) {
-        msg.textContent = "Incorrect 6-digit PIN."; 
-        msg.style.color = "#c0392b"; 
-        return; 
+
+      if (tech.is_available === false) {
+        msg.textContent = 'Technician account is blocked. Contact Admin.';
+        msg.style.color = '#c0392b';
+        return;
       }
 
-      if (data.is_available === false) { 
-        msg.textContent = "Technician account is blocked. Contact Admin."; 
-        msg.style.color = "#c0392b"; 
-        return; 
-      }
+      activeTechSession = {
+        name: tech.name,
+        category: tech.category,
+        id: tech.id,
+        techCode: tech.tech_code,
+        phone: tech.contact_phone || tech.phone || ''
+      };
 
-      activeTechSession = { name: data.name, category: cat, id: data.id, techCode: data.tech_code, phone: data.contact_phone || '' };
-      document.getElementById('topAuthBadge').textContent = "🧑‍🔧 " + data.name + " (" + data.tech_code + ")";
-      document.getElementById('techPoolHeader').textContent = `${data.name} [${data.tech_code}] (${cat.toUpperCase()} Pool)`;
-      msg.textContent = ""; updateRoleBasedNavigation(); navigateTo('tech-pool', true); renderPoolJobs();
-    } catch(e) { msg.textContent = "Login Error: " + e.message; msg.style.color = "#c0392b"; }
+      currentUser = null;
+      localStorage.removeItem('bm_active_customer');
+      document.getElementById('topAuthBadge').textContent = '🧑‍🔧 ' + tech.name + ' (' + tech.tech_code + ')';
+      document.getElementById('techPoolHeader').textContent = `${tech.name} [${tech.tech_code}] (${String(tech.category).toUpperCase()} Pool)`;
+      msg.textContent = '';
+      updateRoleBasedNavigation();
+      navigateTo('tech-pool', true);
+      await renderPoolJobs();
+    } catch (e) {
+      console.error('Technician login error:', e);
+      msg.textContent = 'Technician login error: ' + e.message;
+      msg.style.color = '#c0392b';
+    }
   }
 
   function checkCooldownState() {
