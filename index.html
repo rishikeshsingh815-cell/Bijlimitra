@@ -1471,7 +1471,6 @@
     const taxableBase = totalEstimated > 0 ? (totalEstimated / 1.18) : 0;
     const gstAmount = totalEstimated - taxableBase;
     const newBooking = {
-      id: crypto.randomUUID(),
       customer_auth_user_id: authUser.id,
       customer_name: currentUser.name || "Customer",
       customer_phone: phone,
@@ -1480,10 +1479,10 @@
       extra_services: combinedServiceString,
       start_pin: startPin,
       stop_pin: stopPin,
-      job_status: 'pending_acceptance',
+      job_status: 'payment_pending',
       technician_name: null,
       invoice_no: invoiceNo,
-      payment_status: 'advance_received',
+      payment_status: 'advance_pending',
       base_rate: Number(taxableBase.toFixed(2)),
       gst_amount: Number(gstAmount.toFixed(2)),
       spare_parts_total: 0,
@@ -1491,15 +1490,17 @@
       overtime_hours: 0
     };
 
-    const { error: bookingErr } = await sbClient.from('bookings').insert([newBooking]);
-    if (bookingErr) {
+    const { data: insertedBooking, error: bookingErr } = await sbClient.from('bookings')
+      .insert([newBooking])
+      .select('*')
+      .single();
+    if (bookingErr || !insertedBooking) {
       console.error('Booking insert failed:', bookingErr);
-      alert('Could not create booking in Supabase: ' + formatSupabaseError(bookingErr) + '\n\nNo local/fake booking was created.\n\nThe HTML now sends the authenticated Auth UUID. If permission is still denied, the remaining fix is the Supabase bookings INSERT RLS policy.');
+      alert('Could not create booking in Supabase: ' + formatSupabaseError(bookingErr || new Error('No booking row returned')) + '\n\nNo local/fake booking was created.');
       return;
     }
 
     // Local storage is only a UI cache after a confirmed Supabase insert.
-    const insertedBooking = newBooking;
     let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
     localPool.unshift(insertedBooking);
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
@@ -1523,6 +1524,25 @@
     const txnErrEl = document.getElementById('advanceTxnError');
     if (!paidCheckbox.checked) { txnErrEl.textContent = "Please confirm you have completed the ₹21 payment."; return; }
     txnErrEl.textContent = "";
+    const authUser = await getAuthenticatedUser();
+    if (!authUser) { txnErrEl.textContent = 'Session expired. Please login again.'; return; }
+
+    const { data: updatedBooking, error: paymentUpdateErr } = await sbClient.from('bookings')
+      .update({ job_status: 'pending_acceptance', payment_status: 'advance_received' })
+      .eq('invoice_no', pendingAdvanceState.invoiceNo)
+      .eq('customer_auth_user_id', authUser.id)
+      .select('*')
+      .single();
+
+    if (paymentUpdateErr || !updatedBooking) {
+      console.error('Advance payment status update failed:', paymentUpdateErr);
+      txnErrEl.textContent = 'Payment confirmation could not be saved: ' + (paymentUpdateErr?.message || 'unknown error');
+      return;
+    }
+
+    let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
+    localPool = localPool.map(j => j.invoice_no === pendingAdvanceState.invoiceNo ? { ...j, ...updatedBooking } : j);
+    localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
     alert(`Advance Payment Received! Booking ID: ${pendingAdvanceState.invoiceNo} is placed.`);
     goToCustomerProfile();
   }
@@ -1538,7 +1558,6 @@
     const stopPin = Math.floor(1000 + Math.random() * 9000).toString();
 
     const revisitBooking = {
-      id: crypto.randomUUID(),
       customer_auth_user_id: authUser.id,
       customer_name: currentUser.name || "Customer",
       customer_phone: currentUser.phone,
@@ -1783,12 +1802,23 @@
     const pinHash = await hashPassword(pin);
 
     try {
-      let { data } = await sbClient.from('technicians').select('*').eq('tech_code', techId).eq('category', cat).single();
-      
-      if (!data) { 
-        msg.textContent = "Invalid Technician ID / Category."; 
-        msg.style.color = "#c0392b"; 
-        return; 
+      const { data, error: techLookupErr } = await sbClient.from('technicians')
+        .select('*')
+        .eq('tech_code', techId)
+        .eq('category', cat)
+        .maybeSingle();
+
+      if (techLookupErr) {
+        console.error('Technician lookup failed:', techLookupErr);
+        msg.textContent = 'Technician database access failed: ' + techLookupErr.message;
+        msg.style.color = '#c0392b';
+        return;
+      }
+
+      if (!data) {
+        msg.textContent = "Invalid Technician ID / Category.";
+        msg.style.color = "#c0392b";
+        return;
       }
       
       if (data.pin_hash && data.pin_hash !== pinHash) {
@@ -2200,7 +2230,7 @@
 
     const { error } = await sbClient.from('technicians').insert([{ 
       name, 
-      phone: pin,
+      phone: contactPhone,
       pin_hash: pinHash,
       category, 
       is_available: true, 
