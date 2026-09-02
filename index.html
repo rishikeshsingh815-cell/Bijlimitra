@@ -850,6 +850,54 @@
     return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
   }
 
+  // ==================== SUPABASE AUTH IDENTITY HELPERS ====================
+  async function getAuthenticatedUser() {
+    const { data, error } = await sbClient.auth.getUser();
+    if (error || !data?.user) return null;
+    return data.user;
+  }
+
+  async function loadCustomerProfileFromAuth(user) {
+    if (!user) return null;
+    let { data: account } = await sbClient.from('customers')
+      .select('*').eq('auth_user_id', user.id).maybeSingle();
+
+    // One-time legacy migration: if email matches, attach the Auth UUID.
+    if (!account && user.email) {
+      const { data: legacy } = await sbClient.from('customers')
+        .select('*').eq('email', user.email).maybeSingle();
+      if (legacy) {
+        const { data: linked, error } = await sbClient.from('customers')
+          .update({ auth_user_id: user.id })
+          .eq('id', legacy.id).select().single();
+        if (!error) account = linked;
+      }
+    }
+
+    if (!account) return null;
+    if (account.is_blocked) {
+      await sbClient.auth.signOut();
+      alert('Your account has been blocked by Admin.');
+      return null;
+    }
+
+    currentUser = {
+      auth_user_id: user.id,
+      name: account.name || user.user_metadata?.full_name || user.user_metadata?.name || 'Customer',
+      phone: account.phone || '',
+      address: account.address || '',
+      email: user.email || account.email || ''
+    };
+    localStorage.setItem('bm_active_customer', JSON.stringify(currentUser));
+    return currentUser;
+  }
+
+  async function restoreSupabaseSession() {
+    const user = await getAuthenticatedUser();
+    if (user && !isAdminLoggedIn && !activeTechSession) await loadCustomerProfileFromAuth(user);
+    updateRoleBasedNavigation();
+  }
+
   /* ==================== PULL TO REFRESH LOGIC ==================== */
   let touchStartY = 0;
   let touchCurrentY = 0;
@@ -930,7 +978,7 @@
   }
   
   function techLogout() { activeTechSession = null; window.location.reload(); }
-  function adminLogout() { isAdminLoggedIn = false; window.location.reload(); }
+  async function adminLogout() { isAdminLoggedIn = false; try { await sbClient.auth.signOut(); } catch(e){} window.location.reload(); }
   function handleTopBadgeClick() { if (currentUser) goToCustomerProfile(); else if (activeTechSession) navigateTo('tech-pool'); else if (isAdminLoggedIn) navigateTo('admin'); else navigateTo('auth'); }
 
   function showScreenOnly(screenId) {
@@ -1042,6 +1090,9 @@
   }
 
   // ==================== GOOGLE AUTH ====================
+  // IMPORTANT: customers.auth_user_id is the ownership key.
+  // Never claim/link a customer row only because the email matches; that can
+  // violate RLS and can also attach one user's profile to another Auth user.
   let pendingGoogleUser = null, googleSignupMap = null, googleSignupMapMarker = null;
   async function signInWithGoogle() {
     const { error } = await sbClient.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + window.location.pathname } });
@@ -1054,20 +1105,40 @@
     googleAuthProcessed = true;
     if (window.location.hash.includes('access_token')) history.replaceState(null, '', window.location.pathname + window.location.search);
 
-    const email = session.user.email;
+    const email = session.user.email || '';
     const name = session.user.user_metadata?.full_name || session.user.user_metadata?.name || 'Customer';
     let existing = null;
-    try { const { data } = await sbClient.from('customers').select('*').eq('email', email).single(); existing = data; } catch(e){}
+    let lookupError = null;
+
+    // RLS-safe lookup: only the row owned by this Auth user.
+    try {
+      const { data, error } = await sbClient.from('customers')
+        .select('*').eq('auth_user_id', session.user.id).maybeSingle();
+      existing = data || null;
+      lookupError = error || null;
+    } catch(e) { lookupError = e; }
+
+    if (lookupError) {
+      console.warn('Customer profile lookup failed:', lookupError);
+      alert('Customer profile access failed: ' + (lookupError.message || 'permission denied') + '\n\nPlease check the customers RLS policy for auth.uid() = auth_user_id.');
+      return;
+    }
 
     if (existing && existing.phone && existing.address) {
       if (existing.is_blocked) { alert("Your account has been blocked by Admin."); return; }
-      currentUser = { name: existing.name || name, phone: existing.phone, address: existing.address, email };
+      currentUser = { auth_user_id: session.user.id, name: existing.name || name, phone: existing.phone, address: existing.address, email: existing.email || email };
       localStorage.setItem('bm_active_customer', JSON.stringify(currentUser));
       updateRoleBasedNavigation(); navigateTo('home', true);
     } else {
-      pendingGoogleUser = { email, name };
+      // New Auth user: create the profile only after phone/address are supplied.
+      // If an old testing row exists with the same email but no auth_user_id, do
+      // not try to hijack/update it from the browser; RLS should block that.
+      pendingGoogleUser = { email, name, auth_user_id: session.user.id, existingId: existing?.id || null };
       document.getElementById('googlePhoneModal').style.display = 'flex';
-      if (existing) { document.getElementById('googlePhoneInput').value = existing.phone || ''; document.getElementById('googleAddressInput').value = existing.address || ''; }
+      if (existing) {
+        document.getElementById('googlePhoneInput').value = existing.phone || '';
+        document.getElementById('googleAddressInput').value = existing.address || '';
+      }
       setTimeout(initGoogleSignupMap, 150);
     }
   });
@@ -1089,14 +1160,42 @@
     const errEl = document.getElementById('googlePhoneError');
     if (!/^[6-9]\d{9}$/.test(phone)) { errEl.textContent = "Please enter a valid 10-digit Indian mobile number."; return; }
     if (!address) { errEl.textContent = "Please select or type your exact address."; return; }
-    errEl.textContent = "";
-    if (!pendingGoogleUser) return;
+    errEl.textContent = "Saving your secure customer profile...";
+    if (!pendingGoogleUser) { errEl.textContent = 'Google session data is missing. Please sign in again.'; return; }
 
-    const { error } = await sbClient.from('customers').upsert({ email: pendingGoogleUser.email, name: pendingGoogleUser.name, phone, address }, { onConflict: 'email' });
-    if (error) { errEl.textContent = "Could not save details: " + error.message; return; }
+    const googleAuthUser = await getAuthenticatedUser();
+    if (!googleAuthUser) { errEl.textContent = 'Google session expired. Please sign in again.'; return; }
 
-    currentUser = { name: pendingGoogleUser.name, phone, address, email: pendingGoogleUser.email };
+    // UPDATE only the row owned by this Auth UUID; otherwise INSERT a new row.
+    // Do not use upsert(onConflict=email): an old/unlinked test row can trigger
+    // an RLS UPDATE and produce "permission denied for table customers".
+    let saved = null;
+    if (pendingGoogleUser.existingId) {
+      const { data, error } = await sbClient.from('customers')
+        .update({ name: pendingGoogleUser.name, phone, address, email: pendingGoogleUser.email })
+        .eq('id', pendingGoogleUser.existingId)
+        .eq('auth_user_id', googleAuthUser.id)
+        .select('*').maybeSingle();
+      if (error) { errEl.textContent = "Could not save details: " + error.message; return; }
+      saved = data;
+    } else {
+      const { data, error } = await sbClient.from('customers')
+        .insert([{ email: pendingGoogleUser.email, name: pendingGoogleUser.name, phone, address, auth_user_id: googleAuthUser.id }])
+        .select('*').single();
+      if (error) {
+        // A duplicate email here normally means an old testing row is not linked.
+        errEl.textContent = error.code === '23505'
+          ? 'This email already has an old/unlinked customer record. Please link that record to your current Auth user in Supabase first, then retry.'
+          : "Could not save details: " + error.message;
+        return;
+      }
+      saved = data;
+    }
+
+    if (!saved) { errEl.textContent = 'Customer profile was not saved. Please retry.'; return; }
+    currentUser = { auth_user_id: googleAuthUser.id, name: saved.name || pendingGoogleUser.name, phone: saved.phone || phone, address: saved.address || address, email: saved.email || pendingGoogleUser.email };
     localStorage.setItem('bm_active_customer', JSON.stringify(currentUser));
+    pendingGoogleUser = null;
     document.getElementById('googlePhoneModal').style.display = 'none';
     updateRoleBasedNavigation(); navigateTo('home', true);
   }
@@ -1128,7 +1227,7 @@
   async function handleCustomerAuthAction() {
     const email = document.getElementById('authEmail').value.trim().toLowerCase();
     const msg = document.getElementById('authMsg');
-    if (!email || !email.includes('@')) { msg.textContent = "Please enter a valid email address."; msg.style.color = "#c0392b"; return; }
+    if (!email || !email.includes('@')) { msg.textContent = 'Please enter a valid email address.'; msg.style.color = '#c0392b'; return; }
 
     if (isCustomerSignupMode) {
       const name = document.getElementById('custRegName').value.trim();
@@ -1137,40 +1236,66 @@
       const otpToken = document.getElementById('authEmailOtp').value.trim();
       const newPassword = document.getElementById('authCreatePassword').value.trim();
 
-      if (!isOtpDispatched || otpToken.length !== 6) { msg.textContent = "Please send OTP and enter the 6-digit code received on email."; msg.style.color = "#c0392b"; return; }
-      if (newPassword.length < 6) { msg.textContent = "Created Password must be at least 6 characters."; msg.style.color = "#c0392b"; return; }
+      if (!isOtpDispatched || otpToken.length !== 6) { msg.textContent = 'Please send OTP and enter the 6-digit code received on email.'; msg.style.color = '#c0392b'; return; }
+      if (newPassword.length < 6) { msg.textContent = 'Created Password must be at least 6 characters.'; msg.style.color = '#c0392b'; return; }
 
-      msg.textContent = "Verifying OTP and creating your account..."; msg.style.color = "var(--title-blue)";
-      const { error: verifyErr } = await sbClient.auth.verifyOtp({ email: email, token: otpToken, type: 'email' });
-      if (verifyErr) { msg.textContent = "Invalid or expired Email OTP: " + verifyErr.message; msg.style.color = "#c0392b"; return; }
+      msg.textContent = 'Verifying OTP and securing your Supabase account...'; msg.style.color = 'var(--title-blue)';
+      const { data: verifyData, error: verifyErr } = await sbClient.auth.verifyOtp({ email, token: otpToken, type: 'email' });
+      if (verifyErr || !verifyData?.user) { msg.textContent = 'Invalid or expired Email OTP: ' + (verifyErr?.message || 'No user session'); msg.style.color = '#c0392b'; return; }
 
-      const hashedPassword = await hashPassword(newPassword);
-      const { error: insertErr } = await sbClient.from('customers').upsert([{ email, name, phone, address, password_hash: hashedPassword }], { onConflict: 'email' });
-      if (insertErr) { msg.textContent = "Registration database error: " + insertErr.message; msg.style.color = "#c0392b"; return; }
+      const { error: pwErr } = await sbClient.auth.updateUser({ password: newPassword, data: { full_name: name } });
+      if (pwErr) { msg.textContent = 'Could not set account password: ' + pwErr.message; msg.style.color = '#c0392b'; return; }
 
-      alert("Account Created Successfully! Please login using your email and password.");
-      toggleCustomerAuthMode();
-      document.getElementById('authEmail').value = email;
-      msg.textContent = "Account verified! Enter your password to log in."; msg.style.color = "var(--title-blue)";
-    } else {
-      const loginPassword = document.getElementById('authLoginPassword').value.trim();
-      if (loginPassword.length < 6) { msg.textContent = "Password must be at least 6 characters."; msg.style.color = "#c0392b"; return; }
-
-      const hashedPassword = await hashPassword(loginPassword);
-      let { data: account } = await sbClient.from('customers').select('*').eq('email', email).single();
-      
-      if (!account) { 
-        msg.textContent = "Account not found with this email. Please switch to Sign Up."; 
-        msg.style.color = "#c0392b"; 
-        return; 
+      // Save profile against the verified Supabase Auth UUID.
+      // We deliberately do not upsert on email because that can attempt an RLS
+      // UPDATE on an old/unlinked testing row.
+      const { data: existingOwned } = await sbClient.from('customers')
+        .select('id').eq('auth_user_id', verifyData.user.id).maybeSingle();
+      let savedCustomer = null;
+      let profileErr = null;
+      if (existingOwned?.id) {
+        const res = await sbClient.from('customers')
+          .update({ email, name, phone, address }).eq('id', existingOwned.id).eq('auth_user_id', verifyData.user.id)
+          .select('*').single();
+        savedCustomer = res.data; profileErr = res.error;
+      } else {
+        const res = await sbClient.from('customers')
+          .insert([{ email, name, phone, address, auth_user_id: verifyData.user.id }])
+          .select('*').single();
+        savedCustomer = res.data; profileErr = res.error;
       }
-      if (account.is_blocked) { msg.textContent = "This account has been blocked by Admin."; msg.style.color = "#c0392b"; return; }
-      if (account.password_hash !== hashedPassword) { msg.textContent = "Incorrect password. Please re-enter."; msg.style.color = "#c0392b"; return; }
+      if (profileErr || !savedCustomer) {
+        msg.textContent = profileErr?.code === '23505'
+          ? 'Registration database error: this email already belongs to an old/unlinked customer record. Please link it in Supabase first.'
+          : 'Registration database error: ' + (profileErr?.message || 'Profile was not saved');
+        msg.style.color = '#c0392b'; return;
+      }
 
-      currentUser = { name: account.name || "Customer", address: account.address, phone: account.phone, email: account.email };
+      currentUser = { auth_user_id: verifyData.user.id, name, phone, address, email };
       localStorage.setItem('bm_active_customer', JSON.stringify(currentUser));
-      window.location.hash = '#home'; window.location.reload();
+      msg.textContent = '';
+      updateRoleBasedNavigation();
+      navigateTo('home', true);
+      return;
     }
+
+    const loginPassword = document.getElementById('authLoginPassword').value.trim();
+    if (loginPassword.length < 6) { msg.textContent = 'Password must be at least 6 characters.'; msg.style.color = '#c0392b'; return; }
+
+    msg.textContent = 'Signing in securely...'; msg.style.color = 'var(--title-blue)';
+    const { data: loginData, error: loginErr } = await sbClient.auth.signInWithPassword({ email, password: loginPassword });
+    if (loginErr || !loginData?.user) { msg.textContent = 'Login failed: ' + (loginErr?.message || 'Invalid credentials'); msg.style.color = '#c0392b'; return; }
+
+    const account = await loadCustomerProfileFromAuth(loginData.user);
+    if (!account) {
+      msg.textContent = 'Auth account exists, but no Customer profile is linked. Please complete registration or contact Admin.';
+      msg.style.color = '#c0392b';
+      return;
+    }
+
+    msg.textContent = '';
+    updateRoleBasedNavigation();
+    navigateTo('home', true);
   }
 
   function goToCustomerProfile() {
@@ -1276,6 +1401,10 @@
   }
 
   async function openDirectAdvancePayment() {
+    const authUser = await getAuthenticatedUser();
+    if (!authUser) { alert('Please login before creating a booking.'); navigateTo('auth'); return; }
+    if (!currentUser) { await loadCustomerProfileFromAuth(authUser); }
+    if (!currentUser) { alert('Customer profile is not linked to your Supabase account.'); return; }
     const address = document.getElementById('custAddressInput').value.trim();
     const phone = currentUser ? currentUser.phone : document.getElementById('custPhoneInput').value.trim();
     const termsAccepted = document.getElementById('bookingTermsCheckbox').checked;
@@ -1313,6 +1442,7 @@
     const stopPin = Math.floor(1000 + Math.random() * 9000).toString();
 
     const newBooking = {
+      customer_auth_user_id: authUser.id,
       customer_name: currentUser.name || "Customer",
       customer_phone: phone,
       customer_address: address,
@@ -1328,14 +1458,17 @@
       payment_status: 'advance_received'
     };
 
-    let insertedId = null;
-    try {
-      const { data } = await sbClient.from('bookings').insert([newBooking]).select().single();
-      if (data) insertedId = data.id;
-    } catch(e){}
+    const { data: insertedBooking, error: bookingErr } = await sbClient.from('bookings')
+      .insert([newBooking]).select().single();
+    if (bookingErr || !insertedBooking) {
+      console.error('Booking insert failed:', bookingErr);
+      alert('Could not create booking in Supabase: ' + (bookingErr?.message || 'Unknown database error') + '\n\nNo local/fake booking was created.');
+      return;
+    }
 
+    // Local storage is only a UI cache after a confirmed Supabase insert.
     let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
-    localPool.unshift({ ...newBooking, id: insertedId || newBooking.invoice_no });
+    localPool.unshift(insertedBooking);
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
 
     pendingAdvanceState = { customerName: currentUser.name || "Customer", phone, address, category: currentCategory, addonsList: combinedServiceString, addonsTotal: 0, startPin, stopPin, invoiceNo };
@@ -1363,6 +1496,8 @@
 
   // ==================== RE-VISIT (WARRANTY CLAIM) ====================
   async function claimFreeRevisit(parentInvoiceNo, serviceType) {
+    const authUser = await getAuthenticatedUser();
+    if (!authUser) { alert('Please login first.'); navigateTo('auth'); return; }
     if (!confirm("Claim Free Re-visit under 07-Day Workmanship Warranty?\nOur technician will inspect the previous repair work at ₹0 Base Fee.")) return;
     
     const invoiceNo = 'REV-' + Date.now().toString().slice(-6);
@@ -1370,6 +1505,7 @@
     const stopPin = Math.floor(1000 + Math.random() * 9000).toString();
 
     const revisitBooking = {
+      customer_auth_user_id: authUser.id,
       customer_name: currentUser.name || "Customer",
       customer_phone: currentUser.phone,
       customer_address: currentUser.address,
@@ -1385,9 +1521,13 @@
       payment_status: 'warranty_revisit'
     };
 
-    try { await sbClient.from('bookings').insert([revisitBooking]); } catch(e){}
+    const { data: insertedRevisit, error: revisitErr } = await sbClient.from('bookings').insert([revisitBooking]).select().single();
+    if (revisitErr || !insertedRevisit) {
+      alert('Could not create warranty re-visit in Supabase: ' + (revisitErr?.message || 'Unknown database error'));
+      return;
+    }
     let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
-    localPool.unshift(revisitBooking);
+    localPool.unshift(insertedRevisit);
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
 
     alert(`Re-visit Booked Free of Charge! Order ID: ${invoiceNo}\nBroadcasting to nearest technicians.`);
@@ -1402,13 +1542,15 @@
 
     let orders = [];
     try {
-      const { data } = await sbClient.from('bookings').select('*').eq('customer_phone', currentUser.phone).order('created_at', { ascending: false });
+      const authUser = await getAuthenticatedUser();
+      if (!authUser) { navigateTo('auth'); return; }
+      const { data } = await sbClient.from('bookings').select('*').eq('customer_auth_user_id', authUser.id).order('created_at', { ascending: false });
       if (data && data.length > 0) orders = data;
     } catch(e){}
 
     if (orders.length === 0) {
       let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
-      orders = localPool.filter(j => j.customer_phone === currentUser.phone);
+      orders = localPool.filter(j => j.customer_auth_user_id === currentUser.auth_user_id);
     }
 
     if (orders.length === 0) {
@@ -1461,8 +1603,15 @@
   }
 
   async function cancelCustomerBooking(orderId) {
+    const authUser = await getAuthenticatedUser();
+    if (!authUser) { alert('Please login first.'); navigateTo('auth'); return; }
     if (!confirm("Cancellation Policy Warning:\nAre you sure you want to cancel? As per terms, the ₹21.00 advance booking token is strictly NON-REFUNDABLE.")) return;
-    try { await sbClient.from('bookings').update({ job_status: 'cancelled', payment_status: 'cancelled_non_refundable' }).or(`id.eq.${orderId},invoice_no.eq.${orderId}`); } catch(e){}
+    if (!authUser) { alert('Session expired. Please login again.'); navigateTo('auth'); return; }
+    const { error: cancelErr } = await sbClient.from('bookings')
+      .update({ job_status: 'cancelled', payment_status: 'cancelled_non_refundable' })
+      .eq('customer_auth_user_id', authUser.id)
+      .or(`id.eq.${orderId},invoice_no.eq.${orderId}`);
+    if (cancelErr) { alert('Could not cancel booking: ' + cancelErr.message); return; }
     let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
     localPool = localPool.map(j => (j.id === orderId || j.invoice_no === orderId) ? { ...j, job_status: 'cancelled', payment_status: 'cancelled_non_refundable' } : j);
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
@@ -1936,15 +2085,27 @@
 
   // ==================== ADMIN SURVEILLANCE ====================
   const ADMIN_ALLOWED_EMAILS = ['kashvienterprises.bihar@gmail.com', 'rishikeshsingh815@gmail.com'];
-  function adminGlobalLogin() {
+  async function adminGlobalLogin() {
     const email = document.getElementById('adminEmailInput').value.trim().toLowerCase();
     const pass = document.getElementById('adminPassInput').value.trim();
     const msg = document.getElementById('authMsg');
-    if (!ADMIN_ALLOWED_EMAILS.includes(email)) { msg.textContent = "Unauthorized Admin email."; msg.style.color = "#c0392b"; return; }
-    if (pass.length >= 6) {
-      isAdminLoggedIn = true; msg.textContent = ""; updateRoleBasedNavigation(); navigateTo('admin', true);
-      loadAdminGlobalFeed(); loadTechnicianFleet(); loadCustomerAccounts();
-    } else { msg.textContent = "Invalid Admin Password."; msg.style.color = "#c0392b"; }
+    if (!email || !pass) { msg.textContent = 'Enter Admin email and password.'; msg.style.color = '#c0392b'; return; }
+
+    const { data, error } = await sbClient.auth.signInWithPassword({ email, password: pass });
+    if (error || !data?.user) { msg.textContent = 'Admin login failed: ' + (error?.message || 'Invalid credentials'); msg.style.color = '#c0392b'; return; }
+
+    const { data: adminRow, error: adminErr } = await sbClient.from('admin_users')
+      .select('user_id,email,is_active').eq('user_id', data.user.id).eq('is_active', true).maybeSingle();
+    if (adminErr || !adminRow) {
+      await sbClient.auth.signOut();
+      msg.textContent = 'This Auth account is not an active Admin.'; msg.style.color = '#c0392b'; return;
+    }
+
+    isAdminLoggedIn = true;
+    msg.textContent = '';
+    updateRoleBasedNavigation();
+    navigateTo('admin', true);
+    loadAdminGlobalFeed(); loadTechnicianFleet(); loadCustomerAccounts();
   }
 
   async function loadAdminGlobalFeed() {
@@ -2069,6 +2230,7 @@
     document.body.appendChild(link); link.click(); document.body.removeChild(link);
   }
 
+  restoreSupabaseSession();
   updateRoleBasedNavigation();
   initSignupMap();
   loadHomeReviews();
