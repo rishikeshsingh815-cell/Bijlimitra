@@ -307,7 +307,7 @@
             <option value="ac">❄️ AC Service Pool</option>
             <option value="plumber">🔧 Plumbing Works Pool</option>
           </select>
-          <input type="password" id="techPinInput" placeholder="Enter 6-Digit PIN" maxlength="6" style="margin-bottom:10px; text-align:center; letter-spacing:4px; font-weight:800;">
+          <input type="password" id="techPinInput" placeholder="Enter 6-Character PIN" maxlength="6" style="margin-bottom:10px; text-align:center; letter-spacing:4px; font-weight:800;">
           <button class="btn" onclick="loginTechnicianToPool()">Login to Job Pool</button>
         </div>
 
@@ -599,7 +599,7 @@
             <input type="text" id="newTechQualification" placeholder="Educational / Technical Qualification" style="margin-bottom:8px;">
             <input type="number" id="newTechExperience" placeholder="Years of Field Experience" min="0" style="margin-bottom:8px;">
             <input type="password" id="newTechPin" placeholder="Enter 6-Digit Access PIN" maxlength="6" style="margin-bottom:10px; text-align:center; letter-spacing:4px; font-weight:800;">
-            <button class="btn secondary" onclick="registerTechnician()">Save Technician &amp; Hash 6-Digit PIN</button>
+            <button class="btn secondary" onclick="registerTechnician()">Save Technician &amp; Hash 6-Character PIN</button>
           </div>
           <div class="card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
@@ -1810,8 +1810,8 @@
     const pin = document.getElementById('techPinInput').value.trim();
     const msg = document.getElementById('authMsg');
 
-    if (!techId || !/^\d{6}$/.test(pin)) {
-      msg.textContent = 'Please enter valid Technician ID and 6-digit PIN.';
+    if (!techId || !/^[A-Za-z0-9]{6}$/.test(pin)) {
+      msg.textContent = 'Please enter valid Technician ID and 6-character PIN.';
       msg.style.color = '#c0392b';
       return;
     }
@@ -1886,21 +1886,47 @@
   async function renderPoolJobs() {
     if (!activeTechSession) return;
     const cooldownActive = checkCooldownState();
+    const normalizeCategory = (v) => String(v || '').trim().toLowerCase();
+    const techCategory = normalizeCategory(activeTechSession.category);
+    const categoryAliases = {
+      electrician: ['electrician', 'electrical', 'electrical services'],
+      plumber: ['plumber', 'plumbing', 'plumbing works'],
+      ac: ['ac', 'ac repair', 'ac repair & service']
+    };
+    const acceptedCategories = categoryAliases[techCategory] || [techCategory];
+
     let claimedJob = null;
     try {
-      const { data: claimed } = await sbClient.from('bookings').select('*').eq('technician_name', activeTechSession.name).in('job_status', ['claimed', 'in_progress', 'work_completed', 'paid_completed']).order('created_at', { ascending: false }).limit(1);
-      if (claimed && claimed.length > 0) claimedJob = claimed[0];
-    } catch(e){}
-    if (!claimedJob) { let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]'); claimedJob = localPool.find(j => j.technician_name === activeTechSession.name && ['claimed','in_progress','work_completed','paid_completed'].includes(j.job_status)); }
+      const { data: claimed, error: claimedErr } = await sbClient
+        .from('bookings')
+        .select('*')
+        .eq('technician_name', activeTechSession.name)
+        .in('job_status', ['claimed', 'in_progress', 'work_completed', 'paid_completed'])
+        .order('created_at', { ascending: false })
+        .limit(1);
+      if (!claimedErr && claimed && claimed.length > 0) claimedJob = claimed[0];
+    } catch(e) { console.error('Claimed job load failed:', e); }
+
+    if (!claimedJob) {
+      const localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
+      claimedJob = localPool.find(j =>
+        String(j.technician_name || '').trim() === String(activeTechSession.name || '').trim() &&
+        ['claimed','in_progress','work_completed','paid_completed'].includes(j.job_status)
+      );
+    }
 
     const activeSec = document.getElementById('activeClaimedJobSection');
     if (claimedJob) {
       activeSec.innerHTML = `
         <div class="card" style="border:2px solid var(--title-blue); background:var(--soft-red-bg);">
-          <div style="display:flex; justify-content:space-between;"><b style="color:var(--title-blue); font-weight:900;">Active Claimed Job: ${claimedJob.invoice_no}</b><span style="font-weight:900;">[ ${claimedJob.job_status.toUpperCase()} ]</span></div>
-          <p style="font-size:12px; margin:4px 0; font-weight:700;">👤 Customer: <b>${claimedJob.customer_name || 'Customer'}</b> | 📞 ${claimedJob.customer_phone}</p>
-          <p style="font-size:12px; margin-bottom:4px; font-weight:600;">📍 Address: ${claimedJob.customer_address}</p>
-          <p style="font-size:11.5px; color:#475569; font-weight:600;">📋 Work Details: <b>${claimedJob.extra_services || 'Base Inspection Fee'}</b></p>
+          <div style="display:flex; justify-content:space-between; gap:8px;"><b style="color:var(--title-blue); font-weight:900;">Active Claimed Job: ${claimedJob.invoice_no || 'BM-ORDER'}</b><span style="font-weight:900;">[ ${String(claimedJob.job_status || '').toUpperCase()} ]</span></div>
+          <p style="font-size:12px; margin:5px 0; font-weight:700;">👤 Customer: <b>${claimedJob.customer_name || 'Customer'}</b> | 📞 ${claimedJob.customer_phone || '--'}</p>
+          <p style="font-size:12px; margin-bottom:4px; font-weight:600;">📍 Address: ${claimedJob.customer_address || '--'}</p>
+          <p style="font-size:12px; margin-bottom:5px; color:#0f172a; font-weight:900;">🛠️ Booked Service: ${SERVICE_CONFIG[claimedJob.service_type]?.title || claimedJob.service_type || 'Electrical Services'}</p>
+          <div style="background:#fff; border:1.5px solid #fecaca; border-radius:8px; padding:8px; margin:6px 0;">
+            <p style="font-size:11.5px; color:#991b1b; font-weight:900; margin-bottom:3px;">📋 Customer ne jo kaam book kiya hai:</p>
+            <p style="font-size:12px; color:#0f172a; font-weight:800; line-height:1.45;">${claimedJob.extra_services || 'Visiting / Minimum Inspection Fee'}</p>
+          </div>
           ${claimedJob.job_status === 'claimed' ? `
             <div style="margin-top:8px;">
               <p style="font-size:11.5px; color:var(--title-blue); font-weight:900; margin-bottom:4px;">Ask Start PIN from Customer upon arrival:</p>
@@ -1915,23 +1941,56 @@
     } else { activeSec.innerHTML = ''; }
 
     let poolJobs = [];
+    let poolLoadError = null;
     try {
-      const { data: pool } = await sbClient.from('bookings').select('*').eq('service_type', activeTechSession.category).eq('job_status', 'pending_acceptance').order('created_at', { ascending: false });
-      if (pool && pool.length > 0) poolJobs = pool;
-    } catch(e){}
-    if (poolJobs.length === 0) { let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]'); poolJobs = localPool.filter(j => j.service_type === activeTechSession.category && j.job_status === 'pending_acceptance'); }
+      // Primary query: current technician category.
+      const { data: pool, error } = await sbClient
+        .from('bookings')
+        .select('*')
+        .eq('job_status', 'pending_acceptance')
+        .order('created_at', { ascending: false });
+      if (error) poolLoadError = error;
+      if (!error && pool) {
+        poolJobs = pool.filter(j => acceptedCategories.includes(normalizeCategory(j.service_type)));
+      }
+    } catch(e) { poolLoadError = e; }
+
+    // If Supabase RLS blocks the SELECT, use the same browser pool created by the customer flow.
+    // This does not change Supabase security; it only preserves the current local fallback.
+    const localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
+    if (poolJobs.length === 0 && localPool.length > 0) {
+      poolJobs = localPool.filter(j =>
+        j.job_status === 'pending_acceptance' &&
+        acceptedCategories.includes(normalizeCategory(j.service_type))
+      );
+    }
 
     const poolList = document.getElementById('availablePoolList');
-    if (!poolJobs || poolJobs.length === 0) { poolList.innerHTML = '<p style="color:#64748b; font-size:12px; text-align:center; padding:16px 0; font-weight:600;">No pending broadcasts in your pool right now.</p>'; return; }
+    if (!poolJobs || poolJobs.length === 0) {
+      poolList.innerHTML = `<div style="text-align:center; padding:16px 10px;">
+        <p style="color:#64748b; font-size:12px; font-weight:700;">No pending broadcasts in your ${techCategory || 'service'} pool right now.</p>
+        ${poolLoadError ? '<p style="color:#b91c1c; font-size:10.5px; margin-top:5px;">Supabase pool read is restricted. Check the bookings SELECT/RLS policy.</p>' : ''}
+      </div>`;
+      return;
+    }
 
-    poolList.innerHTML = poolJobs.map(j => `
+    poolList.innerHTML = poolJobs.map(j => {
+      const cfg = SERVICE_CONFIG[j.service_type] || SERVICE_CONFIG.electrician;
+      const workDetails = j.extra_services || 'Visiting / Minimum Inspection Fee';
+      const isWarranty = j.payment_status === 'warranty_revisit';
+      return `
       <div class="card" style="border-left:5px solid var(--warning);">
-        <div style="display:flex; justify-content:space-between;"><b>${j.invoice_no}</b><span style="font-weight:900; color:var(--title-blue);">${j.service_type?.toUpperCase()}</span></div>
-        <p style="font-size:12px; color:#1e293b; margin:3px 0; font-weight:700;">👤 ${j.customer_name || 'Customer'} (📞 ${j.customer_phone})</p>
-        <p style="font-size:12px; color:#64748b; font-weight:600;">📍 ${j.customer_address}</p>
-        <p style="font-size:11px; color:var(--primary-dark-red); font-weight:800;">${j.payment_status === 'warranty_revisit' ? '🛡️ Free 07-Day Warranty Re-visit' : '⚡ Regular Service'}</p>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;"><b style="color:var(--title-blue);">${j.invoice_no || 'BM-ORDER'}</b><span style="font-weight:900; color:var(--title-blue); font-size:11px;">${cfg.title}</span></div>
+        <p style="font-size:12px; color:#1e293b; margin:5px 0 3px; font-weight:800;">👤 Customer: ${j.customer_name || 'Customer'} | 📞 ${j.customer_phone || '--'}</p>
+        <p style="font-size:12px; color:#475569; margin:3px 0; font-weight:600;">📍 Work Address: ${j.customer_address || '--'}</p>
+        <div style="background:#fff7ed; border:1.5px solid #fed7aa; border-radius:8px; padding:8px; margin:7px 0;">
+          <p style="font-size:11.5px; color:#9a3412; font-weight:900; margin-bottom:3px;">🛠️ CUSTOMER KA REQUESTED KAAM:</p>
+          <p style="font-size:12px; color:#0f172a; font-weight:800; line-height:1.5;">${workDetails}</p>
+        </div>
+        <p style="font-size:11px; color:var(--primary-dark-red); font-weight:800;">${isWarranty ? '🛡️ Free 07-Day Warranty Re-visit' : '⚡ Regular Service • Advance ₹21 Received'}</p>
         <button class="btn" style="margin-top:8px;" ${cooldownActive ? 'disabled' : ''} onclick="claimPoolJob('${j.id || j.invoice_no}')">${cooldownActive ? 'Claim Blocked (Cooldown)' : '⚡ Accept &amp; Claim Job'}</button>
-      </div>`).join('');
+      </div>`;
+    }).join('');
   }
 
   async function claimPoolJob(jobId) {
@@ -2236,8 +2295,8 @@
           experienceYears = document.getElementById('newTechExperience').value.trim(), 
           pin = document.getElementById('newTechPin').value.trim();
 
-    if (!name || pin.length !== 6) { 
-      alert("Please enter technician name and a secure 6-digit PIN."); 
+    if (!name || !/^[A-Za-z0-9]{6}$/.test(pin)) { 
+      alert("Please enter technician name and a secure 6-character PIN."); 
       return; 
     }
     if (!/^[6-9]\d{9}$/.test(contactPhone)) { 
@@ -2267,7 +2326,7 @@
     }]);
 
     if (error) { alert("Failed to register technician: " + error.message); return; }
-    alert(`Technician Successfully Registered!\nID: ${techCode}\nSecure 6-Digit PIN: ${pin}`); 
+    alert(`Technician Successfully Registered!\nID: ${techCode}\nSecure 6-Character PIN: ${pin}`); 
     loadTechnicianFleet();
   }
 
