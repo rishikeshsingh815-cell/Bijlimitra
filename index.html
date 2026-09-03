@@ -186,9 +186,6 @@
     .desktop-nav-item:hover { transform:translateY(-1px); }
 </style>
 <style>
-.bm-lang-switch{position:fixed;right:16px;top:16px;z-index:99999;display:flex;gap:4px;background:#fff;padding:5px;border-radius:12px;box-shadow:0 8px 25px rgba(15,23,42,.15);border:1px solid #e2e8f0}
-.bm-lang-switch button{border:0;padding:7px 11px;border-radius:8px;font-weight:800;cursor:pointer;background:#f1f5f9;color:#334155}
-.bm-lang-switch button.active{background:#1d4ed8;color:#fff}
 body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
 </style>
 <style id="bm-v20-professional-fixes">
@@ -196,8 +193,18 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
 .bm-account-actions{display:none;align-items:center;gap:7px}.bm-account-actions .bm-action{border:1px solid #dbe3ec;background:#fff;border-radius:9px;padding:7px 10px;font-weight:800;font-size:11px;cursor:pointer}.bm-account-actions .bm-logout{background:#b91c1c;color:#fff;border-color:#b91c1c}.bm-account-actions .bm-profile{color:#0f3b66}
 @media(max-width:700px){.bm-account-actions{gap:4px}.bm-account-actions .bm-action{padding:6px 8px;font-size:10px}}
 </style>
+<style id="bm-v21-2-modal-fix">
+/* v21.2: Google profile modal is hidden until explicitly opened. */
+#googlePhoneModal[style*="display: flex"] { display:flex !important; }
+#googlePhoneModal .modal-content { max-height: calc(100vh - 32px); }
+@media (max-width: 480px) {
+  #googlePhoneModal { padding: 10px; }
+  #googlePhoneModal .modal-content { padding: 16px; max-height: calc(100vh - 20px); }
+  #googleSignupMap { height: 150px !important; }
+}
+</style>
 </head>
-<body data-bm-hi="13. GOOGLE USER प्रोफाइल" data-bm-i18n="13. GOOGLE USER MODAL"><div aria_label="Language" class="bm-lang-switch"><button id="bm-en" type="button">English</button><button id="bm-hi" type="button">हिन्दी</button></div>
+<body>
 <div data-bm-hi="🔄 लाइव डेटा सिंक हो रहा है..." data-bm-i18n="🔄 Syncing live data..." id="pullToRefreshIndicator">🔄 Syncing live data...</div>
 <div class="desktop-shell">
 <div class="desktop-sidebar" id="desktopSidebar" style="display:none;">
@@ -236,7 +243,7 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
 </div>
 </div>
 <div class="desktop-main" style="flex:1;">
-<div class="app" data-bm-hi="9. एडमिन डैशबोर्ड" data-bm-i18n="9. ADMIN DASHBOARD SCREEN" id="mainApp">
+<div class="app" id="mainApp">
 <div class="topbar">
 <div class="brand-header-box">
 <div class="tech-mascot-avatar">
@@ -271,7 +278,7 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
 </div>
 <!-- 1. AUTH SCREEN -->
 <div class="screen" id="screen-auth">
-<div class="desktop-inner" data-bm-hi="6-CHARACTER PIN से TECHNICIAN LOGIN" data-bm-i18n="TECHNICIAN LOGIN WITH 6-DIGIT PIN">
+<div class="desktop-inner">
 <div class="card" style="border-top: 4.5px solid var(--title-blue);">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
 <h3 class="section-title-blue" data-bm-hi="कस्टमर लॉगिन" data-bm-i18n="Customer Login" id="custAuthFormTitle" style="margin-bottom:0;">Customer Login</h3>
@@ -336,7 +343,7 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
 </div>
 <!-- 2. HOME SCREEN -->
 <div class="screen active" id="screen-home">
-<div class="desktop-inner" data-bm-hi="रिव्यू फीड" data-bm-i18n="REVIEWS FEED">
+<div class="desktop-inner">
 <!-- HERO TRUST BANNER -->
 <div class="hero-trust-banner">
 <div class="trust-subtitle" data-bm-hi="🛡️ सत्यापित टेक्नीशियन • बीमित सेवा" data-bm-i18n="🛡️ ID-verified technicians • Insured service">🛡️ ID-verified technicians • Insured service</div>
@@ -351,7 +358,7 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
 <h2 class="section-title-blue" data-bm-hi="🗺️ बेगूसराय स्ट्रीट डिस्पैच मैप" data-bm-i18n="🗺️ Begusarai Street Dispatch Map">🗺️ Begusarai Street Dispatch Map</h2>
 <div id="homeMap"></div>
 <h2 class="section-title-blue" data-bm-hi="⚡ सर्विस श्रेणी चुनें" data-bm-i18n="⚡ Select Service Category" style="margin-top:14px;">⚡ Select Service Category</h2>
-<div class="category-grid" data-bm-hi="3. प्लंबिंग (पाइप + वाल्व + सॉकेट)" data-bm-i18n="3. PLUMBING (Pipe + Valve + Socket Visuals)">
+<div class="category-grid">
 <!-- 1. ELECTRICIAN (Wire + Bulb Visuals) -->
 <div class="category-card" onclick="selectCategoryBooking('electrician')">
 <div class="category-card-left">
@@ -390,7 +397,7 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
 </div>
 </div>
 <!-- 1. GENERAL BOOKING, CANCELLATION & BILLING POLICY (MAIN INTERFACE) -->
-<div class="terms-box" data-bm-hi="टेस्टिंग के बाद टेक्नीशियन को रिलीज करने के लिए दें।" data-bm-i18n="after testing to release the technician." style="margin-top:16px;">
+<div class="terms-box" style="margin-top:16px;">
 <h4 data-bm-hi="📋 1. बुकिंग, कैंसिलेशन और बिलिंग नीति" data-bm-i18n="📋 1. Booking, Cancellation &amp; Billing Policy" style="color:#92400e; font-size:13.5px; margin-bottom:8px; font-weight:900;">📋 1. Booking, Cancellation &amp; Billing Policy</h4>
           • <b data-bm-hi="एडवांस बुकिंग फीस:" data-bm-i18n="Advance Booking Fee:">Advance Booking Fee:</b> A non-refundable advance fee of <b>₹21.00</b> is charged at the time of booking.<br/>
           • <b data-bm-hi="कैंसिलेशन नियम:" data-bm-i18n="Cancellation Rule:">Cancellation Rule:</b> If the customer cancels the service request, the advance booking amount of <b data-bm-hi="₹21.00 रिफंड नहीं होगी" data-bm-i18n="₹21.00 will not be refunded">₹21.00 will not be refunded</b>.<br/>
@@ -433,7 +440,7 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
 </div>
 <!-- 4. BOOKING SCREEN -->
 <div class="screen" id="screen-booking">
-<div class="desktop-inner" data-bm-hi="सर्विस के अनुसार नियम और शर्तें" data-bm-i18n="DYNAMIC SERVICE SPECIFIC TERMS &amp; CONDITIONS">
+<div class="desktop-inner">
 <button class="btn secondary" data-bm-hi="← वापस" data-bm-i18n="← Back" onclick="window.history.back()" style="width:auto; padding:6px 14px; font-size:12px; margin-bottom:12px;">← Back</button>
 <div class="card" style="border-left:5px solid var(--title-blue);">
 <h3 class="section-title-blue" data-bm-hi="सर्विस बुकिंग" data-bm-i18n="Service Booking" id="bookCatName" style="font-size:17px;">Service Booking</h3>
@@ -452,7 +459,7 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
 <div class="price-row" style="font-weight:800; border-top:1px dashed #cbd5e1; margin-top:4px; padding-top:4px;"><span data-bm-hi="अनुमानित कुल राशि" data-bm-i18n="Estimated Total Amount">Estimated Total Amount</span><span id="priceTotalIncGst">₹121.00</span></div>
 <div class="price-row" style="color:var(--primary-red); font-weight:800;"><span data-bm-hi="एडवांस बुकिंग टोकन" data-bm-i18n="Advance Booking Token">Advance Booking Token</span><span>- ₹21.00</span></div>
 <div class="price-row total"><span data-bm-hi="टोकन के बाद देय राशि" data-bm-i18n="Due Amount After Token">Due Amount After Token</span><span id="priceTotalDueVal">₹100.00</span></div>
-<p data-bm-hi="बुकिंग के बाद रिफंड नहीं होगा।" data-bm-i18n="once booked." style="font-size:11.5px; color:#991b1b; font-weight:900; margin-top:8px; background:#fff1f2; padding:8px 10px; border-radius:8px; border:1px solid #fecdd3;">⚠️ <b data-bm-hi="कैंसिलेशन नीति:" data-bm-i18n="CANCELLATION POLICY:">CANCELLATION POLICY:</b> The ₹21.00 advance booking token is strictly <b data-bm-hi="नॉन-रिफंडेबल" data-bm-i18n="NON-REFUNDABLE">NON-REFUNDABLE</b> once booked.</p>
+<p style="font-size:11.5px; color:#991b1b; font-weight:900; margin-top:8px; background:#fff1f2; padding:8px 10px; border-radius:8px; border:1px solid #fecdd3;">⚠️ <b data-bm-hi="कैंसिलेशन नीति:" data-bm-i18n="CANCELLATION POLICY:">CANCELLATION POLICY:</b> The ₹21.00 advance booking token is strictly <b data-bm-hi="नॉन-रिफंडेबल" data-bm-i18n="NON-REFUNDABLE">NON-REFUNDABLE</b> once booked.</p>
 </div>
 <label data-bm-hi="सर्विस पता:" data-bm-i18n="Service Address:" style="font-size:12px; font-weight:800; color:var(--title-blue); margin-bottom:4px; display:block;">Service Address:</label>
 <input id="custAddressInput" placeholder="Enter complete service address" type="text"/>
@@ -542,11 +549,11 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
 <div class="inv-title" data-bm-hi="टैक्स इनवॉइस / सर्विस रसीद" data-bm-i18n="TAX INVOICE / SERVICE RECEIPT" id="pdfDocTypeTitle">TAX INVOICE / SERVICE RECEIPT</div>
 <div class="inv-meta-grid">
 <div>Customer Name: <b id="pdfCustName">-</b></div>
-<div data-bm-hi="कस्टमर फोन:" data-bm-i18n="Customer Phone:">Customer Phone: <b id="pdfCustPhone">-</b></div>
-<div data-bm-hi="इनवॉइस नंबर:" data-bm-i18n="Invoice No:">Invoice No: <b id="pdfInvNo">-</b></div>
-<div data-bm-hi="पता:" data-bm-i18n="Address:">Address: <b id="pdfCustAddr">-</b></div>
-<div data-bm-hi="टेक्नीशियन:" data-bm-i18n="Technician:">Technician: <b id="pdfTech">-</b></div>
-<div data-bm-hi="तारीख:" data-bm-i18n="Date:">Date: <b id="pdfDate">-</b></div>
+<div>Customer Phone: <b id="pdfCustPhone">-</b></div>
+<div>Invoice No: <b id="pdfInvNo">-</b></div>
+<div>Address: <b id="pdfCustAddr">-</b></div>
+<div>Technician: <b id="pdfTech">-</b></div>
+<div>Date: <b id="pdfDate">-</b></div>
 </div>
 <table class="inv-table">
 <thead><tr><th>Sr</th><th data-bm-hi="सर्विस / काम का विवरण" data-bm-i18n="Description of Service / Work">Description of Service / Work</th><th data-bm-hi="SAC कोड" data-bm-i18n="SAC Code">SAC Code</th><th data-bm-hi="रेट (₹)" data-bm-i18n="Rate (₹)">Rate (₹)</th><th data-bm-hi="GST (18%)" data-bm-i18n="GST (18%)">GST (18%)</th><th data-bm-hi="कुल (₹)" data-bm-i18n="Total (₹)">Total (₹)</th></tr></thead>
@@ -617,7 +624,7 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
 </div>
 <!-- 10. TECHNICIAN WORK COMPLETION & BILLING MODAL (Without Saman List, Includes Pre-selected Customer Works) -->
 <div class="modal-backdrop" id="techCompletionModal">
-<div class="modal-content" data-bm-hi="ऑन-साइट अतिरिक्त काम (मटेरियल के बिना)" data-bm-i18n="On-Site Additional Tasks (Without Material/Saman) - FIXED ALIGNMENT IN ONE LINE">
+<div class="modal-content">
 <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2.5px solid var(--title-blue); padding-bottom:10px; margin-bottom:12px;">
 <h3 class="section-title-blue" data-bm-hi="काम पूरा और बिलिंग" data-bm-i18n="Work Completion &amp; Billing" style="margin-bottom:0;">Work Completion &amp; Billing</h3>
 <span onclick="closeTechCompletionModal()" style="font-size:22px; font-weight:900; cursor:pointer;">×</span>
@@ -2412,36 +2419,25 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
     }
   });
 
-  const BM_TRANSLATIONS = { en:{login:'Login',logout:'Logout',profile:'Profile & Orders',categories:'Categories'}, hi:{login:'लॉगिन',logout:'लॉगआउट',profile:'प्रोफाइल और ऑर्डर',categories:'श्रेणियाँ'} };
   function setInterfaceLanguage(lang) {
+    lang = (lang === 'hi') ? 'hi' : 'en';
     localStorage.setItem('bm_language', lang);
-    const t=BM_TRANSLATIONS[lang]||BM_TRANSLATIONS.en;
-    document.documentElement.lang=lang==='hi'?'hi':'en';
-    const profile=document.getElementById('deskNavProfile'); if(profile && currentUser) profile.textContent='👤 '+t.profile;
-    const logout=document.getElementById('deskNavLogout'); if(logout) logout.textContent='🚪 '+t.logout;
+    localStorage.setItem('bijliMitraLanguage', lang);
+    document.documentElement.lang = lang;
+    document.body.classList.toggle('bm-hi', lang === 'hi');
+    document.querySelectorAll('[data-bm-i18n]').forEach(el => {
+      const en = el.getAttribute('data-bm-i18n');
+      const hi = el.getAttribute('data-bm-hi');
+      if (en !== null && hi !== null) el.textContent = lang === 'hi' ? hi : en;
+    });
     updateRoleBasedNavigation();
   }
-  function restoreInterfaceLanguage(){ const el=document.getElementById('languageSelector'); const lang=localStorage.getItem('bm_language')||'en'; if(el) el.value=lang; setInterfaceLanguage(lang); }
-</script>
-<script>
-(function(){
-  const nodes=[...document.querySelectorAll('[data-bm-i18n]')];
-  const setLang=(lang)=>{
-    nodes.forEach(el=>{
-      const en=el.getAttribute('data-bm-i18n');
-      const hi=el.getAttribute('data-bm-hi');
-      el.textContent=(lang==='hi' ? hi : en);
-    });
-    document.documentElement.lang=lang==='hi'?'hi':'en';
-    document.body.classList.toggle('bm-hi',lang==='hi');
-    document.getElementById('bm-en').classList.toggle('active',lang==='en');
-    document.getElementById('bm-hi').classList.toggle('active',lang==='hi');
-    localStorage.setItem('bijliMitraLanguage',lang);
-  };
-  document.getElementById('bm-en').onclick=()=>setLang('en');
-  document.getElementById('bm-hi').onclick=()=>setLang('hi');
-  setLang(localStorage.getItem('bijliMitraLanguage')||'en');
-})();
+  function restoreInterfaceLanguage(){
+    const el=document.getElementById('languageSelector');
+    const lang=localStorage.getItem('bm_language') || localStorage.getItem('bijliMitraLanguage') || 'en';
+    if(el) el.value=lang;
+    setInterfaceLanguage(lang);
+  }
 </script><script id="bm-v21-fixes">
 (function(){
   const esc = v => String(v ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
@@ -2529,7 +2525,7 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
     }catch(e){ err=e; }
     if(err){
       console.error('Technician pool RPC failed:',err);
-      poolList.innerHTML='<div style="padding:18px;text-align:center;color:#b91c1c;font-weight:800">Unable to load job pool. Please check the deployed get_technician_pool(text,text) function.</div>';
+      poolList.innerHTML='<div style="padding:18px;text-align:center;color:#b91c1c;font-weight:800">Unable to load job pool. Please check the deployed get_technician_pool(text,text,text) function.</div>';
       return;
     }
     pool=pool.filter(j=>categoryKey(j.service_type)===cat && j.job_status==='pending_acceptance');
