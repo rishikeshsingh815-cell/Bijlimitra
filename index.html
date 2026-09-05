@@ -203,7 +203,7 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
   #googleSignupMap { height: 150px !important; }
 }
 </style>
-</head>
+\n<style id="bm-v22-modern-ui">\n:root{--bm-navy:#0b1f3a;--bm-blue:#155eef;--bm-red:#e53935;--bm-amber:#f59e0b;--bm-green:#16a34a;--bm-bg:#f4f7fb;--bm-card:#ffffff;--bm-text:#0f172a;--bm-muted:#64748b;--bm-border:#e2e8f0;--bm-shadow:0 12px 30px rgba(15,23,42,.08)}\nbody{background:linear-gradient(180deg,#f7f9fc 0%,#eef3f9 100%)!important;color:var(--bm-text)!important;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important}\nbody:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 10% 0%,rgba(21,94,239,.08),transparent 28%),radial-gradient(circle at 95% 12%,rgba(229,57,53,.07),transparent 24%);z-index:-1}\n.desktop-inner{max-width:980px!important}\n.card{background:rgba(255,255,255,.94)!important;border:1px solid rgba(226,232,240,.9)!important;border-radius:18px!important;box-shadow:var(--bm-shadow)!important}\n.section-title-blue{color:var(--bm-navy)!important;font-weight:900!important;letter-spacing:-.02em}\n.btn{border:0!important;border-radius:12px!important;min-height:42px!important;font-weight:850!important;box-shadow:0 5px 14px rgba(15,23,42,.10)!important;transition:transform .16s ease,box-shadow .16s ease,filter .16s ease!important}\n.btn:hover{transform:translateY(-1px);filter:brightness(1.02);box-shadow:0 8px 18px rgba(15,23,42,.13)!important}\n.btn.secondary{background:#fff!important;color:var(--bm-navy)!important;border:1px solid var(--bm-border)!important}\n.btn.danger{background:linear-gradient(135deg,#ef4444,#dc2626)!important}\ninput,select,textarea{border:1px solid #d8e0eb!important;border-radius:11px!important;background:#fff!important;min-height:42px!important;box-sizing:border-box!important}\ninput:focus,select:focus,textarea:focus{outline:0!important;border-color:#7aa2ff!important;box-shadow:0 0 0 4px rgba(21,94,239,.10)!important}\n.category-grid{gap:12px!important}\n.category-card{background:linear-gradient(135deg,#fff,#f8fbff)!important;border:1px solid #dfe7f2!important;border-radius:17px!important;padding:15px!important;box-shadow:0 8px 22px rgba(15,23,42,.06)!important;transition:.18s ease!important}\n.category-card:hover{transform:translateY(-2px);border-color:#9dbbff!important;box-shadow:0 14px 28px rgba(21,94,239,.10)!important}\n.cat-custom-icon-box{border-radius:14px!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.65),0 5px 12px rgba(15,23,42,.08)!important}\n.trust-pill{border:1px solid #dce5f1!important;background:#fff!important;border-radius:999px!important;padding:7px 10px!important;box-shadow:0 3px 10px rgba(15,23,42,.04)!important}\n#screen-tech-pool .card{border-radius:18px!important}\n#activeClaimedJobSection .card{background:linear-gradient(145deg,#ffffff,#f5f9ff)!important;border-color:#b9cdf8!important}\n#availablePoolList{display:grid;gap:12px}\n#availablePoolList .card{position:relative;overflow:hidden;border:1px solid #dce5f1!important;background:#fff!important;padding:15px!important}\n#availablePoolList .card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#155eef,#38bdf8)}\n#availablePoolList .btn{width:100%!important;margin-top:10px!important}\n#techCooldownNotice{border-radius:13px!important;box-shadow:0 5px 16px rgba(220,38,38,.08)}\n.bottomnav{background:rgba(255,255,255,.94)!important;backdrop-filter:blur(14px)!important;border-top:1px solid #e2e8f0!important;box-shadow:0 -8px 24px rgba(15,23,42,.06)!important}\n@media(max-width:700px){.desktop-inner{padding-left:12px!important;padding-right:12px!important}.card{border-radius:15px!important}.category-grid{grid-template-columns:1fr!important}.btn{min-height:44px!important}.trust-pills{gap:6px!important}}\n</style>\n</head>
 <body>
 <div data-bm-hi="🔄 लाइव डेटा सिंक हो रहा है..." data-bm-i18n="🔄 Syncing live data..." id="pullToRefreshIndicator">🔄 Syncing live data...</div>
 <div class="desktop-shell">
@@ -1458,48 +1458,28 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
 
     const combinedServiceString = selectedServiceNames.join(', ');
     const invoiceNo = 'BM-' + Date.now().toString().slice(-6);
-    const startPin = Math.floor(1000 + Math.random() * 9000).toString();
-    const stopPin = Math.floor(1000 + Math.random() * 9000).toString();
-
-    // bookings uses a UUID id and stores the service amount as taxable base
-    // + GST. Keep the INSERT limited to columns used by the live schema.
     const taxableBase = totalEstimated > 0 ? (totalEstimated / 1.18) : 0;
     const gstAmount = totalEstimated - taxableBase;
-    const newBooking = {
-      customer_auth_user_id: authUser.id,
-      customer_name: currentUser.name || "Customer",
-      customer_phone: phone,
-      customer_address: address,
-      service_type: currentCategory,
-      extra_services: combinedServiceString,
-      start_pin: startPin,
-      stop_pin: stopPin,
-      job_status: 'payment_pending',
-      technician_name: null,
-      invoice_no: invoiceNo,
-      payment_status: 'advance_pending',
-      base_rate: Number(taxableBase.toFixed(2)),
-      gst_amount: Number(gstAmount.toFixed(2)),
-      spare_parts_total: 0,
-      petrol_charge: 0,
-      overtime_hours: 0
-    };
 
-    const { data: insertedBooking, error: bookingErr } = await sbClient.from('bookings')
-      .insert([newBooking])
-      .select('*')
-      .single();
-    if (bookingErr || !insertedBooking) {
-      console.error('Booking insert failed:', bookingErr);
+    // PINs are generated and hashed server-side. Plaintext is returned only to this
+    // authenticated customer for the one-time booking confirmation.
+    const { data: createdBooking, error: bookingErr } = await sbClient.rpc('customer_create_booking', {
+      p_invoice_no: invoiceNo, p_customer_name: currentUser.name || 'Customer',
+      p_customer_phone: phone, p_customer_address: address, p_service_type: currentCategory,
+      p_extra_services: combinedServiceString, p_base_rate: Number(taxableBase.toFixed(2)),
+      p_gst_amount: Number(gstAmount.toFixed(2))
+    });
+    if (bookingErr || !createdBooking) {
+      console.error('Booking creation RPC failed:', bookingErr);
       alert('Could not create booking in Supabase: ' + formatSupabaseError(bookingErr || new Error('No booking row returned')) + '\n\nNo local/fake booking was created.');
       return;
     }
-
-    // Local storage is only a UI cache after a confirmed Supabase insert.
+    const insertedBooking = createdBooking.booking || createdBooking;
+    const startPin = createdBooking.start_pin;
+    const stopPin = createdBooking.stop_pin;
     let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
     localPool.unshift(insertedBooking);
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
-
     pendingAdvanceState = { customerName: currentUser.name || "Customer", phone, address, category: currentCategory, addonsList: combinedServiceString, addonsTotal: 0, startPin, stopPin, invoiceNo };
 
     const cashfreeSuccess = await openCashfreeCheckout('ADV-' + invoiceNo, 21.00, phone, currentUser.name, currentUser.email);
@@ -1522,12 +1502,9 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
     const authUser = await getAuthenticatedUser();
     if (!authUser) { txnErrEl.textContent = 'Session expired. Please login again.'; return; }
 
-    const { data: updatedBooking, error: paymentUpdateErr } = await sbClient.from('bookings')
-      .update({ job_status: 'pending_acceptance', payment_status: 'advance_received' })
-      .eq('invoice_no', pendingAdvanceState.invoiceNo)
-      .eq('customer_auth_user_id', authUser.id)
-      .select('*')
-      .single();
+    const { data: updatedBooking, error: paymentUpdateErr } = await sbClient.rpc('customer_confirm_advance_payment', {
+      p_invoice_no: String(pendingAdvanceState.invoiceNo)
+    });
 
     if (paymentUpdateErr || !updatedBooking) {
       console.error('Advance payment status update failed:', paymentUpdateErr);
@@ -1546,39 +1523,12 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
   async function claimFreeRevisit(parentInvoiceNo, serviceType) {
     const authUser = await getAuthenticatedUser();
     if (!authUser || !currentUser) { alert('Please login first.'); navigateTo('auth'); return; }
-
-    // HARD 7-DAY SERVER-SOURCED ELIGIBILITY CHECK
-    const { data: parent, error: parentErr } = await sbClient.from('bookings')
-      .select('id,invoice_no,customer_auth_user_id,service_type,job_status,end_time,created_at,payment_status')
-      .eq('invoice_no', parentInvoiceNo)
-      .eq('customer_auth_user_id', authUser.id)
-      .maybeSingle();
-    if (parentErr || !parent) { alert('Original booking could not be verified.'); return; }
-    if (parent.job_status !== 'paid_completed' || !parent.end_time) { alert('Warranty starts only after successful job completion.'); return; }
-    const completedAt = new Date(parent.end_time).getTime();
-    const ageMs = Date.now() - completedAt;
-    if (ageMs < 0 || ageMs > 7 * 24 * 60 * 60 * 1000) {
-      alert('07-Day workmanship warranty has expired. Warranty claims are allowed only within 7 days of job completion.');
-      return;
-    }
-    if (parent.payment_status === 'warranty_revisit') { alert('This booking is already a warranty re-visit.'); return; }
     if (!confirm('Claim Free Re-visit under 07-Day Workmanship Warranty?\nTechnician inspection will be provided at ₹0 Base Fee.')) return;
-
-    const invoiceNo = 'REV-' + Date.now().toString().slice(-6);
-    const startPin = Math.floor(1000 + Math.random() * 9000).toString();
-    const stopPin = Math.floor(1000 + Math.random() * 9000).toString();
-    const revisitBooking = {
-      customer_auth_user_id: authUser.id, customer_name: currentUser.name || 'Customer', customer_phone: currentUser.phone,
-      customer_address: currentUser.address, service_type: parent.service_type || serviceType,
-      extra_services: `07-Day Free Revisit (Warranty Claim for ${parentInvoiceNo})`, start_pin:startPin, stop_pin:stopPin,
-      job_status:'pending_acceptance', technician_name:null, invoice_no:invoiceNo, payment_status:'warranty_revisit',
-      base_rate:0, gst_amount:0, spare_parts_total:0, petrol_charge:0, overtime_hours:0
-    };
-    const { error: revisitErr } = await sbClient.from('bookings').insert([revisitBooking]);
-    if (revisitErr) { alert('Could not create warranty re-visit: ' + revisitErr.message); return; }
-    let localPool=JSON.parse(localStorage.getItem('bm_local_pool')||'[]'); localPool.unshift(revisitBooking); localStorage.setItem('bm_local_pool',JSON.stringify(localPool));
-    alert(`Re-visit booked free of charge! Order ID: ${invoiceNo}`);
-    loadCustomerOrders();
+    const { data, error } = await sbClient.rpc('bm_claim_warranty_7day', { p_parent_invoice_no: parentInvoiceNo });
+    if (error) { alert(error.message || 'Warranty claim failed.'); return; }
+    if (!data) { alert('Warranty is not eligible or has expired.'); return; }
+    alert(`Free 07-Day Warranty Re-visit booked!\nOrder ID: ${data.invoice_no}\nStart PIN: ${data.start_pin}\nStop PIN: ${data.stop_pin}`);
+    await loadCustomerOrders();
   }
 
   // ==================== CUSTOMER ORDERS & BILLING ====================
@@ -1629,8 +1579,7 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
           
           ${!isCancelled ? `
           <div style="background:var(--soft-red-bg); border:1.5px dashed var(--soft-red-border); border-radius:8px; padding:8px; margin:8px 0; font-size:11.5px; font-weight:700;">
-            🔴 Your Start PIN: <b>${b.start_pin}</b> (Give upon arrival)<br>
-            🔴 Your Stop PIN: <b>${b.stop_pin}</b> (Give after work completes)
+            🔐 Start/Stop PINs are issued securely at booking time. Keep them private and provide them only to your assigned technician.
           </div>` : ''}
 
           ${isPending ? `<button class="btn danger" style="padding:8px; font-size:11.5px; margin-top:8px;" onclick="cancelCustomerBooking('${b.id || b.invoice_no}')">❌ Cancel Booking (₹21 Non-Refundable)</button>` : ''}
@@ -1654,11 +1603,21 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
     if (!authUser) { alert('Please login first.'); navigateTo('auth'); return; }
     if (!confirm("Cancellation Policy Warning:\nAre you sure you want to cancel? As per terms, the ₹21.00 advance booking token is strictly NON-REFUNDABLE.")) return;
     if (!authUser) { alert('Session expired. Please login again.'); navigateTo('auth'); return; }
-    const { error: cancelErr } = await sbClient.from('bookings')
-      .update({ job_status: 'cancelled', payment_status: 'cancelled_non_refundable' })
-      .eq('customer_auth_user_id', authUser.id)
-      .or(`id.eq.${orderId},invoice_no.eq.${orderId}`);
-    if (cancelErr) { alert('Could not cancel booking: ' + cancelErr.message); return; }
+    // Customer cancellation must go through a server-side RPC so RLS cannot
+    // accidentally block a legitimate customer or allow cancellation of
+    // somebody else's booking. The RPC verifies auth.uid() + ownership.
+    const { data: cancelData, error: cancelErr } = await sbClient.rpc('customer_cancel_booking', {
+      p_booking_id: String(orderId)
+    });
+    if (cancelErr) {
+      console.error('Customer cancellation RPC failed:', cancelErr);
+      alert('Could not cancel booking: ' + cancelErr.message);
+      return;
+    }
+    if (!cancelData) {
+      alert('Booking could not be cancelled. It may already be claimed, completed, or cancelled.');
+      return;
+    }
     let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
     localPool = localPool.map(j => (j.id === orderId || j.invoice_no === orderId) ? { ...j, job_status: 'cancelled', payment_status: 'cancelled_non_refundable' } : j);
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
@@ -1845,7 +1804,8 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
         category: tech.category,
         id: tech.id,
         techCode: tech.tech_code,
-        phone: tech.contact_phone || tech.phone || ''
+        phone: tech.contact_phone || tech.phone || '',
+        pinHash
       };
 
       currentUser = null;
@@ -1888,14 +1848,17 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
 
     let claimedJob = null;
     try {
-      const { data: claimed, error: claimedErr } = await sbClient
-        .from('bookings')
-        .select('*')
-        .eq('technician_name', activeTechSession.name)
-        .in('job_status', ['claimed', 'in_progress', 'work_completed', 'paid_completed'])
-        .order('created_at', { ascending: false })
-        .limit(1);
-      if (!claimedErr && claimed && claimed.length > 0) claimedJob = claimed[0];
+      const authUser = await getAuthenticatedUser();
+      if (authUser) {
+        const { data: claimed, error: claimedErr } = await sbClient
+          .from('bookings')
+          .select('id,invoice_no,customer_name,customer_phone,customer_address,service_type,extra_services,technician_name,technician_phone,job_status,payment_status,start_time,end_time,base_rate,gst_amount,spare_parts_total,petrol_charge,overtime_hours,overtime_rate_per_hour,grand_total,overtime_charge,extra_on_site_cost,calculated_total,created_at')
+          .eq('technician_auth_user_id', authUser.id)
+          .in('job_status', ['claimed', 'in_progress'])
+          .order('created_at', { ascending: false })
+          .limit(1);
+        if (!claimedErr && claimed && claimed.length > 0) claimedJob = claimed[0];
+      }
     } catch(e) { console.error('Claimed job load failed:', e); }
 
     if (!claimedJob) {
@@ -1907,6 +1870,7 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
     }
 
     const activeSec = document.getElementById('activeClaimedJobSection');
+    const technicianHasActiveJob = !!claimedJob && ['claimed','in_progress'].includes(claimedJob.job_status);
     if (claimedJob) {
       activeSec.innerHTML = `
         <div class="card" style="border:2px solid var(--title-blue); background:var(--soft-red-bg);">
@@ -1922,7 +1886,7 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
             <div style="margin-top:8px;">
               <p style="font-size:11.5px; color:var(--title-blue); font-weight:900; margin-bottom:4px;">Ask Start PIN from Customer upon arrival:</p>
               <input type="text" id="startPinVerifyInput" placeholder="Enter 4-Digit Start PIN" maxlength="4" style="text-align:center; font-size:16px; font-weight:900; margin-bottom:6px;">
-              <button class="btn" onclick="verifyStartPin('${claimedJob.id || claimedJob.invoice_no}', '${claimedJob.start_pin}')">Verify Start PIN &amp; Begin Job</button>
+              <button class="btn" onclick="verifyStartPin('${claimedJob.id || claimedJob.invoice_no}')">Verify Start PIN &amp; Begin Job</button>
               <button class="btn danger" style="margin-top:6px;" onclick="cancelClaimedJob('${claimedJob.id || claimedJob.invoice_no}')">Cancel Job (15-Min Penalty)</button>
             </div>
           ` : claimedJob.job_status === 'in_progress' ? `
@@ -1937,18 +1901,26 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
       // IMPORTANT: pending jobs are not owned by a technician yet, so a normal
       // bookings SELECT RLS policy (customer_auth_user_id / technician_auth_user_id)
       // correctly hides them. The secure SECURITY DEFINER RPC is the only pool read.
+      // The deployed secure RPC requires the technician's SHA-256 PIN hash.
+      // Without this third argument the pool returns no jobs (or an RPC error).
       const { data: pool, error } = await sbClient.rpc('get_technician_pool', {
         p_tech_code: activeTechSession.techCode,
-        p_category: activeTechSession.category
+        p_category: categoryKey(activeTechSession.category),
+        p_pin_hash: activeTechSession.pinHash
       });
       if (error) poolLoadError = error;
       if (!error && Array.isArray(pool)) {
-        poolJobs = pool.filter(j => acceptedCategories.includes(normalizeCategory(j.service_type)));
+        const catKey = categoryKey(activeTechSession.category);
+        poolJobs = pool.filter(j => categoryKey(j.service_type) === catKey && j.job_status === 'pending_acceptance');
       }
     } catch(e) { poolLoadError = e; }
 
     // Local fallback is retained only for offline/test data; Supabase RPC is authoritative.
     const localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
+    if (poolLoadError) {
+      console.error('TECHNICIAN POOL RPC ERROR:', poolLoadError);
+    }
+
     if (poolJobs.length === 0 && localPool.length > 0 && poolLoadError) {
       poolJobs = localPool.filter(j =>
         j.job_status === 'pending_acceptance' &&
@@ -1979,7 +1951,7 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
           <p style="font-size:12px; color:#0f172a; font-weight:800; line-height:1.5;">${workDetails}</p>
         </div>
         <p style="font-size:11px; color:var(--primary-dark-red); font-weight:800;">${isWarranty ? '🛡️ Free 07-Day Warranty Re-visit' : '⚡ Regular Service • Advance ₹21 Received'}</p>
-        <button class="btn" style="margin-top:8px;" ${cooldownActive ? 'disabled' : ''} onclick="claimPoolJob('${j.id || j.invoice_no}')">${cooldownActive ? 'Claim Blocked (Cooldown)' : '⚡ Accept &amp; Claim Job'}</button>
+        <button class="btn" style="margin-top:8px;" ${cooldownActive || technicianHasActiveJob ? 'disabled' : ''} onclick="claimPoolJob('${j.id || j.invoice_no}')">${cooldownActive ? 'Claim Blocked (Cooldown)' : technicianHasActiveJob ? '🔒 Finish Current Job First' : '⚡ Accept &amp; Claim Job'}</button>
       </div>`;
     }).join('');
   }
@@ -1990,7 +1962,8 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
       const { data, error } = await sbClient.rpc('claim_technician_job', {
         p_job_id: jobId,
         p_tech_code: activeTechSession.techCode,
-        p_category: activeTechSession.category
+        p_category: categoryKey(activeTechSession.category),
+        p_pin_hash: activeTechSession.pinHash
       });
       if (error) throw error;
       if (!data) throw new Error('Job is no longer available. Please refresh the pool.');
@@ -2025,27 +1998,25 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
     await renderPoolJobs();
   }
 
-  async function verifyStartPin(jobId, correctPin) {
+  async function verifyStartPin(jobId) {
     const entered = document.getElementById('startPinVerifyInput').value.trim();
-    if (entered === correctPin) {
-      const startTime = new Date().toISOString();
-      try {
-        const { error } = await sbClient.rpc('start_technician_job', {
-          p_job_id: jobId,
-          p_tech_code: activeTechSession.techCode,
-          p_start_time: startTime
-        });
-        if (error) throw error;
-        let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
-        localPool = localPool.map(j => (j.id === jobId || j.invoice_no === jobId) ? { ...j, job_status: 'in_progress', start_time: startTime } : j);
-        localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
-        alert("Start PIN verified successfully! Job marked In-Progress.");
-        await renderPoolJobs();
-      } catch(e) {
-        console.error('Start job failed:', e);
-        alert('Could not start job: ' + (e.message || 'Please try again.'));
-      }
-    } else { alert("Invalid Start PIN! Please check with customer."); }
+    if (!/^\d{4}$/.test(entered)) { alert('Please enter the 4-digit Start PIN.'); return; }
+    const startTime = new Date().toISOString();
+    try {
+      const { error } = await sbClient.rpc('start_technician_job', {
+        p_job_id: jobId, p_tech_code: activeTechSession.techCode,
+        p_start_pin: entered, p_start_time: startTime
+      });
+      if (error) throw error;
+      let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
+      localPool = localPool.map(j => (j.id === jobId || j.invoice_no === jobId) ? { ...j, job_status: 'in_progress', start_time: startTime } : j);
+      localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
+      alert('Start PIN verified successfully! Job marked In-Progress.');
+      await renderPoolJobs();
+    } catch(e) {
+      console.error('Start job failed:', e);
+      alert('Could not start job: ' + (e.message || 'Invalid Start PIN or job is no longer available.'));
+    }
   }
 
   // ==================== WORK COMPLETION & DYNAMIC TECH QR ====================
@@ -2132,10 +2103,19 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
     document.getElementById('modalFinalNetDue').textContent = `₹${netDue.toFixed(2)}`;
   }
 
-  function openTechnicianCollectionQr() {
+  async function openTechnicianCollectionQr() {
     if (!activeModalJob) return;
     const enteredPin = document.getElementById('modalStopPinInput').value.trim();
-    if (!enteredPin || enteredPin !== activeModalJob.stop_pin) { alert("Invalid Stop PIN! Please ask customer for correct 4-digit Stop PIN."); return; }
+    if (!/^\d{4}$/.test(enteredPin)) { alert('Please enter the 4-digit Stop PIN.'); return; }
+    try {
+      const { data, error } = await sbClient.rpc('verify_stop_pin', { p_job_id: activeModalJob.id, p_stop_pin: enteredPin });
+      if (error) throw error;
+      if (!data) { alert('Invalid Stop PIN! Please ask customer for the correct 4-digit Stop PIN.'); return; }
+    } catch (e) {
+      console.error('Stop PIN verification failed:', e);
+      alert('Stop PIN verification failed: ' + (e.message || 'Please try again.'));
+      return;
+    }
 
     const cfg = SERVICE_CONFIG[activeModalJob.service_type] || SERVICE_CONFIG.electrician;
     const isRevisit = activeModalJob.payment_status === 'warranty_revisit';
@@ -2303,7 +2283,7 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
           <div style="display:flex; justify-content:space-between;"><b style="font-weight:900; color:var(--title-blue);">${b.invoice_no} [${b.service_type?.toUpperCase()}]</b><span style="font-weight:900; color:${statusColor};">${statusText}</span></div>
           <p style="margin-top:2px; font-weight:700;">Customer: <b>${b.customer_name || 'Customer'}</b> (📞 ${b.customer_phone})</p>
           <p style="font-weight:600;">Tech Assigned: <b>${b.technician_name || 'Unassigned'}</b></p>
-          <p style="font-weight:700;">🔴 Start PIN: <b>${b.start_pin}</b> | 🔴 Stop PIN: <b>${b.stop_pin}</b></p>
+          <p style="font-weight:700; color:#64748b;">🔐 Start/Stop PINs are protected and are not displayed here.</p>
           <p style="color:#64748b; font-weight:600;">Address: ${b.customer_address}</p>
           ${isPaid ? `<button class="btn secondary" style="width:auto; padding:4px 10px; font-size:11px;" onclick="downloadOrderPdf('${b.id || b.invoice_no}')">📥 View Tax Invoice</button>` : ''}
           ${isCancelled ? `<button class="btn secondary" style="width:auto; padding:4px 10px; font-size:11px;" onclick="downloadCancellationReceiptPdf('${b.id || b.invoice_no}')">📄 View Cancellation Receipt</button>` : ''}
@@ -2501,76 +2481,6 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
         : isAdminLoggedIn
         ? '<div class="nav-item active" onclick="navigateTo(\'admin\')">🔐 Admin</div>'
         : '<div class="nav-item active" onclick="navigateTo(\'home\')">🏠 Categories</div><div class="nav-item" onclick="navigateTo(\'auth\')">👤 Login</div>';
-    }
-  };
-
-  // Technician pool: call the ACTUAL deployed RPC signature:
-  // get_technician_pool(text,text,text). The old v20 bm_get_technician_pool call
-  // caused an empty/error pool even though bookings existed in Supabase.
-  window.renderPoolJobs = async function(){
-    if(!activeTechSession) return;
-    const poolList=document.getElementById('availablePoolList');
-    if(!poolList) return;
-    const cat=categoryKey(activeTechSession.category);
-    const cooldownActive=typeof checkCooldownState==='function' ? checkCooldownState() : false;
-    poolList.innerHTML='<div style="padding:18px;text-align:center;font-weight:800;color:#64748b">Loading available jobs…</div>';
-    let pool=[], err=null;
-    try{
-      const r=await sbClient.rpc('get_technician_pool',{
-        p_tech_code:activeTechSession.techCode,
-        p_category:cat,
-        p_pin_hash:activeTechSession.pinHash
-      });
-      pool=r.data||[]; err=r.error;
-    }catch(e){ err=e; }
-    if(err){
-      console.error('Technician pool RPC failed:',err);
-      poolList.innerHTML='<div style="padding:18px;text-align:center;color:#b91c1c;font-weight:800">Unable to load job pool. Please check the deployed get_technician_pool(text,text,text) function.</div>';
-      return;
-    }
-    pool=pool.filter(j=>categoryKey(j.service_type)===cat && j.job_status==='pending_acceptance');
-    if(!pool.length){
-      poolList.innerHTML='<div style="padding:18px;text-align:center;color:#64748b;font-weight:800">No pending jobs in your service pool right now.</div>';
-      return;
-    }
-    poolList.innerHTML=pool.map(j=>{
-      const cfg=SERVICE_CONFIG[j.service_type]||SERVICE_CONFIG.electrician;
-      const work=j.extra_services||'Inspection / Diagnostic Visit';
-      const amount=(Number(j.base_rate)||0)+(Number(j.gst_amount)||0);
-      return `<div class="card" style="border-left:5px solid var(--warning)">
-        <div style="display:flex;justify-content:space-between;gap:8px"><b style="color:var(--title-blue)">${esc(j.invoice_no||'BM-ORDER')}</b><b style="color:var(--title-blue);font-size:11px">${esc(cfg.title)}</b></div>
-        <p style="font-size:12px;font-weight:800;margin:6px 0">👤 Customer: ${esc(j.customer_name||'Customer')} &nbsp; 📞 ${esc(j.customer_phone||'--')}</p>
-        <p style="font-size:12px;font-weight:700;color:#475569">📍 Work Address: ${esc(j.customer_address||'--')}</p>
-        <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:9px;padding:9px;margin:7px 0">
-          <b style="font-size:11px;color:#9a3412">🛠️ CUSTOMER REQUESTED WORK</b>
-          <div style="margin-top:4px;font-weight:800;line-height:1.5">${esc(work)}</div>
-        </div>
-        <p style="font-size:11px;color:var(--primary-dark-red);font-weight:800">${j.payment_status==='warranty_revisit'?'🛡️ Free 07-Day Warranty Re-visit':'⚡ Regular Service • Advance ₹21 Received'}${amount>0?' • GST-inclusive booking ₹'+amount.toFixed(2):''}</p>
-        <button class="btn" ${cooldownActive?'disabled':''} onclick="claimPoolJob('${esc(j.id||j.invoice_no)}')">${cooldownActive?'Claim Blocked (Cooldown)':'⚡ Accept &amp; Claim Job'}</button>
-      </div>`;
-    }).join('');
-  };
-
-  // Claim: call the ACTUAL deployed RPC signature:
-  // claim_technician_job(text,text,text,text).
-  window.claimPoolJob = async function(jobId){
-    if(!activeTechSession) return;
-    if(typeof checkCooldownState==='function' && checkCooldownState()) return;
-    try{
-      const r=await sbClient.rpc('claim_technician_job',{
-        p_job_id:jobId,
-        p_tech_code:activeTechSession.techCode,
-        p_category:categoryKey(activeTechSession.category),
-        p_pin_hash:activeTechSession.pinHash
-      });
-      if(r.error) throw r.error;
-      if(!r.data) throw new Error('Job is no longer available. Please refresh the pool.');
-      alert('Job accepted successfully.');
-      await renderPoolJobs();
-    }catch(e){
-      console.error('Claim job failed:',e);
-      alert('Could not claim job: '+(e.message||e));
-      await renderPoolJobs();
     }
   };
 
