@@ -1370,8 +1370,8 @@ Please check the customers RLS policy for auth.uid() = auth_user_id.');
   function formatSupabaseError(error) {
     if (!error) return 'Unknown Supabase error';
     const code = error.code ? ` [${error.code}]` : '';
-    const detail = error.details ? `\nDetail: ${error.details}` : '';
-    const hint = error.hint ? `\nHint: ${error.hint}` : '';
+    const detail = error.details ? `Detail: ${error.details}` : '';
+    const hint = error.hint ? `Hint: ${error.hint}` : '';
     return `${error.message || 'Database request failed'}${code}${detail}${hint}`;
   }
 
@@ -1572,11 +1572,11 @@ No local/fake booking was created.');
   async function claimFreeRevisit(parentInvoiceNo, serviceType) {
     const authUser = await getAuthenticatedUser();
     if (!authUser || !currentUser) { alert('Please login first.'); navigateTo('auth'); return; }
-    if (!confirm('Claim Free Re-visit under 07-Day Workmanship Warranty?\nTechnician inspection will be provided at ₹0 Base Fee.')) return;
+    if (!confirm('Claim Free Re-visit under 07-Day Workmanship Warranty?Technician inspection will be provided at ₹0 Base Fee.')) return;
     const { data, error } = await sbClient.rpc('bm_claim_warranty_7day', { p_parent_invoice_no: parentInvoiceNo });
     if (error) { alert(error.message || 'Warranty claim failed.'); return; }
     if (!data) { alert('Warranty is not eligible or has expired.'); return; }
-    alert(`Free 07-Day Warranty Re-visit booked!\nOrder ID: ${data.invoice_no}\nStart PIN: ${data.start_pin}\nStop PIN: ${data.stop_pin}`);
+    alert(`Free 07-Day Warranty Re-visit booked!Order ID: ${data.invoice_no}Start PIN: ${data.start_pin}Stop PIN: ${data.stop_pin}`);
     await loadCustomerOrders();
   }
 
@@ -1650,7 +1650,7 @@ No local/fake booking was created.');
   async function cancelCustomerBooking(orderId) {
     const authUser = await getAuthenticatedUser();
     if (!authUser) { alert('Please login first.'); navigateTo('auth'); return; }
-    if (!confirm("Cancellation Policy Warning:\nAre you sure you want to cancel? As per terms, the ₹21.00 advance booking token is strictly NON-REFUNDABLE.")) return;
+    if (!confirm("Cancellation Policy Warning:Are you sure you want to cancel? As per terms, the ₹21.00 advance booking token is strictly NON-REFUNDABLE.")) return;
     if (!authUser) { alert('Session expired. Please login again.'); navigateTo('auth'); return; }
     // Customer cancellation must go through a server-side RPC so RLS cannot
     // accidentally block a legitimate customer or allow cancellation of
@@ -2375,7 +2375,7 @@ No local/fake booking was created.');
       }
 
       const tech = Array.isArray(data) ? data[0] : data;
-      alert(`Technician Successfully Registered!\nID: ${tech?.tech_code || '-'}\nSecure 6-Character PIN: ${pin}`);
+      alert(`Technician Successfully Registered!ID: ${tech?.tech_code || '-'}Secure 6-Character PIN: ${pin}`);
       document.getElementById('newTechPin').value = '';
       loadTechnicianFleet();
     } catch (e) {
@@ -2449,8 +2449,8 @@ No local/fake booking was created.');
     const shiftData = data.filter(b => { const h = new Date(b.created_at || Date.now()).getHours(); return h >= 6 && h < 18; });
     if (shiftData.length === 0) { alert("No work records found."); return; }
 
-    let csv = "data:text/csv;charset=utf-8,InvoiceNo,CustomerName,CustomerPhone,Address,Technician,Status,Date\r\n";
-    shiftData.forEach(row => { csv += `"${row.invoice_no}","${row.customer_name||''}","${row.customer_phone}","${row.customer_address}","${row.technician_name||''}","${row.job_status}","${row.created_at||''}"\r\n`; });
+    let csv = "data:text/csv;charset=utf-8,InvoiceNo,CustomerName,CustomerPhone,Address,Technician,Status,Date\r";
+    shiftData.forEach(row => { csv += `"${row.invoice_no}","${row.customer_name||''}","${row.customer_phone}","${row.customer_address}","${row.technician_name||''}","${row.job_status}","${row.created_at||''}"\r`; });
     const link = document.createElement("a");
     link.setAttribute("href", encodeURI(csv)); link.setAttribute("download", "Bijli_Mitra_Shift_Report.csv");
     document.body.appendChild(link); link.click(); document.body.removeChild(link);
@@ -2638,9 +2638,109 @@ No local/fake booking was created.');
 })();
 </script><script id="bm-remove-literal-newline-artifacts">
 (function(){
- function clean(){try{const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT),a=[];while(w.nextNode())a.push(w.currentNode);a.forEach(n=>{if(n.nodeValue&&/^(?:\s|\\n|\\r)+$/.test(n.nodeValue))n.nodeValue='';});}catch(e){}}
+ function clean(){try{const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT),a=[];while(w.nextNode())a.push(w.currentNode);a.forEach(n=>{if(n.nodeValue&&/^(?:\s|\|\\r)+$/.test(n.nodeValue))n.nodeValue='';});}catch(e){}}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',clean);else clean();
 })();
 </script>
+
+<script id="bm-final-tech-pool-override">
+(function(){
+  const catKeyFinal = (v) => {
+    const x = String(v || '').trim().toLowerCase();
+    if (x.includes('electric')) return 'electrician';
+    if (x.includes('plumb')) return 'plumber';
+    if (x === 'ac' || x.includes('air condition')) return 'ac';
+    return x;
+  };
+
+  window.renderPoolJobs = async function(){
+    if (!window.activeTechSession && typeof activeTechSession === 'undefined') return;
+
+    const session = (typeof activeTechSession !== 'undefined') ? activeTechSession : window.activeTechSession;
+    const list = document.getElementById('availablePoolList');
+    if (!list || !session) return;
+
+    list.innerHTML = '<div style="padding:24px;text-align:center;font-weight:800;color:#64748b">🔄 Loading live jobs…</div>';
+
+    try {
+      const category = catKeyFinal(session.category);
+      const { data, error } = await sbClient.rpc('get_technician_pool', {
+        p_tech_code: String(session.techCode || '').trim(),
+        p_category: category,
+        p_pin_hash: String(session.pinHash || '').trim()
+      });
+
+      if (error) throw error;
+
+      const jobs = (Array.isArray(data) ? data : []).filter(j =>
+        j && j.job_status === 'pending_acceptance' &&
+        catKeyFinal(j.service_type) === category
+      );
+
+      if (!jobs.length) {
+        list.innerHTML =
+          '<div style="padding:28px 16px;text-align:center;color:#64748b;font-weight:800">' +
+          'No pending bookings in your ' + category + ' pool right now.' +
+          '</div>';
+        return;
+      }
+
+      list.innerHTML = jobs.map(j => {
+        const amount = (Number(j.base_rate) || 0) + (Number(j.gst_amount) || 0);
+        const work = j.extra_services || 'Inspection / Diagnostic Visit';
+        return `
+          <div class="card" style="border:1px solid #ffd1dc;border-left:5px solid #e11d48;border-radius:18px;padding:14px;margin-bottom:12px;background:#fff;">
+            <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;">
+              <b style="color:#102a56">${String(j.invoice_no || 'BM-ORDER')}</b>
+              <span style="background:#ffe8ef;color:#c51645;border-radius:999px;padding:5px 8px;font-size:10px;font-weight:900;">
+                ${category.toUpperCase()}
+              </span>
+            </div>
+            <div style="margin-top:8px;font-weight:800;color:#102a56;">
+              👤 ${String(j.customer_name || 'Customer')}
+            </div>
+            <div style="margin-top:4px;font-size:12px;color:#475569;">
+              📞 ${String(j.customer_phone || '--')}
+            </div>
+            <div style="margin-top:4px;font-size:12px;color:#475569;">
+              📍 ${String(j.customer_address || '--')}
+            </div>
+            <div style="margin-top:9px;padding:9px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;">
+              <div style="font-size:10px;font-weight:900;color:#9a3412;">🛠️ CUSTOMER REQUESTED WORK</div>
+              <div style="margin-top:4px;font-size:12px;font-weight:800;color:#172033;">${String(work)}</div>
+            </div>
+            <div style="margin-top:8px;font-size:11px;font-weight:800;color:#9f1239;">
+              ⚡ Advance ₹21 Received${amount > 0 ? ' • Booking ₹' + amount.toFixed(2) : ''}
+            </div>
+            <button class="btn" style="width:100%;margin-top:10px;"
+              onclick="claimPoolJob('${String(j.id || j.invoice_no).replace(/'/g,"\\'")}')">
+              ⚡ Accept &amp; Claim Job
+            </button>
+          </div>`;
+      }).join('');
+
+    } catch (e) {
+      console.error('FINAL TECH POOL RPC ERROR:', e);
+      list.innerHTML =
+        '<div style="padding:20px;text-align:center;color:#b91c1c;font-weight:800">' +
+        'Unable to load live job pool.<br>' +
+        '<small style="display:block;margin-top:8px;font-weight:600;word-break:break-word;">' +
+        String(e && e.message ? e.message : e) +
+        '</small></div>';
+    }
+  };
+
+  window.addEventListener('load', function(){
+    setTimeout(function(){
+      try {
+        if (typeof activeTechSession !== 'undefined' && activeTechSession) {
+          window.renderPoolJobs();
+        }
+      } catch(e) {}
+    }, 300);
+  });
+})();
+</script>
+
 </body>
 </html>
