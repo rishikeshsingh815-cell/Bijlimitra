@@ -1053,6 +1053,12 @@ html, body {
 }
 </style>
 
+
+<style id="bm-instant-booking-fix">
+.bm-service-card{cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+.bm-service-card button{touch-action:manipulation;}
+.bm-service-card:focus-visible{outline:3px solid rgba(37,99,235,.28);outline-offset:3px;}
+</style>
 </head>
 <body>
 <div id="pullToRefreshIndicator">🔄 Syncing live data...</div>
@@ -1228,25 +1234,25 @@ html, body {
   </div>
 
   <div class="bm-services-grid">
-    <div class="bm-service-card bm-service-electric" onclick="selectCategoryBooking('electrician')">
+    <div class="bm-service-card bm-service-electric" role="button" tabindex="0" onclick="selectCategoryBooking('electrician')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectCategoryBooking('electrician')}">
       <div class="bm-service-icon">⚡</div>
       <h3>Electrician</h3>
       <p>Wiring, Fittings,<br>Repair</p>
-      <button type="button">Book Now&nbsp; →</button>
+      <button type="button" onclick="event.stopPropagation(); selectCategoryBooking('electrician')">Book Now&nbsp; →</button>
     </div>
 
-    <div class="bm-service-card bm-service-ac" onclick="selectCategoryBooking('ac')">
+    <div class="bm-service-card bm-service-ac" role="button" tabindex="0" onclick="selectCategoryBooking('ac')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectCategoryBooking('ac')}">
       <div class="bm-service-icon">❄️</div>
       <h3>AC Service</h3>
       <p>Installation,<br>Repair, AMC</p>
-      <button type="button">Book Now&nbsp; →</button>
+      <button type="button" onclick="event.stopPropagation(); selectCategoryBooking('ac')">Book Now&nbsp; →</button>
     </div>
 
-    <div class="bm-service-card bm-service-plumb" onclick="selectCategoryBooking('plumber')">
+    <div class="bm-service-card bm-service-plumb" role="button" tabindex="0" onclick="selectCategoryBooking('plumber')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectCategoryBooking('plumber')}">
       <div class="bm-service-icon">🚰</div>
       <h3>Plumber</h3>
       <p>Pipes, Leakage,<br>Fittings</p>
-      <button type="button">Book Now&nbsp; →</button>
+      <button type="button" onclick="event.stopPropagation(); selectCategoryBooking('plumber')">Book Now&nbsp; →</button>
     </div>
 
     <div class="bm-service-card bm-service-more" onclick="navigateTo('home')">
@@ -2288,10 +2294,10 @@ html, body {
     document.getElementById('bookingTermsCheckbox').checked = false;
 
     // Render Dynamic – / + UI
-    renderChecklist(catKey);
+    renderChecklist(normalizedCategory);
 
     // Auto populate category specific terms
-    document.getElementById('bookingTermsText').innerHTML = CATEGORY_TERMS_CONFIG[catKey] || CATEGORY_TERMS_CONFIG.electrician;
+    document.getElementById('bookingTermsText').innerHTML = CATEGORY_TERMS_CONFIG[normalizedCategory] || CATEGORY_TERMS_CONFIG.electrician;
     
     navigateTo('booking');
     initBookingMap();
