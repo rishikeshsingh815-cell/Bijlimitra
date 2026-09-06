@@ -1059,6 +1059,16 @@ html, body {
 .bm-service-card button{touch-action:manipulation;}
 .bm-service-card:focus-visible{outline:3px solid rgba(37,99,235,.28);outline-offset:3px;}
 </style>
+
+<style id="bm-single-name-profile-fix">
+/* Customer account: only the customer-name badge is clickable. */
+.bm-account-actions .bm-profile,
+#bmProfileBtn,
+.bm-profile-btn,
+button.bm-profile { display:none!important; }
+#topAuthBadge { cursor:pointer!important; }
+</style>
+
 </head>
 <body>
 <div id="pullToRefreshIndicator">🔄 Syncing live data...</div>
@@ -1088,7 +1098,6 @@ html, body {
 </div>
 <div id="deskCustomerNav">
 <div class="desktop-nav-item active" id="deskNavHome" onclick="navigateTo('home')">🏠 Book Category</div>
-<div class="desktop-nav-item" id="deskNavProfile" onclick="goToCustomerProfile()">👤 Profile &amp; Orders</div>
 <div class="desktop-nav-item" id="deskNavLogout" onclick="customerLogout()" style="display:none !important;">🚪 Logout</div>
 </div>
 <div id="deskTechNav" style="display:none;">
@@ -1128,7 +1137,7 @@ html, body {
 <option value="en">English</option>
 
 </select>
-<div class="bm-account-actions" id="bmAccountActions"><button class="bm-action bm-profile" id="bmProfileBtn" onclick="bmOpenProfile()">👤 Profile</button><button class="bm-action bm-logout" id="bmLogoutBtn" onclick="bmUniversalLogout()">🚪 Logout</button></div>
+<div class="bm-account-actions" id="bmAccountActions"><button class="bm-action bm-logout" id="bmLogoutBtn" onclick="bmUniversalLogout()">🚪 Logout</button></div>
 <div class="user-badge" id="topAuthBadge" onclick="handleTopBadgeClick()">Login</div>
 </div>
 </div>
@@ -1865,10 +1874,9 @@ html, body {
     const deskCustomer = document.getElementById('deskCustomerNav');
     const deskTech = document.getElementById('deskTechNav');
     const deskAdmin = document.getElementById('deskAdminNav');
-    const deskProfile = document.getElementById('deskNavProfile');
     const deskLogout = document.getElementById('deskNavLogout');
 
-    [deskProfile, deskLogout].forEach(el => { if (el) el.style.display = 'none'; });
+    if (deskLogout) deskLogout.style.display = 'none';
     if (isAdminLoggedIn) {
       badge.textContent = '🔐 Master Admin';
       deskCustomer.style.display='none'; deskTech.style.display='none'; deskAdmin.style.display='block';
@@ -1880,9 +1888,8 @@ html, body {
     } else if (currentUser) {
       badge.textContent = `👤 ${currentUser.name || currentUser.phone}`;
       deskCustomer.style.display='block'; deskTech.style.display='none'; deskAdmin.style.display='none';
-      if (deskProfile) deskProfile.style.display='block';
-      if (deskLogout) deskLogout.style.display='block';
-      mobNav.innerHTML = `<div class="nav-item active" id="mobNavHome" onclick="navigateTo('home')"><span class="nav-icon">🏠</span>Categories</div><div class="nav-item" id="mobNavProfile" onclick="goToCustomerProfile()"><span class="nav-icon">👤</span>Profile</div><div class="nav-item" onclick="customerLogout()"><span class="nav-icon">🚪</span>Logout</div>`;
+      if (deskLogout) deskLogout.style.display='none';
+      mobNav.innerHTML = `<div class="nav-item active" id="mobNavHome" onclick="navigateTo('home')"><span class="nav-icon">🏠</span>Categories</div><div class="nav-item" onclick="customerLogout()"><span class="nav-icon">🚪</span>Logout</div>`;
     } else {
       badge.textContent='Login';
       deskCustomer.style.display='block'; deskTech.style.display='none'; deskAdmin.style.display='none';
@@ -2375,13 +2382,27 @@ html, body {
       alert('Could not create booking in Supabase: ' + formatSupabaseError(bookingErr || new Error('No booking row returned')) + '\n\nNo local/fake booking was created.');
       return;
     }
-    const insertedBooking = createdBooking.booking || createdBooking;
-    const startPin = createdBooking.start_pin;
-    const stopPin = createdBooking.stop_pin;
+    // Supabase can return a JSON object or a single-row array depending on the
+    // RPC return type. Normalize both shapes before reading the generated PINs.
+    const rpcPayload = Array.isArray(createdBooking) ? (createdBooking[0] || {}) : (createdBooking || {});
+    const insertedBooking = rpcPayload.booking || rpcPayload.result || rpcPayload.data || rpcPayload;
+    const startPin = rpcPayload.start_pin || rpcPayload.startPin ||
+      (insertedBooking && (insertedBooking.start_pin || insertedBooking.startPin)) ||
+      (rpcPayload.pins && (rpcPayload.pins.start_pin || rpcPayload.pins.startPin));
+    const stopPin = rpcPayload.stop_pin || rpcPayload.stopPin ||
+      (insertedBooking && (insertedBooking.stop_pin || insertedBooking.stopPin)) ||
+      (rpcPayload.pins && (rpcPayload.pins.stop_pin || rpcPayload.pins.stopPin));
+    if (!startPin || !stopPin) {
+      console.error('Booking RPC did not return generated customer PINs:', createdBooking);
+      alert('Booking was created, but the Start/Stop PINs were not returned by the secure Supabase function. Please check customer_create_booking RPC return values before proceeding.');
+      return;
+    }
+    saveCustomerBookingPins(invoiceNo, startPin, stopPin);
     let localPool = JSON.parse(localStorage.getItem('bm_local_pool') || '[]');
     localPool.unshift(insertedBooking);
     localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
     pendingAdvanceState = { customerName: currentUser.name || "Customer", phone, address, category: currentCategory, addonsList: combinedServiceString, addonsTotal: 0, startPin, stopPin, invoiceNo };
+    console.info('Customer technician PINs generated:', { invoiceNo, startPin, stopPin });
 
     const cashfreeSuccess = await openCashfreeCheckout('ADV-' + invoiceNo, 21.00, phone, currentUser.name, currentUser.email);
     if (!cashfreeSuccess) {
@@ -2433,6 +2454,51 @@ html, body {
   }
 
   // ==================== CUSTOMER ORDERS & BILLING ====================
+  // Customer PIN vault: PINs are returned by the secure booking RPC only to the
+  // authenticated customer. Keep the plaintext values locally so the customer can
+  // hand the Start/Stop PINs to the assigned technician from Profile & Orders.
+  function saveCustomerBookingPins(invoiceNo, startPin, stopPin) {
+    if (!invoiceNo || !startPin || !stopPin) return;
+    const key = 'bm_customer_booking_pins';
+    let vault = {};
+    try { vault = JSON.parse(localStorage.getItem(key) || '{}') || {}; } catch(e) { vault = {}; }
+    vault[String(invoiceNo)] = { startPin: String(startPin), stopPin: String(stopPin), savedAt: Date.now() };
+    localStorage.setItem(key, JSON.stringify(vault));
+  }
+  function getCustomerBookingPins(invoiceNo) {
+    if (!invoiceNo) return null;
+    try {
+      const vault = JSON.parse(localStorage.getItem('bm_customer_booking_pins') || '{}') || {};
+      return vault[String(invoiceNo)] || null;
+    } catch(e) { return null; }
+  }
+  function renderCustomerPins(invoiceNo) {
+    let pins = getCustomerBookingPins(invoiceNo);
+    if (!pins && pendingAdvanceState && String(pendingAdvanceState.invoiceNo || '') === String(invoiceNo || '')) {
+      if (pendingAdvanceState.startPin && pendingAdvanceState.stopPin) {
+        pins = { startPin: pendingAdvanceState.startPin, stopPin: pendingAdvanceState.stopPin };
+      }
+    }
+    if (!pins) return '';
+    return `
+      <div style="background:#fff7ed; border:1.5px solid #fdba74; border-radius:9px; padding:10px; margin:8px 0;">
+        <div style="font-size:12px; font-weight:900; color:#9a3412; margin-bottom:6px;">🔐 Technician Verification PINs</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:7px;">
+          <div style="background:#fff; border:1px solid #fed7aa; border-radius:7px; padding:7px; text-align:center;">
+            <div style="font-size:10px; color:#64748b; font-weight:800;">START PIN</div>
+            <div style="font-size:20px; letter-spacing:4px; font-weight:900; color:#0f3b66;">${pins.startPin}</div>
+            <div style="font-size:9.5px; color:#64748b; font-weight:700;">Give on technician arrival</div>
+          </div>
+          <div style="background:#fff; border:1px solid #fed7aa; border-radius:7px; padding:7px; text-align:center;">
+            <div style="font-size:10px; color:#64748b; font-weight:800;">STOP PIN</div>
+            <div style="font-size:20px; letter-spacing:4px; font-weight:900; color:#0f3b66;">${pins.stopPin}</div>
+            <div style="font-size:9.5px; color:#64748b; font-weight:700;">Give after work/testing</div>
+          </div>
+        </div>
+        <div style="font-size:10px; color:#9a3412; font-weight:800; margin-top:6px;">Do not share these PINs with anyone other than your assigned technician.</div>
+      </div>`;
+  }
+
   async function loadCustomerOrders() {
     if (!currentUser) return;
     const container = document.getElementById('customerHistoryContainer');
@@ -2478,10 +2544,10 @@ html, body {
           <p style="font-size:12px; color:#64748b; font-weight:600;">🧑‍🔧 Assigned Tech: <b>${b.technician_name || 'Broadcasting in Pool (Waiting Tech...)'}</b>${b.technician_phone ? ' (📞 ' + b.technician_phone + ')' : ''}</p>
           <p style="font-size:12px; color:#64748b; font-weight:600;">📍 Work Address: ${b.customer_address}</p>
           
-          ${!isCancelled ? `
+          ${!isCancelled ? (renderCustomerPins(b.invoice_no) || `
           <div style="background:var(--soft-red-bg); border:1.5px dashed var(--soft-red-border); border-radius:8px; padding:8px; margin:8px 0; font-size:11.5px; font-weight:700;">
-            🔐 Start/Stop PINs are issued securely at booking time. Keep them private and provide them only to your assigned technician.
-          </div>` : ''}
+            🔐 Start/Stop PINs are securely issued at booking time. If they are not visible here, please refresh once after booking.
+          </div>`) : ''}
 
           ${isPending ? `<button class="btn danger" style="padding:8px; font-size:11.5px; margin-top:8px;" onclick="cancelCustomerBooking('${b.id || b.invoice_no}')">❌ Cancel Booking (₹21 Non-Refundable)</button>` : ''}
           
@@ -3358,12 +3424,10 @@ html, body {
     const deskTech=document.getElementById('deskTechNav');
     const deskAdmin=document.getElementById('deskAdminNav');
     const mob=document.getElementById('mobileBottomNav');
-    const pb=document.getElementById('bmProfileBtn');
     const lb=document.getElementById('bmLogoutBtn');
     if(!badge) return;
     const logged=!!(currentUser||activeTechSession||isAdminLoggedIn);
     if(actions) actions.style.display=logged?'flex':'none';
-    if(pb) pb.style.display=currentUser?'inline-block':'none';
     if(lb) lb.style.display=logged?'inline-block':'none';
     if(currentUser) badge.textContent='👤 '+(currentUser.name||currentUser.phone||'Customer');
     else if(activeTechSession) badge.textContent='🧑‍🔧 '+(activeTechSession.name||'Technician');
@@ -3376,7 +3440,7 @@ html, body {
     const deskLogout=document.getElementById('deskNavLogout'); if(deskLogout) deskLogout.style.display='none';
     if(mob){
       mob.innerHTML=currentUser
-        ? '<div class="nav-item active" onclick="navigateTo(\'home\')">🏠 Categories</div><div class="nav-item" onclick="goToCustomerProfile()">👤 Profile</div>'
+        ? '<div class="nav-item active" onclick="navigateTo(\'home\')">🏠 Categories</div>'
         : activeTechSession
         ? '<div class="nav-item active" onclick="navigateTo(\'tech-pool\')">🧑‍🔧 Job Pool</div>'
         : isAdminLoggedIn
@@ -3487,6 +3551,28 @@ window.addEventListener('load', function(){
     if (!['electrician','ac','plumber'].includes(normalized)) return;
     return originalSelectCategoryBooking(normalized);
   };
+})();
+</script>
+
+
+<script id="bm-profile-pin-ui-fix">
+(function(){
+  function removeLegacyProfileControls(){
+    document.querySelectorAll('.bm-profile,#bmProfileBtn,.bm-profile-btn,button.bm-profile').forEach(el=>{
+      el.style.display='none';
+      el.setAttribute('aria-hidden','true');
+    });
+    // Older builds may have a generic button labelled "Profile".
+    document.querySelectorAll('button').forEach(btn=>{
+      const t=(btn.textContent||'').trim().replace(/\s+/g,' ').toLowerCase();
+      if(t==='profile' || t==='👤 profile' || t==='🧑 profile'){
+        btn.style.display='none';
+        btn.setAttribute('aria-hidden','true');
+      }
+    });
+  }
+  document.addEventListener('DOMContentLoaded', removeLegacyProfileControls);
+  new MutationObserver(removeLegacyProfileControls).observe(document.documentElement,{childList:true,subtree:true});
 })();
 </script>
 
