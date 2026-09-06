@@ -203,14 +203,859 @@ body.bm-hi{font-family:Arial,"Noto Sans Devanagari",sans-serif}
   #googleSignupMap { height: 150px !important; }
 }
 </style>
-<style id="bm-v22-modern-ui">:root{--bm-navy:#0b1f3a;--bm-blue:#155eef;--bm-red:#e53935;--bm-amber:#f59e0b;--bm-green:#16a34a;--bm-bg:#f4f7fb;--bm-card:#ffffff;--bm-text:#0f172a;--bm-muted:#64748b;--bm-border:#e2e8f0;--bm-shadow:0 12px 30px rgba(15,23,42,.08)}\nbody{background:linear-gradient(180deg,#f7f9fc 0%,#eef3f9 100%)!important;color:var(--bm-text)!important;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important}\nbody:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 10% 0%,rgba(21,94,239,.08),transparent 28%),radial-gradient(circle at 95% 12%,rgba(229,57,53,.07),transparent 24%);z-index:-1}\n.desktop-inner{max-width:980px!important}\n.card{background:rgba(255,255,255,.94)!important;border:1px solid rgba(226,232,240,.9)!important;border-radius:18px!important;box-shadow:var(--bm-shadow)!important}\n.section-title-blue{color:var(--bm-navy)!important;font-weight:900!important;letter-spacing:-.02em}\n.btn{border:0!important;border-radius:12px!important;min-height:42px!important;font-weight:850!important;box-shadow:0 5px 14px rgba(15,23,42,.10)!important;transition:transform .16s ease,box-shadow .16s ease,filter .16s ease!important}\n.btn:hover{transform:translateY(-1px);filter:brightness(1.02);box-shadow:0 8px 18px rgba(15,23,42,.13)!important}\n.btn.secondary{background:#fff!important;color:var(--bm-navy)!important;border:1px solid var(--bm-border)!important}\n.btn.danger{background:linear-gradient(135deg,#ef4444,#dc2626)!important}\ninput,select,textarea{border:1px solid #d8e0eb!important;border-radius:11px!important;background:#fff!important;min-height:42px!important;box-sizing:border-box!important}\ninput:focus,select:focus,textarea:focus{outline:0!important;border-color:#7aa2ff!important;box-shadow:0 0 0 4px rgba(21,94,239,.10)!important}\n.category-grid{gap:12px!important}\n.category-card{background:linear-gradient(135deg,#fff,#f8fbff)!important;border:1px solid #dfe7f2!important;border-radius:17px!important;padding:15px!important;box-shadow:0 8px 22px rgba(15,23,42,.06)!important;transition:.18s ease!important}\n.category-card:hover{transform:translateY(-2px);border-color:#9dbbff!important;box-shadow:0 14px 28px rgba(21,94,239,.10)!important}\n.cat-custom-icon-box{border-radius:14px!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.65),0 5px 12px rgba(15,23,42,.08)!important}\n.trust-pill{border:1px solid #dce5f1!important;background:#fff!important;border-radius:999px!important;padding:7px 10px!important;box-shadow:0 3px 10px rgba(15,23,42,.04)!important}\n#screen-tech-pool .card{border-radius:18px!important}\n#activeClaimedJobSection .card{background:linear-gradient(145deg,#ffffff,#f5f9ff)!important;border-color:#b9cdf8!important}\n#availablePoolList{display:grid;gap:12px}\n#availablePoolList .card{position:relative;overflow:hidden;border:1px solid #dce5f1!important;background:#fff!important;padding:15px!important}\n#availablePoolList .card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#155eef,#38bdf8)}\n#availablePoolList .btn{width:100%!important;margin-top:10px!important}\n#techCooldownNotice{border-radius:13px!important;box-shadow:0 5px 16px rgba(220,38,38,.08)}\n.bottomnav{background:rgba(255,255,255,.94)!important;backdrop-filter:blur(14px)!important;border-top:1px solid #e2e8f0!important;box-shadow:0 -8px 24px rgba(15,23,42,.06)!important}\n@media(max-width:700px){.desktop-inner{padding-left:12px!important;padding-right:12px!important}.card{border-radius:15px!important}.category-grid{grid-template-columns:1fr!important}.btn{min-height:44px!important}.trust-pills{gap:6px!important}}\n</style>\n<style id="bm-safe-pull-refresh">
+<style id="bm-v22-modern-ui">:root{--bm-navy:#0b1f3a;--bm-blue:#155eef;--bm-red:#e53935;--bm-amber:#f59e0b;--bm-green:#16a34a;--bm-bg:#f4f7fb;--bm-card:#ffffff;--bm-text:#0f172a;--bm-muted:#64748b;--bm-border:#e2e8f0;--bm-shadow:0 12px 30px rgba(15,23,42,.08)}
+body{background:linear-gradient(180deg,#f7f9fc 0%,#eef3f9 100%)!important;color:var(--bm-text)!important;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 10% 0%,rgba(21,94,239,.08),transparent 28%),radial-gradient(circle at 95% 12%,rgba(229,57,53,.07),transparent 24%);z-index:-1}
+.desktop-inner{max-width:980px!important}
+.card{background:rgba(255,255,255,.94)!important;border:1px solid rgba(226,232,240,.9)!important;border-radius:18px!important;box-shadow:var(--bm-shadow)!important}
+.section-title-blue{color:var(--bm-navy)!important;font-weight:900!important;letter-spacing:-.02em}
+.btn{border:0!important;border-radius:12px!important;min-height:42px!important;font-weight:850!important;box-shadow:0 5px 14px rgba(15,23,42,.10)!important;transition:transform .16s ease,box-shadow .16s ease,filter .16s ease!important}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.02);box-shadow:0 8px 18px rgba(15,23,42,.13)!important}
+.btn.secondary{background:#fff!important;color:var(--bm-navy)!important;border:1px solid var(--bm-border)!important}
+.btn.danger{background:linear-gradient(135deg,#ef4444,#dc2626)!important}
+input,select,textarea{border:1px solid #d8e0eb!important;border-radius:11px!important;background:#fff!important;min-height:42px!important;box-sizing:border-box!important}
+input:focus,select:focus,textarea:focus{outline:0!important;border-color:#7aa2ff!important;box-shadow:0 0 0 4px rgba(21,94,239,.10)!important}
+.category-grid{gap:12px!important}
+.category-card{background:linear-gradient(135deg,#fff,#f8fbff)!important;border:1px solid #dfe7f2!important;border-radius:17px!important;padding:15px!important;box-shadow:0 8px 22px rgba(15,23,42,.06)!important;transition:.18s ease!important}
+.category-card:hover{transform:translateY(-2px);border-color:#9dbbff!important;box-shadow:0 14px 28px rgba(21,94,239,.10)!important}
+.cat-custom-icon-box{border-radius:14px!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.65),0 5px 12px rgba(15,23,42,.08)!important}
+.trust-pill{border:1px solid #dce5f1!important;background:#fff!important;border-radius:999px!important;padding:7px 10px!important;box-shadow:0 3px 10px rgba(15,23,42,.04)!important}
+#screen-tech-pool .card{border-radius:18px!important}
+#activeClaimedJobSection .card{background:linear-gradient(145deg,#ffffff,#f5f9ff)!important;border-color:#b9cdf8!important}
+#availablePoolList{display:grid;gap:12px}
+#availablePoolList .card{position:relative;overflow:hidden;border:1px solid #dce5f1!important;background:#fff!important;padding:15px!important}
+#availablePoolList .card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#155eef,#38bdf8)}
+#availablePoolList .btn{width:100%!important;margin-top:10px!important}
+#techCooldownNotice{border-radius:13px!important;box-shadow:0 5px 16px rgba(220,38,38,.08)}
+.bottomnav{background:rgba(255,255,255,.94)!important;backdrop-filter:blur(14px)!important;border-top:1px solid #e2e8f0!important;box-shadow:0 -8px 24px rgba(15,23,42,.06)!important}
+@media(max-width:700px){.desktop-inner{padding-left:12px!important;padding-right:12px!important}.card{border-radius:15px!important}.category-grid{grid-template-columns:1fr!important}.btn{min-height:44px!important}.trust-pills{gap:6px!important}}
+</style><style id="bm-safe-pull-refresh">
 html, body {
   overscroll-behavior-y: contain !important;
 }
 </style>
+<script id="bm-category-helper">
+function categoryKey(value) {
+  const x = String(value || '').trim().toLowerCase();
+  if (x.includes('electric')) return 'electrician';
+  if (x.includes('plumb')) return 'plumber';
+  if (x === 'ac' || x.includes('air condition')) return 'ac';
+  return x;
+}
+</script>
+<style id="bm-requested-work-polish">
+.tech-requested-work{background:linear-gradient(135deg,#fff7ed,#fffaf5)!important;border:1.5px solid #fdba74!important;border-radius:12px!important;padding:10px!important;margin:8px 0!important;}
+.tech-requested-work .work-label{font-size:11px;color:#9a3412;font-weight:900;margin-bottom:5px;}
+.tech-requested-work .work-value{font-size:13px;color:#102a56;font-weight:850;line-height:1.5;white-space:pre-wrap;word-break:break-word;}
+</style>
+
+<style id="bm-reference-ui-final">
+:root{
+  --bm-pink:#e9154f;
+  --bm-pink-dark:#c80f42;
+  --bm-navy:#102a56;
+  --bm-muted:#61708a;
+}
+html,body{background:#fff!important;}
+body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;}
+.desktop-main{background:#fff!important;}
+#mainApp{background:#fff!important;box-shadow:none!important;max-width:100%!important;}
+.topbar{
+  background:linear-gradient(125deg,#f31a52 0%,#df1047 48%,#bd0c3d 100%)!important;
+  min-height:116px!important;
+  padding:18px 30px!important;
+  border-radius:0!important;
+  box-shadow:0 8px 28px rgba(198,15,66,.18)!important;
+}
+.brand-header-box{gap:18px!important;}
+.tech-mascot-avatar{
+  width:82px!important;height:82px!important;
+  border:4px solid #fff!important;
+  box-shadow:0 7px 18px rgba(0,0,0,.16)!important;
+}
+.topbar h1{font-size:32px!important;line-height:1!important;letter-spacing:-1px!important;}
+.topbar p{font-size:18px!important;margin-top:7px!important;font-weight:750!important;}
+.language-selector{
+  width:310px!important;height:66px!important;
+  padding:0 24px!important;border-radius:34px!important;
+  background:#fff!important;color:#17365e!important;
+  font-size:22px!important;font-weight:850!important;
+  border:0!important;box-shadow:0 5px 15px rgba(0,0,0,.10)!important;
+}
+.bm-account-actions{gap:10px!important;}
+.bm-action{border-radius:28px!important;padding:11px 18px!important;font-size:14px!important;}
+.user-badge{
+  border-radius:28px!important;
+  background:rgba(255,255,255,.20)!important;
+  border:2px solid rgba(255,255,255,.45)!important;
+  padding:11px 20px!important;
+  font-size:14px!important;
+}
+.bm-reference-home{max-width:1180px!important;margin:0 auto!important;padding:28px 24px 120px!important;}
+.bm-hero{
+  position:relative;overflow:hidden;
+  min-height:430px;
+  border-radius:28px!important;
+  background:linear-gradient(110deg,#fff7f9 0%,#fff 58%,#fdf3ff 100%)!important;
+  border:1px solid #f1dce4!important;
+  box-shadow:0 14px 35px rgba(32,43,69,.08)!important;
+  display:grid;grid-template-columns:1.22fr .78fr;
+  margin-bottom:34px!important;
+}
+.bm-hero-copy{padding:36px 34px 28px;position:relative;z-index:3;}
+.bm-trust-label{
+  display:inline-block;padding:10px 18px;border-radius:999px;
+  background:#ffe8ee;color:#c81747;font-size:15px;font-weight:900;letter-spacing:.7px;
+}
+.bm-hero h2{
+  margin:22px 0 10px!important;max-width:700px;
+  color:#0e1f3c!important;font-size:50px!important;line-height:1.08!important;
+  letter-spacing:-1.7px!important;font-weight:950!important;
+}
+.bm-hero h2 span{color:var(--bm-pink);}
+.bm-hero-copy>p{
+  margin:0!important;max-width:690px;color:#5c6b84!important;
+  font-size:22px!important;line-height:1.45!important;font-weight:500!important;
+}
+.bm-trust-row{display:grid;grid-template-columns:1fr 1.35fr 1.15fr;gap:12px;margin-top:28px;}
+.bm-trust-card{
+  min-height:72px;border-radius:17px;padding:12px 16px;
+  display:flex;align-items:center;gap:12px;font-size:25px;
+  box-shadow:0 5px 16px rgba(15,23,42,.05);
+}
+.bm-trust-card b{font-size:15px;line-height:1.25;}
+.bm-green{background:#effcf5;border:2px solid #b9efd2;color:#087447;}
+.bm-blue{background:#eff7ff;border:2px solid #bfddff;color:#124b87;}
+.bm-gold{background:#fff9eb;border:2px solid #f7dda5;color:#87400f;}
+.bm-hero-art{position:relative;min-height:430px;overflow:hidden;background:radial-gradient(circle at 70% 35%,#f2e9ff 0%,transparent 45%);}
+.bm-script{
+  position:absolute;top:44px;right:78px;z-index:4;
+  color:#0e376f;font-size:31px;font-weight:800;
+  font-family:"Segoe Script","Brush Script MT",cursive;
+  line-height:1.02;transform:rotate(-8deg);
+  text-align:center;
+}
+.bm-pin{
+  position:absolute;z-index:5;left:34%;top:56%;
+  width:56px;height:74px;border-radius:50% 50% 50% 0;
+  background:#ef315b;color:#fff;transform:rotate(-45deg);
+  font-size:0;box-shadow:0 12px 24px rgba(225,29,72,.25);
+}
+.bm-pin:after{content:"";position:absolute;width:22px;height:22px;border-radius:50%;background:#fff;left:17px;top:17px;}
+.bm-house{position:absolute;right:0;bottom:0;width:86%;height:63%;}
+.bm-roof{
+  position:absolute;left:4%;right:3%;top:4%;height:44%;
+  background:linear-gradient(150deg,#5d7481,#344b59);
+  clip-path:polygon(8% 100%,50% 0,100% 100%);
+  border-radius:12px;
+}
+.bm-house-body{
+  position:absolute;left:15%;right:8%;bottom:0;height:66%;
+  background:linear-gradient(110deg,#f8f3e9,#fff);
+  border:2px solid #e5ddd0;
+  box-shadow:0 12px 30px rgba(45,55,72,.14);
+}
+.bm-window{
+  position:absolute;left:14%;top:18%;width:24%;height:31%;
+  background:linear-gradient(135deg,#d7eff9,#8dc9df);
+  border:6px solid #fff;box-shadow:0 0 0 2px #c9d5dc;
+}
+.bm-window-2{left:auto;right:12%;}
+.bm-door{
+  position:absolute;left:45%;bottom:0;width:19%;height:52%;
+  background:#b97a49;border:5px solid #fff;box-shadow:0 0 0 2px #c9d5dc;
+}
+.bm-tree{position:absolute;bottom:2%;border-radius:50%;background:#67a35c;z-index:2;}
+.bm-tree-1{left:1%;width:130px;height:130px;}
+.bm-tree-2{left:12%;width:85px;height:85px;bottom:8%;}
+.bm-section-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin:0 0 16px;
+}
+.bm-section-head h2{
+  margin:0!important;color:#0e1f3c!important;font-size:38px!important;font-weight:950!important;
+}
+.bm-section-head button{
+  border:0;background:#fff0f4;color:#c91647;
+  border-radius:999px;padding:12px 22px;font-size:16px;font-weight:900;cursor:pointer;
+}
+.bm-services-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:36px;
+}
+.bm-service-card{
+  min-height:300px;border-radius:22px;padding:22px 18px 18px;
+  text-align:center;cursor:pointer;border:1.5px solid;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  box-shadow:0 8px 24px rgba(15,23,42,.05);
+  transition:.18s ease;
+}
+.bm-service-card:hover{transform:translateY(-4px);box-shadow:0 15px 30px rgba(15,23,42,.10);}
+.bm-service-electric{background:#fff6f8;border-color:#ffd7e0;}
+.bm-service-ac{background:#f2f8ff;border-color:#cfe5ff;}
+.bm-service-plumb{background:#f0fcf7;border-color:#c9efdf;}
+.bm-service-more{background:#f7f2ff;border-color:#e4d6ff;}
+.bm-service-icon{
+  width:92px;height:92px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:45px;background:rgba(255,255,255,.7);border:3px solid rgba(255,255,255,.85);
+  box-shadow:0 0 0 2px rgba(225,29,72,.10);margin-bottom:17px;
+}
+.bm-service-card h3{margin:0;color:#0e1f3c;font-size:24px;font-weight:950;}
+.bm-service-card p{margin:10px 0 20px;color:#61708a;font-size:17px;line-height:1.35;min-height:47px;}
+.bm-service-card button{
+  margin-top:auto;width:100%;border:0;border-radius:999px;padding:12px 16px;
+  font-size:16px;font-weight:900;cursor:pointer;
+}
+.bm-service-electric button{background:#ffe0e8;color:#cf1647;}
+.bm-service-ac button{background:#dceeff;color:#0964ba;}
+.bm-service-plumb button{background:#d9f7e9;color:#078253;}
+.bm-service-more button{background:#e9dcff;color:#6123c5;}
+.bm-help{
+  min-height:130px;border-radius:28px;padding:22px 28px;
+  background:linear-gradient(110deg,#ed124d,#c90c41);
+  color:#fff;display:flex;align-items:center;gap:24px;
+  box-shadow:0 14px 30px rgba(201,12,65,.18);margin-bottom:30px;
+}
+.bm-help-icon{
+  width:78px;height:78px;border-radius:50%;border:4px solid #fff;
+  display:flex;align-items:center;justify-content:center;font-size:42px;flex:0 0 78px;
+}
+.bm-help-copy{flex:1;border-left:1px solid rgba(255,255,255,.5);padding-left:26px;}
+.bm-help-copy h3{font-size:29px;margin:0 0 4px;font-weight:950;}
+.bm-help-copy p{font-size:18px;margin:0;opacity:.92;}
+.bm-call{
+  background:#fff;color:#c91042;border-radius:17px;padding:18px 28px;
+  font-size:19px;font-weight:950;text-decoration:none;white-space:nowrap;
+}
+.bm-home-secondary{text-align:center;color:#61708a;padding:4px 0 10px;}
+.bm-home-secondary h3{color:#17345f;margin:0 0 5px;font-size:17px;}
+.bm-home-secondary p{margin:0;font-size:13px;}
+#homeMap{display:block!important;}
+.bottomnav{
+  max-width:none!important;left:0!important;transform:none!important;
+  border-top:1px solid #eceef4!important;padding:8px 8px 10px!important;
+  background:rgba(255,255,255,.97)!important;box-shadow:0 -8px 28px rgba(15,23,42,.08)!important;
+}
+@media(max-width:700px){
+  .topbar{min-height:160px!important;padding:22px 18px 18px!important;align-items:flex-start!important;}
+  .brand-header-box{gap:12px!important;}
+  .tech-mascot-avatar{width:68px!important;height:68px!important;}
+  .topbar h1{font-size:24px!important;}
+  .topbar p{font-size:14px!important;line-height:1.12!important;}
+  .topbar>div:last-child{display:grid!important;grid-template-columns:1fr!important;gap:8px!important;width:calc(100% - 82px)!important;}
+  .language-selector{width:100%!important;height:56px!important;font-size:18px!important;}
+  .bm-account-actions{display:flex!important;justify-content:flex-end!important;}
+  .bm-action{font-size:12px!important;padding:9px 13px!important;}
+  .user-badge{font-size:12px!important;padding:9px 13px!important;}
+  .bm-reference-home{padding:16px 14px 96px!important;}
+  .bm-hero{display:block;min-height:0;border-radius:23px!important;margin-bottom:25px!important;}
+  .bm-hero-copy{padding:24px 20px 12px!important;}
+  .bm-trust-label{font-size:11px!important;padding:8px 12px!important;}
+  .bm-hero h2{font-size:34px!important;line-height:1.08!important;margin:18px 0 9px!important;}
+  .bm-hero-copy>p{font-size:17px!important;line-height:1.42!important;}
+  .bm-hero-art{height:210px;min-height:210px!important;margin-top:-8px;}
+  .bm-script{font-size:21px;right:30px;top:20px;}
+  .bm-house{width:78%;height:72%;}
+  .bm-pin{left:28%;top:51%;width:40px;height:53px;}
+  .bm-pin:after{width:15px;height:15px;left:13px;top:12px;}
+  .bm-trust-row{grid-template-columns:1fr;gap:8px;margin-top:16px;}
+  .bm-trust-card{min-height:52px;padding:9px 12px;font-size:19px;border-radius:14px;}
+  .bm-trust-card b{font-size:12px;}
+  .bm-section-head{margin-bottom:12px;}
+  .bm-section-head h2{font-size:29px!important;}
+  .bm-section-head button{font-size:12px;padding:10px 15px;}
+  .bm-services-grid{grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:24px;}
+  .bm-service-card{min-height:230px;padding:14px 10px 12px;border-radius:18px;}
+  .bm-service-icon{width:64px;height:64px;font-size:31px;margin-bottom:10px;}
+  .bm-service-card h3{font-size:18px;}
+  .bm-service-card p{font-size:13px;margin:7px 0 13px;min-height:36px;}
+  .bm-service-card button{font-size:13px;padding:9px 8px;}
+  .bm-help{min-height:112px;border-radius:22px;padding:16px 13px;gap:11px;}
+  .bm-help-icon{width:55px;height:55px;flex:0 0 55px;font-size:27px;border-width:3px;}
+  .bm-help-copy{padding-left:13px;}
+  .bm-help-copy h3{font-size:21px;}
+  .bm-help-copy p{font-size:12px;}
+  .bm-call{padding:13px 12px;font-size:13px;border-radius:13px;}
+  .bm-home-secondary{font-size:11px;}
+}
+</style>
+
+<style id="bm-reference-map-final">
+html,body{overscroll-behavior-y:contain!important;}
+.bm-location-card{
+  margin:0 0 28px;
+  padding:18px;
+  border:1px solid #e6eaf1;
+  border-radius:24px;
+  background:#fff;
+  box-shadow:0 10px 28px rgba(15,23,42,.07);
+}
+.bm-location-head{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  margin-bottom:12px;
+}
+.bm-location-head h3{margin:0;color:#102a56;font-size:22px;font-weight:950;}
+.bm-location-head p{margin:4px 0 0;color:#61708a;font-size:13px;line-height:1.4;}
+.bm-location-head span{
+  flex:0 0 auto;padding:9px 12px;border-radius:999px;
+  background:#fff0f4;color:#c91647;font-size:12px;font-weight:900;
+}
+#homeMap{
+  display:block!important;
+  width:100%!important;
+  height:260px!important;
+  min-height:260px!important;
+  border:1px solid #dbe4ef!important;
+  border-radius:18px!important;
+  overflow:hidden!important;
+  background:#e8eef5!important;
+  margin:0!important;
+}
+.leaflet-container{font:12px/1.4 Inter,system-ui,sans-serif!important;}
+@media(max-width:700px){
+  .bm-location-card{padding:13px;border-radius:20px;margin-bottom:22px;}
+  .bm-location-head{align-items:flex-start;}
+  .bm-location-head h3{font-size:19px;}
+  .bm-location-head p{font-size:11px;}
+  .bm-location-head span{font-size:10px;padding:7px 9px;}
+  #homeMap{height:220px!important;min-height:220px!important;border-radius:15px!important;}
+}
+</style>
+
+<style id="bm-compact-comfortable-ui">
+/* Compact, comfortable desktop + mobile layout.
+   Only presentation is changed; booking/Supabase logic remains untouched. */
+
+html, body {
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden;
+}
+
+.desktop-main {
+  min-width:0!important;
+}
+
+.bm-reference-home {
+  width:100%!important;
+  max-width:1080px!important;
+  padding:22px 20px 100px!important;
+}
+
+.bm-hero {
+  min-height:350px!important;
+  grid-template-columns:1.15fr .85fr!important;
+  border-radius:22px!important;
+  margin-bottom:24px!important;
+}
+
+.bm-hero-copy {
+  padding:28px 28px 22px!important;
+}
+
+.bm-trust-label {
+  font-size:12px!important;
+  padding:8px 13px!important;
+}
+
+.bm-hero h2 {
+  font-size:40px!important;
+  line-height:1.08!important;
+  margin:17px 0 9px!important;
+  letter-spacing:-1.1px!important;
+}
+
+.bm-hero-copy>p {
+  font-size:18px!important;
+  line-height:1.4!important;
+}
+
+.bm-trust-row {
+  gap:9px!important;
+  margin-top:20px!important;
+}
+
+.bm-trust-card {
+  min-height:62px!important;
+  padding:10px 12px!important;
+  gap:8px!important;
+  font-size:20px!important;
+  border-radius:14px!important;
+}
+
+.bm-trust-card b {
+  font-size:12px!important;
+}
+
+.bm-hero-art {
+  min-height:350px!important;
+}
+
+.bm-script {
+  top:32px!important;
+  right:48px!important;
+  font-size:25px!important;
+}
+
+.bm-section-head {
+  margin-bottom:12px!important;
+}
+
+.bm-section-head h2 {
+  font-size:31px!important;
+}
+
+.bm-section-head button {
+  font-size:13px!important;
+  padding:10px 17px!important;
+}
+
+.bm-services-grid {
+  gap:12px!important;
+  margin-bottom:26px!important;
+}
+
+.bm-service-card {
+  min-height:255px!important;
+  padding:17px 13px 14px!important;
+  border-radius:18px!important;
+}
+
+.bm-service-icon {
+  width:72px!important;
+  height:72px!important;
+  font-size:35px!important;
+  margin-bottom:12px!important;
+}
+
+.bm-service-card h3 {
+  font-size:20px!important;
+}
+
+.bm-service-card p {
+  font-size:14px!important;
+  margin:7px 0 14px!important;
+}
+
+.bm-service-card button {
+  font-size:14px!important;
+  padding:10px 12px!important;
+}
+
+.bm-help {
+  min-height:104px!important;
+  border-radius:21px!important;
+  padding:17px 20px!important;
+  gap:15px!important;
+  margin-bottom:22px!important;
+}
+
+.bm-help-icon {
+  width:62px!important;
+  height:62px!important;
+  flex-basis:62px!important;
+  font-size:31px!important;
+}
+
+.bm-help-copy {
+  padding-left:17px!important;
+}
+
+.bm-help-copy h3 {
+  font-size:23px!important;
+}
+
+.bm-help-copy p {
+  font-size:14px!important;
+}
+
+.bm-call {
+  padding:13px 19px!important;
+  font-size:15px!important;
+  border-radius:14px!important;
+}
+
+/* Desktop header */
+@media (min-width:901px) {
+  .topbar {
+    min-height:82px!important;
+    padding:12px 22px!important;
+  }
+
+  .brand-header-box {
+    gap:12px!important;
+  }
+
+  .tech-mascot-avatar {
+    width:58px!important;
+    height:58px!important;
+    border-width:3px!important;
+  }
+
+  .topbar h1 {
+    font-size:25px!important;
+  }
+
+  .topbar p {
+    font-size:14px!important;
+    margin-top:3px!important;
+  }
+
+  .language-selector {
+    width:190px!important;
+    height:48px!important;
+    font-size:16px!important;
+    padding:0 16px!important;
+  }
+
+  .bm-account-actions {
+    gap:6px!important;
+  }
+
+  .bm-account-actions .bm-action,
+  .user-badge {
+    padding:8px 13px!important;
+    font-size:12px!important;
+  }
+
+  .desktop-sidebar {
+    width:220px!important;
+  }
+
+  .desktop-main {
+    padding:18px 24px!important;
+  }
+}
+
+/* Tablet */
+@media (min-width:701px) and (max-width:1100px) {
+  .bm-reference-home {
+    max-width:100%!important;
+    padding:18px 16px 90px!important;
+  }
+
+  .bm-hero {
+    min-height:315px!important;
+  }
+
+  .bm-hero-copy {
+    padding:23px 22px 18px!important;
+  }
+
+  .bm-hero h2 {
+    font-size:34px!important;
+  }
+
+  .bm-hero-copy>p {
+    font-size:16px!important;
+  }
+
+  .bm-hero-art {
+    min-height:315px!important;
+  }
+
+  .bm-service-card {
+    min-height:235px!important;
+  }
+
+  .bm-service-icon {
+    width:64px!important;
+    height:64px!important;
+    font-size:31px!important;
+  }
+
+  .bm-service-card h3 {
+    font-size:18px!important;
+  }
+}
+
+/* Mobile: reduce vertical height and keep controls thumb-friendly. */
+@media (max-width:700px) {
+  .topbar {
+    min-height:126px!important;
+    padding:13px 13px 12px!important;
+  }
+
+  .brand-header-box {
+    gap:9px!important;
+  }
+
+  .tech-mascot-avatar {
+    width:54px!important;
+    height:54px!important;
+    border-width:3px!important;
+  }
+
+  .topbar h1 {
+    font-size:20px!important;
+    letter-spacing:-.5px!important;
+  }
+
+  .topbar p {
+    font-size:11.5px!important;
+    margin-top:3px!important;
+  }
+
+  .topbar>div:last-child {
+    width:calc(100% - 64px)!important;
+    gap:6px!important;
+  }
+
+  .language-selector {
+    height:43px!important;
+    min-height:43px!important;
+    font-size:14px!important;
+    padding:0 12px!important;
+    border-radius:22px!important;
+  }
+
+  .bm-account-actions {
+    gap:4px!important;
+  }
+
+  .bm-account-actions .bm-action,
+  .user-badge {
+    min-height:36px!important;
+    padding:7px 9px!important;
+    font-size:10px!important;
+    border-radius:20px!important;
+  }
+
+  .bm-reference-home {
+    padding:11px 10px 88px!important;
+  }
+
+  .bm-hero {
+    border-radius:18px!important;
+    margin-bottom:18px!important;
+  }
+
+  .bm-hero-copy {
+    padding:18px 15px 8px!important;
+  }
+
+  .bm-trust-label {
+    font-size:9px!important;
+    padding:6px 9px!important;
+    letter-spacing:.45px!important;
+  }
+
+  .bm-hero h2 {
+    font-size:27px!important;
+    margin:12px 0 7px!important;
+    letter-spacing:-.7px!important;
+  }
+
+  .bm-hero-copy>p {
+    font-size:14px!important;
+    line-height:1.35!important;
+  }
+
+  .bm-hero-art {
+    height:155px!important;
+    min-height:155px!important;
+    margin-top:-2px!important;
+  }
+
+  .bm-script {
+    top:13px!important;
+    right:24px!important;
+    font-size:17px!important;
+  }
+
+  .bm-house {
+    width:72%!important;
+    height:70%!important;
+  }
+
+  .bm-pin {
+    width:32px!important;
+    height:43px!important;
+    left:27%!important;
+    top:52%!important;
+  }
+
+  .bm-pin:after {
+    width:12px!important;
+    height:12px!important;
+    left:10px!important;
+    top:10px!important;
+  }
+
+  .bm-trust-row {
+    grid-template-columns:repeat(3,1fr)!important;
+    gap:6px!important;
+    margin-top:11px!important;
+  }
+
+  .bm-trust-card {
+    min-height:48px!important;
+    padding:7px 6px!important;
+    gap:4px!important;
+    font-size:14px!important;
+    border-radius:10px!important;
+  }
+
+  .bm-trust-card b {
+    font-size:8.5px!important;
+    line-height:1.15!important;
+  }
+
+  .bm-section-head {
+    margin-bottom:9px!important;
+  }
+
+  .bm-section-head h2 {
+    font-size:24px!important;
+  }
+
+  .bm-section-head button {
+    font-size:11px!important;
+    padding:8px 12px!important;
+  }
+
+  .bm-services-grid {
+    gap:7px!important;
+    margin-bottom:17px!important;
+  }
+
+  .bm-service-card {
+    min-height:196px!important;
+    padding:11px 7px 9px!important;
+    border-radius:14px!important;
+  }
+
+  .bm-service-icon {
+    width:52px!important;
+    height:52px!important;
+    font-size:25px!important;
+    margin-bottom:7px!important;
+  }
+
+  .bm-service-card h3 {
+    font-size:15px!important;
+  }
+
+  .bm-service-card p {
+    font-size:10.5px!important;
+    line-height:1.25!important;
+    margin:5px 0 9px!important;
+    min-height:29px!important;
+  }
+
+  .bm-service-card button {
+    font-size:11px!important;
+    padding:7px 6px!important;
+  }
+
+  .bm-help {
+    min-height:86px!important;
+    padding:11px 9px!important;
+    gap:8px!important;
+    border-radius:16px!important;
+    margin-bottom:16px!important;
+  }
+
+  .bm-help-icon {
+    width:46px!important;
+    height:46px!important;
+    flex-basis:46px!important;
+    font-size:23px!important;
+    border-width:2px!important;
+  }
+
+  .bm-help-copy {
+    padding-left:9px!important;
+  }
+
+  .bm-help-copy h3 {
+    font-size:17px!important;
+    margin-bottom:2px!important;
+  }
+
+  .bm-help-copy p {
+    font-size:10px!important;
+  }
+
+  .bm-call {
+    padding:10px 10px!important;
+    font-size:11px!important;
+    border-radius:10px!important;
+  }
+
+  #homeMap {
+    height:190px!important;
+    min-height:190px!important;
+  }
+
+  .bm-location-card {
+    padding:11px!important;
+    border-radius:16px!important;
+    margin-bottom:16px!important;
+  }
+
+  .bm-location-head {
+    gap:7px!important;
+    margin-bottom:8px!important;
+  }
+
+  .bm-location-head h3 {
+    font-size:17px!important;
+  }
+
+  .bm-location-head p {
+    font-size:10px!important;
+  }
+
+  .bm-location-head span {
+    font-size:9px!important;
+    padding:6px 7px!important;
+  }
+
+  .bottomnav {
+    padding:6px 5px 8px!important;
+  }
+
+  .nav-item {
+    font-size:10px!important;
+  }
+
+  .nav-icon {
+    font-size:18px!important;
+    margin-bottom:2px!important;
+  }
+
+  /* Keep forms readable even though the home screen is compact. */
+  .screen:not(#screen-home) {
+    padding:11px!important;
+  }
+
+  .screen:not(#screen-home) .card {
+    padding:13px 14px!important;
+    margin-bottom:10px!important;
+  }
+
+  input, select, textarea {
+    min-height:44px!important;
+    font-size:14px!important;
+  }
+
+  .btn {
+    min-height:44px!important;
+    padding:11px!important;
+  }
+
+  .modal-content {
+    max-width:calc(100vw - 20px)!important;
+    max-height:calc(100vh - 20px)!important;
+    padding:16px!important;
+    border-radius:15px!important;
+  }
+}
+</style>
+
 </head>
 <body>
-<div data-bm-hi="🔄 लाइव डेटा सिंक हो रहा है..." data-bm-i18n="🔄 Syncing live data..." id="pullToRefreshIndicator">🔄 Syncing live data...</div>
+<div id="pullToRefreshIndicator">🔄 Syncing live data...</div>
 <div class="desktop-shell">
 <div class="desktop-sidebar" id="desktopSidebar" style="display:none;">
 <div style="display:flex; align-items:center; gap:10px; padding:0 24px 20px;">
@@ -232,19 +1077,19 @@ html, body {
 </div>
 <div>
 <div style="font-size:19px; font-weight:900; color:var(--title-blue); letter-spacing:-0.3px;">Bijli Mitra</div>
-<div data-bm-hi="बेगूसराय, बिहार" data-bm-i18n="Begusarai, Bihar" style="font-size:11.5px; color:#64748b; font-weight:700;">Begusarai, Bihar</div>
+<div style="font-size:11.5px; color:#64748b; font-weight:700;">Begusarai, Bihar</div>
 </div>
 </div>
 <div id="deskCustomerNav">
-<div class="desktop-nav-item active" data-bm-hi="🏠 बुकिंग श्रेणी" data-bm-i18n="🏠 Book Category" id="deskNavHome" onclick="navigateTo('home')">🏠 Book Category</div>
-<div class="desktop-nav-item" data-bm-hi="👤 प्रोफाइल और ऑर्डर" data-bm-i18n="👤 Profile &amp; Orders" id="deskNavProfile" onclick="goToCustomerProfile()">👤 Profile &amp; Orders</div>
-<div class="desktop-nav-item" data-bm-hi="🚪 लॉगआउट" data-bm-i18n="🚪 Logout" id="deskNavLogout" onclick="customerLogout()" style="display:none !important;">🚪 Logout</div>
+<div class="desktop-nav-item active" id="deskNavHome" onclick="navigateTo('home')">🏠 Book Category</div>
+<div class="desktop-nav-item" id="deskNavProfile" onclick="goToCustomerProfile()">👤 Profile &amp; Orders</div>
+<div class="desktop-nav-item" id="deskNavLogout" onclick="customerLogout()" style="display:none !important;">🚪 Logout</div>
 </div>
 <div id="deskTechNav" style="display:none;">
-<div class="desktop-nav-item" data-bm-hi="🧑‍🔧 टेक्नीशियन जॉब पूल" data-bm-i18n="🧑‍🔧 Technician Job Pool" id="deskNavTech" onclick="navigateTo('tech-pool')">🧑‍🔧 Technician Job Pool</div>
+<div class="desktop-nav-item" id="deskNavTech" onclick="navigateTo('tech-pool')">🧑‍🔧 Technician Job Pool</div>
 </div>
 <div id="deskAdminNav" style="display:none;">
-<div class="desktop-nav-item" data-bm-hi="🔐 एडमिन प्रबंधन" data-bm-i18n="🔐 Admin Management" id="deskNavAdmin" onclick="navigateTo('admin')">🔐 Admin Management</div>
+<div class="desktop-nav-item" id="deskNavAdmin" onclick="navigateTo('admin')">🔐 Admin Management</div>
 </div>
 </div>
 <div class="desktop-main" style="flex:1;">
@@ -269,16 +1114,16 @@ html, body {
 </div>
 <div>
 <h1>Bijli Mitra</h1>
-<p data-bm-hi="बेगूसराय, बिहार" data-bm-i18n="Begusarai, Bihar">Begusarai, Bihar</p>
+<p>Begusarai, Bihar</p>
 </div>
 </div>
 <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;">
 <select aria-label="Language" class="language-selector" id="languageSelector" onchange="setInterfaceLanguage(this.value)">
 <option value="en">English</option>
-<option value="hi">हिन्दी</option>
+
 </select>
 <div class="bm-account-actions" id="bmAccountActions"><button class="bm-action bm-profile" id="bmProfileBtn" onclick="bmOpenProfile()">👤 Profile</button><button class="bm-action bm-logout" id="bmLogoutBtn" onclick="bmUniversalLogout()">🚪 Logout</button></div>
-<div class="user-badge" data-bm-hi="लॉगिन" data-bm-i18n="Login" id="topAuthBadge" onclick="handleTopBadgeClick()">Login</div>
+<div class="user-badge" id="topAuthBadge" onclick="handleTopBadgeClick()">Login</div>
 </div>
 </div>
 <!-- 1. AUTH SCREEN -->
@@ -286,14 +1131,14 @@ html, body {
 <div class="desktop-inner">
 <div class="card" style="border-top: 4.5px solid var(--title-blue);">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-<h3 class="section-title-blue" data-bm-hi="कस्टमर लॉगिन" data-bm-i18n="Customer Login" id="custAuthFormTitle" style="margin-bottom:0;">Customer Login</h3>
-<button class="btn secondary" data-bm-hi="नए यूज़र हैं? साइन अप करें" data-bm-i18n="New user? Sign Up" id="custAuthToggleBtn" onclick="toggleCustomerAuthMode()" style="width:auto; padding:5px 10px; font-size:11px;" type="button">New user? Sign Up</button>
+<h3 class="section-title-blue" id="custAuthFormTitle" style="margin-bottom:0;">Customer Login</h3>
+<button class="btn secondary" id="custAuthToggleBtn" onclick="toggleCustomerAuthMode()" style="width:auto; padding:5px 10px; font-size:11px;" type="button">New user? Sign Up</button>
 </div>
 <button class="btn" onclick="signInWithGoogle()" style="background:#fff; color:#334155; border:1.5px solid #cbd5e1; display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:12px; box-shadow:0 2px 6px rgba(0,0,0,0.04);" type="button">
 <svg height="18" viewbox="0 0 48 48" width="18"><path d="M43.6 20.5H42V20H24v8h11.3C33.9 32.7 29.4 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l6-6C34.4 5.1 29.5 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.2-.1-2.4-.4-3.5z" fill="#FFC107"></path><path d="M6.3 14.7l6.6 4.8C14.5 15.9 18.9 13 24 13c3.1 0 5.8 1.1 8 3l6-6C34.4 5.1 29.5 3 24 3 15.9 3 8.9 7.6 6.3 14.7z" fill="#FF3D00"></path><path d="M24 45c5.3 0 10.1-2 13.7-5.4l-6.3-5.3C29.4 36 26.9 37 24 37c-5.3 0-9.8-3.3-11.4-8l-6.6 5.1C8.9 40.4 15.9 45 24 45z" fill="#4CAF50"></path><path d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4 5.5l6.3 5.3C39.9 36.6 43 30.9 43 24c0-1.2-.1-2.4-.4-3.5z" fill="#1976D2"></path></svg>
-<span data-bm-hi="Google से जारी रखें" data-bm-i18n="Continue with Google" style="font-weight:800;">Continue with Google</span>
+<span style="font-weight:800;">Continue with Google</span>
 </button>
-<div data-bm-hi="— या Email और Password से —" data-bm-i18n="— or use Email &amp; Password —" style="text-align:center; font-size:11px; color:#94a3b8; margin-bottom:12px; font-weight:700;">— or use Email &amp; Password —</div>
+<div style="text-align:center; font-size:11px; color:#94a3b8; margin-bottom:12px; font-weight:700;">— or use Email &amp; Password —</div>
 <div class="input-group">
 <input id="authEmail" placeholder="Email Address (e.g. user@gmail.com)" type="email"/>
 </div>
@@ -301,123 +1146,174 @@ html, body {
 <div class="input-group"><input id="custRegName" placeholder="Full Name" type="text"/></div>
 <div class="input-group"><input id="authPhone" maxlength="10" placeholder="10-Digit Mobile Number (Mandatory)" type="tel"/></div>
 <div class="card" style="padding:12px; background:var(--soft-red-bg); border:1.5px solid var(--soft-red-border); margin-bottom:12px;">
-<span data-bm-hi="📍 मैप से पता चुनें (अनिवार्य):" data-bm-i18n="📍 Select Address from Map (Mandatory):" style="font-size:12px; font-weight:900; color:var(--title-blue);">📍 Select Address from Map (Mandatory):</span>
-<p data-bm-hi="मैप पर अपना सही स्थान चुनें:" data-bm-i18n="Tap your exact location on the map:" style="font-size:11px; color:#64748b; margin-top:2px; font-weight:600;">Tap your exact location on the map:</p>
+<span style="font-size:12px; font-weight:900; color:var(--title-blue);">📍 Select Address from Map (Mandatory):</span>
+<p style="font-size:11px; color:#64748b; margin-top:2px; font-weight:600;">Tap your exact location on the map:</p>
 <div id="signupMap"></div>
 </div>
 <div class="input-group"><input id="custRegAddress" placeholder="Selected Address (from map or type landmark)" type="text"/></div>
-<button class="btn secondary" data-bm-hi="📨 Email Verification OTP भेजें" data-bm-i18n="📨 Send Email Verification OTP" id="sendEmailOtpBtn" onclick="sendEmailVerificationOtp()" style="margin-bottom:12px;" type="button">📨 Send Email Verification OTP</button>
+<button class="btn secondary" id="sendEmailOtpBtn" onclick="sendEmailVerificationOtp()" style="margin-bottom:12px;" type="button">📨 Send Email Verification OTP</button>
 </div>
 <div id="otpPasswordCreationGroup" style="display:none;">
 <div class="input-group"><input id="authEmailOtp" maxlength="6" placeholder="Enter 6-Digit Email OTP" style="text-align:center; font-weight:900; letter-spacing:4px; border-color:var(--title-blue); font-size:16px;" type="text"/></div>
 <div class="input-group">
 <input id="authCreatePassword" placeholder="Create Password (Min. 6 characters)" type="password"/>
-<span class="toggle-pw" data-bm-hi="दिखाएँ" data-bm-i18n="Show" onclick="togglePasswordVisibility('authCreatePassword', this)">Show</span>
+<span class="toggle-pw" onclick="togglePasswordVisibility('authCreatePassword', this)">Show</span>
 </div>
 </div>
 <div class="input-group" id="loginPasswordGroup">
 <input id="authLoginPassword" placeholder="Enter Password" type="password"/>
-<span class="toggle-pw" data-bm-hi="दिखाएँ" data-bm-i18n="Show" onclick="togglePasswordVisibility('authLoginPassword', this)">Show</span>
+<span class="toggle-pw" onclick="togglePasswordVisibility('authLoginPassword', this)">Show</span>
 </div>
-<button class="btn" data-bm-hi="लॉगिन करके आगे बढ़ें" data-bm-i18n="Login &amp; Proceed" id="custAuthActionBtn" onclick="handleCustomerAuthAction()">Login &amp; Proceed</button>
+<button class="btn" id="custAuthActionBtn" onclick="handleCustomerAuthAction()">Login &amp; Proceed</button>
 <p id="authMsg" style="font-size:12px; margin-top:10px; text-align:center; font-weight:700;"></p>
 <div style="border-top:1px solid #f1f5f9; margin-top:16px; padding-top:12px; display:flex; justify-content:space-between;">
-<a data-bm-hi="🧑‍🔧 स्टाफ/टेक्नीशियन लॉगिन" data-bm-i18n="🧑‍🔧 Staff/Technician Login" href="#" onclick="openTechLoginModal()" style="font-size:11.5px; color:var(--title-blue); text-decoration:none; font-weight:800;">🧑‍🔧 Staff/Technician Login</a>
-<a data-bm-hi="🔐 एडमिन एक्सेस" data-bm-i18n="🔐 Admin Access" href="#" onclick="openAdminLoginModal()" style="font-size:11.5px; color:var(--title-blue); text-decoration:none; font-weight:800;">🔐 Admin Access</a>
+<a href="#" onclick="openTechLoginModal()" style="font-size:11.5px; color:var(--title-blue); text-decoration:none; font-weight:800;">🧑‍🔧 Staff/Technician Login</a>
+<a href="#" onclick="openAdminLoginModal()" style="font-size:11.5px; color:var(--title-blue); text-decoration:none; font-weight:800;">🔐 Admin Access</a>
 </div>
 </div>
 <!-- TECHNICIAN LOGIN WITH 6-DIGIT PIN -->
 <div class="card" id="roleSecTech" style="display:none; border-top:4px solid var(--title-blue);">
-<h3 class="section-title-blue" data-bm-hi="🧑‍🔧 टेक्नीशियन लॉगिन" data-bm-i18n="🧑‍🔧 Technician Login">🧑‍🔧 Technician Login</h3>
+<h3 class="section-title-blue">🧑‍🔧 Technician Login</h3>
 <input id="techIdInput" placeholder="Technician ID (e.g. TECH-001)" style="margin-bottom:10px; text-transform:uppercase; font-weight:800;" type="text"/>
 <select id="techCategorySelect" style="margin-bottom:10px; font-weight:700;">
-<option data-bm-hi="💡 इलेक्ट्रिकल सर्विस पूल" data-bm-i18n="💡 Electrical Services Pool" value="electrician">💡 Electrical Services Pool</option>
-<option data-bm-hi="❄️ AC सर्विस पूल" data-bm-i18n="❄️ AC Service Pool" value="ac">❄️ AC Service Pool</option>
-<option data-bm-hi="🔧 प्लंबिंग वर्क्स पूल" data-bm-i18n="🔧 Plumbing Works Pool" value="plumber">🔧 Plumbing Works Pool</option>
+<option value="electrician">💡 Electrical Services Pool</option>
+<option value="ac">❄️ AC Service Pool</option>
+<option value="plumber">🔧 Plumbing Works Pool</option>
 </select>
 <input id="techPinInput" maxlength="6" placeholder="Enter 6-Character PIN" style="margin-bottom:10px; text-align:center; letter-spacing:4px; font-weight:800;" type="password"/>
-<button class="btn" data-bm-hi="जॉब पूल में लॉगिन करें" data-bm-i18n="Login to Job Pool" onclick="loginTechnicianToPool()">Login to Job Pool</button>
+<button class="btn" onclick="loginTechnicianToPool()">Login to Job Pool</button>
 </div>
 <div class="card" id="roleSecAdmin" style="display:none; border-top:4px solid var(--title-blue);">
-<h3 class="section-title-blue" data-bm-hi="🔐 मास्टर एडमिन लॉगिन" data-bm-i18n="🔐 Master Admin Login">🔐 Master Admin Login</h3>
+<h3 class="section-title-blue">🔐 Master Admin Login</h3>
 <input id="adminEmailInput" placeholder="Authorized Admin Email" style="margin-bottom:10px;" type="email"/>
 <input id="adminPassInput" placeholder="Admin Password" style="margin-bottom:10px;" type="password"/>
-<button class="btn" data-bm-hi="एडमिन के रूप में लॉगिन करें" data-bm-i18n="Login as Admin" onclick="adminGlobalLogin()">Login as Admin</button>
+<button class="btn" onclick="adminGlobalLogin()">Login as Admin</button>
 </div>
 </div>
 </div>
 <!-- 2. HOME SCREEN -->
 <div class="screen active" id="screen-home">
-<div class="desktop-inner">
-<!-- HERO TRUST BANNER -->
-<div class="hero-trust-banner">
-<div class="trust-subtitle" data-bm-hi="🛡️ सत्यापित टेक्नीशियन • बीमित सेवा" data-bm-i18n="🛡️ ID-verified technicians • Insured service">🛡️ ID-verified technicians • Insured service</div>
-<h2 class="hero-title" data-bm-hi="घर पर सत्यापित टेक्नीशियन बुक करें" data-bm-i18n="Book a verified technician at home">Book a verified technician at home</h2>
-<p class="hero-desc" data-bm-hi="AC, इलेक्ट्रीशियन, प्लंबर और अन्य सेवाएँ — बेगूसराय में 30 मिनट में पहुँचें।" data-bm-i18n="AC, electrician, plumber and more — arriving in 30 minutes in Begusarai.">AC, electrician, plumber and more — arriving in 30 minutes in Begusarai.</p>
-<div class="trust-pills">
-<span class="trust-pill" data-bm-hi="🔒 सुरक्षित भुगतान" data-bm-i18n="🔒 Secure payment">🔒 Secure payment</span>
-<span class="trust-pill" data-bm-hi="🛡️ 07-दिन की कार्य गुणवत्ता वारंटी" data-bm-i18n="🛡️ 07-Day Workmanship Warranty">🛡️ 07-Day Workmanship Warranty</span>
-<span class="trust-pill" data-bm-hi="⚡ स्थानीय बेगूसराय डिस्पैच" data-bm-i18n="⚡ Local Begusarai Dispatch">⚡ Local Begusarai Dispatch</span>
+<div class="desktop-inner bm-reference-home">
+
+  <section class="bm-hero">
+    <div class="bm-hero-copy">
+      <div class="bm-trust-label">🛡️ ID-VERIFIED TECHNICIANS • INSURED SERVICE</div>
+      <h2>Book a verified <span>technician</span> at home</h2>
+      <p>AC, electrician, plumber and more — arriving in 30 minutes in Begusarai.</p>
+      <div class="bm-trust-row">
+        <div class="bm-trust-card bm-green">🛡️ <b>Secure<br>payment</b></div>
+        <div class="bm-trust-card bm-blue">🛡️ <b>07-Day<br>Workmanship Warranty</b></div>
+        <div class="bm-trust-card bm-gold">⚡ <b>Local Begusarai<br>Dispatch</b></div>
+      </div>
+    </div>
+    <div class="bm-hero-art" aria-hidden="true">
+      <div class="bm-script">Your Home<br>Our Priority</div>
+      <div class="bm-pin">●</div>
+      <div class="bm-house">
+        <div class="bm-roof"></div>
+        <div class="bm-house-body">
+          <div class="bm-window"></div>
+          <div class="bm-window bm-window-2"></div>
+          <div class="bm-door"></div>
+        </div>
+      </div>
+      <div class="bm-tree bm-tree-1"></div>
+      <div class="bm-tree bm-tree-2"></div>
+    </div>
+  </section>
+
+  <div class="bm-section-head">
+    <h2>Our Services</h2>
+    <button type="button" onclick="navigateTo('home')">View All&nbsp; →</button>
+  </div>
+
+  <div class="bm-services-grid">
+    <div class="bm-service-card bm-service-electric" onclick="selectCategoryBooking('electrician')">
+      <div class="bm-service-icon">⚡</div>
+      <h3>Electrician</h3>
+      <p>Wiring, Fittings,<br>Repair</p>
+      <button type="button">Book Now&nbsp; →</button>
+    </div>
+
+    <div class="bm-service-card bm-service-ac" onclick="selectCategoryBooking('ac')">
+      <div class="bm-service-icon">❄️</div>
+      <h3>AC Service</h3>
+      <p>Installation,<br>Repair, AMC</p>
+      <button type="button">Book Now&nbsp; →</button>
+    </div>
+
+    <div class="bm-service-card bm-service-plumb" onclick="selectCategoryBooking('plumber')">
+      <div class="bm-service-icon">🚰</div>
+      <h3>Plumber</h3>
+      <p>Pipes, Leakage,<br>Fittings</p>
+      <button type="button">Book Now&nbsp; →</button>
+    </div>
+
+    <div class="bm-service-card bm-service-more" onclick="navigateTo('home')">
+      <div class="bm-service-icon">🛠️</div>
+      <h3>More Services</h3>
+      <p>Home Appliances,<br>And More</p>
+      <button type="button">Book Now&nbsp; →</button>
+    </div>
+  </div>
+
+  <section class="bm-location-card">
+    <div class="bm-location-head">
+      <div>
+        <h3>Service Location</h3>
+        <p>Live service coverage in Begusarai. Tap the map to view the dispatch location.</p>
+      </div>
+      <span>📍 Begusarai</span>
+    </div>
+    <div id="homeMap"></div>
+  </section>
+
+  <section class="bm-help">
+    <div class="bm-help-icon">◉</div>
+    <div class="bm-help-copy">
+      <h3>Need Help?</h3>
+      <p>Our team is here to assist you</p>
+    </div>
+    <a class="bm-call" href="tel:+919999999999">☎&nbsp; Call Now</a>
+  </section>
+
+  <div class="bm-home-secondary">
+    <h3>Safe, Verified &amp; Transparent Service</h3>
+    <p>₹21 booking advance • Cash or UPI after completion • 07-Day workmanship warranty</p>
+  </div>
+
 </div>
-</div>
-<h2 class="section-title-blue" data-bm-hi="🗺️ बेगूसराय स्ट्रीट डिस्पैच मैप" data-bm-i18n="🗺️ Begusarai Street Dispatch Map">🗺️ Begusarai Street Dispatch Map</h2>
-<div id="homeMap"></div>
-<h2 class="section-title-blue" data-bm-hi="⚡ सर्विस श्रेणी चुनें" data-bm-i18n="⚡ Select Service Category" style="margin-top:14px;">⚡ Select Service Category</h2>
-<div class="category-grid">
-<!-- 1. ELECTRICIAN (Wire + Bulb Visuals) -->
-<div class="category-card" onclick="selectCategoryBooking('electrician')">
-<div class="category-card-left">
-<div class="cat-custom-icon-box cat-icon-electrician">💡</div>
-<div>
-<h3 data-bm-hi="⚡ इलेक्ट्रिकल सर्विस" data-bm-i18n="⚡ Electrical Services">⚡ Electrical Services</h3>
-<p data-bm-hi="वायरिंग, स्विच, पंखे, MCB, इन्वर्टर" data-bm-i18n="Wiring, Switches, Fans, MCB, Inverter">Wiring, Switches, Fans, MCB, Inverter</p>
-<div data-bm-hi="🔌 लाइन और वायर फिटिंग • 💡 बल्ब और पंखा रिपेयर" data-bm-i18n="🔌 Line &amp; Wire Fitting • 💡 Bulb &amp; Fan Repair" style="font-size:10.5px; color:#d97706; font-weight:800; margin-top:2px;">🔌 Line &amp; Wire Fitting • 💡 Bulb &amp; Fan Repair</div>
-</div>
-</div>
-<div class="category-price-badge"><b data-bm-hi="₹121 बेस" data-bm-i18n="₹121 Base">₹121 Base</b><p data-bm-hi="(इंस्पेक्शन फीस)" data-bm-i18n="(Inspection Fee)" style="font-size:11px; color:#64748b; font-weight:600;">(Inspection Fee)</p></div>
-</div>
-<!-- 2. AC REPAIR (AC + Flowing Air Visuals) -->
-<div class="category-card" onclick="selectCategoryBooking('ac')">
-<div class="category-card-left">
-<div class="cat-custom-icon-box cat-icon-ac">❄️</div>
-<div>
-<h3 data-bm-hi="❄️ AC रिपेयर और सर्विस" data-bm-i18n="❄️ AC Repair &amp; Service">❄️ AC Repair &amp; Service</h3>
-<p data-bm-hi="जेट पंप वॉश, इंस्टॉलेशन, गैस रिफिल" data-bm-i18n="Jet Pump Wash, Installation, Gas Refill">Jet Pump Wash, Installation, Gas Refill</p>
-<div data-bm-hi="💨 डीप जेट वॉश • 🌬️ ठंडी हवा कूलिंग" data-bm-i18n="💨 Deep Jet Wash • 🌬️ Chilled Air Cooling" style="font-size:10.5px; color:#0284c7; font-weight:800; margin-top:2px;">💨 Deep Jet Wash • 🌬️ Chilled Air Cooling</div>
-</div>
-</div>
-<div class="category-price-badge"><b data-bm-hi="₹199 बेस" data-bm-i18n="₹199 Base">₹199 Base</b><p data-bm-hi="(इंस्पेक्शन फीस)" data-bm-i18n="(Inspection Fee)" style="font-size:11px; color:#64748b; font-weight:600;">(Inspection Fee)</p></div>
 </div>
 <!-- 3. PLUMBING (Pipe + Valve + Socket Visuals) -->
 <div class="category-card" onclick="selectCategoryBooking('plumber')">
 <div class="category-card-left">
 <div class="cat-custom-icon-box cat-icon-plumber">🔧</div>
 <div>
-<h3 data-bm-hi="🔧 प्लंबिंग वर्क्स" data-bm-i18n="🔧 Plumbing Works">🔧 Plumbing Works</h3>
-<p data-bm-hi="पाइपलाइन, नल, लीकेज, टैंक क्लीनिंग" data-bm-i18n="Pipelines, Taps, Leakages, Tank Cleaning">Pipelines, Taps, Leakages, Tank Cleaning</p>
-<div data-bm-hi="🚰 पाइप और वाल्व फिटिंग • 🚿 सॉकेट और टैंक केयर" data-bm-i18n="🚰 Pipe &amp; Valve Fittings • 🚿 Socket &amp; Tank Care" style="font-size:10.5px; color:#16a34a; font-weight:800; margin-top:2px;">🚰 Pipe &amp; Valve Fittings • 🚿 Socket &amp; Tank Care</div>
+<h3>🔧 Plumbing Works</h3>
+<p>Pipelines, Taps, Leakages, Tank Cleaning</p>
+<div style="font-size:10.5px; color:#16a34a; font-weight:800; margin-top:2px;">🚰 Pipe &amp; Valve Fittings • 🚿 Socket &amp; Tank Care</div>
 </div>
 </div>
-<div class="category-price-badge"><b data-bm-hi="₹121 बेस" data-bm-i18n="₹121 Base">₹121 Base</b><p data-bm-hi="(इंस्पेक्शन फीस)" data-bm-i18n="(Inspection Fee)" style="font-size:11px; color:#64748b; font-weight:600;">(Inspection Fee)</p></div>
+<div class="category-price-badge"><b>₹121 Base</b><p style="font-size:11px; color:#64748b; font-weight:600;">(Inspection Fee)</p></div>
 </div>
 </div>
 <!-- 1. GENERAL BOOKING, CANCELLATION & BILLING POLICY (MAIN INTERFACE) -->
 <div class="terms-box" style="margin-top:16px;">
-<h4 data-bm-hi="📋 1. बुकिंग, कैंसिलेशन और बिलिंग नीति" data-bm-i18n="📋 1. Booking, Cancellation &amp; Billing Policy" style="color:#92400e; font-size:13.5px; margin-bottom:8px; font-weight:900;">📋 1. Booking, Cancellation &amp; Billing Policy</h4>
-          • <b data-bm-hi="एडवांस बुकिंग फीस:" data-bm-i18n="Advance Booking Fee:">Advance Booking Fee:</b> A non-refundable advance fee of <b>₹21.00</b> is charged at the time of booking.<br/>
-          • <b data-bm-hi="कैंसिलेशन नियम:" data-bm-i18n="Cancellation Rule:">Cancellation Rule:</b> If the customer cancels the service request, the advance booking amount of <b data-bm-hi="₹21.00 रिफंड नहीं होगी" data-bm-i18n="₹21.00 will not be refunded">₹21.00 will not be refunded</b>.<br/>
-          • <b data-bm-hi="फाइनल बिलिंग समायोजन:" data-bm-i18n="Final Billing Adjustment:">Final Billing Adjustment:</b> Upon successful completion of the service, the advance ₹21.00 will be <b data-bm-hi="कुल बिल से घटाई जाएगी" data-bm-i18n="deducted from the total bill amount">deducted from the total bill amount</b>, and the customer pays only the remaining balance.<br/>
-          • <b data-bm-hi="मटेरियल लागत:" data-bm-i18n="Material Cost:">Material Cost:</b> All quoted rates cover <b data-bm-hi="लेबर चार्ज" data-bm-i18n="labour charges only">labour charges only</b>. Any required spare parts, pipes, wires, gas, or fittings must be provided or paid for separately by the customer.<br/>
-          • <b data-bm-hi="भुगतान का तरीका:" data-bm-i18n="Payment Mode:">Payment Mode:</b> Full payment must be cleared immediately after completion and on-site testing via <b data-bm-hi="Cash या UPI" data-bm-i18n="Cash or UPI">Cash or UPI</b>.<br/>
-          • <b data-bm-hi="PIN सत्यापन:" data-bm-i18n="PIN Verification:">PIN Verification:</b> Hand over the 4-digit <b data-bm-hi="Start PIN" data-bm-i18n="Start PIN">Start PIN</b> upon arrival and 4-digit <b data-bm-hi="Stop PIN" data-bm-i18n="Stop PIN">Stop PIN</b> after testing to release the technician.
+<h4 style="color:#92400e; font-size:13.5px; margin-bottom:8px; font-weight:900;">Booking, Cancellation &amp; Billing Policy</h4>
+          • <b>Advance Booking Fee:</b> A non-refundable advance fee of <b>₹21.00</b> is charged at the time of booking.<br/>
+          • <b>Cancellation Rule:</b> If the customer cancels the service request, the advance booking amount of <b>₹21.00 will not be refunded</b>.<br/>
+          • <b>Final Billing Adjustment:</b> Upon successful completion of the service, the advance ₹21.00 will be <b>deducted from the total bill amount</b>, and the customer pays only the remaining balance.<br/>
+          • <b>Material Cost:</b> All quoted rates cover <b>labour charges only</b>. Any required spare parts, pipes, wires, gas, or fittings must be provided or paid for separately by the customer.<br/>
+          • <b>Payment Mode:</b> Full payment must be cleared immediately after completion and on-site testing via <b>Cash or UPI</b>.<br/>
+          • <b>PIN Verification:</b> Hand over the 4-digit <b>Start PIN</b> upon arrival and 4-digit <b>Stop PIN</b> after testing to release the technician.
         </div>
 <!-- REVIEWS FEED -->
 <div class="card" style="margin-top:14px;">
-<h3 class="section-title-blue" data-bm-hi="⭐ सत्यापित कस्टमर रिव्यू" data-bm-i18n="⭐ Verified Customer Reviews">⭐ Verified Customer Reviews</h3>
-<div id="homeReviewsContainer"><p data-bm-hi="सत्यापित कस्टमर रिव्यू लोड हो रहे हैं..." data-bm-i18n="Loading verified customer reviews..." style="font-size:12px; color:#64748b; font-weight:600;">Loading verified customer reviews...</p></div>
+<h3 class="section-title-blue">⭐ Verified Customer Reviews</h3>
+<div id="homeReviewsContainer"><p style="font-size:12px; color:#64748b; font-weight:600;">Loading verified customer reviews...</p></div>
 </div>
 <div class="card" style="margin-top:12px; background:var(--soft-red-bg); border:1.5px solid var(--soft-red-border);">
-<h4 class="section-title-blue" data-bm-hi="🏢 कमर्शियल और बल्क ऑर्डर डेस्क" data-bm-i18n="🏢 Commercial &amp; Bulk Order Desk" style="font-size:13.5px; margin-bottom:4px;">🏢 Commercial &amp; Bulk Order Desk</h4>
+<h4 class="section-title-blue" style="font-size:13.5px; margin-bottom:4px;">🏢 Commercial &amp; Bulk Order Desk</h4>
 <p style="font-size:11.5px; color:#475569; line-height:1.5; font-weight:600;">For corporate or bulk requirements covering HVAC/AC, Electrical, or Plumbing maintenance, contact our corporate desk at: <a href="mailto:kashvienterprises.bihar@gmail.com" style="color:var(--title-blue); font-weight:900;">kashvienterprises.bihar@gmail.com</a></p>
 </div>
 </div>
@@ -428,88 +1324,88 @@ html, body {
 <div class="card" style="border-left:5px solid var(--title-blue);">
 <div style="display:flex; justify-content:space-between; align-items:flex-start;">
 <div>
-<h2 class="section-title-blue" data-bm-hi="कस्टमर का नाम" data-bm-i18n="Customer Name" id="profDispName" style="font-size:18px; margin-bottom:4px;">Customer Name</h2>
+<h2 class="section-title-blue" id="profDispName" style="font-size:18px; margin-bottom:4px;">Customer Name</h2>
 <p style="font-size:12px; color:#475569; font-weight:600;">✉️ <span id="profDispEmail">--</span></p>
 <p style="font-size:12px; color:#475569; font-weight:600; margin-top:2px;">📞 <span id="profDispPhone">--</span></p>
 <p style="font-size:12px; color:#475569; font-weight:600; margin-top:2px;">📍 <span id="profDispAddress">--</span></p>
 </div>
-<button class="btn secondary" data-bm-hi="लॉगआउट" data-bm-i18n="Logout" onclick="customerLogout()" style="width:auto; padding:5px 10px; font-size:11px;">Logout</button>
+<button class="btn secondary" onclick="customerLogout()" style="width:auto; padding:5px 10px; font-size:11px;">Logout</button>
 </div>
 </div>
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; margin-top:16px;">
-<h3 class="section-title-blue" data-bm-hi="मेरी बुकिंग हिस्ट्री और वारंटी" data-bm-i18n="My Booking History &amp; Warranty" style="font-size:15px; margin-bottom:0;">My Booking History &amp; Warranty</h3>
-<button class="btn secondary" data-bm-hi="🔄 रिफ्रेश" data-bm-i18n="🔄 Refresh" onclick="loadCustomerOrders()" style="width:auto; padding:5px 10px; font-size:11px;">🔄 Refresh</button>
+<h3 class="section-title-blue" style="font-size:15px; margin-bottom:0;">My Booking History &amp; Warranty</h3>
+<button class="btn secondary" onclick="loadCustomerOrders()" style="width:auto; padding:5px 10px; font-size:11px;">🔄 Refresh</button>
 </div>
-<div id="customerHistoryContainer"><p data-bm-hi="आपकी पुरानी बुकिंग लोड हो रही हैं..." data-bm-i18n="Loading your past bookings..." style="color:#64748b; font-size:13px; text-align:center; padding:20px 0; font-weight:600;">Loading your past bookings...</p></div>
+<div id="customerHistoryContainer"><p style="color:#64748b; font-size:13px; text-align:center; padding:20px 0; font-weight:600;">Loading your past bookings...</p></div>
 </div>
 </div>
 <!-- 4. BOOKING SCREEN -->
 <div class="screen" id="screen-booking">
 <div class="desktop-inner">
-<button class="btn secondary" data-bm-hi="← वापस" data-bm-i18n="← Back" onclick="window.history.back()" style="width:auto; padding:6px 14px; font-size:12px; margin-bottom:12px;">← Back</button>
+<button class="btn secondary" onclick="window.history.back()" style="width:auto; padding:6px 14px; font-size:12px; margin-bottom:12px;">← Back</button>
 <div class="card" style="border-left:5px solid var(--title-blue);">
-<h3 class="section-title-blue" data-bm-hi="सर्विस बुकिंग" data-bm-i18n="Service Booking" id="bookCatName" style="font-size:17px;">Service Booking</h3>
+<h3 class="section-title-blue" id="bookCatName" style="font-size:17px;">Service Booking</h3>
 <p id="bookBaseScopeDesc" style="font-size:12px; color:#475569; margin-top:4px; line-height:1.45; font-weight:600;">-</p>
 </div>
 <!-- DYNAMIC QUANTITY-BASED WORK SELECTION (NO CHECKBOXES) -->
 <div class="card" style="border-left:5px solid var(--primary-red);">
-<label data-bm-hi="जरूरी काम और मात्रा चुनें (– / +):" data-bm-i18n="Select Required Works &amp; Quantity (– / +):" style="font-size:13px; font-weight:900; color:var(--title-blue); margin-bottom:4px; display:block;">Select Required Works &amp; Quantity (– / +):</label>
-<p data-bm-hi="+ और - बटन से मात्रा बदलें (कम से कम एक काम चुनें):" data-bm-i18n="Use + and - buttons to adjust count (Select at least one work):" style="font-size:11px; color:#64748b; margin-bottom:10px; font-weight:600;">Use + and - buttons to adjust count (Select at least one work):</p>
+<label style="font-size:13px; font-weight:900; color:var(--title-blue); margin-bottom:4px; display:block;">Select Required Works &amp; Quantity (– / +):</label>
+<p style="font-size:11px; color:#64748b; margin-bottom:10px; font-weight:600;">Use + and - buttons to adjust count (Select at least one work):</p>
 <div id="bookingServicesChecklist" style="max-height:260px; overflow-y:auto; border:1.5px solid #cbd5e1; border-radius:8px; padding:6px 10px; background:#fff;">
 <!-- Dynamically populated via JS renderChecklist() -->
 </div>
 </div>
 <div class="card">
-<div class="price-row"><span data-bm-hi="अनुमानित सर्विस राशि" data-bm-i18n="Estimated Service Amount">Estimated Service Amount</span><span id="priceBaseVal">₹121.00</span></div>
-<div class="price-row" style="font-weight:800; border-top:1px dashed #cbd5e1; margin-top:4px; padding-top:4px;"><span data-bm-hi="अनुमानित कुल राशि" data-bm-i18n="Estimated Total Amount">Estimated Total Amount</span><span id="priceTotalIncGst">₹121.00</span></div>
-<div class="price-row" style="color:var(--primary-red); font-weight:800;"><span data-bm-hi="एडवांस बुकिंग टोकन" data-bm-i18n="Advance Booking Token">Advance Booking Token</span><span>- ₹21.00</span></div>
-<div class="price-row total"><span data-bm-hi="टोकन के बाद देय राशि" data-bm-i18n="Due Amount After Token">Due Amount After Token</span><span id="priceTotalDueVal">₹100.00</span></div>
-<p style="font-size:11.5px; color:#991b1b; font-weight:900; margin-top:8px; background:#fff1f2; padding:8px 10px; border-radius:8px; border:1px solid #fecdd3;">⚠️ <b data-bm-hi="कैंसिलेशन नीति:" data-bm-i18n="CANCELLATION POLICY:">CANCELLATION POLICY:</b> The ₹21.00 advance booking token is strictly <b data-bm-hi="नॉन-रिफंडेबल" data-bm-i18n="NON-REFUNDABLE">NON-REFUNDABLE</b> once booked.</p>
+<div class="price-row"><span>Estimated Service Amount</span><span id="priceBaseVal">₹121.00</span></div>
+<div class="price-row" style="font-weight:800; border-top:1px dashed #cbd5e1; margin-top:4px; padding-top:4px;"><span>Estimated Total Amount</span><span id="priceTotalIncGst">₹121.00</span></div>
+<div class="price-row" style="color:var(--primary-red); font-weight:800;"><span>Advance Booking Token</span><span>- ₹21.00</span></div>
+<div class="price-row total"><span>Due Amount After Token</span><span id="priceTotalDueVal">₹100.00</span></div>
+<p style="font-size:11.5px; color:#991b1b; font-weight:900; margin-top:8px; background:#fff1f2; padding:8px 10px; border-radius:8px; border:1px solid #fecdd3;">⚠️ <b>CANCELLATION POLICY:</b> The ₹21.00 advance booking token is strictly <b>NON-REFUNDABLE</b> once booked.</p>
 </div>
-<label data-bm-hi="सर्विस पता:" data-bm-i18n="Service Address:" style="font-size:12px; font-weight:800; color:var(--title-blue); margin-bottom:4px; display:block;">Service Address:</label>
+<label style="font-size:12px; font-weight:800; color:var(--title-blue); margin-bottom:4px; display:block;">Service Address:</label>
 <input id="custAddressInput" placeholder="Enter complete service address" type="text"/>
 <div class="card" style="padding:12px; background:var(--soft-red-bg); border:1.5px solid var(--soft-red-border); margin-bottom:12px;">
 <div style="display:flex; justify-content:space-between; align-items:center;">
-<span data-bm-hi="📍 मैप लोकेशन चुनें" data-bm-i18n="📍 Map Location Picker" style="font-size:12px; font-weight:900; color:var(--title-blue);">📍 Map Location Picker</span>
-<button class="btn secondary" data-bm-hi="मैप चालू/बंद करें" data-bm-i18n="Toggle Map" onclick="toggleBookingMap()" style="width:auto; padding:4px 8px; font-size:11px;" type="button">Toggle Map</button>
+<span style="font-size:12px; font-weight:900; color:var(--title-blue);">📍 Map Location Picker</span>
+<button class="btn secondary" onclick="toggleBookingMap()" style="width:auto; padding:4px 8px; font-size:11px;" type="button">Toggle Map</button>
 </div>
-<p data-bm-hi="सही लोकेशन पिन करने के लिए मैप पर टैप करें:" data-bm-i18n="Tap anywhere on map to pin exact location:" style="font-size:11px; color:#64748b; margin-top:4px; font-weight:600;">Tap anywhere on map to pin exact location:</p>
+<p style="font-size:11px; color:#64748b; margin-top:4px; font-weight:600;">Tap anywhere on map to pin exact location:</p>
 <div id="bookingMapContainer" style="display:block; margin-top:8px;"><div id="bookingMap"></div></div>
 </div>
-<label data-bm-hi="कस्टमर मोबाइल नंबर:" data-bm-i18n="Customer Mobile Number:" style="font-size:12px; font-weight:800; color:var(--title-blue); margin-bottom:4px; display:block;">Customer Mobile Number:</label>
+<label style="font-size:12px; font-weight:800; color:var(--title-blue); margin-bottom:4px; display:block;">Customer Mobile Number:</label>
 <input id="custPhoneInput" maxlength="10" placeholder="10-digit mobile number" readonly="" style="background:#f8fafc; font-weight:800;" type="tel"/>
 <!-- DYNAMIC SERVICE SPECIFIC TERMS & CONDITIONS -->
 <div class="terms-box">
 <label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer;">
 <input id="bookingTermsCheckbox" style="width:20px; height:20px; margin-top:2px;" type="checkbox"/>
-<span data-bm-hi="चुनी गई सर्विस के अनुसार दिखाया जाएगा" data-bm-i18n="Dynamically populated based on trade selected" id="bookingTermsText">
+<span id="bookingTermsText">
 <!-- Dynamically populated based on trade selected -->
 </span>
 </label>
 </div>
-<button class="btn" data-bm-hi="एडवांस टोकन (₹21.00) का भुगतान करें" data-bm-i18n="Proceed to Pay Advance Token (₹21.00)" onclick="openDirectAdvancePayment()">Proceed to Pay Advance Token (₹21.00)</button>
+<button class="btn" onclick="openDirectAdvancePayment()">Proceed to Pay Advance Token (₹21.00)</button>
 </div>
 </div>
 <!-- 5. ADVANCE DIRECT UPI QR SCREEN -->
 <div class="screen" id="screen-advance-pay">
 <div class="desktop-inner">
 <div class="card" style="border-left:5px solid var(--title-blue);">
-<h3 class="section-title-blue" data-bm-hi="एडवांस टोकन (₹21.00) भुगतान करें" data-bm-i18n="Pay Advance Token (₹21.00)">Pay Advance Token (₹21.00)</h3>
-<p data-bm-hi="बुकिंग कन्फर्म करने के लिए UPI से स्कैन करके भुगतान करें।" data-bm-i18n="Scan and complete payment using UPI to confirm your booking." style="font-size:12px; color:#64748b; font-weight:600;">Scan and complete payment using UPI to confirm your booking.</p>
+<h3 class="section-title-blue">Pay Advance Token (₹21.00)</h3>
+<p style="font-size:12px; color:#64748b; font-weight:600;">Scan and complete payment using UPI to confirm your booking.</p>
 </div>
 <div class="qr-box">
 <div style="font-size:12px; font-weight:900; color:var(--title-blue); letter-spacing:0.5px;">KASHVI ENTERPRISES</div>
 <img alt="Dynamic UPI QR" class="qr-img" id="advanceQrImg"/>
 <div style="font-size:24px; font-weight:900; color:var(--primary-dark-red);">₹21.00</div>
-<p data-bm-hi="PhonePe, GPay, Paytm से स्कैन करें (नॉन-रिफंडेबल)" data-bm-i18n="Scan with PhonePe, GPay, Paytm (Non-Refundable)" style="font-size:11px; color:#64748b; margin-top:2px; font-weight:700;">Scan with PhonePe, GPay, Paytm (Non-Refundable)</p>
+<p style="font-size:11px; color:#64748b; margin-top:2px; font-weight:700;">Scan with PhonePe, GPay, Paytm (Non-Refundable)</p>
 </div>
-<a class="btn" data-bm-hi="🚀 UPI App में खोलें (PhonePe / GPay)" data-bm-i18n="🚀 Open in UPI App (PhonePe / GPay)" href="#" id="advanceUpiIntentBtn" style="display:block; text-align:center; text-decoration:none; margin-bottom:10px;">🚀 Open in UPI App (PhonePe / GPay)</a>
+<a class="btn" href="#" id="advanceUpiIntentBtn" style="display:block; text-align:center; text-decoration:none; margin-bottom:10px;">🚀 Open in UPI App (PhonePe / GPay)</a>
 <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer; margin-bottom:10px; font-size:13px; color:#334155; font-weight:700;">
 <input id="advancePaidCheckbox" style="width:18px; height:18px; margin-top:1px;" type="checkbox"/>
-<span data-bm-hi="मैंने ₹21.00 का भुगतान पूरा कर दिया है" data-bm-i18n="I have completed the ₹21.00 payment">I have completed the ₹21.00 payment</span>
+<span>I have completed the ₹21.00 payment</span>
 </label>
 <p id="advanceTxnError" style="color:#c0392b; font-size:11.5px; margin-bottom:8px; font-weight:700;"></p>
-<button class="btn secondary" data-bm-hi="✔ भुगतान कन्फर्म (बुकिंग सबमिट करें)" data-bm-i18n="✔ Payment Confirmed (Submit Booking)" onclick="broadcastJobToPool()">✔ Payment Confirmed (Submit Booking)</button>
+<button class="btn secondary" onclick="broadcastJobToPool()">✔ Payment Confirmed (Submit Booking)</button>
 </div>
 </div>
 <!-- 6. TECHNICIAN POOL & DASHBOARD -->
@@ -517,15 +1413,15 @@ html, body {
 <div class="desktop-inner">
 <div id="techPoolDashboard">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-<h3 class="section-title-blue" data-bm-hi="लाइव जॉब पूल" data-bm-i18n="Live Job Pool" id="techPoolHeader" style="margin-bottom:0;">Live Job Pool</h3>
+<h3 class="section-title-blue" id="techPoolHeader" style="margin-bottom:0;">Live Job Pool</h3>
 <div style="display:flex; gap:6px;">
-<button class="btn secondary" data-bm-hi="🔄 रिफ्रेश" data-bm-i18n="🔄 Refresh" onclick="renderPoolJobs()" style="width:auto; padding:5px 10px; font-size:11px;">🔄 Refresh</button>
-<button class="btn danger" data-bm-hi="लॉगआउट" data-bm-i18n="Logout" onclick="techLogout()" style="width:auto; padding:5px 8px; font-size:11px;">Logout</button>
+<button class="btn secondary" onclick="renderPoolJobs()" style="width:auto; padding:5px 10px; font-size:11px;">🔄 Refresh</button>
+<button class="btn danger" onclick="techLogout()" style="width:auto; padding:5px 8px; font-size:11px;">Logout</button>
 </div>
 </div>
 <div id="techCooldownNotice" style="display:none; background:#fee2e2; border:1.5px solid var(--primary-red); padding:10px; border-radius:8px; font-size:12px; color:#991b1b; margin-bottom:10px; font-weight:700;">⚠️ Cooldown Active: You canceled a claimed job. You can claim new jobs in: <b id="cooldownTimer">--:--</b></div>
 <div id="activeClaimedJobSection"></div>
-<h4 data-bm-hi="उपलब्ध कैटेगरी जॉब्स:" data-bm-i18n="Available Category Broadcasts:" style="font-size:13px; color:var(--title-blue); margin:14px 0 8px; font-weight:900;">Available Category Broadcasts:</h4>
+<h4 style="font-size:13px; color:var(--title-blue); margin:14px 0 8px; font-weight:900;">Available Category Broadcasts:</h4>
 <div id="availablePoolList"></div>
 </div>
 </div>
@@ -535,9 +1431,9 @@ html, body {
 <div class="desktop-inner">
 <div class="card" style="border-left:5px solid var(--success); text-align:center; padding:32px 16px;">
 <div style="font-size:46px; margin-bottom:8px;">✅</div>
-<h3 data-bm-hi="भुगतान सफलतापूर्वक प्राप्त हुआ" data-bm-i18n="Payment Successfully Received" style="color:var(--success); font-weight:900;">Payment Successfully Received</h3>
+<h3 style="color:var(--success); font-weight:900;">Payment Successfully Received</h3>
 <p style="font-size:12.5px; color:#475569; margin-top:6px; line-height:1.5; font-weight:600;">Tax Invoice PDF has been generated and synchronized across Customer, Technician, and Admin dashboards.</p>
-<button class="btn" data-bm-hi="जॉब पूल पर वापस जाएँ" data-bm-i18n="Back to Job Pool" onclick="navigateTo('tech-pool')" style="margin-top:16px;">Back to Job Pool</button>
+<button class="btn" onclick="navigateTo('tech-pool')" style="margin-top:16px;">Back to Job Pool</button>
 </div>
 </div>
 </div>
@@ -546,12 +1442,12 @@ html, body {
 <div class="invoice-paper" id="invoicePdf">
 <div class="inv-header">
 <h2>KASHVI ENTERPRISES</h2>
-<p data-bm-hi="होम अप्लायंसेज रिपेयर और इलेक्ट्रिकल सर्विस" data-bm-i18n="Home Appliances Repair &amp; Electrical Services">Home Appliances Repair &amp; Electrical Services</p>
+<p>Home Appliances Repair &amp; Electrical Services</p>
 <p>Mandir Marg, Masnadpur Bihat, Begusarai, Bihar - 851115</p>
 <p>Email: kashvienterprises.bihar@gmail.com</p>
 <p>GSTIN: 10CPRPK8525A1Z4 | Udyam: UDYAM-BR-06-0067891</p>
 </div>
-<div class="inv-title" data-bm-hi="टैक्स इनवॉइस / सर्विस रसीद" data-bm-i18n="TAX INVOICE / SERVICE RECEIPT" id="pdfDocTypeTitle">TAX INVOICE / SERVICE RECEIPT</div>
+<div class="inv-title" id="pdfDocTypeTitle">TAX INVOICE / SERVICE RECEIPT</div>
 <div class="inv-meta-grid">
 <div>Customer Name: <b id="pdfCustName">-</b></div>
 <div>Customer Phone: <b id="pdfCustPhone">-</b></div>
@@ -561,15 +1457,15 @@ html, body {
 <div>Date: <b id="pdfDate">-</b></div>
 </div>
 <table class="inv-table">
-<thead><tr><th>Sr</th><th data-bm-hi="सर्विस / काम का विवरण" data-bm-i18n="Description of Service / Work">Description of Service / Work</th><th data-bm-hi="SAC कोड" data-bm-i18n="SAC Code">SAC Code</th><th data-bm-hi="रेट (₹)" data-bm-i18n="Rate (₹)">Rate (₹)</th><th data-bm-hi="GST (18%)" data-bm-i18n="GST (18%)">GST (18%)</th><th data-bm-hi="कुल (₹)" data-bm-i18n="Total (₹)">Total (₹)</th></tr></thead>
+<thead><tr><th>Sr</th><th>Description of Service / Work</th><th>SAC Code</th><th>Rate (₹)</th><th>GST (18%)</th><th>Total (₹)</th></tr></thead>
 <tbody id="pdfItemsBody"></tbody>
 </table>
 <div class="inv-summary">
-<div class="price-row"><span data-bm-hi="टैक्सेबल सबटोटल:" data-bm-i18n="Taxable Subtotal:">Taxable Subtotal:</span><span id="pdfSubtotal">₹0.00</span></div>
-<div class="price-row"><span data-bm-hi="CGST (9%):" data-bm-i18n="CGST (9%):">CGST (9%):</span><span id="pdfCgst">₹0.00</span></div>
-<div class="price-row"><span data-bm-hi="SGST (9%):" data-bm-i18n="SGST (9%):">SGST (9%):</span><span id="pdfSgst">₹0.00</span></div>
-<div class="price-row" id="pdfAdvanceTokenRow" style="color:var(--primary-red); font-weight:800;"><span data-bm-hi="घटाया गया एडवांस टोकन:" data-bm-i18n="Advance Token Deducted:">Advance Token Deducted:</span><span>- ₹21.00</span></div>
-<div class="price-row total"><span data-bm-hi="ग्रैंड टोटल (नेट सेटल्ड):" data-bm-i18n="Grand Total (Net Settled):" id="pdfGrandTotalLabel">Grand Total (Net Settled):</span><span id="pdfGrandTotal">₹0.00</span></div>
+<div class="price-row"><span>Taxable Subtotal:</span><span id="pdfSubtotal">₹0.00</span></div>
+<div class="price-row"><span>CGST (9%):</span><span id="pdfCgst">₹0.00</span></div>
+<div class="price-row"><span>SGST (9%):</span><span id="pdfSgst">₹0.00</span></div>
+<div class="price-row" id="pdfAdvanceTokenRow" style="color:var(--primary-red); font-weight:800;"><span>Advance Token Deducted:</span><span>- ₹21.00</span></div>
+<div class="price-row total"><span id="pdfGrandTotalLabel">Grand Total (Net Settled):</span><span id="pdfGrandTotal">₹0.00</span></div>
 </div>
 <div id="pdfCancellationNote" style="display:none; margin-top:14px; padding:10px; border:1px dashed var(--primary-red); color:var(--primary-dark-red); font-size:11px; text-align:center; font-weight:800; border-radius:6px;">
           * Note: Booking was cancelled by customer. The ₹21.00 token is non-refundable towards administrative dispatch charges.
@@ -581,42 +1477,42 @@ html, body {
 <div class="desktop-inner">
 <div id="adminGlobalDashboard">
 <div style="background:var(--title-blue-badge); border:1.5px solid var(--title-blue-border); padding:14px; border-radius:12px; margin-bottom:14px;">
-<h4 class="section-title-blue" data-bm-hi="📥 शिफ्ट रिपोर्ट" data-bm-i18n="📥 Shift Reports" style="font-size:14px; margin-bottom:4px;">📥 Shift Reports</h4>
-<p data-bm-hi="आज की शिफ्ट के पूरे काम और कस्टमर लॉग डाउनलोड करें।" data-bm-i18n="Download completed works and customer logs for today's shift." style="font-size:11px; color:#475569; margin-bottom:8px; font-weight:600;">Download completed works and customer logs for today's shift.</p>
-<button class="btn" data-bm-hi="शिफ्ट रिपोर्ट डाउनलोड करें (CSV)" data-bm-i18n="Download Shift Report (CSV)" onclick="downloadShiftReport()" style="padding:10px; font-size:13px;">Download Shift Report (CSV)</button>
+<h4 class="section-title-blue" style="font-size:14px; margin-bottom:4px;">📥 Shift Reports</h4>
+<p style="font-size:11px; color:#475569; margin-bottom:8px; font-weight:600;">Download completed works and customer logs for today's shift.</p>
+<button class="btn" onclick="downloadShiftReport()" style="padding:10px; font-size:13px;">Download Shift Report (CSV)</button>
 </div>
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-<h3 class="section-title-blue" data-bm-hi="ग्लोबल एक्टिविटी और अकाउंट्स" data-bm-i18n="Global Activity &amp; Accounts" style="margin-bottom:0;">Global Activity &amp; Accounts</h3>
+<h3 class="section-title-blue" style="margin-bottom:0;">Global Activity &amp; Accounts</h3>
 <div style="display:flex; gap:6px;">
-<button class="btn secondary" data-bm-hi="🔄 रिफ्रेश" data-bm-i18n="🔄 Refresh" onclick="loadAdminGlobalFeed()" style="width:auto; padding:5px 10px; font-size:11px;">🔄 Refresh</button>
-<button class="btn danger" data-bm-hi="लॉगआउट" data-bm-i18n="Logout" onclick="adminLogout()" style="width:auto; padding:5px 8px; font-size:11px;">Logout</button>
+<button class="btn secondary" onclick="loadAdminGlobalFeed()" style="width:auto; padding:5px 10px; font-size:11px;">🔄 Refresh</button>
+<button class="btn danger" onclick="adminLogout()" style="width:auto; padding:5px 8px; font-size:11px;">Logout</button>
 </div>
 </div>
 <div id="adminGlobalFeed" style="margin-bottom:16px;"></div>
 <div class="card">
-<h3 class="section-title-blue" data-bm-hi="👷 टेक्नीशियन रजिस्टर करें (6-Character Encrypted PIN)" data-bm-i18n="👷 Register Technician (6-Digit Encrypted PIN)" style="font-size:15px;">👷 Register Technician (6-Digit Encrypted PIN)</h3>
+<h3 class="section-title-blue" style="font-size:15px;">👷 Register Technician (6-Digit Encrypted PIN)</h3>
 <input id="newTechName" placeholder="Full Name" style="margin-bottom:8px;" type="text"/>
 <input id="newTechPhone" maxlength="10" placeholder="Contact Phone Number" style="margin-bottom:8px;" type="tel"/>
 <select id="newTechCat" style="margin-bottom:8px; font-weight:700;">
-<option data-bm-hi="⚡ इलेक्ट्रीशियन" data-bm-i18n="⚡ Electrician" value="electrician">⚡ Electrician</option>
-<option data-bm-hi="❄️ AC सर्विस" data-bm-i18n="❄️ AC Service" value="ac">❄️ AC Service</option>
-<option data-bm-hi="🔧 प्लंबर" data-bm-i18n="🔧 Plumber" value="plumber">🔧 Plumber</option>
+<option value="electrician">⚡ Electrician</option>
+<option value="ac">❄️ AC Service</option>
+<option value="plumber">🔧 Plumber</option>
 </select>
 <input id="newTechQualification" placeholder="Educational / Technical Qualification" style="margin-bottom:8px;" type="text"/>
 <input id="newTechExperience" min="0" placeholder="Years of Field Experience" style="margin-bottom:8px;" type="number"/>
 <input id="newTechPin" maxlength="6" placeholder="Enter 6-Digit Access PIN" style="margin-bottom:10px; text-align:center; letter-spacing:4px; font-weight:800;" type="password"/>
-<button class="btn secondary" data-bm-hi="टेक्नीशियन सेव करें और 6-Character PIN Hash करें" data-bm-i18n="Save Technician &amp; Hash 6-Character PIN" onclick="registerTechnician()">Save Technician &amp; Hash 6-Character PIN</button>
+<button class="btn secondary" onclick="registerTechnician()">Save Technician &amp; Hash 6-Character PIN</button>
 </div>
 <div class="card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-<h3 class="section-title-blue" data-bm-hi="🧑‍🔧 टेक्नीशियन फ्लीट" data-bm-i18n="🧑‍🔧 Technician Fleet" style="font-size:14.5px; margin-bottom:0;">🧑‍🔧 Technician Fleet</h3>
+<h3 class="section-title-blue" style="font-size:14.5px; margin-bottom:0;">🧑‍🔧 Technician Fleet</h3>
 <button class="btn secondary" onclick="loadTechnicianFleet()" style="width:auto; padding:4px 10px; font-size:11px;">🔄</button>
 </div>
 <div id="techFleetList"><p style="color:#64748b; font-size:12px;">Loading...</p></div>
 </div>
 <div class="card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-<h3 class="section-title-blue" data-bm-hi="🚫 कस्टमर अकाउंट्स" data-bm-i18n="🚫 Customer Accounts" style="font-size:14.5px; margin-bottom:0;">🚫 Customer Accounts</h3>
+<h3 class="section-title-blue" style="font-size:14.5px; margin-bottom:0;">🚫 Customer Accounts</h3>
 <button class="btn secondary" onclick="loadCustomerAccounts()" style="width:auto; padding:4px 10px; font-size:11px;">🔄</button>
 </div>
 <div id="customerAccountsList"><p style="color:#64748b; font-size:12px;">Loading...</p></div>
@@ -631,58 +1527,58 @@ html, body {
 <div class="modal-backdrop" id="techCompletionModal">
 <div class="modal-content">
 <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2.5px solid var(--title-blue); padding-bottom:10px; margin-bottom:12px;">
-<h3 class="section-title-blue" data-bm-hi="काम पूरा और बिलिंग" data-bm-i18n="Work Completion &amp; Billing" style="margin-bottom:0;">Work Completion &amp; Billing</h3>
+<h3 class="section-title-blue" style="margin-bottom:0;">Work Completion &amp; Billing</h3>
 <span onclick="closeTechCompletionModal()" style="font-size:22px; font-weight:900; cursor:pointer;">×</span>
 </div>
 <!-- Customer Pre-Selected Work Summary -->
 <div style="background:var(--soft-red-bg); border:1.5px solid var(--soft-red-border); border-radius:10px; padding:12px; margin-bottom:12px; font-size:12px;">
-<b data-bm-hi="कस्टमर के बुक किए काम (पहले से जोड़े गए):" data-bm-i18n="Customer Booked Works (Already Added):" style="color:var(--title-blue); font-size:13px;">Customer Booked Works (Already Added):</b>
-<p data-bm-hi="बुक की गई सर्विस लोड हो रही है..." data-bm-i18n="Loading booked services..." id="modalInitialOrderText" style="color:#0f172a; margin-top:4px; font-weight:800;">Loading booked services...</p>
+<b style="color:var(--title-blue); font-size:13px;">Customer Booked Works (Already Added):</b>
+<p id="modalInitialOrderText" style="color:#0f172a; margin-top:4px; font-weight:800;">Loading booked services...</p>
 <div style="display:flex; justify-content:space-between; margin-top:6px;">
-<span data-bm-hi="एडवांस टोकन भुगतान: ₹21.00 (समायोजित)" data-bm-i18n="Advance Token Paid: ₹21.00 (Adjusted)" style="color:var(--primary-red); font-weight:800;">Advance Token Paid: ₹21.00 (Adjusted)</span>
-<span data-bm-hi="अवधि: --" data-bm-i18n="Duration: --" id="modalElapsedTimeText" style="color:var(--title-blue); font-weight:800;">Duration: --</span>
+<span style="color:var(--primary-red); font-weight:800;">Advance Token Paid: ₹21.00 (Adjusted)</span>
+<span id="modalElapsedTimeText" style="color:var(--title-blue); font-weight:800;">Duration: --</span>
 </div>
 </div>
 <!-- On-Site Additional Tasks (Without Material/Saman) - FIXED ALIGNMENT IN ONE LINE -->
 <div style="margin-bottom:12px;">
-<label data-bm-hi="अतिरिक्त ऑन-साइट काम जोड़ें (यदि किया गया हो):" data-bm-i18n="Add Extra On-Site Works (If Performed):" id="modalServicesHeading" style="font-weight:800; font-size:12.5px; color:var(--title-blue); display:block; margin-bottom:4px;">Add Extra On-Site Works (If Performed):</label>
-<p data-bm-hi="अतिरिक्त किए गए काम चुनें और कीमत डालें:" data-bm-i18n="Check any additional service done and quote price:" style="font-size:11px; color:#64748b; margin-bottom:6px; font-weight:600;">Check any additional service done and quote price:</p>
+<label id="modalServicesHeading" style="font-weight:800; font-size:12.5px; color:var(--title-blue); display:block; margin-bottom:4px;">Add Extra On-Site Works (If Performed):</label>
+<p style="font-size:11px; color:#64748b; margin-bottom:6px; font-weight:600;">Check any additional service done and quote price:</p>
 <div id="modalAddonsChecklist" style="max-height:160px; overflow-y:auto; border:1.5px solid #cbd5e1; border-radius:8px; padding:6px 10px; background:#fff;"></div>
 </div>
 <div class="input-group">
-<label data-bm-hi="कस्टमर का 4-अंकीय Stop PIN डालें:" data-bm-i18n="Enter Customer 4-Digit Stop PIN:" style="font-weight:800; font-size:12.5px; color:var(--title-blue); display:block; margin-bottom:4px;">Enter Customer 4-Digit Stop PIN:</label>
+<label style="font-weight:800; font-size:12.5px; color:var(--title-blue); display:block; margin-bottom:4px;">Enter Customer 4-Digit Stop PIN:</label>
 <input id="modalStopPinInput" maxlength="4" placeholder="Stop PIN" style="text-align:center; font-size:16px; font-weight:900;" type="text"/>
 </div>
 <div class="card" style="background:var(--soft-red-bg); border:1.5px solid var(--soft-red-border); padding:12px; margin-bottom:12px;">
-<div class="price-row"><span data-bm-hi="बुक की गई सर्विस बेस फीस:" data-bm-i18n="Booked Service Base Fee:">Booked Service Base Fee:</span><span id="modalBaseDisp">₹0.00</span></div>
-<div class="price-row"><span data-bm-hi="अतिरिक्त ऑन-साइट काम:" data-bm-i18n="Extra On-Site Works:">Extra On-Site Works:</span><span id="modalExtraWorkDisp">+₹0.00</span></div>
-<div class="price-row" id="modalOvertimeRow" style="display:none; color:var(--warning);"><span data-bm-hi="ओवरटाइम:" data-bm-i18n="Overtime:" id="modalOvertimeLabel">Overtime:</span><span id="modalOvertimeDisp">₹0.00</span></div>
-<div class="price-row" style="color:var(--primary-red); font-weight:800;"><span data-bm-hi="घटाया गया एडवांस टोकन:" data-bm-i18n="Advance Token Deducted:">Advance Token Deducted:</span><span>- ₹21.00</span></div>
-<div class="price-row total"><span data-bm-hi="ग्रैंड टोटल (नेट देय):" data-bm-i18n="Grand Total (Net Due):">Grand Total (Net Due):</span><span id="modalFinalNetDue" style="color:var(--primary-dark-red);">₹0.00</span></div>
+<div class="price-row"><span>Booked Service Base Fee:</span><span id="modalBaseDisp">₹0.00</span></div>
+<div class="price-row"><span>Extra On-Site Works:</span><span id="modalExtraWorkDisp">+₹0.00</span></div>
+<div class="price-row" id="modalOvertimeRow" style="display:none; color:var(--warning);"><span id="modalOvertimeLabel">Overtime:</span><span id="modalOvertimeDisp">₹0.00</span></div>
+<div class="price-row" style="color:var(--primary-red); font-weight:800;"><span>Advance Token Deducted:</span><span>- ₹21.00</span></div>
+<div class="price-row total"><span>Grand Total (Net Due):</span><span id="modalFinalNetDue" style="color:var(--primary-dark-red);">₹0.00</span></div>
 </div>
-<button class="btn" data-bm-hi="📱 कस्टमर पेमेंट QR बनाएं (ऑन-साइट)" data-bm-i18n="📱 Generate Customer Payment QR (On-Site)" onclick="openTechnicianCollectionQr()">📱 Generate Customer Payment QR (On-Site)</button>
+<button class="btn" onclick="openTechnicianCollectionQr()">📱 Generate Customer Payment QR (On-Site)</button>
 </div>
 </div>
 <!-- 11. TECHNICIAN ON-SITE PAYMENT QR MODAL -->
 <div class="modal-backdrop" id="techPaymentQrModal">
 <div class="modal-content" style="text-align:center;">
-<h3 class="section-title-blue" data-bm-hi="कस्टमर फाइनल सेटलमेंट" data-bm-i18n="Customer Final Settlement" style="justify-content:center; font-size:17px; margin-bottom:4px;">Customer Final Settlement</h3>
-<p data-bm-hi="कस्टमर को यह QR स्कैन करके भुगतान करने दें:" data-bm-i18n="Show this QR code to the customer on-site to scan &amp; pay:" style="font-size:12px; color:#64748b; font-weight:600;">Show this QR code to the customer on-site to scan &amp; pay:</p>
+<h3 class="section-title-blue" style="justify-content:center; font-size:17px; margin-bottom:4px;">Customer Final Settlement</h3>
+<p style="font-size:12px; color:#64748b; font-weight:600;">Show this QR code to the customer on-site to scan &amp; pay:</p>
 <div class="qr-box" style="margin:14px 0;">
 <div style="font-size:12px; font-weight:900; color:var(--title-blue); letter-spacing:0.5px;">KASHVI ENTERPRISES</div>
 <img alt="Payment QR" class="qr-img" id="techOnsiteQrImg"/>
 <div id="techOnsiteQrAmount" style="font-size:24px; font-weight:900; color:var(--primary-dark-red);">₹0.00</div>
-<p data-bm-hi="UPI (GPay / PhonePe / Paytm)" data-bm-i18n="UPI (GPay / PhonePe / Paytm)" style="font-size:11px; color:#64748b; margin-top:2px; font-weight:700;">UPI (GPay / PhonePe / Paytm)</p>
+<p style="font-size:11px; color:#64748b; margin-top:2px; font-weight:700;">UPI (GPay / PhonePe / Paytm)</p>
 </div>
-<button class="btn" data-bm-hi="✔ भुगतान प्राप्त कन्फर्म करें और इनवॉइस जारी करें" data-bm-i18n="✔ Confirm Payment Received &amp; Issue Invoice" onclick="confirmTechnicianSettlementDone()" style="background:linear-gradient(135deg, #059669, #047857);">✔ Confirm Payment Received &amp; Issue Invoice</button>
-<button class="btn secondary" data-bm-hi="बिल कैंसिल / बदलें" data-bm-i18n="Cancel / Modify Bill" onclick="closeTechPaymentQrModal()" style="margin-top:8px;">Cancel / Modify Bill</button>
+<button class="btn" onclick="confirmTechnicianSettlementDone()" style="background:linear-gradient(135deg, #059669, #047857);">✔ Confirm Payment Received &amp; Issue Invoice</button>
+<button class="btn secondary" onclick="closeTechPaymentQrModal()" style="margin-top:8px;">Cancel / Modify Bill</button>
 </div>
 </div>
 <!-- 12. CUSTOMER REVIEW MODAL -->
 <div class="modal-backdrop" id="customerReviewModal">
 <div class="modal-content">
-<h3 class="section-title-blue" data-bm-hi="अपना अनुभव रेट करें" data-bm-i18n="Rate Your Experience" style="justify-content:center; font-size:17px; margin-bottom:6px;">Rate Your Experience</h3>
-<p data-bm-hi="Bijli Mitra की सर्विस कैसी रही?" data-bm-i18n="How was the service provided by Bijli Mitra?" style="font-size:12px; color:#64748b; text-align:center; margin-bottom:10px; font-weight:600;">How was the service provided by Bijli Mitra?</p>
+<h3 class="section-title-blue" style="justify-content:center; font-size:17px; margin-bottom:6px;">Rate Your Experience</h3>
+<p style="font-size:12px; color:#64748b; text-align:center; margin-bottom:10px; font-weight:600;">How was the service provided by Bijli Mitra?</p>
 <div class="star-rating" id="reviewStarRating">
 <span class="star" onclick="setReviewRating(1)">★</span>
 <span class="star" onclick="setReviewRating(2)">★</span>
@@ -691,24 +1587,24 @@ html, body {
 <span class="star selected" onclick="setReviewRating(5)">★</span>
 </div>
 <textarea id="customerReviewComment" placeholder="Write your honest review or feedback here..." rows="3" style="margin-bottom:12px;"></textarea>
-<button class="btn" data-bm-hi="वेबसाइट पर रिव्यू सबमिट करें" data-bm-i18n="Submit Review to Website" onclick="submitCustomerReview()">Submit Review to Website</button>
+<button class="btn" onclick="submitCustomerReview()">Submit Review to Website</button>
 </div>
 </div>
 <!-- 13. GOOGLE USER MODAL -->
 <div class="modal-backdrop" id="googlePhoneModal">
 <div class="modal-content" style="max-width:380px;">
-<h3 class="section-title-blue" data-bm-hi="अपनी प्रोफाइल पूरी करें" data-bm-i18n="Complete Your Profile" style="font-size:16px; margin-bottom:6px;">Complete Your Profile</h3>
-<p data-bm-hi="आपका मोबाइल नंबर और सही स्ट्रीट पता अनिवार्य है ताकि टेक्नीशियन आप तक पहुँच सके।" data-bm-i18n="Your mobile number and exact street address are mandatory so our field technicians can reach you." style="font-size:12px; color:#64748b; margin-bottom:14px; font-weight:600;">Your mobile number and exact street address are mandatory so our field technicians can reach you.</p>
-<label data-bm-hi="10-अंकीय मोबाइल नंबर (अनिवार्य):" data-bm-i18n="10-Digit Mobile Number (Mandatory):" style="font-size:12px; font-weight:800; color:var(--title-blue); margin-bottom:4px; display:block;">10-Digit Mobile Number (Mandatory):</label>
+<h3 class="section-title-blue" style="font-size:16px; margin-bottom:6px;">Complete Your Profile</h3>
+<p style="font-size:12px; color:#64748b; margin-bottom:14px; font-weight:600;">Your mobile number and exact street address are mandatory so our field technicians can reach you.</p>
+<label style="font-size:12px; font-weight:800; color:var(--title-blue); margin-bottom:4px; display:block;">10-Digit Mobile Number (Mandatory):</label>
 <input id="googlePhoneInput" maxlength="10" placeholder="Enter 10-digit mobile number" style="margin-bottom:8px; font-weight:800;" type="tel"/>
 <div class="card" style="padding:10px; background:var(--soft-red-bg); border:1.5px solid var(--soft-red-border); margin-bottom:8px;">
-<span data-bm-hi="📍 मैप से सही पता चुनें:" data-bm-i18n="📍 Select Exact Address from Map:" style="font-size:12px; font-weight:900; color:var(--title-blue);">📍 Select Exact Address from Map:</span>
+<span style="font-size:12px; font-weight:900; color:var(--title-blue);">📍 Select Exact Address from Map:</span>
 <div id="googleSignupMap" style="height:170px; border-radius:10px; border:2px solid var(--primary-red); margin-top:6px;"></div>
 </div>
-<label data-bm-hi="चुना गया पता / लैंडमार्क:" data-bm-i18n="Selected Address / Landmark:" style="font-size:12px; font-weight:800; color:var(--title-blue); margin-bottom:4px; display:block;">Selected Address / Landmark:</label>
+<label style="font-size:12px; font-weight:800; color:var(--title-blue); margin-bottom:4px; display:block;">Selected Address / Landmark:</label>
 <input id="googleAddressInput" placeholder="Selected address" style="margin-bottom:8px;" type="text"/>
 <p id="googlePhoneError" style="color:#c0392b; font-size:11px; margin-bottom:8px; font-weight:700;"></p>
-<button class="btn" data-bm-hi="सेव करें और आगे बढ़ें" data-bm-i18n="Save &amp; Continue" onclick="submitGooglePhone()">Save &amp; Continue</button>
+<button class="btn" onclick="submitGooglePhone()">Save &amp; Continue</button>
 </div>
 </div>
 <div class="bottomnav" id="mobileBottomNav"></div>
@@ -746,7 +1642,7 @@ html, body {
       { name: 'New Point Wiring (Light / Fan)', price: 199, unit: 'per point' },
       { name: 'Power Point Wiring (16A / AC / Geyser)', price: 299, unit: 'per point' },
       { name: 'Fault Finding / Short Circuit Checking', price: 299, unit: 'inspection' },
-      { name: 'Pure Ghar Ka Wiring (per sq. ft)', price: 18, unit: 'sq. ft' },
+      { name: 'Complete Home Wiring (per sq. ft)', price: 18, unit: 'sq. ft' },
       { name: 'Others (Custom Electrical Work)', price: 0, unit: 'quoted on-site' }
     ],
     plumber: [
@@ -790,7 +1686,7 @@ html, body {
   };
 
   const TRADE_SERVICES_CATALOG = {
-    electrician: ['Visiting / Minimum Inspection Fee','Switch / Socket Replacement','Ceiling / Wall / Exhaust Fan Installation','Light Fitting (LED / Tube light / Holder)','Chandelier (Jhoomar) Installation','MCB Replacement','Inverter & Battery Complete Setup','Geyser Electrical Fitting','Water Motor / Starter Wiring','New Point Wiring (Light / Fan)','Power Point Wiring (16A / AC / Geyser)','Fault Finding / Short Circuit Checking','Pure Ghar Ka Wiring (per sq. ft)','Others (Custom Electrical Work)'],
+    electrician: ['Visiting / Minimum Inspection Fee','Switch / Socket Replacement','Ceiling / Wall / Exhaust Fan Installation','Light Fitting (LED / Tube light / Holder)','Chandelier (Jhoomar) Installation','MCB Replacement','Inverter & Battery Complete Setup','Geyser Electrical Fitting','Water Motor / Starter Wiring','New Point Wiring (Light / Fan)','Power Point Wiring (16A / AC / Geyser)','Fault Finding / Short Circuit Checking','Complete Home Wiring (per sq. ft)','Others (Custom Electrical Work)'],
     plumber: ['Visiting / Inspection Fee','Nal (Tap / Faucet) Replacement','Angle Valve / Jet Spray Fitting','Wall Mixer / Shower Fitting','Washbasin Fitting (with connection)','Kitchen Sink Installation','Western Commode (Toilet Seat) Fitting','Flush Cistern (Tanki) Repair / Replace','Water Tank (500L – 1000L) Installation','Water Motor / Pump Piping Connection','Drainage Blockage (Choke) Removal','Pipe Leakage Repair (Cutting & Joint fitting)','New Bathroom Concealed Piping (Labour)','Others (Custom Plumbing Work)'],
     ac: ['Visiting / Inspection Charge (If no repair is done)','Window AC Normal Service','Window AC Jet Wash Service','Split AC Jet Wash Service','Water Leakage / Drain Choke Fix','Capacitor Replacement (Labour + Capacitor)','Sensor Replacement (Labour + Sensor)','Swing Motor Replacement (Labour + Motor)','Minor Leakage Repair','Major Leakage Repair (Brazing + Vacuuming)','Full Gas Refilling (R32/R410A/R22 with Vacuum)','Non-Inverter PCB Repair','Inverter AC PCB Repair','Blower / Condenser Motor Labour','Compressor Replacement Labour','Split AC Installation (Standard Labour)','Split AC Uninstallation','Window AC Installation','Window AC Uninstallation','Others (Custom AC Service)']
   };
@@ -803,7 +1699,7 @@ html, body {
 
   const CATEGORY_TERMS_CONFIG = {
     electrician: `
-      <b>TERMS &amp; CONDITIONS (2. Electrical Services):</b><br>
+      <b>TERMS &amp; CONDITIONS Electrical Services):</b><br>
       • <b>Jurisdiction Limit:</b> Any work falling under the jurisdiction of the State Electricity Board (e.g., service lines, main meter tampering, pole connections, transformer faults) will <b>not be performed</b> by Bijli Mitra technicians.<br>
       • <b>Testing:</b> Complete wiring load, switch polarity, and earthing will be tested in front of the customer before billing.<br>
       • <b>Service Warranty:</b> A <b>07-day labour warranty</b> applies to all new point connections and fittings.<br>
@@ -812,7 +1708,7 @@ html, body {
       <b>I agree to pay the non-refundable ₹21 token and accept all terms above.</b>
     `,
     plumber: `
-      <b>TERMS &amp; CONDITIONS (3. Plumbing Services):</b><br>
+      <b>TERMS &amp; CONDITIONS Plumbing Services):</b><br>
       • <b>Leakage Verification:</b> All pipe joints, faucets, and drain lines must undergo a mandatory water-pressure test before final sign-off.<br>
       • <b>Exclusion of Civil Work:</b> Wall chipping and cutting are included for piping, but subsequent plastering, tile replacement, and painting are <b>strictly excluded</b>.<br>
       • <b>Service Warranty:</b> A <b>10-day labour warranty</b> applies to all new joint fittings and tap installations.<br>
@@ -820,7 +1716,7 @@ html, body {
       <b>I agree to pay the non-refundable ₹21 token and accept all terms above.</b>
     `,
     ac: `
-      <b>TERMS &amp; CONDITIONS (4. Air Conditioning Services):</b><br>
+      <b>TERMS &amp; CONDITIONS Air Conditioning Services):</b><br>
       • <b>Performance Testing:</b> Current draw (amperage) and grill cooling temperature will be verified before invoice clearance.<br>
       • <b>Consumables &amp; Spares:</b> Copper piping (₹750/m), Drain pipe (₹40/m), Heavy Outdoor Stand (₹700) and extra gas charging will be billed separately at actual rates.<br>
       • <b>Service Warranty:</b> A <b>30-day warranty</b> is provided on complete gas refilling and servicing leaks (excludes electrical surges or external physical damages).<br>
@@ -929,8 +1825,9 @@ html, body {
   let isPulling = false;
 
   window.addEventListener('touchstart', (e) => {
-    if (window.scrollY === 0) {
+    if (window.scrollY === 0 && e.touches && e.touches.length) {
       touchStartY = e.touches[0].clientY;
+      touchCurrentY = touchStartY;
       isPulling = true;
     }
   }, { passive: true });
@@ -1884,7 +2781,7 @@ html, body {
           <p style="font-size:12px; margin-bottom:4px; font-weight:600;">📍 Address: ${claimedJob.customer_address || '--'}</p>
           <p style="font-size:12px; margin-bottom:5px; color:#0f172a; font-weight:900;">🛠️ Booked Service: ${SERVICE_CONFIG[claimedJob.service_type]?.title || claimedJob.service_type || 'Electrical Services'}</p>
           <div style="background:#fff; border:1.5px solid #fecaca; border-radius:8px; padding:8px; margin:6px 0;">
-            <p style="font-size:11.5px; color:#991b1b; font-weight:900; margin-bottom:3px;">📋 Customer ne jo kaam book kiya hai:</p>
+            <p style="font-size:11.5px; color:#991b1b; font-weight:900; margin-bottom:3px;">📋 Customer Requested Work:</p>
             <p style="font-size:12px; color:#0f172a; font-weight:800; line-height:1.45;">${claimedJob.extra_services || 'Visiting / Minimum Inspection Fee'}</p>
           </div>
           ${claimedJob.job_status === 'claimed' ? `
@@ -1944,16 +2841,16 @@ html, body {
 
     poolList.innerHTML = poolJobs.map(j => {
       const cfg = SERVICE_CONFIG[j.service_type] || SERVICE_CONFIG.electrician;
-      const workDetails = j.extra_services || 'Visiting / Minimum Inspection Fee';
+      const workDetails = (j.extra_services && String(j.extra_services).trim()) ? String(j.extra_services).trim() : 'Visiting / Minimum Inspection Fee';
       const isWarranty = j.payment_status === 'warranty_revisit';
       return `
       <div class="card" style="border-left:5px solid var(--warning);">
         <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;"><b style="color:var(--title-blue);">${j.invoice_no || 'BM-ORDER'}</b><span style="font-weight:900; color:var(--title-blue); font-size:11px;">${cfg.title}</span></div>
         <p style="font-size:12px; color:#1e293b; margin:5px 0 3px; font-weight:800;">👤 Customer: ${j.customer_name || 'Customer'} | 📞 ${j.customer_phone || '--'}</p>
         <p style="font-size:12px; color:#475569; margin:3px 0; font-weight:600;">📍 Work Address: ${j.customer_address || '--'}</p>
-        <div style="background:#fff7ed; border:1.5px solid #fed7aa; border-radius:8px; padding:8px; margin:7px 0;">
-          <p style="font-size:11.5px; color:#9a3412; font-weight:900; margin-bottom:3px;">🛠️ CUSTOMER KA REQUESTED KAAM:</p>
-          <p style="font-size:12px; color:#0f172a; font-weight:800; line-height:1.5;">${workDetails}</p>
+        <div class="tech-requested-work">
+          <div class="work-label">🛠️ CUSTOMER REQUESTED WORK</div>
+          <div class="work-value">${workDetails}</div>
         </div>
         <p style="font-size:11px; color:var(--primary-dark-red); font-weight:800;">${isWarranty ? '🛡️ Free 07-Day Warranty Re-visit' : '⚡ Regular Service • Advance ₹21 Received'}</p>
         <button class="btn" style="margin-top:8px;" ${cooldownActive || technicianHasActiveJob ? 'disabled' : ''} onclick="claimPoolJob('${j.id || j.invoice_no}')">${cooldownActive ? 'Claim Blocked (Cooldown)' : technicianHasActiveJob ? '🔒 Finish Current Job First' : '⚡ Accept &amp; Claim Job'}</button>
@@ -1978,7 +2875,7 @@ html, body {
         ? { ...j, job_status: 'claimed', technician_name: activeTechSession.name, technician_phone: activeTechSession.phone }
         : j);
       localStorage.setItem('bm_local_pool', JSON.stringify(localPool));
-      alert("Job Confirmed & Accepted!");
+      alert('Job accepted successfully.');
       await renderPoolJobs();
     } catch(e) {
       console.error('Claim job failed:', e);
@@ -1988,7 +2885,7 @@ html, body {
   }
 
   async function cancelClaimedJob(jobId) {
-    if (!confirm("Canceling will enforce a 15-minute cooldown. Continue?")) return;
+    if (!confirm("Cancellation will enforce a 15-minute cooldown. Continue?")) return;
     localStorage.setItem('tech_cooldown_until', (Date.now() + 15 * 60 * 1000).toString());
     try {
       const { error } = await sbClient.rpc('cancel_technician_job', {
@@ -2419,7 +3316,7 @@ html, body {
   }
   function restoreInterfaceLanguage(){
     const el=document.getElementById('languageSelector');
-    const lang=localStorage.getItem('bm_language') || localStorage.getItem('bijliMitraLanguage') || 'en';
+    const lang='en'; localStorage.setItem('bm_language','en');
     if(el) el.value=lang;
     setInterfaceLanguage(lang);
   }
@@ -2571,5 +3468,15 @@ html, body {
   document.head.appendChild(style);
   setTimeout(()=>{try{updateRoleBasedNavigation();}catch(e){}},0);
 })();
-</script></body>
+</script>
+<script id="bm-reference-map-init-fix">
+window.addEventListener('load', function(){
+  setTimeout(function(){
+    try{
+      if (typeof homeMap !== 'undefined' && homeMap) homeMap.invalidateSize(true);
+    }catch(e){}
+  }, 500);
+});
+</script>
+</body>
 </html>
