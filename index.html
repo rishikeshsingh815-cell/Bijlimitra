@@ -1284,19 +1284,6 @@ html, body {
 
 </div>
 </div>
-<!-- 3. PLUMBING (Pipe + Valve + Socket Visuals) -->
-<div class="category-card" onclick="selectCategoryBooking('plumber')">
-<div class="category-card-left">
-<div class="cat-custom-icon-box cat-icon-plumber">🔧</div>
-<div>
-<h3>🔧 Plumbing Works</h3>
-<p>Pipelines, Taps, Leakages, Tank Cleaning</p>
-<div style="font-size:10.5px; color:#16a34a; font-weight:800; margin-top:2px;">🚰 Pipe &amp; Valve Fittings • 🚿 Socket &amp; Tank Care</div>
-</div>
-</div>
-<div class="category-price-badge"><b>₹121 Base</b><p style="font-size:11px; color:#64748b; font-weight:600;">(Inspection Fee)</p></div>
-</div>
-</div>
 <!-- 1. GENERAL BOOKING, CANCELLATION & BILLING POLICY (MAIN INTERFACE) -->
 <div class="terms-box" style="margin-top:16px;">
 <h4 style="color:#92400e; font-size:13.5px; margin-bottom:8px; font-weight:900;">Booking, Cancellation &amp; Billing Policy</h4>
@@ -2286,8 +2273,14 @@ html, body {
 
   function selectCategoryBooking(catKey) {
     if (!currentUser) { alert("Please Log In or Register to book services."); navigateTo('auth'); return; }
-    currentCategory = catKey;
-    const cfg = SERVICE_CONFIG[catKey];
+    const normalizedCategory = categoryKey(catKey);
+    if (!['electrician','ac','plumber'].includes(normalizedCategory)) {
+      console.error('Invalid booking category:', catKey);
+      alert('Please select a valid service category.');
+      return;
+    }
+    currentCategory = normalizedCategory;
+    const cfg = SERVICE_CONFIG[normalizedCategory];
     document.getElementById('bookCatName').textContent = cfg.title;
     document.getElementById('bookBaseScopeDesc').innerHTML = cfg.scope;
     document.getElementById('custPhoneInput').value = currentUser.phone;
@@ -3478,5 +3471,18 @@ window.addEventListener('load', function(){
   }, 500);
 });
 </script>
+
+<script id="bm-category-consistency-fix">
+(function(){
+  const originalSelectCategoryBooking = window.selectCategoryBooking;
+  if (typeof originalSelectCategoryBooking !== 'function') return;
+  window.selectCategoryBooking = function(catKey){
+    const normalized = categoryKey(catKey);
+    if (!['electrician','ac','plumber'].includes(normalized)) return;
+    return originalSelectCategoryBooking(normalized);
+  };
+})();
+</script>
+
 </body>
 </html>
